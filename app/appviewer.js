@@ -3,11 +3,11 @@
 // we use $.ajax to load the diagram.
 // make sure you run the application via web-server (ie. connect (node) or asdf (ruby))
 
-// require the viewer, make sure you added the bpmn-js bower distribution
+// require the viewer, make sure you added the vdml-js bower distribution
 // along with all its dependencies to the web site
-var BpmnViewer = window.BpmnJS;
+var VdmlViewer = window.VdmlJS;
 
-var viewer = new BpmnViewer({ container: '#canvas' });
+var viewer = new VdmlViewer({ container: '#canvas' });
 
 var xhr = new XMLHttpRequest();
 
@@ -25,5 +25,5 @@ xhr.onreadystatechange = function() {
     }
 };
 
-xhr.open('GET', '../resources/pizza-collaboration.bpmn', true);
+xhr.open('GET', '../resources/pizza-collaboration.vdml', true);
 xhr.send(null);

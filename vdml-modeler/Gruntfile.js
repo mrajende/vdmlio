@@ -19,7 +19,7 @@ module.exports = function(grunt) {
     config: {
       sources: 'lib',
       tests: 'test',
-      dist: '../bower-bpmn-js/dist'
+      dist: '../bower-vdml-js/dist'
     },
 
     eslint: {
@@ -80,24 +80,24 @@ module.exports = function(grunt) {
 
     bundle: {
       viewer: {
-        name: 'bpmn-viewer',
+        name: 'vdml-viewer',
         src: '<%= config.sources %>/Viewer.js',
         dest: '<%= config.dist %>'
       },
       navigated_viewer: {
-        name: 'bpmn-navigated-viewer',
+        name: 'vdml-navigated-viewer',
         src: '<%= config.sources %>/NavigatedViewer.js',
         dest: '<%= config.dist %>'
       },
       modeler: {
-        name: 'bpmn-modeler',
+        name: 'vdml-modeler',
         src: '<%= config.sources %>/Modeler.js',
         dest: '<%= config.dist %>'
       }
     },
 
     copy: {
-      bpmn_js: {
+      vdml_js: {
         files: [
           { expand: true, cwd: 'assets', src: [ '**' ], dest: '<%= config.dist %>/assets' }
         ]

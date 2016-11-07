@@ -1,6 +1,6 @@
 'use strict';
 
-var BpmnTreeWalker = require('./BpmnTreeWalker');
+var VdmlTreeWalker = require('./VdmlTreeWalker');
 
 
 /**
@@ -12,9 +12,9 @@ var BpmnTreeWalker = require('./BpmnTreeWalker');
  * @param  {ModdleElement} definitions
  * @param  {Function} done the callback, invoked with (err, [ warning ]) once the import is done
  */
-function importBpmnDiagram(diagram, definitions, done) {
+function importVdmlDiagram(diagram, definitions, done) {
 
-  var importer = diagram.get('bpmnImporter'),
+  var importer = diagram.get('vdmlImporter'),
       eventBus = diagram.get('eventBus'),
       translate = diagram.get('translate');
 
@@ -44,7 +44,7 @@ function importBpmnDiagram(diagram, definitions, done) {
       }
     };
 
-    var walker = new BpmnTreeWalker(visitor, translate);
+    var walker = new VdmlTreeWalker(visitor, translate);
 
     // traverse BPMN 2.0 document model,
     // starting at definitions
@@ -67,4 +67,4 @@ function importBpmnDiagram(diagram, definitions, done) {
   done(error, warnings);
 }
 
-module.exports.importBpmnDiagram = importBpmnDiagram;
+module.exports.importVdmlDiagram = importVdmlDiagram;

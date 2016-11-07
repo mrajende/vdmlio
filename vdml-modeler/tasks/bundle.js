@@ -88,7 +88,7 @@ module.exports = function(grunt) {
     var done = this.async();
 
     var browserifyOptions = {
-      standalone: 'BpmnJS',
+      standalone: 'VdmlJS',
       debug: true,
       builtins: false,
       insertGlobalVars: {

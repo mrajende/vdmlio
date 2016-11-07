@@ -1,5 +1,5 @@
 module.exports = {
-  __init__: [ 'bpmnRenderer' ],
-  bpmnRenderer: [ 'type', require('./BpmnRenderer') ],
+  __init__: [ 'vdmlRenderer' ],
+  vdmlRenderer: [ 'type', require('./VdmlRenderer') ],
   pathMap: [ 'type', require('./PathMap') ]
 };

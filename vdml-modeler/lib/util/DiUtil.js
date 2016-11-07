@@ -5,15 +5,15 @@ var is = require('./ModelUtil').is,
 
 module.exports.isExpanded = function(element) {
 
-  if (is(element, 'bpmn:CallActivity')) {
+  if (is(element, 'vdml:CallActivity')) {
     return false;
   }
 
-  if (is(element, 'bpmn:SubProcess')) {
+  if (is(element, 'vdml:SubProcess')) {
     return !!getBusinessObject(element).di.isExpanded;
   }
 
-  if (is(element, 'bpmn:Participant')) {
+  if (is(element, 'vdml:Participant')) {
     return !!getBusinessObject(element).processRef;
   }
 

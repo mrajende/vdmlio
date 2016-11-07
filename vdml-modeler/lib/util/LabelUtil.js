@@ -19,12 +19,12 @@ var FLOW_LABEL_INDENT = module.exports.FLOW_LABEL_INDENT = 15;
  * @return {Boolean} true if has label
  */
 module.exports.hasExternalLabel = function(semantic) {
-  return is(semantic, 'bpmn:Event') ||
-         is(semantic, 'bpmn:Gateway') ||
-         is(semantic, 'bpmn:DataStoreReference') ||
-         is(semantic, 'bpmn:DataObjectReference') ||
-         is(semantic, 'bpmn:SequenceFlow') ||
-         is(semantic, 'bpmn:MessageFlow');
+  return is(semantic, 'vdml:Event') ||
+         is(semantic, 'vdml:Gateway') ||
+         is(semantic, 'vdml:DataStoreReference') ||
+         is(semantic, 'vdml:DataObjectReference') ||
+         is(semantic, 'vdml:SequenceFlow') ||
+         is(semantic, 'vdml:MessageFlow');
 };
 
 /**

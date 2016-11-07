@@ -1,5 +1,5 @@
 /*!
- * bpmn-js - bpmn-modeler v0.17.3
+ * bpmn-js - vdml-modeler v0.17.3
 
  * Copyright 2014, 2015 camunda Services GmbH and other contributors
  *
@@ -8,14 +8,14 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-11-04
+ * Date: 2016-11-07
  */
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.BpmnJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var Ids = _dereq_(289);
+var Ids = _dereq_(268);
 
 var Viewer = _dereq_(3);
 
@@ -23,27 +23,27 @@ var NavigatedViewer = _dereq_(2);
 
 var initialDiagram =
   '<?xml version="1.0" encoding="UTF-8"?>' +
-  '<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-                    'xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" ' +
-                    'xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" ' +
+  '<vdml:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                    'xmlns:vdml="http://www.omg.org/spec/VDML/20100524/MODEL" ' +
+                    'xmlns:vdmldi="http://www.omg.org/spec/VDML/20100524/DI" ' +
                     'xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" ' +
-                    'targetNamespace="http://bpmn.io/schema/bpmn" ' +
+                    'targetNamespace="http://vdml.io/schema/vdml" ' +
                     'id="Definitions_1">' +
-    '<bpmn:process id="Process_1" isExecutable="false">' +
-      '<bpmn:startEvent id="StartEvent_1"/>' +
-    '</bpmn:process>' +
-    '<bpmndi:BPMNDiagram id="BPMNDiagram_1">' +
-      '<bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">' +
-        '<bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">' +
+    '<vdml:process id="Process_1" isExecutable="false">' +
+      '<vdml:startEvent id="StartEvent_1"/>' +
+    '</vdml:process>' +
+    '<vdmldi:VDMLDiagram id="VDMLDiagram_1">' +
+      '<vdmldi:VDMLPlane id="VDMLPlane_1" vdmlElement="Process_1">' +
+        '<vdmldi:VDMLShape id="_VDMLShape_StartEvent_2" vdmlElement="StartEvent_1">' +
           '<dc:Bounds height="36.0" width="36.0" x="173.0" y="102.0"/>' +
-        '</bpmndi:BPMNShape>' +
-      '</bpmndi:BPMNPlane>' +
-    '</bpmndi:BPMNDiagram>' +
-  '</bpmn:definitions>';
+        '</vdmldi:VDMLShape>' +
+      '</vdmldi:VDMLPlane>' +
+    '</vdmldi:VDMLDiagram>' +
+  '</vdml:definitions>';
 
 
 /**
- * A modeler for BPMN 2.0 diagrams.
+ * A modeler for VDML 2.0 diagrams.
  *
  *
  * ## Extending the Modeler
@@ -74,8 +74,8 @@ var initialDiagram =
  * };
  *
  * // extend the viewer
- * var bpmnModeler = new Modeler({ additionalModules: [ extensionModule ] });
- * bpmnModeler.importXML(...);
+ * var vdmlModeler = new Modeler({ additionalModules: [ extensionModule ] });
+ * vdmlModeler.importXML(...);
  * ```
  *
  *
@@ -103,7 +103,7 @@ var initialDiagram =
  *   contextPadProvider: [ 'type', CustomContextPadProvider ]
  * };
  *
- * var bpmnModeler = new Modeler({ additionalModules: [ overrideModule ]});
+ * var vdmlModeler = new Modeler({ additionalModules: [ overrideModule ]});
  * ```
  *
  * @param {Object} [options] configuration options to pass to the viewer
@@ -155,7 +155,7 @@ Modeler.prototype._createModdle = function(options) {
   var moddle = Viewer.prototype._createModdle.call(this, options);
 
   // attach ids to moddle to be able to track
-  // and validated ids in the BPMN 2.0 XML document
+  // and validated ids in the VDML 2.0 XML document
   // tree
   moddle.ids = new Ids([ 32, 36, 1 ]);
 
@@ -186,17 +186,17 @@ Modeler.prototype._collectIds = function(definitions, context) {
 
 Modeler.prototype._interactionModules = [
   // non-modeling components
-  _dereq_(258),
-  _dereq_(259),
-  _dereq_(262)
+  _dereq_(237),
+  _dereq_(238),
+  _dereq_(241)
 ];
 
 Modeler.prototype._modelingModules = [
   // modeling components
-  _dereq_(141),
-  _dereq_(147),
-  _dereq_(208),
-  _dereq_(226),
+  _dereq_(120),
+  _dereq_(126),
+  _dereq_(187),
+  _dereq_(205),
   _dereq_(10),
   _dereq_(18),
   _dereq_(12),
@@ -220,10 +220,10 @@ Modeler.prototype._modules = [].concat(
   Modeler.prototype._interactionModules,
   Modeler.prototype._modelingModules);
 
-},{"10":10,"12":12,"141":141,"147":147,"18":18,"2":2,"208":208,"22":22,"226":226,"258":258,"259":259,"26":26,"262":262,"289":289,"291":291,"3":3,"64":64,"70":70,"75":75,"85":85}],2:[function(_dereq_,module,exports){
+},{"10":10,"12":12,"120":120,"126":126,"18":18,"187":187,"2":2,"205":205,"22":22,"237":237,"238":238,"241":241,"26":26,"268":268,"270":270,"3":3,"64":64,"70":70,"75":75,"85":85}],2:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
 var Viewer = _dereq_(3);
 
@@ -242,43 +242,43 @@ inherits(NavigatedViewer, Viewer);
 module.exports = NavigatedViewer;
 
 NavigatedViewer.prototype._navigationModules = [
-  _dereq_(262),
-  _dereq_(258)
+  _dereq_(241),
+  _dereq_(237)
 ];
 
 NavigatedViewer.prototype._modules = [].concat(
   NavigatedViewer.prototype._modules,
   NavigatedViewer.prototype._navigationModules);
-},{"258":258,"262":262,"291":291,"3":3}],3:[function(_dereq_,module,exports){
+},{"237":237,"241":241,"270":270,"3":3}],3:[function(_dereq_,module,exports){
 /**
  * The code in the <project-logo></project-logo> area
  * must not be changed.
  *
- * @see http://bpmn.io/license for more information.
+ * @see http://vdml.io/license for more information.
  */
 'use strict';
 
-var assign = _dereq_(433),
-    omit = _dereq_(438),
-    isString = _dereq_(430),
-    isNumber = _dereq_(427);
+var assign = _dereq_(410),
+    omit = _dereq_(415),
+    isString = _dereq_(407),
+    isNumber = _dereq_(404);
 
-var domify = _dereq_(451),
-    domQuery = _dereq_(454),
-    domRemove = _dereq_(455);
+var domify = _dereq_(428),
+    domQuery = _dereq_(431),
+    domRemove = _dereq_(432);
 
-var Diagram = _dereq_(119),
-    BpmnModdle = _dereq_(95);
+var Diagram = _dereq_(98),
+    VdmlModdle = _dereq_(444);
 
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var Importer = _dereq_(88);
+var Importer = _dereq_(86);
 
 
 function checkValidationError(err) {
 
-  // check if we can help the user by indicating wrong BPMN 2.0 xml
+  // check if we can help the user by indicating wrong VDML 2.0 xml
   // (in case he or the exporting tool did not get that right)
 
   var pattern = /unparsable content <([^>]+)> detected([\s\S]*)$/;
@@ -287,7 +287,7 @@ function checkValidationError(err) {
   if (match) {
     err.message =
       'unparsable content <' + match[1] + '> detected; ' +
-      'this may indicate an invalid BPMN 2.0 diagram file' + match[2];
+      'this may indicate an invalid VDML 2.0 diagram file' + match[2];
   }
 
   return err;
@@ -309,7 +309,7 @@ function ensureUnit(val) {
 }
 
 /**
- * A viewer for BPMN 2.0 diagrams.
+ * A viewer for VDML 2.0 diagrams.
  *
  * Have a look at {@link NavigatedViewer} or {@link Modeler} for bundles that include
  * additional features.
@@ -343,8 +343,8 @@ function ensureUnit(val) {
  * };
  *
  * // extend the viewer
- * var bpmnViewer = new Viewer({ additionalModules: [ extensionModule ] });
- * bpmnViewer.importXML(...);
+ * var vdmlViewer = new Viewer({ additionalModules: [ extensionModule ] });
+ * vdmlViewer.importXML(...);
  * ```
  *
  * @param {Object} [options] configuration options to pass to the viewer
@@ -378,7 +378,7 @@ module.exports = Viewer;
 
 
 /**
- * Parse and render a BPMN 2.0 diagram.
+ * Parse and render a VDML 2.0 diagram.
  *
  * Once finished the viewer reports back the result to the
  * provided callback function with (err, warnings).
@@ -395,7 +395,7 @@ module.exports = Viewer;
  *
  * You can use these events to hook into the life-cycle.
  *
- * @param {String} xml the BPMN 2.0 xml
+ * @param {String} xml the VDML 2.0 xml
  * @param {Function} [done] invoked with (err, warnings=[])
  */
 Viewer.prototype.importXML = function(xml, done) {
@@ -409,7 +409,7 @@ Viewer.prototype.importXML = function(xml, done) {
   // allow xml manipulation
   xml = this._emit('import.parse.start', { xml: xml }) || xml;
 
-  this.moddle.fromXML(xml, 'bpmn:Definitions', function(err, definitions, context) {
+  this.moddle.fromXML(xml, 'vdml:Definitions', function(err, definitions, context) {
 
     // hook in post parse listeners +
     // allow definitions manipulation
@@ -440,8 +440,8 @@ Viewer.prototype.importXML = function(xml, done) {
 };
 
 /**
- * Export the currently displayed BPMN 2.0 diagram as
- * a BPMN 2.0 XML document.
+ * Export the currently displayed VDML 2.0 diagram as
+ * a VDML 2.0 XML document.
  *
  * @param {Object} [options] export options
  * @param {Boolean} [options.format=false] output formated XML
@@ -466,7 +466,7 @@ Viewer.prototype.saveXML = function(options, done) {
 };
 
 /**
- * Export the currently displayed BPMN 2.0 diagram as
+ * Export the currently displayed VDML 2.0 diagram as
  * an SVG image.
  *
  * @param {Object} [options]
@@ -491,7 +491,7 @@ Viewer.prototype.saveSVG = function(options, done) {
 
   var svg =
     '<?xml version="1.0" encoding="utf-8"?>\n' +
-    '<!-- created with bpmn-js / http://bpmn.io -->\n' +
+    '<!-- created with vdml-js / http://vdml.io -->\n' +
     '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n' +
     '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ' +
          'width="' + bbox.width + '" height="' + bbox.height + '" ' +
@@ -557,7 +557,7 @@ Viewer.prototype.importDefinitions = function(definitions, done) {
     this.definitions = definitions;
 
     // perform graphical import
-    Importer.importBpmnDiagram(this, definitions, done);
+    Importer.importVdmlDiagram(this, definitions, done);
   } catch (e) {
 
     // handle synchronous errors
@@ -613,7 +613,7 @@ Viewer.prototype._init = function(container, moddle, options) {
       additionalModules = options.additionalModules || [],
       staticModules = [
         {
-          bpmnjs: [ 'value', this ],
+          vdmljs: [ 'value', this ],
           moddle: [ 'value', moddle ]
         }
       ];
@@ -673,16 +673,16 @@ Viewer.prototype._createContainer = function(options) {
 Viewer.prototype._createModdle = function(options) {
   var moddleOptions = assign({}, this._moddleExtensions, options.moddleExtensions);
 
-  return new BpmnModdle(moddleOptions);
+  return new VdmlModdle(moddleOptions);
 };
 
 
 // modules the viewer is composed of
 Viewer.prototype._modules = [
   _dereq_(4),
-  _dereq_(250),
-  _dereq_(235),
-  _dereq_(213)
+  _dereq_(229),
+  _dereq_(214),
+  _dereq_(192)
 ];
 
 // default moddle extensions the viewer is composed of
@@ -691,24 +691,24 @@ Viewer.prototype._moddleExtensions = {};
 /* <project-logo> */
 
 var PoweredBy = _dereq_(94),
-    domEvent = _dereq_(452);
+    domEvent = _dereq_(429);
 
 /**
  * Adds the project logo to the diagram container as
- * required by the bpmn.io license.
+ * required by the vdml.io license.
  *
- * @see http://bpmn.io/license
+ * @see http://vdml.io/license
  *
  * @param {Element} container
  */
 function addProjectLogo(container) {
-  var logoData = PoweredBy.BPMNIO_LOGO;
+  var logoData = PoweredBy.VDMLIO_LOGO;
 
   var linkMarkup =
-    '<a href="http://bpmn.io" ' +
+    '<a href="http://vdml.io" ' +
        'target="_blank" ' +
        'class="bjs-powered-by" ' +
-       'title="Powered by bpmn.io" ' +
+       'title="Powered by vdml.io" ' +
        'style="position: absolute; bottom: 15px; right: 15px; z-index: 100">' +
         '<img src="data:image/png;base64,' + logoData + '">' +
     '</a>';
@@ -725,7 +725,7 @@ function addProjectLogo(container) {
 }
 
 /* </project-logo> */
-},{"119":119,"213":213,"235":235,"250":250,"291":291,"4":4,"427":427,"430":430,"433":433,"438":438,"451":451,"452":452,"454":454,"455":455,"88":88,"94":94,"95":95}],4:[function(_dereq_,module,exports){
+},{"192":192,"214":214,"229":229,"270":270,"4":4,"404":404,"407":407,"410":410,"415":415,"428":428,"429":429,"431":431,"432":432,"444":444,"86":86,"94":94,"98":98}],4:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
     _dereq_(7),
@@ -735,1689 +735,7 @@ module.exports = {
 },{"7":7,"90":90}],5:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291),
-    isObject = _dereq_(428),
-    assign = _dereq_(433),
-    forEach = _dereq_(304),
-    every = _dereq_(301),
-    includes = _dereq_(306),
-    some = _dereq_(311);
-
-var BaseRenderer = _dereq_(130),
-    TextUtil = _dereq_(280),
-    DiUtil = _dereq_(91);
-
-var is = _dereq_(93).is;
-
-var RenderUtil = _dereq_(279);
-
-var componentsToPath = RenderUtil.componentsToPath,
-    createLine = RenderUtil.createLine;
-
-
-var TASK_BORDER_RADIUS = 10;
-var INNER_OUTER_DIST = 3;
-
-var LABEL_STYLE = {
-  fontFamily: 'Arial, sans-serif',
-  fontSize: '12px'
-};
-
-
-function BpmnRenderer(eventBus, styles, pathMap, priority) {
-
-  BaseRenderer.call(this, eventBus, priority);
-
-  var textUtil = new TextUtil({
-    style: LABEL_STYLE,
-    size: { width: 100 }
-  });
-
-  var markers = {};
-
-  var computeStyle = styles.computeStyle;
-
-  function addMarker(id, element) {
-    markers[id] = element;
-  }
-
-  function marker(id) {
-    return markers[id];
-  }
-
-  function initMarkers(svg) {
-
-    function createMarker(id, options) {
-      var attrs = assign({
-        fill: 'black',
-        strokeWidth: 1,
-        strokeLinecap: 'round',
-        strokeDasharray: 'none'
-      }, options.attrs);
-
-      var ref = options.ref || { x: 0, y: 0 };
-
-      var scale = options.scale || 1;
-
-      // fix for safari / chrome / firefox bug not correctly
-      // resetting stroke dash array
-      if (attrs.strokeDasharray === 'none') {
-        attrs.strokeDasharray = [10000, 1];
-      }
-
-      var marker = options.element
-                     .attr(attrs)
-                     .marker(0, 0, 20, 20, ref.x, ref.y)
-                     .attr({
-                       markerWidth: 20 * scale,
-                       markerHeight: 20 * scale
-                     });
-
-      return addMarker(id, marker);
-    }
-
-
-    createMarker('sequenceflow-end', {
-      element: svg.path('M 1 5 L 11 10 L 1 15 Z'),
-      ref: { x: 11, y: 10 },
-      scale: 0.5
-    });
-
-    createMarker('messageflow-start', {
-      element: svg.circle(6, 6, 3.5),
-      attrs: {
-        fill: 'white',
-        stroke: 'black'
-      },
-      ref: { x: 6, y: 6 }
-    });
-
-    createMarker('messageflow-end', {
-      element: svg.path('m 1 5 l 0 -3 l 7 3 l -7 3 z'),
-      attrs: {
-        fill: 'white',
-        stroke: 'black',
-        strokeLinecap: 'butt'
-      },
-      ref: { x: 8.5, y: 5 }
-    });
-
-    createMarker('association-start', {
-      element: svg.path('M 11 5 L 1 10 L 11 15'),
-      attrs: {
-        fill: 'none',
-        stroke: 'black',
-        strokeWidth: 1.5
-      },
-      ref: { x: 1, y: 10 },
-      scale: 0.5
-    });
-
-    createMarker('association-end', {
-      element: svg.path('M 1 5 L 11 10 L 1 15'),
-      attrs: {
-        fill: 'none',
-        stroke: 'black',
-        strokeWidth: 1.5
-      },
-      ref: { x: 12, y: 10 },
-      scale: 0.5
-    });
-
-    createMarker('conditional-flow-marker', {
-      element: svg.path('M 0 10 L 8 6 L 16 10 L 8 14 Z'),
-      attrs: {
-        fill: 'white',
-        stroke: 'black'
-      },
-      ref: { x: -1, y: 10 },
-      scale: 0.5
-    });
-
-    createMarker('conditional-default-flow-marker', {
-      element: svg.path('M 1 4 L 5 16'),
-      attrs: {
-        stroke: 'black'
-      },
-      ref: { x: -5, y: 10 },
-      scale: 0.5
-    });
-  }
-
-  function drawCircle(p, width, height, offset, attrs) {
-
-    if (isObject(offset)) {
-      attrs = offset;
-      offset = 0;
-    }
-
-    offset = offset || 0;
-
-    attrs = computeStyle(attrs, {
-      stroke: 'black',
-      strokeWidth: 2,
-      fill: 'white'
-    });
-
-    var cx = width / 2,
-        cy = height / 2;
-
-    return p.circle(cx, cy, Math.round((width + height) / 4 - offset)).attr(attrs);
-  }
-
-  function drawRect(p, width, height, r, offset, attrs) {
-
-    if (isObject(offset)) {
-      attrs = offset;
-      offset = 0;
-    }
-
-    offset = offset || 0;
-
-    attrs = computeStyle(attrs, {
-      stroke: 'black',
-      strokeWidth: 2,
-      fill: 'white'
-    });
-
-    return p.rect(offset, offset, width - offset * 2, height - offset * 2, r).attr(attrs);
-  }
-
-  function drawDiamond(p, width, height, attrs) {
-
-    var x_2 = width / 2;
-    var y_2 = height / 2;
-
-    var points = [x_2, 0, width, y_2, x_2, height, 0, y_2 ];
-
-    attrs = computeStyle(attrs, {
-      stroke: 'black',
-      strokeWidth: 2,
-      fill: 'white'
-    });
-
-    return p.polygon(points).attr(attrs);
-  }
-
-  function drawLine(p, waypoints, attrs) {
-    attrs = computeStyle(attrs, [ 'no-fill' ], {
-      stroke: 'black',
-      strokeWidth: 2,
-      fill: 'none'
-    });
-
-    return createLine(waypoints, attrs).appendTo(p);
-  }
-
-  function drawPath(p, d, attrs) {
-
-    attrs = computeStyle(attrs, [ 'no-fill' ], {
-      strokeWidth: 2,
-      stroke: 'black'
-    });
-
-    return p.path(d).attr(attrs);
-  }
-
-  function drawMarker(type, p, path, attrs) {
-    return drawPath(p, path, assign({ 'data-marker': type }, attrs));
-  }
-
-  function as(type) {
-    return function(p, element) {
-      return handlers[type](p, element);
-    };
-  }
-
-  function renderer(type) {
-    return handlers[type];
-  }
-
-  function renderEventContent(element, p) {
-
-    var event = getSemantic(element);
-    var isThrowing = isThrowEvent(event);
-
-    if (isTypedEvent(event, 'bpmn:MessageEventDefinition')) {
-      return renderer('bpmn:MessageEventDefinition')(p, element, isThrowing);
-    }
-
-    if (isTypedEvent(event, 'bpmn:TimerEventDefinition')) {
-      return renderer('bpmn:TimerEventDefinition')(p, element, isThrowing);
-    }
-
-    if (isTypedEvent(event, 'bpmn:ConditionalEventDefinition')) {
-      return renderer('bpmn:ConditionalEventDefinition')(p, element);
-    }
-
-    if (isTypedEvent(event, 'bpmn:SignalEventDefinition')) {
-      return renderer('bpmn:SignalEventDefinition')(p, element, isThrowing);
-    }
-
-    if (isTypedEvent(event, 'bpmn:CancelEventDefinition') &&
-      isTypedEvent(event, 'bpmn:TerminateEventDefinition', { parallelMultiple: false })) {
-      return renderer('bpmn:MultipleEventDefinition')(p, element, isThrowing);
-    }
-
-    if (isTypedEvent(event, 'bpmn:CancelEventDefinition') &&
-      isTypedEvent(event, 'bpmn:TerminateEventDefinition', { parallelMultiple: true })) {
-      return renderer('bpmn:ParallelMultipleEventDefinition')(p, element, isThrowing);
-    }
-
-    if (isTypedEvent(event, 'bpmn:EscalationEventDefinition')) {
-      return renderer('bpmn:EscalationEventDefinition')(p, element, isThrowing);
-    }
-
-    if (isTypedEvent(event, 'bpmn:LinkEventDefinition')) {
-      return renderer('bpmn:LinkEventDefinition')(p, element, isThrowing);
-    }
-
-    if (isTypedEvent(event, 'bpmn:ErrorEventDefinition')) {
-      return renderer('bpmn:ErrorEventDefinition')(p, element, isThrowing);
-    }
-
-    if (isTypedEvent(event, 'bpmn:CancelEventDefinition')) {
-      return renderer('bpmn:CancelEventDefinition')(p, element, isThrowing);
-    }
-
-    if (isTypedEvent(event, 'bpmn:CompensateEventDefinition')) {
-      return renderer('bpmn:CompensateEventDefinition')(p, element, isThrowing);
-    }
-
-    if (isTypedEvent(event, 'bpmn:TerminateEventDefinition')) {
-      return renderer('bpmn:TerminateEventDefinition')(p, element, isThrowing);
-    }
-
-    return null;
-  }
-
-  function renderLabel(p, label, options) {
-    return textUtil.createText(p, label || '', options).addClass('djs-label');
-  }
-
-  function renderEmbeddedLabel(p, element, align) {
-    var semantic = getSemantic(element);
-    return renderLabel(p, semantic.name, { box: element, align: align, padding: 5 });
-  }
-
-  function renderExternalLabel(p, element) {
-    var semantic = getSemantic(element);
-    var box = {
-      width: 90,
-      height: 30,
-      x: element.width / 2 + element.x,
-      y: element.height / 2 + element.y
-    };
-
-    return renderLabel(p, semantic.name, { box: box, style: { fontSize: '11px' } });
-  }
-
-  function renderLaneLabel(p, text, element) {
-    var textBox = renderLabel(p, text, {
-      box: { height: 30, width: element.height },
-      align: 'center-middle'
-    });
-
-    var top = -1 * element.height;
-    textBox.transform(
-      'rotate(270) ' +
-      'translate(' + top + ',' + 0 + ')'
-    );
-  }
-
-  function createPathFromConnection(connection) {
-    var waypoints = connection.waypoints;
-
-    var pathData = 'm  ' + waypoints[0].x + ',' + waypoints[0].y;
-    for (var i = 1; i < waypoints.length; i++) {
-      pathData += 'L' + waypoints[i].x + ',' + waypoints[i].y + ' ';
-    }
-    return pathData;
-  }
-
-  var handlers = this.handlers = {
-    'bpmn:Event': function(p, element, attrs) {
-      return drawCircle(p, element.width, element.height,  attrs);
-    },
-    'bpmn:StartEvent': function(p, element) {
-      var attrs = {};
-      var semantic = getSemantic(element);
-
-      if (!semantic.isInterrupting) {
-        attrs = {
-          strokeDasharray: '6',
-          strokeLinecap: 'round'
-        };
-      }
-
-      var circle = renderer('bpmn:Event')(p, element, attrs);
-
-      renderEventContent(element, p);
-
-      return circle;
-    },
-    'bpmn:MessageEventDefinition': function(p, element, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_MESSAGE', {
-        xScaleFactor: 0.9,
-        yScaleFactor: 0.9,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.235,
-          my: 0.315
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'white';
-      var stroke = isThrowing ? 'white' : 'black';
-
-      var messagePath = drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill,
-        stroke: stroke
-      });
-
-      return messagePath;
-    },
-    'bpmn:TimerEventDefinition': function(p, element) {
-
-      var circle = drawCircle(p, element.width, element.height, 0.2 * element.height, {
-        strokeWidth: 2
-      });
-
-      var pathData = pathMap.getScaledPath('EVENT_TIMER_WH', {
-        xScaleFactor: 0.75,
-        yScaleFactor: 0.75,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.5,
-          my: 0.5
-        }
-      });
-
-      drawPath(p, pathData, {
-        strokeWidth: 2,
-        strokeLinecap: 'square'
-      });
-
-      for (var i = 0;i < 12;i++) {
-
-        var linePathData = pathMap.getScaledPath('EVENT_TIMER_LINE', {
-          xScaleFactor: 0.75,
-          yScaleFactor: 0.75,
-          containerWidth: element.width,
-          containerHeight: element.height,
-          position: {
-            mx: 0.5,
-            my: 0.5
-          }
-        });
-
-        var width = element.width / 2;
-        var height = element.height / 2;
-
-        drawPath(p, linePathData, {
-          strokeWidth: 1,
-          strokeLinecap: 'square',
-          transform: 'rotate(' + (i * 30) + ',' + height + ',' + width + ')'
-        });
-      }
-
-      return circle;
-    },
-    'bpmn:EscalationEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_ESCALATION', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.5,
-          my: 0.2
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'bpmn:ConditionalEventDefinition': function(p, event) {
-      var pathData = pathMap.getScaledPath('EVENT_CONDITIONAL', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.5,
-          my: 0.222
-        }
-      });
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1
-      });
-    },
-    'bpmn:LinkEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_LINK', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.57,
-          my: 0.263
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'bpmn:ErrorEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_ERROR', {
-        xScaleFactor: 1.1,
-        yScaleFactor: 1.1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.2,
-          my: 0.722
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'bpmn:CancelEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_CANCEL_45', {
-        xScaleFactor: 1.0,
-        yScaleFactor: 1.0,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.638,
-          my: -0.055
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      }).transform('rotate(45)');
-    },
-    'bpmn:CompensateEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_COMPENSATION', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.22,
-          my: 0.5
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'bpmn:SignalEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_SIGNAL', {
-        xScaleFactor: 0.9,
-        yScaleFactor: 0.9,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.5,
-          my: 0.2
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'bpmn:MultipleEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_MULTIPLE', {
-        xScaleFactor: 1.1,
-        yScaleFactor: 1.1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.222,
-          my: 0.36
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'bpmn:ParallelMultipleEventDefinition': function(p, event) {
-      var pathData = pathMap.getScaledPath('EVENT_PARALLEL_MULTIPLE', {
-        xScaleFactor: 1.2,
-        yScaleFactor: 1.2,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.458,
-          my: 0.194
-        }
-      });
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1
-      });
-    },
-    'bpmn:EndEvent': function(p, element) {
-      var circle = renderer('bpmn:Event')(p, element, {
-        strokeWidth: 4
-      });
-
-      renderEventContent(element, p, true);
-
-      return circle;
-    },
-    'bpmn:TerminateEventDefinition': function(p, element) {
-      var circle = drawCircle(p, element.width, element.height, 8, {
-        strokeWidth: 4,
-        fill: 'black'
-      });
-
-      return circle;
-    },
-    'bpmn:IntermediateEvent': function(p, element) {
-      var outer = renderer('bpmn:Event')(p, element, { strokeWidth: 1 });
-      /* inner */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, { strokeWidth: 1, fill: 'none' });
-
-      renderEventContent(element, p);
-
-      return outer;
-    },
-    'bpmn:IntermediateCatchEvent': as('bpmn:IntermediateEvent'),
-    'bpmn:IntermediateThrowEvent': as('bpmn:IntermediateEvent'),
-
-    'bpmn:Activity': function(p, element, attrs) {
-      return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, attrs);
-    },
-
-    'bpmn:Task': function(p, element, attrs) {
-      var rect = renderer('bpmn:Activity')(p, element, attrs);
-      renderEmbeddedLabel(p, element, 'center-middle');
-      attachTaskMarkers(p, element);
-      return rect;
-    },
-    'bpmn:ServiceTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
-
-      var pathDataBG = pathMap.getScaledPath('TASK_TYPE_SERVICE', {
-        abspos: {
-          x: 12,
-          y: 18
-        }
-      });
-
-      /* service bg */ drawPath(p, pathDataBG, {
-        strokeWidth: 1,
-        fill: 'none'
-      });
-
-      var fillPathData = pathMap.getScaledPath('TASK_TYPE_SERVICE_FILL', {
-        abspos: {
-          x: 17.2,
-          y: 18
-        }
-      });
-
-      /* service fill */ drawPath(p, fillPathData, {
-        strokeWidth: 0,
-        stroke: 'none',
-        fill: 'white'
-      });
-
-      var pathData = pathMap.getScaledPath('TASK_TYPE_SERVICE', {
-        abspos: {
-          x: 17,
-          y: 22
-        }
-      });
-
-      /* service */ drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: 'white'
-      });
-
-      return task;
-    },
-    'bpmn:UserTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
-
-      var x = 15;
-      var y = 12;
-
-      var pathData = pathMap.getScaledPath('TASK_TYPE_USER_1', {
-        abspos: {
-          x: x,
-          y: y
-        }
-      });
-
-      /* user path */ drawPath(p, pathData, {
-        strokeWidth: 0.5,
-        fill: 'none'
-      });
-
-      var pathData2 = pathMap.getScaledPath('TASK_TYPE_USER_2', {
-        abspos: {
-          x: x,
-          y: y
-        }
-      });
-
-      /* user2 path */ drawPath(p, pathData2, {
-        strokeWidth: 0.5,
-        fill: 'none'
-      });
-
-      var pathData3 = pathMap.getScaledPath('TASK_TYPE_USER_3', {
-        abspos: {
-          x: x,
-          y: y
-        }
-      });
-
-      /* user3 path */ drawPath(p, pathData3, {
-        strokeWidth: 0.5,
-        fill: 'black'
-      });
-
-      return task;
-    },
-    'bpmn:ManualTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
-
-      var pathData = pathMap.getScaledPath('TASK_TYPE_MANUAL', {
-        abspos: {
-          x: 17,
-          y: 15
-        }
-      });
-
-      /* manual path */ drawPath(p, pathData, {
-        strokeWidth: 0.25,
-        fill: 'white',
-        stroke: 'black'
-      });
-
-      return task;
-    },
-    'bpmn:SendTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
-
-      var pathData = pathMap.getScaledPath('TASK_TYPE_SEND', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: 21,
-        containerHeight: 14,
-        position: {
-          mx: 0.285,
-          my: 0.357
-        }
-      });
-
-      /* send path */ drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: 'black',
-        stroke: 'white'
-      });
-
-      return task;
-    },
-    'bpmn:ReceiveTask' : function(p, element) {
-      var semantic = getSemantic(element);
-
-      var task = renderer('bpmn:Task')(p, element);
-      var pathData;
-
-      if (semantic.instantiate) {
-        drawCircle(p, 28, 28, 20 * 0.22, { strokeWidth: 1 });
-
-        pathData = pathMap.getScaledPath('TASK_TYPE_INSTANTIATING_SEND', {
-          abspos: {
-            x: 7.77,
-            y: 9.52
-          }
-        });
-      } else {
-
-        pathData = pathMap.getScaledPath('TASK_TYPE_SEND', {
-          xScaleFactor: 0.9,
-          yScaleFactor: 0.9,
-          containerWidth: 21,
-          containerHeight: 14,
-          position: {
-            mx: 0.3,
-            my: 0.4
-          }
-        });
-      }
-
-      /* receive path */ drawPath(p, pathData, {
-        strokeWidth: 1
-      });
-
-      return task;
-    },
-    'bpmn:ScriptTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
-
-      var pathData = pathMap.getScaledPath('TASK_TYPE_SCRIPT', {
-        abspos: {
-          x: 15,
-          y: 20
-        }
-      });
-
-      /* script path */ drawPath(p, pathData, {
-        strokeWidth: 1
-      });
-
-      return task;
-    },
-    'bpmn:BusinessRuleTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
-
-      var headerPathData = pathMap.getScaledPath('TASK_TYPE_BUSINESS_RULE_HEADER', {
-        abspos: {
-          x: 8,
-          y: 8
-        }
-      });
-
-      var businessHeaderPath = drawPath(p, headerPathData);
-      businessHeaderPath.attr({
-        strokeWidth: 1,
-        fill: 'AAA'
-      });
-
-      var headerData = pathMap.getScaledPath('TASK_TYPE_BUSINESS_RULE_MAIN', {
-        abspos: {
-          x: 8,
-          y: 8
-        }
-      });
-
-      var businessPath = drawPath(p, headerData);
-      businessPath.attr({
-        strokeWidth: 1
-      });
-
-      return task;
-    },
-    'bpmn:SubProcess': function(p, element, attrs) {
-
-      attrs = assign({ fillOpacity: 0.95 }, attrs);
-
-      var rect = renderer('bpmn:Activity')(p, element, attrs);
-
-      var expanded = DiUtil.isExpanded(element);
-
-      var isEventSubProcess = DiUtil.isEventSubProcess(element);
-
-      if (isEventSubProcess) {
-        rect.attr({
-          strokeDasharray: '1,2'
-        });
-      }
-
-      renderEmbeddedLabel(p, element, expanded ? 'center-top' : 'center-middle');
-
-      if (expanded) {
-        attachTaskMarkers(p, element);
-      } else {
-        attachTaskMarkers(p, element, ['SubProcessMarker']);
-      }
-
-      return rect;
-    },
-    'bpmn:AdHocSubProcess': function(p, element) {
-      return renderer('bpmn:SubProcess')(p, element);
-    },
-    'bpmn:Transaction': function(p, element) {
-      var outer = renderer('bpmn:SubProcess')(p, element);
-
-      var innerAttrs = styles.style([ 'no-fill', 'no-events' ]);
-
-      /* inner path */ drawRect(p, element.width, element.height, TASK_BORDER_RADIUS - 2, INNER_OUTER_DIST, innerAttrs);
-
-      return outer;
-    },
-    'bpmn:CallActivity': function(p, element) {
-      return renderer('bpmn:SubProcess')(p, element, {
-        strokeWidth: 5
-      });
-    },
-    'bpmn:Participant': function(p, element) {
-
-      var lane = renderer('bpmn:Lane')(p, element, {
-        fillOpacity: 0.95,
-        fill: 'White'
-      });
-
-      var expandedPool = DiUtil.isExpanded(element);
-
-      if (expandedPool) {
-        drawLine(p, [
-          { x: 30, y: 0 },
-          { x: 30, y: element.height }
-        ]);
-        var text = getSemantic(element).name;
-        renderLaneLabel(p, text, element);
-      } else {
-        // Collapsed pool draw text inline
-        var text2 = getSemantic(element).name;
-        renderLabel(p, text2, { box: element, align: 'center-middle' });
-      }
-
-      var participantMultiplicity = !!(getSemantic(element).participantMultiplicity);
-
-      if (participantMultiplicity) {
-        renderer('ParticipantMultiplicityMarker')(p, element);
-      }
-
-      return lane;
-    },
-    'bpmn:Lane': function(p, element, attrs) {
-      var rect = drawRect(p, element.width, element.height, 0, attrs || {
-        fill: 'none'
-      });
-
-      var semantic = getSemantic(element);
-
-      if (semantic.$type === 'bpmn:Lane') {
-        var text = semantic.name;
-        renderLaneLabel(p, text, element);
-      }
-
-      return rect;
-    },
-    'bpmn:InclusiveGateway': function(p, element) {
-      var diamond = drawDiamond(p, element.width, element.height);
-
-      /* circle path */
-      drawCircle(p, element.width, element.height, element.height * 0.24, {
-        strokeWidth: 2.5,
-        fill: 'none'
-      });
-
-      return diamond;
-    },
-    'bpmn:ExclusiveGateway': function(p, element) {
-      var diamond = drawDiamond(p, element.width, element.height);
-
-      var pathData = pathMap.getScaledPath('GATEWAY_EXCLUSIVE', {
-        xScaleFactor: 0.4,
-        yScaleFactor: 0.4,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.32,
-          my: 0.3
-        }
-      });
-
-      if ((getDi(element).isMarkerVisible)) {
-        drawPath(p, pathData, {
-          strokeWidth: 1,
-          fill: 'black'
-        });
-      }
-
-      return diamond;
-    },
-    'bpmn:ComplexGateway': function(p, element) {
-      var diamond = drawDiamond(p, element.width, element.height);
-
-      var pathData = pathMap.getScaledPath('GATEWAY_COMPLEX', {
-        xScaleFactor: 0.5,
-        yScaleFactor:0.5,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.46,
-          my: 0.26
-        }
-      });
-
-      /* complex path */ drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: 'black'
-      });
-
-      return diamond;
-    },
-    'bpmn:ParallelGateway': function(p, element) {
-      var diamond = drawDiamond(p, element.width, element.height);
-
-      var pathData = pathMap.getScaledPath('GATEWAY_PARALLEL', {
-        xScaleFactor: 0.6,
-        yScaleFactor:0.6,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.46,
-          my: 0.2
-        }
-      });
-
-      /* parallel path */ drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: 'black'
-      });
-
-      return diamond;
-    },
-    'bpmn:EventBasedGateway': function(p, element) {
-
-      var semantic = getSemantic(element);
-
-      var diamond = drawDiamond(p, element.width, element.height);
-
-      /* outer circle path */ drawCircle(p, element.width, element.height, element.height * 0.20, {
-        strokeWidth: 1,
-        fill: 'none'
-      });
-
-      var type = semantic.eventGatewayType;
-      var instantiate = !!semantic.instantiate;
-
-      function drawEvent() {
-
-        var pathData = pathMap.getScaledPath('GATEWAY_EVENT_BASED', {
-          xScaleFactor: 0.18,
-          yScaleFactor: 0.18,
-          containerWidth: element.width,
-          containerHeight: element.height,
-          position: {
-            mx: 0.36,
-            my: 0.44
-          }
-        });
-
-        /* event path */ drawPath(p, pathData, {
-          strokeWidth: 2,
-          fill: 'none'
-        });
-      }
-
-      if (type === 'Parallel') {
-
-        var pathData = pathMap.getScaledPath('GATEWAY_PARALLEL', {
-          xScaleFactor: 0.4,
-          yScaleFactor:0.4,
-          containerWidth: element.width,
-          containerHeight: element.height,
-          position: {
-            mx: 0.474,
-            my: 0.296
-          }
-        });
-
-        var parallelPath = drawPath(p, pathData);
-        parallelPath.attr({
-          strokeWidth: 1,
-          fill: 'none'
-        });
-      } else if (type === 'Exclusive') {
-
-        if (!instantiate) {
-          var innerCircle = drawCircle(p, element.width, element.height, element.height * 0.26);
-          innerCircle.attr({
-            strokeWidth: 1,
-            fill: 'none'
-          });
-        }
-
-        drawEvent();
-      }
-
-
-      return diamond;
-    },
-    'bpmn:Gateway': function(p, element) {
-      return drawDiamond(p, element.width, element.height);
-    },
-    'bpmn:SequenceFlow': function(p, element) {
-      var pathData = createPathFromConnection(element);
-      var path = drawPath(p, pathData, {
-        strokeLinejoin: 'round',
-        markerEnd: marker('sequenceflow-end')
-      });
-
-      var sequenceFlow = getSemantic(element);
-      var source = element.source.businessObject;
-
-      // conditional flow marker
-      if (sequenceFlow.conditionExpression && source.$instanceOf('bpmn:Activity')) {
-        path.attr({
-          markerStart: marker('conditional-flow-marker')
-        });
-      }
-
-      // default marker
-      if (source.default && (source.$instanceOf('bpmn:Gateway') || source.$instanceOf('bpmn:Activity')) &&
-          source.default === sequenceFlow) {
-        path.attr({
-          markerStart: marker('conditional-default-flow-marker')
-        });
-      }
-
-      return path;
-    },
-    'bpmn:Association': function(p, element, attrs) {
-
-      var semantic = getSemantic(element);
-
-      attrs = assign({
-        strokeDasharray: '0.5, 5',
-        strokeLinecap: 'round',
-        strokeLinejoin: 'round'
-      }, attrs || {});
-
-      if (semantic.associationDirection === 'One' ||
-          semantic.associationDirection === 'Both') {
-        attrs.markerEnd = marker('association-end');
-      }
-
-      if (semantic.associationDirection === 'Both') {
-        attrs.markerStart = marker('association-start');
-      }
-
-      return drawLine(p, element.waypoints, attrs);
-    },
-    'bpmn:DataInputAssociation': function(p, element) {
-      return renderer('bpmn:Association')(p, element, {
-        markerEnd: marker('association-end')
-      });
-    },
-    'bpmn:DataOutputAssociation': function(p, element) {
-      return renderer('bpmn:Association')(p, element, {
-        markerEnd: marker('association-end')
-      });
-    },
-    'bpmn:MessageFlow': function(p, element) {
-
-      var semantic = getSemantic(element),
-          di = getDi(element);
-
-      var pathData = createPathFromConnection(element);
-      var path = drawPath(p, pathData, {
-        markerEnd: marker('messageflow-end'),
-        markerStart: marker('messageflow-start'),
-        strokeDasharray: '10, 12',
-        strokeLinecap: 'round',
-        strokeLinejoin: 'round',
-        strokeWidth: '1.5px'
-      });
-
-      if (semantic.messageRef) {
-        var midPoint = path.getPointAtLength(path.getTotalLength() / 2);
-
-        var markerPathData = pathMap.getScaledPath('MESSAGE_FLOW_MARKER', {
-          abspos: {
-            x: midPoint.x,
-            y: midPoint.y
-          }
-        });
-
-        var messageAttrs = { strokeWidth: 1 };
-
-        if (di.messageVisibleKind === 'initiating') {
-          messageAttrs.fill = 'white';
-          messageAttrs.stroke = 'black';
-        } else {
-          messageAttrs.fill = '#888';
-          messageAttrs.stroke = 'white';
-        }
-
-        drawPath(p, markerPathData, messageAttrs);
-      }
-
-      return path;
-    },
-    'bpmn:DataObject': function(p, element) {
-      var pathData = pathMap.getScaledPath('DATA_OBJECT_PATH', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.474,
-          my: 0.296
-        }
-      });
-
-      var elementObject = drawPath(p, pathData, { fill: 'white' });
-
-      var semantic = getSemantic(element);
-
-      if (isCollection(semantic)) {
-        renderDataItemCollection(p, element);
-      }
-
-      return elementObject;
-    },
-    'bpmn:DataObjectReference': as('bpmn:DataObject'),
-    'bpmn:DataInput': function(p, element) {
-
-      var arrowPathData = pathMap.getRawPath('DATA_ARROW');
-
-      // page
-      var elementObject = renderer('bpmn:DataObject')(p, element);
-
-      /* input arrow path */ drawPath(p, arrowPathData, { strokeWidth: 1 });
-
-      return elementObject;
-    },
-    'bpmn:DataOutput': function(p, element) {
-      var arrowPathData = pathMap.getRawPath('DATA_ARROW');
-
-      // page
-      var elementObject = renderer('bpmn:DataObject')(p, element);
-
-      /* output arrow path */ drawPath(p, arrowPathData, {
-        strokeWidth: 1,
-        fill: 'black'
-      });
-
-      return elementObject;
-    },
-    'bpmn:DataStoreReference': function(p, element) {
-      var DATA_STORE_PATH = pathMap.getScaledPath('DATA_STORE', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0,
-          my: 0.133
-        }
-      });
-
-      var elementStore = drawPath(p, DATA_STORE_PATH, {
-        strokeWidth: 2,
-        fill: 'white'
-      });
-
-      return elementStore;
-    },
-    'bpmn:BoundaryEvent': function(p, element) {
-
-      var semantic = getSemantic(element),
-          cancel = semantic.cancelActivity;
-
-      var attrs = {
-        strokeWidth: 1
-      };
-
-      if (!cancel) {
-        attrs.strokeDasharray = '6';
-        attrs.strokeLinecap = 'round';
-      }
-
-      var outer = renderer('bpmn:Event')(p, element, attrs);
-      /* inner path */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, assign(attrs, { fill: 'none' }));
-
-      renderEventContent(element, p);
-
-      return outer;
-    },
-    'bpmn:Group': function(p, element) {
-      return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, {
-        strokeWidth: 1,
-        strokeDasharray: '8,3,1,3',
-        fill: 'none',
-        pointerEvents: 'none'
-      });
-    },
-    'label': function(p, element) {
-      // Update external label size and bounds during rendering when
-      // we have the actual rendered bounds anyway.
-
-      var textElement = renderExternalLabel(p, element);
-
-      var textBBox = textElement.getBBox();
-
-      // update element.x so that the layouted text is still
-      // center alligned (newX = oldMidX - newWidth / 2)
-      element.x = Math.ceil(element.x + element.width / 2) - Math.ceil((textBBox.width / 2));
-
-      // take element width, height from actual bounds
-      element.width = Math.ceil(textBBox.width);
-      element.height = Math.ceil(textBBox.height);
-
-      // compensate bounding box x
-      textElement.attr({
-        transform: 'translate(' + (-1 * textBBox.x) + ',0)'
-      });
-
-      return textElement;
-    },
-    'bpmn:TextAnnotation': function(p, element) {
-      var style = {
-        'fill': 'none',
-        'stroke': 'none'
-      };
-      var textElement = drawRect(p, element.width, element.height, 0, 0, style);
-      var textPathData = pathMap.getScaledPath('TEXT_ANNOTATION', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.0,
-          my: 0.0
-        }
-      });
-      drawPath(p, textPathData);
-
-      var text = getSemantic(element).text || '';
-      renderLabel(p, text, { box: element, align: 'left-middle', padding: 5 });
-
-      return textElement;
-    },
-    'ParticipantMultiplicityMarker': function(p, element) {
-      var markerPath = pathMap.getScaledPath('MARKER_PARALLEL', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2) / element.width),
-          my: (element.height - 15) / element.height
-        }
-      });
-
-      drawMarker('participant-multiplicity', p, markerPath);
-    },
-    'SubProcessMarker': function(p, element) {
-      var markerRect = drawRect(p, 14, 14, 0, {
-        strokeWidth: 1
-      });
-
-      // Process marker is placed in the middle of the box
-      // therefore fixed values can be used here
-      markerRect.transform('translate(' + (element.width / 2 - 7.5) + ',' + (element.height - 20) + ')');
-
-      var markerPath = pathMap.getScaledPath('MARKER_SUB_PROCESS', {
-        xScaleFactor: 1.5,
-        yScaleFactor: 1.5,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: (element.width / 2 - 7.5) / element.width,
-          my: (element.height - 20) / element.height
-        }
-      });
-
-      drawMarker('sub-process', p, markerPath);
-    },
-    'ParallelMarker': function(p, element, position) {
-      var markerPath = pathMap.getScaledPath('MARKER_PARALLEL', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2 + position.parallel) / element.width),
-          my: (element.height - 20) / element.height
-        }
-      });
-
-      drawMarker('parallel', p, markerPath);
-    },
-    'SequentialMarker': function(p, element, position) {
-      var markerPath = pathMap.getScaledPath('MARKER_SEQUENTIAL', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2 + position.seq) / element.width),
-          my: (element.height - 19) / element.height
-        }
-      });
-
-      drawMarker('sequential', p, markerPath);
-    },
-    'CompensationMarker': function(p, element, position) {
-      var markerMath = pathMap.getScaledPath('MARKER_COMPENSATION', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2 + position.compensation) / element.width),
-          my: (element.height - 13) / element.height
-        }
-      });
-
-      drawMarker('compensation', p, markerMath, { strokeWidth: 1 });
-    },
-    'LoopMarker': function(p, element, position) {
-      var markerPath = pathMap.getScaledPath('MARKER_LOOP', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2 + position.loop) / element.width),
-          my: (element.height - 7) / element.height
-        }
-      });
-
-      drawMarker('loop', p, markerPath, {
-        strokeWidth: 1,
-        fill: 'none',
-        strokeLinecap: 'round',
-        strokeMiterlimit: 0.5
-      });
-    },
-    'AdhocMarker': function(p, element, position) {
-      var markerPath = pathMap.getScaledPath('MARKER_ADHOC', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2 + position.adhoc) / element.width),
-          my: (element.height - 15) / element.height
-        }
-      });
-
-      drawMarker('adhoc', p, markerPath, {
-        strokeWidth: 1,
-        fill: 'black'
-      });
-    }
-  };
-
-  function attachTaskMarkers(p, element, taskMarkers) {
-    var obj = getSemantic(element);
-
-    var subprocess = includes(taskMarkers, 'SubProcessMarker');
-    var position;
-
-    if (subprocess) {
-      position = {
-        seq: -21,
-        parallel: -22,
-        compensation: -42,
-        loop: -18,
-        adhoc: 10
-      };
-    } else {
-      position = {
-        seq: -3,
-        parallel: -6,
-        compensation: -27,
-        loop: 0,
-        adhoc: 10
-      };
-    }
-
-    forEach(taskMarkers, function(marker) {
-      renderer(marker)(p, element, position);
-    });
-
-    if (obj.isForCompensation) {
-      renderer('CompensationMarker')(p, element, position);
-    }
-
-    if (obj.$type === 'bpmn:AdHocSubProcess') {
-      renderer('AdhocMarker')(p, element, position);
-    }
-
-    var loopCharacteristics = obj.loopCharacteristics,
-        isSequential = loopCharacteristics && loopCharacteristics.isSequential;
-
-    if (loopCharacteristics) {
-
-      if (isSequential === undefined) {
-        renderer('LoopMarker')(p, element, position);
-      }
-
-      if (isSequential === false) {
-        renderer('ParallelMarker')(p, element, position);
-      }
-
-      if (isSequential === true) {
-        renderer('SequentialMarker')(p, element, position);
-      }
-    }
-  }
-
-  function renderDataItemCollection(p, element) {
-
-    var yPosition = (element.height - 16) / element.height;
-
-    var pathData = pathMap.getScaledPath('DATA_OBJECT_COLLECTION_PATH', {
-      xScaleFactor: 1,
-      yScaleFactor: 1,
-      containerWidth: element.width,
-      containerHeight: element.height,
-      position: {
-        mx: 0.451,
-        my: yPosition
-      }
-    });
-
-    /* collection path */ drawPath(p, pathData, {
-      strokeWidth: 2
-    });
-  }
-
-  // hook onto canvas init event to initialize
-  // connection start/end markers on svg
-  eventBus.on('canvas.init', function(event) {
-    initMarkers(event.svg);
-  });
-}
-
-
-inherits(BpmnRenderer, BaseRenderer);
-
-BpmnRenderer.$inject = [ 'eventBus', 'styles', 'pathMap' ];
-
-module.exports = BpmnRenderer;
-
-
-BpmnRenderer.prototype.canRender = function(element) {
-  return is(element, 'bpmn:BaseElement');
-};
-
-BpmnRenderer.prototype.drawShape = function(visuals, element) {
-  var type = element.type;
-  var h = this.handlers[type];
-
-  /* jshint -W040 */
-  return h(visuals, element);
-};
-
-BpmnRenderer.prototype.drawConnection = function(visuals, element) {
-  var type = element.type;
-  var h = this.handlers[type];
-
-  /* jshint -W040 */
-  return h(visuals, element);
-};
-
-BpmnRenderer.prototype.getShapePath = function(element) {
-
-  if (is(element, 'bpmn:Event')) {
-    return getCirclePath(element);
-  }
-
-  if (is(element, 'bpmn:Activity')) {
-    return getRoundRectPath(element, TASK_BORDER_RADIUS);
-  }
-
-  if (is(element, 'bpmn:Gateway')) {
-    return getDiamondPath(element);
-  }
-
-  return getRectPath(element);
-};
-
-
-///////// helper functions /////////////////////////////
-
-/**
- * Checks if eventDefinition of the given element matches with semantic type.
- *
- * @return {boolean} true if element is of the given semantic type
- */
-function isTypedEvent(event, eventDefinitionType, filter) {
-
-  function matches(definition, filter) {
-    return every(filter, function(val, key) {
-
-      // we want a == conversion here, to be able to catch
-      // undefined == false and friends
-      /* jshint -W116 */
-      return definition[key] == val;
-    });
-  }
-
-  return some(event.eventDefinitions, function(definition) {
-    return definition.$type === eventDefinitionType && matches(event, filter);
-  });
-}
-
-function isThrowEvent(event) {
-  return (event.$type === 'bpmn:IntermediateThrowEvent') || (event.$type === 'bpmn:EndEvent');
-}
-
-function isCollection(element) {
-  return element.isCollection ||
-        (element.elementObjectRef && element.elementObjectRef.isCollection);
-}
-
-function getDi(element) {
-  return element.businessObject.di;
-}
-
-function getSemantic(element) {
-  return element.businessObject;
-}
-
-
-
-/////// cropping path customizations /////////////////////////
-
-function getCirclePath(shape) {
-
-  var cx = shape.x + shape.width / 2,
-      cy = shape.y + shape.height / 2,
-      radius = shape.width / 2;
-
-  var circlePath = [
-    ['M', cx, cy],
-    ['m', 0, -radius],
-    ['a', radius, radius, 0, 1, 1, 0, 2 * radius],
-    ['a', radius, radius, 0, 1, 1, 0, -2 * radius],
-    ['z']
-  ];
-
-  return componentsToPath(circlePath);
-}
-
-function getRoundRectPath(shape, borderRadius) {
-
-  var x = shape.x,
-      y = shape.y,
-      width = shape.width,
-      height = shape.height;
-
-  var roundRectPath = [
-    ['M', x + borderRadius, y],
-    ['l', width - borderRadius * 2, 0],
-    ['a', borderRadius, borderRadius, 0, 0, 1, borderRadius, borderRadius],
-    ['l', 0, height - borderRadius * 2],
-    ['a', borderRadius, borderRadius, 0, 0, 1, -borderRadius, borderRadius],
-    ['l', borderRadius * 2 - width, 0],
-    ['a', borderRadius, borderRadius, 0, 0, 1, -borderRadius, -borderRadius],
-    ['l', 0, borderRadius * 2 - height],
-    ['a', borderRadius, borderRadius, 0, 0, 1, borderRadius, -borderRadius],
-    ['z']
-  ];
-
-  return componentsToPath(roundRectPath);
-}
-
-function getDiamondPath(shape) {
-
-  var width = shape.width,
-      height = shape.height,
-      x = shape.x,
-      y = shape.y,
-      halfWidth = width / 2,
-      halfHeight = height / 2;
-
-  var diamondPath = [
-    ['M', x + halfWidth, y],
-    ['l', halfWidth, halfHeight],
-    ['l', -halfWidth, halfHeight],
-    ['l', -halfWidth, -halfHeight],
-    ['z']
-  ];
-
-  return componentsToPath(diamondPath);
-}
-
-function getRectPath(shape) {
-  var x = shape.x,
-      y = shape.y,
-      width = shape.width,
-      height = shape.height;
-
-  var rectPath = [
-    ['M', x, y],
-    ['l', width, 0],
-    ['l', 0, height],
-    ['l', -width, 0],
-    ['z']
-  ];
-
-  return componentsToPath(rectPath);
-}
-
-},{"130":130,"279":279,"280":280,"291":291,"301":301,"304":304,"306":306,"311":311,"428":428,"433":433,"91":91,"93":93}],6:[function(_dereq_,module,exports){
-'use strict';
-
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 /**
  * Map containing SVG paths needed by BpmnRenderer.
@@ -2868,17 +1186,1699 @@ function PathMap() {
 
 module.exports = PathMap;
 
-},{"288":288}],7:[function(_dereq_,module,exports){
+},{"267":267}],6:[function(_dereq_,module,exports){
+'use strict';
+
+var inherits = _dereq_(270),
+    isObject = _dereq_(405),
+    assign = _dereq_(410),
+    forEach = _dereq_(283),
+    every = _dereq_(280),
+    includes = _dereq_(285),
+    some = _dereq_(290);
+
+var BaseRenderer = _dereq_(109),
+    TextUtil = _dereq_(259),
+    DiUtil = _dereq_(91);
+
+var is = _dereq_(93).is;
+
+var RenderUtil = _dereq_(258);
+
+var componentsToPath = RenderUtil.componentsToPath,
+    createLine = RenderUtil.createLine;
+
+
+var TASK_BORDER_RADIUS = 10;
+var INNER_OUTER_DIST = 3;
+
+var LABEL_STYLE = {
+  fontFamily: 'Arial, sans-serif',
+  fontSize: '12px'
+};
+
+
+function VdmlRenderer(eventBus, styles, pathMap, priority) {
+
+  BaseRenderer.call(this, eventBus, priority);
+
+  var textUtil = new TextUtil({
+    style: LABEL_STYLE,
+    size: { width: 100 }
+  });
+
+  var markers = {};
+
+  var computeStyle = styles.computeStyle;
+
+  function addMarker(id, element) {
+    markers[id] = element;
+  }
+
+  function marker(id) {
+    return markers[id];
+  }
+
+  function initMarkers(svg) {
+
+    function createMarker(id, options) {
+      var attrs = assign({
+        fill: 'black',
+        strokeWidth: 1,
+        strokeLinecap: 'round',
+        strokeDasharray: 'none'
+      }, options.attrs);
+
+      var ref = options.ref || { x: 0, y: 0 };
+
+      var scale = options.scale || 1;
+
+      // fix for safari / chrome / firefox bug not correctly
+      // resetting stroke dash array
+      if (attrs.strokeDasharray === 'none') {
+        attrs.strokeDasharray = [10000, 1];
+      }
+
+      var marker = options.element
+                     .attr(attrs)
+                     .marker(0, 0, 20, 20, ref.x, ref.y)
+                     .attr({
+                       markerWidth: 20 * scale,
+                       markerHeight: 20 * scale
+                     });
+
+      return addMarker(id, marker);
+    }
+
+
+    createMarker('sequenceflow-end', {
+      element: svg.path('M 1 5 L 11 10 L 1 15 Z'),
+      ref: { x: 11, y: 10 },
+      scale: 0.5
+    });
+
+    createMarker('messageflow-start', {
+      element: svg.circle(6, 6, 3.5),
+      attrs: {
+        fill: 'white',
+        stroke: 'black'
+      },
+      ref: { x: 6, y: 6 }
+    });
+
+    createMarker('messageflow-end', {
+      element: svg.path('m 1 5 l 0 -3 l 7 3 l -7 3 z'),
+      attrs: {
+        fill: 'white',
+        stroke: 'black',
+        strokeLinecap: 'butt'
+      },
+      ref: { x: 8.5, y: 5 }
+    });
+
+    createMarker('association-start', {
+      element: svg.path('M 11 5 L 1 10 L 11 15'),
+      attrs: {
+        fill: 'none',
+        stroke: 'black',
+        strokeWidth: 1.5
+      },
+      ref: { x: 1, y: 10 },
+      scale: 0.5
+    });
+
+    createMarker('association-end', {
+      element: svg.path('M 1 5 L 11 10 L 1 15'),
+      attrs: {
+        fill: 'none',
+        stroke: 'black',
+        strokeWidth: 1.5
+      },
+      ref: { x: 12, y: 10 },
+      scale: 0.5
+    });
+
+    createMarker('conditional-flow-marker', {
+      element: svg.path('M 0 10 L 8 6 L 16 10 L 8 14 Z'),
+      attrs: {
+        fill: 'white',
+        stroke: 'black'
+      },
+      ref: { x: -1, y: 10 },
+      scale: 0.5
+    });
+
+    createMarker('conditional-default-flow-marker', {
+      element: svg.path('M 1 4 L 5 16'),
+      attrs: {
+        stroke: 'black'
+      },
+      ref: { x: -5, y: 10 },
+      scale: 0.5
+    });
+  }
+
+  function drawCircle(p, width, height, offset, attrs) {
+
+    if (isObject(offset)) {
+      attrs = offset;
+      offset = 0;
+    }
+
+    offset = offset || 0;
+
+    attrs = computeStyle(attrs, {
+      stroke: 'black',
+      strokeWidth: 2,
+      fill: 'white'
+    });
+
+    var cx = width / 2,
+        cy = height / 2;
+
+    return p.circle(cx, cy, Math.round((width + height) / 4 - offset)).attr(attrs);
+  }
+
+  function drawRect(p, width, height, r, offset, attrs) {
+
+    if (isObject(offset)) {
+      attrs = offset;
+      offset = 0;
+    }
+
+    offset = offset || 0;
+
+    attrs = computeStyle(attrs, {
+      stroke: 'black',
+      strokeWidth: 2,
+      fill: 'white'
+    });
+
+    return p.rect(offset, offset, width - offset * 2, height - offset * 2, r).attr(attrs);
+  }
+
+  function drawDiamond(p, width, height, attrs) {
+
+    var x_2 = width / 2;
+    var y_2 = height / 2;
+
+    var points = [x_2, 0, width, y_2, x_2, height, 0, y_2 ];
+
+    attrs = computeStyle(attrs, {
+      stroke: 'black',
+      strokeWidth: 2,
+      fill: 'white'
+    });
+
+    return p.polygon(points).attr(attrs);
+  }
+
+  function drawLine(p, waypoints, attrs) {
+    attrs = computeStyle(attrs, [ 'no-fill' ], {
+      stroke: 'black',
+      strokeWidth: 2,
+      fill: 'none'
+    });
+
+    return createLine(waypoints, attrs).appendTo(p);
+  }
+
+  function drawPath(p, d, attrs) {
+
+    attrs = computeStyle(attrs, [ 'no-fill' ], {
+      strokeWidth: 2,
+      stroke: 'black'
+    });
+
+    return p.path(d).attr(attrs);
+  }
+
+  function drawMarker(type, p, path, attrs) {
+    return drawPath(p, path, assign({ 'data-marker': type }, attrs));
+  }
+
+  function as(type) {
+    return function(p, element) {
+      return handlers[type](p, element);
+    };
+  }
+
+  function renderer(type) {
+    return handlers[type];
+  }
+
+  function renderEventContent(element, p) {
+
+    var event = getSemantic(element);
+    var isThrowing = isThrowEvent(event);
+
+    if (isTypedEvent(event, 'vdml:MessageEventDefinition')) {
+      return renderer('vdml:MessageEventDefinition')(p, element, isThrowing);
+    }
+
+    if (isTypedEvent(event, 'vdml:TimerEventDefinition')) {
+      return renderer('vdml:TimerEventDefinition')(p, element, isThrowing);
+    }
+
+    if (isTypedEvent(event, 'vdml:ConditionalEventDefinition')) {
+      return renderer('vdml:ConditionalEventDefinition')(p, element);
+    }
+
+    if (isTypedEvent(event, 'vdml:SignalEventDefinition')) {
+      return renderer('vdml:SignalEventDefinition')(p, element, isThrowing);
+    }
+
+    if (isTypedEvent(event, 'vdml:CancelEventDefinition') &&
+      isTypedEvent(event, 'vdml:TerminateEventDefinition', { parallelMultiple: false })) {
+      return renderer('vdml:MultipleEventDefinition')(p, element, isThrowing);
+    }
+
+    if (isTypedEvent(event, 'vdml:CancelEventDefinition') &&
+      isTypedEvent(event, 'vdml:TerminateEventDefinition', { parallelMultiple: true })) {
+      return renderer('vdml:ParallelMultipleEventDefinition')(p, element, isThrowing);
+    }
+
+    if (isTypedEvent(event, 'vdml:EscalationEventDefinition')) {
+      return renderer('vdml:EscalationEventDefinition')(p, element, isThrowing);
+    }
+
+    if (isTypedEvent(event, 'vdml:LinkEventDefinition')) {
+      return renderer('vdml:LinkEventDefinition')(p, element, isThrowing);
+    }
+
+    if (isTypedEvent(event, 'vdml:ErrorEventDefinition')) {
+      return renderer('vdml:ErrorEventDefinition')(p, element, isThrowing);
+    }
+
+    if (isTypedEvent(event, 'vdml:CancelEventDefinition')) {
+      return renderer('vdml:CancelEventDefinition')(p, element, isThrowing);
+    }
+
+    if (isTypedEvent(event, 'vdml:CompensateEventDefinition')) {
+      return renderer('vdml:CompensateEventDefinition')(p, element, isThrowing);
+    }
+
+    if (isTypedEvent(event, 'vdml:TerminateEventDefinition')) {
+      return renderer('vdml:TerminateEventDefinition')(p, element, isThrowing);
+    }
+
+    return null;
+  }
+
+  function renderLabel(p, label, options) {
+    return textUtil.createText(p, label || '', options).addClass('djs-label');
+  }
+
+  function renderEmbeddedLabel(p, element, align) {
+    var semantic = getSemantic(element);
+    return renderLabel(p, semantic.name, { box: element, align: align, padding: 5 });
+  }
+
+  function renderExternalLabel(p, element) {
+    var semantic = getSemantic(element);
+    var box = {
+      width: 90,
+      height: 30,
+      x: element.width / 2 + element.x,
+      y: element.height / 2 + element.y
+    };
+
+    return renderLabel(p, semantic.name, { box: box, style: { fontSize: '11px' } });
+  }
+
+  function renderLaneLabel(p, text, element) {
+    var textBox = renderLabel(p, text, {
+      box: { height: 30, width: element.height },
+      align: 'center-middle'
+    });
+
+    var top = -1 * element.height;
+    textBox.transform(
+      'rotate(270) ' +
+      'translate(' + top + ',' + 0 + ')'
+    );
+  }
+
+  function createPathFromConnection(connection) {
+    var waypoints = connection.waypoints;
+
+    var pathData = 'm  ' + waypoints[0].x + ',' + waypoints[0].y;
+    for (var i = 1; i < waypoints.length; i++) {
+      pathData += 'L' + waypoints[i].x + ',' + waypoints[i].y + ' ';
+    }
+    return pathData;
+  }
+
+  var handlers = this.handlers = {
+    'vdml:Event': function(p, element, attrs) {
+      return drawCircle(p, element.width, element.height,  attrs);
+    },
+    'vdml:StartEvent': function(p, element) {
+      var attrs = {};
+      var semantic = getSemantic(element);
+
+      if (!semantic.isInterrupting) {
+        attrs = {
+          strokeDasharray: '6',
+          strokeLinecap: 'round'
+        };
+      }
+
+      var circle = renderer('vdml:Event')(p, element, attrs);
+
+      renderEventContent(element, p);
+
+      return circle;
+    },
+    'vdml:MessageEventDefinition': function(p, element, isThrowing) {
+      var pathData = pathMap.getScaledPath('EVENT_MESSAGE', {
+        xScaleFactor: 0.9,
+        yScaleFactor: 0.9,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: 0.235,
+          my: 0.315
+        }
+      });
+
+      var fill = isThrowing ? 'black' : 'white';
+      var stroke = isThrowing ? 'white' : 'black';
+
+      var messagePath = drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: fill,
+        stroke: stroke
+      });
+
+      return messagePath;
+    },
+    'vdml:TimerEventDefinition': function(p, element) {
+
+      var circle = drawCircle(p, element.width, element.height, 0.2 * element.height, {
+        strokeWidth: 2
+      });
+
+      var pathData = pathMap.getScaledPath('EVENT_TIMER_WH', {
+        xScaleFactor: 0.75,
+        yScaleFactor: 0.75,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: 0.5,
+          my: 0.5
+        }
+      });
+
+      drawPath(p, pathData, {
+        strokeWidth: 2,
+        strokeLinecap: 'square'
+      });
+
+      for (var i = 0;i < 12;i++) {
+
+        var linePathData = pathMap.getScaledPath('EVENT_TIMER_LINE', {
+          xScaleFactor: 0.75,
+          yScaleFactor: 0.75,
+          containerWidth: element.width,
+          containerHeight: element.height,
+          position: {
+            mx: 0.5,
+            my: 0.5
+          }
+        });
+
+        var width = element.width / 2;
+        var height = element.height / 2;
+
+        drawPath(p, linePathData, {
+          strokeWidth: 1,
+          strokeLinecap: 'square',
+          transform: 'rotate(' + (i * 30) + ',' + height + ',' + width + ')'
+        });
+      }
+
+      return circle;
+    },
+    'vdml:EscalationEventDefinition': function(p, event, isThrowing) {
+      var pathData = pathMap.getScaledPath('EVENT_ESCALATION', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: event.width,
+        containerHeight: event.height,
+        position: {
+          mx: 0.5,
+          my: 0.2
+        }
+      });
+
+      var fill = isThrowing ? 'black' : 'none';
+
+      return drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: fill
+      });
+    },
+    'vdml:ConditionalEventDefinition': function(p, event) {
+      var pathData = pathMap.getScaledPath('EVENT_CONDITIONAL', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: event.width,
+        containerHeight: event.height,
+        position: {
+          mx: 0.5,
+          my: 0.222
+        }
+      });
+
+      return drawPath(p, pathData, {
+        strokeWidth: 1
+      });
+    },
+    'vdml:LinkEventDefinition': function(p, event, isThrowing) {
+      var pathData = pathMap.getScaledPath('EVENT_LINK', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: event.width,
+        containerHeight: event.height,
+        position: {
+          mx: 0.57,
+          my: 0.263
+        }
+      });
+
+      var fill = isThrowing ? 'black' : 'none';
+
+      return drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: fill
+      });
+    },
+    'vdml:ErrorEventDefinition': function(p, event, isThrowing) {
+      var pathData = pathMap.getScaledPath('EVENT_ERROR', {
+        xScaleFactor: 1.1,
+        yScaleFactor: 1.1,
+        containerWidth: event.width,
+        containerHeight: event.height,
+        position: {
+          mx: 0.2,
+          my: 0.722
+        }
+      });
+
+      var fill = isThrowing ? 'black' : 'none';
+
+      return drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: fill
+      });
+    },
+    'vdml:CancelEventDefinition': function(p, event, isThrowing) {
+      var pathData = pathMap.getScaledPath('EVENT_CANCEL_45', {
+        xScaleFactor: 1.0,
+        yScaleFactor: 1.0,
+        containerWidth: event.width,
+        containerHeight: event.height,
+        position: {
+          mx: 0.638,
+          my: -0.055
+        }
+      });
+
+      var fill = isThrowing ? 'black' : 'none';
+
+      return drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: fill
+      }).transform('rotate(45)');
+    },
+    'vdml:CompensateEventDefinition': function(p, event, isThrowing) {
+      var pathData = pathMap.getScaledPath('EVENT_COMPENSATION', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: event.width,
+        containerHeight: event.height,
+        position: {
+          mx: 0.22,
+          my: 0.5
+        }
+      });
+
+      var fill = isThrowing ? 'black' : 'none';
+
+      return drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: fill
+      });
+    },
+    'vdml:SignalEventDefinition': function(p, event, isThrowing) {
+      var pathData = pathMap.getScaledPath('EVENT_SIGNAL', {
+        xScaleFactor: 0.9,
+        yScaleFactor: 0.9,
+        containerWidth: event.width,
+        containerHeight: event.height,
+        position: {
+          mx: 0.5,
+          my: 0.2
+        }
+      });
+
+      var fill = isThrowing ? 'black' : 'none';
+
+      return drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: fill
+      });
+    },
+    'vdml:MultipleEventDefinition': function(p, event, isThrowing) {
+      var pathData = pathMap.getScaledPath('EVENT_MULTIPLE', {
+        xScaleFactor: 1.1,
+        yScaleFactor: 1.1,
+        containerWidth: event.width,
+        containerHeight: event.height,
+        position: {
+          mx: 0.222,
+          my: 0.36
+        }
+      });
+
+      var fill = isThrowing ? 'black' : 'none';
+
+      return drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: fill
+      });
+    },
+    'vdml:ParallelMultipleEventDefinition': function(p, event) {
+      var pathData = pathMap.getScaledPath('EVENT_PARALLEL_MULTIPLE', {
+        xScaleFactor: 1.2,
+        yScaleFactor: 1.2,
+        containerWidth: event.width,
+        containerHeight: event.height,
+        position: {
+          mx: 0.458,
+          my: 0.194
+        }
+      });
+
+      return drawPath(p, pathData, {
+        strokeWidth: 1
+      });
+    },
+    'vdml:EndEvent': function(p, element) {
+      var circle = renderer('vdml:Event')(p, element, {
+        strokeWidth: 4
+      });
+
+      renderEventContent(element, p, true);
+
+      return circle;
+    },
+    'vdml:TerminateEventDefinition': function(p, element) {
+      var circle = drawCircle(p, element.width, element.height, 8, {
+        strokeWidth: 4,
+        fill: 'black'
+      });
+
+      return circle;
+    },
+    'vdml:IntermediateEvent': function(p, element) {
+      var outer = renderer('vdml:Event')(p, element, { strokeWidth: 1 });
+      /* inner */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, { strokeWidth: 1, fill: 'none' });
+
+      renderEventContent(element, p);
+
+      return outer;
+    },
+    'vdml:IntermediateCatchEvent': as('vdml:IntermediateEvent'),
+    'vdml:IntermediateThrowEvent': as('vdml:IntermediateEvent'),
+
+    'vdml:Activity': function(p, element, attrs) {
+      return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, attrs);
+    },
+
+    'vdml:Task': function(p, element, attrs) {
+      var rect = renderer('vdml:Activity')(p, element, attrs);
+      renderEmbeddedLabel(p, element, 'center-middle');
+      attachTaskMarkers(p, element);
+      return rect;
+    },
+    'vdml:ServiceTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
+
+      var pathDataBG = pathMap.getScaledPath('TASK_TYPE_SERVICE', {
+        abspos: {
+          x: 12,
+          y: 18
+        }
+      });
+
+      /* service bg */ drawPath(p, pathDataBG, {
+        strokeWidth: 1,
+        fill: 'none'
+      });
+
+      var fillPathData = pathMap.getScaledPath('TASK_TYPE_SERVICE_FILL', {
+        abspos: {
+          x: 17.2,
+          y: 18
+        }
+      });
+
+      /* service fill */ drawPath(p, fillPathData, {
+        strokeWidth: 0,
+        stroke: 'none',
+        fill: 'white'
+      });
+
+      var pathData = pathMap.getScaledPath('TASK_TYPE_SERVICE', {
+        abspos: {
+          x: 17,
+          y: 22
+        }
+      });
+
+      /* service */ drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: 'white'
+      });
+
+      return task;
+    },
+    'vdml:UserTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
+
+      var x = 15;
+      var y = 12;
+
+      var pathData = pathMap.getScaledPath('TASK_TYPE_USER_1', {
+        abspos: {
+          x: x,
+          y: y
+        }
+      });
+
+      /* user path */ drawPath(p, pathData, {
+        strokeWidth: 0.5,
+        fill: 'none'
+      });
+
+      var pathData2 = pathMap.getScaledPath('TASK_TYPE_USER_2', {
+        abspos: {
+          x: x,
+          y: y
+        }
+      });
+
+      /* user2 path */ drawPath(p, pathData2, {
+        strokeWidth: 0.5,
+        fill: 'none'
+      });
+
+      var pathData3 = pathMap.getScaledPath('TASK_TYPE_USER_3', {
+        abspos: {
+          x: x,
+          y: y
+        }
+      });
+
+      /* user3 path */ drawPath(p, pathData3, {
+        strokeWidth: 0.5,
+        fill: 'black'
+      });
+
+      return task;
+    },
+    'vdml:ManualTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
+
+      var pathData = pathMap.getScaledPath('TASK_TYPE_MANUAL', {
+        abspos: {
+          x: 17,
+          y: 15
+        }
+      });
+
+      /* manual path */ drawPath(p, pathData, {
+        strokeWidth: 0.25,
+        fill: 'white',
+        stroke: 'black'
+      });
+
+      return task;
+    },
+    'vdml:SendTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
+
+      var pathData = pathMap.getScaledPath('TASK_TYPE_SEND', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: 21,
+        containerHeight: 14,
+        position: {
+          mx: 0.285,
+          my: 0.357
+        }
+      });
+
+      /* send path */ drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: 'black',
+        stroke: 'white'
+      });
+
+      return task;
+    },
+    'vdml:ReceiveTask' : function(p, element) {
+      var semantic = getSemantic(element);
+
+      var task = renderer('vdml:Task')(p, element);
+      var pathData;
+
+      if (semantic.instantiate) {
+        drawCircle(p, 28, 28, 20 * 0.22, { strokeWidth: 1 });
+
+        pathData = pathMap.getScaledPath('TASK_TYPE_INSTANTIATING_SEND', {
+          abspos: {
+            x: 7.77,
+            y: 9.52
+          }
+        });
+      } else {
+
+        pathData = pathMap.getScaledPath('TASK_TYPE_SEND', {
+          xScaleFactor: 0.9,
+          yScaleFactor: 0.9,
+          containerWidth: 21,
+          containerHeight: 14,
+          position: {
+            mx: 0.3,
+            my: 0.4
+          }
+        });
+      }
+
+      /* receive path */ drawPath(p, pathData, {
+        strokeWidth: 1
+      });
+
+      return task;
+    },
+    'vdml:ScriptTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
+
+      var pathData = pathMap.getScaledPath('TASK_TYPE_SCRIPT', {
+        abspos: {
+          x: 15,
+          y: 20
+        }
+      });
+
+      /* script path */ drawPath(p, pathData, {
+        strokeWidth: 1
+      });
+
+      return task;
+    },
+    'vdml:BusinessRuleTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
+
+      var headerPathData = pathMap.getScaledPath('TASK_TYPE_BUSINESS_RULE_HEADER', {
+        abspos: {
+          x: 8,
+          y: 8
+        }
+      });
+
+      var businessHeaderPath = drawPath(p, headerPathData);
+      businessHeaderPath.attr({
+        strokeWidth: 1,
+        fill: 'AAA'
+      });
+
+      var headerData = pathMap.getScaledPath('TASK_TYPE_BUSINESS_RULE_MAIN', {
+        abspos: {
+          x: 8,
+          y: 8
+        }
+      });
+
+      var businessPath = drawPath(p, headerData);
+      businessPath.attr({
+        strokeWidth: 1
+      });
+
+      return task;
+    },
+    'vdml:SubProcess': function(p, element, attrs) {
+
+      attrs = assign({ fillOpacity: 0.95 }, attrs);
+
+      var rect = renderer('vdml:Activity')(p, element, attrs);
+
+      var expanded = DiUtil.isExpanded(element);
+
+      var isEventSubProcess = DiUtil.isEventSubProcess(element);
+
+      if (isEventSubProcess) {
+        rect.attr({
+          strokeDasharray: '1,2'
+        });
+      }
+
+      renderEmbeddedLabel(p, element, expanded ? 'center-top' : 'center-middle');
+
+      if (expanded) {
+        attachTaskMarkers(p, element);
+      } else {
+        attachTaskMarkers(p, element, ['SubProcessMarker']);
+      }
+
+      return rect;
+    },
+    'vdml:AdHocSubProcess': function(p, element) {
+      return renderer('vdml:SubProcess')(p, element);
+    },
+    'vdml:Transaction': function(p, element) {
+      var outer = renderer('vdml:SubProcess')(p, element);
+
+      var innerAttrs = styles.style([ 'no-fill', 'no-events' ]);
+
+      /* inner path */ drawRect(p, element.width, element.height, TASK_BORDER_RADIUS - 2, INNER_OUTER_DIST, innerAttrs);
+
+      return outer;
+    },
+    'vdml:CallActivity': function(p, element) {
+      return renderer('vdml:SubProcess')(p, element, {
+        strokeWidth: 5
+      });
+    },
+    'vdml:Participant': function(p, element) {
+
+      var lane = renderer('vdml:Lane')(p, element, {
+        fillOpacity: 0.95,
+        fill: 'White'
+      });
+
+      var expandedPool = DiUtil.isExpanded(element);
+
+      if (expandedPool) {
+        drawLine(p, [
+          { x: 30, y: 0 },
+          { x: 30, y: element.height }
+        ]);
+        var text = getSemantic(element).name;
+        renderLaneLabel(p, text, element);
+      } else {
+        // Collapsed pool draw text inline
+        var text2 = getSemantic(element).name;
+        renderLabel(p, text2, { box: element, align: 'center-middle' });
+      }
+
+      var participantMultiplicity = !!(getSemantic(element).participantMultiplicity);
+
+      if (participantMultiplicity) {
+        renderer('ParticipantMultiplicityMarker')(p, element);
+      }
+
+      return lane;
+    },
+    'vdml:Lane': function(p, element, attrs) {
+      var rect = drawRect(p, element.width, element.height, 0, attrs || {
+        fill: 'none'
+      });
+
+      var semantic = getSemantic(element);
+
+      if (semantic.$type === 'vdml:Lane') {
+        var text = semantic.name;
+        renderLaneLabel(p, text, element);
+      }
+
+      return rect;
+    },
+    'vdml:InclusiveGateway': function(p, element) {
+      var diamond = drawDiamond(p, element.width, element.height);
+
+      /* circle path */
+      drawCircle(p, element.width, element.height, element.height * 0.24, {
+        strokeWidth: 2.5,
+        fill: 'none'
+      });
+
+      return diamond;
+    },
+    'vdml:ExclusiveGateway': function(p, element) {
+      var diamond = drawDiamond(p, element.width, element.height);
+
+      var pathData = pathMap.getScaledPath('GATEWAY_EXCLUSIVE', {
+        xScaleFactor: 0.4,
+        yScaleFactor: 0.4,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: 0.32,
+          my: 0.3
+        }
+      });
+
+      if ((getDi(element).isMarkerVisible)) {
+        drawPath(p, pathData, {
+          strokeWidth: 1,
+          fill: 'black'
+        });
+      }
+
+      return diamond;
+    },
+    'vdml:ComplexGateway': function(p, element) {
+      var diamond = drawDiamond(p, element.width, element.height);
+
+      var pathData = pathMap.getScaledPath('GATEWAY_COMPLEX', {
+        xScaleFactor: 0.5,
+        yScaleFactor:0.5,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: 0.46,
+          my: 0.26
+        }
+      });
+
+      /* complex path */ drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: 'black'
+      });
+
+      return diamond;
+    },
+    'vdml:ParallelGateway': function(p, element) {
+      var diamond = drawDiamond(p, element.width, element.height);
+
+      var pathData = pathMap.getScaledPath('GATEWAY_PARALLEL', {
+        xScaleFactor: 0.6,
+        yScaleFactor:0.6,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: 0.46,
+          my: 0.2
+        }
+      });
+
+      /* parallel path */ drawPath(p, pathData, {
+        strokeWidth: 1,
+        fill: 'black'
+      });
+
+      return diamond;
+    },
+    'vdml:EventBasedGateway': function(p, element) {
+
+      var semantic = getSemantic(element);
+
+      var diamond = drawDiamond(p, element.width, element.height);
+
+      /* outer circle path */ drawCircle(p, element.width, element.height, element.height * 0.20, {
+        strokeWidth: 1,
+        fill: 'none'
+      });
+
+      var type = semantic.eventGatewayType;
+      var instantiate = !!semantic.instantiate;
+
+      function drawEvent() {
+
+        var pathData = pathMap.getScaledPath('GATEWAY_EVENT_BASED', {
+          xScaleFactor: 0.18,
+          yScaleFactor: 0.18,
+          containerWidth: element.width,
+          containerHeight: element.height,
+          position: {
+            mx: 0.36,
+            my: 0.44
+          }
+        });
+
+        /* event path */ drawPath(p, pathData, {
+          strokeWidth: 2,
+          fill: 'none'
+        });
+      }
+
+      if (type === 'Parallel') {
+
+        var pathData = pathMap.getScaledPath('GATEWAY_PARALLEL', {
+          xScaleFactor: 0.4,
+          yScaleFactor:0.4,
+          containerWidth: element.width,
+          containerHeight: element.height,
+          position: {
+            mx: 0.474,
+            my: 0.296
+          }
+        });
+
+        var parallelPath = drawPath(p, pathData);
+        parallelPath.attr({
+          strokeWidth: 1,
+          fill: 'none'
+        });
+      } else if (type === 'Exclusive') {
+
+        if (!instantiate) {
+          var innerCircle = drawCircle(p, element.width, element.height, element.height * 0.26);
+          innerCircle.attr({
+            strokeWidth: 1,
+            fill: 'none'
+          });
+        }
+
+        drawEvent();
+      }
+
+
+      return diamond;
+    },
+    'vdml:Gateway': function(p, element) {
+      return drawDiamond(p, element.width, element.height);
+    },
+    'vdml:SequenceFlow': function(p, element) {
+      var pathData = createPathFromConnection(element);
+      var path = drawPath(p, pathData, {
+        strokeLinejoin: 'round',
+        markerEnd: marker('sequenceflow-end')
+      });
+
+      var sequenceFlow = getSemantic(element);
+      var source = element.source.businessObject;
+
+      // conditional flow marker
+      if (sequenceFlow.conditionExpression && source.$instanceOf('vdml:Activity')) {
+        path.attr({
+          markerStart: marker('conditional-flow-marker')
+        });
+      }
+
+      // default marker
+      if (source.default && (source.$instanceOf('vdml:Gateway') || source.$instanceOf('vdml:Activity')) &&
+          source.default === sequenceFlow) {
+        path.attr({
+          markerStart: marker('conditional-default-flow-marker')
+        });
+      }
+
+      return path;
+    },
+    'vdml:Association': function(p, element, attrs) {
+
+      var semantic = getSemantic(element);
+
+      attrs = assign({
+        strokeDasharray: '0.5, 5',
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round'
+      }, attrs || {});
+
+      if (semantic.associationDirection === 'One' ||
+          semantic.associationDirection === 'Both') {
+        attrs.markerEnd = marker('association-end');
+      }
+
+      if (semantic.associationDirection === 'Both') {
+        attrs.markerStart = marker('association-start');
+      }
+
+      return drawLine(p, element.waypoints, attrs);
+    },
+    'vdml:DataInputAssociation': function(p, element) {
+      return renderer('vdml:Association')(p, element, {
+        markerEnd: marker('association-end')
+      });
+    },
+    'vdml:DataOutputAssociation': function(p, element) {
+      return renderer('vdml:Association')(p, element, {
+        markerEnd: marker('association-end')
+      });
+    },
+    'vdml:MessageFlow': function(p, element) {
+
+      var semantic = getSemantic(element),
+          di = getDi(element);
+
+      var pathData = createPathFromConnection(element);
+      var path = drawPath(p, pathData, {
+        markerEnd: marker('messageflow-end'),
+        markerStart: marker('messageflow-start'),
+        strokeDasharray: '10, 12',
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round',
+        strokeWidth: '1.5px'
+      });
+
+      if (semantic.messageRef) {
+        var midPoint = path.getPointAtLength(path.getTotalLength() / 2);
+
+        var markerPathData = pathMap.getScaledPath('MESSAGE_FLOW_MARKER', {
+          abspos: {
+            x: midPoint.x,
+            y: midPoint.y
+          }
+        });
+
+        var messageAttrs = { strokeWidth: 1 };
+
+        if (di.messageVisibleKind === 'initiating') {
+          messageAttrs.fill = 'white';
+          messageAttrs.stroke = 'black';
+        } else {
+          messageAttrs.fill = '#888';
+          messageAttrs.stroke = 'white';
+        }
+
+        drawPath(p, markerPathData, messageAttrs);
+      }
+
+      return path;
+    },
+    'vdml:DataObject': function(p, element) {
+      var pathData = pathMap.getScaledPath('DATA_OBJECT_PATH', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: 0.474,
+          my: 0.296
+        }
+      });
+
+      var elementObject = drawPath(p, pathData, { fill: 'white' });
+
+      var semantic = getSemantic(element);
+
+      if (isCollection(semantic)) {
+        renderDataItemCollection(p, element);
+      }
+
+      return elementObject;
+    },
+    'vdml:DataObjectReference': as('vdml:DataObject'),
+    'vdml:DataInput': function(p, element) {
+
+      var arrowPathData = pathMap.getRawPath('DATA_ARROW');
+
+      // page
+      var elementObject = renderer('vdml:DataObject')(p, element);
+
+      /* input arrow path */ drawPath(p, arrowPathData, { strokeWidth: 1 });
+
+      return elementObject;
+    },
+    'vdml:DataOutput': function(p, element) {
+      var arrowPathData = pathMap.getRawPath('DATA_ARROW');
+
+      // page
+      var elementObject = renderer('vdml:DataObject')(p, element);
+
+      /* output arrow path */ drawPath(p, arrowPathData, {
+        strokeWidth: 1,
+        fill: 'black'
+      });
+
+      return elementObject;
+    },
+    'vdml:DataStoreReference': function(p, element) {
+      var DATA_STORE_PATH = pathMap.getScaledPath('DATA_STORE', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: 0,
+          my: 0.133
+        }
+      });
+
+      var elementStore = drawPath(p, DATA_STORE_PATH, {
+        strokeWidth: 2,
+        fill: 'white'
+      });
+
+      return elementStore;
+    },
+    'vdml:BoundaryEvent': function(p, element) {
+
+      var semantic = getSemantic(element),
+          cancel = semantic.cancelActivity;
+
+      var attrs = {
+        strokeWidth: 1
+      };
+
+      if (!cancel) {
+        attrs.strokeDasharray = '6';
+        attrs.strokeLinecap = 'round';
+      }
+
+      var outer = renderer('vdml:Event')(p, element, attrs);
+      /* inner path */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, assign(attrs, { fill: 'none' }));
+
+      renderEventContent(element, p);
+
+      return outer;
+    },
+    'vdml:Group': function(p, element) {
+      return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, {
+        strokeWidth: 1,
+        strokeDasharray: '8,3,1,3',
+        fill: 'none',
+        pointerEvents: 'none'
+      });
+    },
+    'label': function(p, element) {
+      // Update external label size and bounds during rendering when
+      // we have the actual rendered bounds anyway.
+
+      var textElement = renderExternalLabel(p, element);
+
+      var textBBox = textElement.getBBox();
+
+      // update element.x so that the layouted text is still
+      // center alligned (newX = oldMidX - newWidth / 2)
+      element.x = Math.ceil(element.x + element.width / 2) - Math.ceil((textBBox.width / 2));
+
+      // take element width, height from actual bounds
+      element.width = Math.ceil(textBBox.width);
+      element.height = Math.ceil(textBBox.height);
+
+      // compensate bounding box x
+      textElement.attr({
+        transform: 'translate(' + (-1 * textBBox.x) + ',0)'
+      });
+
+      return textElement;
+    },
+    'vdml:TextAnnotation': function(p, element) {
+      var style = {
+        'fill': 'none',
+        'stroke': 'none'
+      };
+      var textElement = drawRect(p, element.width, element.height, 0, 0, style);
+      var textPathData = pathMap.getScaledPath('TEXT_ANNOTATION', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: 0.0,
+          my: 0.0
+        }
+      });
+      drawPath(p, textPathData);
+
+      var text = getSemantic(element).text || '';
+      renderLabel(p, text, { box: element, align: 'left-middle', padding: 5 });
+
+      return textElement;
+    },
+    'ParticipantMultiplicityMarker': function(p, element) {
+      var markerPath = pathMap.getScaledPath('MARKER_PARALLEL', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: ((element.width / 2) / element.width),
+          my: (element.height - 15) / element.height
+        }
+      });
+
+      drawMarker('participant-multiplicity', p, markerPath);
+    },
+    'SubProcessMarker': function(p, element) {
+      var markerRect = drawRect(p, 14, 14, 0, {
+        strokeWidth: 1
+      });
+
+      // Process marker is placed in the middle of the box
+      // therefore fixed values can be used here
+      markerRect.transform('translate(' + (element.width / 2 - 7.5) + ',' + (element.height - 20) + ')');
+
+      var markerPath = pathMap.getScaledPath('MARKER_SUB_PROCESS', {
+        xScaleFactor: 1.5,
+        yScaleFactor: 1.5,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: (element.width / 2 - 7.5) / element.width,
+          my: (element.height - 20) / element.height
+        }
+      });
+
+      drawMarker('sub-process', p, markerPath);
+    },
+    'ParallelMarker': function(p, element, position) {
+      var markerPath = pathMap.getScaledPath('MARKER_PARALLEL', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: ((element.width / 2 + position.parallel) / element.width),
+          my: (element.height - 20) / element.height
+        }
+      });
+
+      drawMarker('parallel', p, markerPath);
+    },
+    'SequentialMarker': function(p, element, position) {
+      var markerPath = pathMap.getScaledPath('MARKER_SEQUENTIAL', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: ((element.width / 2 + position.seq) / element.width),
+          my: (element.height - 19) / element.height
+        }
+      });
+
+      drawMarker('sequential', p, markerPath);
+    },
+    'CompensationMarker': function(p, element, position) {
+      var markerMath = pathMap.getScaledPath('MARKER_COMPENSATION', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: ((element.width / 2 + position.compensation) / element.width),
+          my: (element.height - 13) / element.height
+        }
+      });
+
+      drawMarker('compensation', p, markerMath, { strokeWidth: 1 });
+    },
+    'LoopMarker': function(p, element, position) {
+      var markerPath = pathMap.getScaledPath('MARKER_LOOP', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: ((element.width / 2 + position.loop) / element.width),
+          my: (element.height - 7) / element.height
+        }
+      });
+
+      drawMarker('loop', p, markerPath, {
+        strokeWidth: 1,
+        fill: 'none',
+        strokeLinecap: 'round',
+        strokeMiterlimit: 0.5
+      });
+    },
+    'AdhocMarker': function(p, element, position) {
+      var markerPath = pathMap.getScaledPath('MARKER_ADHOC', {
+        xScaleFactor: 1,
+        yScaleFactor: 1,
+        containerWidth: element.width,
+        containerHeight: element.height,
+        position: {
+          mx: ((element.width / 2 + position.adhoc) / element.width),
+          my: (element.height - 15) / element.height
+        }
+      });
+
+      drawMarker('adhoc', p, markerPath, {
+        strokeWidth: 1,
+        fill: 'black'
+      });
+    }
+  };
+
+  function attachTaskMarkers(p, element, taskMarkers) {
+    var obj = getSemantic(element);
+
+    var subprocess = includes(taskMarkers, 'SubProcessMarker');
+    var position;
+
+    if (subprocess) {
+      position = {
+        seq: -21,
+        parallel: -22,
+        compensation: -42,
+        loop: -18,
+        adhoc: 10
+      };
+    } else {
+      position = {
+        seq: -3,
+        parallel: -6,
+        compensation: -27,
+        loop: 0,
+        adhoc: 10
+      };
+    }
+
+    forEach(taskMarkers, function(marker) {
+      renderer(marker)(p, element, position);
+    });
+
+    if (obj.isForCompensation) {
+      renderer('CompensationMarker')(p, element, position);
+    }
+
+    if (obj.$type === 'vdml:AdHocSubProcess') {
+      renderer('AdhocMarker')(p, element, position);
+    }
+
+    var loopCharacteristics = obj.loopCharacteristics,
+        isSequential = loopCharacteristics && loopCharacteristics.isSequential;
+
+    if (loopCharacteristics) {
+
+      if (isSequential === undefined) {
+        renderer('LoopMarker')(p, element, position);
+      }
+
+      if (isSequential === false) {
+        renderer('ParallelMarker')(p, element, position);
+      }
+
+      if (isSequential === true) {
+        renderer('SequentialMarker')(p, element, position);
+      }
+    }
+  }
+
+  function renderDataItemCollection(p, element) {
+
+    var yPosition = (element.height - 16) / element.height;
+
+    var pathData = pathMap.getScaledPath('DATA_OBJECT_COLLECTION_PATH', {
+      xScaleFactor: 1,
+      yScaleFactor: 1,
+      containerWidth: element.width,
+      containerHeight: element.height,
+      position: {
+        mx: 0.451,
+        my: yPosition
+      }
+    });
+
+    /* collection path */ drawPath(p, pathData, {
+      strokeWidth: 2
+    });
+  }
+
+  // hook onto canvas init event to initialize
+  // connection start/end markers on svg
+  eventBus.on('canvas.init', function(event) {
+    initMarkers(event.svg);
+  });
+}
+
+
+inherits(VdmlRenderer, BaseRenderer);
+
+VdmlRenderer.$inject = [ 'eventBus', 'styles', 'pathMap' ];
+
+module.exports = VdmlRenderer;
+
+
+VdmlRenderer.prototype.canRender = function(element) {
+  return is(element, 'vdml:BaseElement');
+};
+
+VdmlRenderer.prototype.drawShape = function(visuals, element) {
+  var type = element.type;
+  var h = this.handlers[type];
+
+  /* jshint -W040 */
+  return h(visuals, element);
+};
+
+VdmlRenderer.prototype.drawConnection = function(visuals, element) {
+  var type = element.type;
+  var h = this.handlers[type];
+
+  /* jshint -W040 */
+  return h(visuals, element);
+};
+
+VdmlRenderer.prototype.getShapePath = function(element) {
+
+  if (is(element, 'vdml:Event')) {
+    return getCirclePath(element);
+  }
+
+  if (is(element, 'vdml:Activity')) {
+    return getRoundRectPath(element, TASK_BORDER_RADIUS);
+  }
+
+  if (is(element, 'vdml:Gateway')) {
+    return getDiamondPath(element);
+  }
+
+  return getRectPath(element);
+};
+
+
+///////// helper functions /////////////////////////////
+
+/**
+ * Checks if eventDefinition of the given element matches with semantic type.
+ *
+ * @return {boolean} true if element is of the given semantic type
+ */
+function isTypedEvent(event, eventDefinitionType, filter) {
+
+  function matches(definition, filter) {
+    return every(filter, function(val, key) {
+
+      // we want a == conversion here, to be able to catch
+      // undefined == false and friends
+      /* jshint -W116 */
+      return definition[key] == val;
+    });
+  }
+
+  return some(event.eventDefinitions, function(definition) {
+    return definition.$type === eventDefinitionType && matches(event, filter);
+  });
+}
+
+function isThrowEvent(event) {
+  return (event.$type === 'vdml:IntermediateThrowEvent') || (event.$type === 'vdml:EndEvent');
+}
+
+function isCollection(element) {
+  return element.isCollection ||
+        (element.elementObjectRef && element.elementObjectRef.isCollection);
+}
+
+function getDi(element) {
+  return element.businessObject.di;
+}
+
+function getSemantic(element) {
+  return element.businessObject;
+}
+
+
+
+/////// cropping path customizations /////////////////////////
+
+function getCirclePath(shape) {
+
+  var cx = shape.x + shape.width / 2,
+      cy = shape.y + shape.height / 2,
+      radius = shape.width / 2;
+
+  var circlePath = [
+    ['M', cx, cy],
+    ['m', 0, -radius],
+    ['a', radius, radius, 0, 1, 1, 0, 2 * radius],
+    ['a', radius, radius, 0, 1, 1, 0, -2 * radius],
+    ['z']
+  ];
+
+  return componentsToPath(circlePath);
+}
+
+function getRoundRectPath(shape, borderRadius) {
+
+  var x = shape.x,
+      y = shape.y,
+      width = shape.width,
+      height = shape.height;
+
+  var roundRectPath = [
+    ['M', x + borderRadius, y],
+    ['l', width - borderRadius * 2, 0],
+    ['a', borderRadius, borderRadius, 0, 0, 1, borderRadius, borderRadius],
+    ['l', 0, height - borderRadius * 2],
+    ['a', borderRadius, borderRadius, 0, 0, 1, -borderRadius, borderRadius],
+    ['l', borderRadius * 2 - width, 0],
+    ['a', borderRadius, borderRadius, 0, 0, 1, -borderRadius, -borderRadius],
+    ['l', 0, borderRadius * 2 - height],
+    ['a', borderRadius, borderRadius, 0, 0, 1, borderRadius, -borderRadius],
+    ['z']
+  ];
+
+  return componentsToPath(roundRectPath);
+}
+
+function getDiamondPath(shape) {
+
+  var width = shape.width,
+      height = shape.height,
+      x = shape.x,
+      y = shape.y,
+      halfWidth = width / 2,
+      halfHeight = height / 2;
+
+  var diamondPath = [
+    ['M', x + halfWidth, y],
+    ['l', halfWidth, halfHeight],
+    ['l', -halfWidth, halfHeight],
+    ['l', -halfWidth, -halfHeight],
+    ['z']
+  ];
+
+  return componentsToPath(diamondPath);
+}
+
+function getRectPath(shape) {
+  var x = shape.x,
+      y = shape.y,
+      width = shape.width,
+      height = shape.height;
+
+  var rectPath = [
+    ['M', x, y],
+    ['l', width, 0],
+    ['l', 0, height],
+    ['l', -width, 0],
+    ['z']
+  ];
+
+  return componentsToPath(rectPath);
+}
+
+},{"109":109,"258":258,"259":259,"270":270,"280":280,"283":283,"285":285,"290":290,"405":405,"410":410,"91":91,"93":93}],7:[function(_dereq_,module,exports){
 module.exports = {
-  __init__: [ 'bpmnRenderer' ],
-  bpmnRenderer: [ 'type', _dereq_(5) ],
-  pathMap: [ 'type', _dereq_(6) ]
+  __init__: [ 'vdmlRenderer' ],
+  vdmlRenderer: [ 'type', _dereq_(6) ],
+  pathMap: [ 'type', _dereq_(5) ]
 };
 
 },{"5":5,"6":6}],8:[function(_dereq_,module,exports){
-var AutoResize = _dereq_(138);
+var AutoResize = _dereq_(117);
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
 var is = _dereq_(93).is;
 
@@ -2911,16 +2911,16 @@ BpmnAutoResize.prototype.resize = function(target, newBounds) {
     this._modeling.resizeShape(target, newBounds);
   }
 };
-},{"138":138,"291":291,"93":93}],9:[function(_dereq_,module,exports){
+},{"117":117,"270":270,"93":93}],9:[function(_dereq_,module,exports){
 'use strict';
 
 var is = _dereq_(93).is;
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
-var AutoResizeProvider = _dereq_(139);
+var AutoResizeProvider = _dereq_(118);
 
 /**
  * This module is a provider for automatically resizing parent BPMN elements
@@ -2964,7 +2964,7 @@ BpmnAutoResizeProvider.prototype.canResize = function(elements, target) {
   return canResize;
 };
 
-},{"139":139,"291":291,"304":304,"93":93}],10:[function(_dereq_,module,exports){
+},{"118":118,"270":270,"283":283,"93":93}],10:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'bpmnAutoResize', 'bpmnAutoResizeProvider' ],
   bpmnAutoResize: [ 'type', _dereq_(8) ],
@@ -2975,15 +2975,15 @@ module.exports = {
 'use strict';
 
 
-var assign = _dereq_(433),
-    forEach = _dereq_(304),
-    isArray = _dereq_(424),
+var assign = _dereq_(410),
+    forEach = _dereq_(283),
+    isArray = _dereq_(401),
     is = _dereq_(93).is,
     isExpanded = _dereq_(91).isExpanded,
     isAny = _dereq_(66).isAny,
     getChildLanes = _dereq_(65).getChildLanes,
     isEventSubProcess = _dereq_(91).isEventSubProcess,
-    hasPrimaryModifier = _dereq_(275).hasPrimaryModifier;
+    hasPrimaryModifier = _dereq_(254).hasPrimaryModifier;
 
 /**
  * A provider for BPMN 2.0 elements context pad
@@ -3347,28 +3347,28 @@ function isEventType(eventBo, type, definition) {
   return isType && isDefinition;
 }
 
-},{"275":275,"304":304,"424":424,"433":433,"65":65,"66":66,"91":91,"93":93}],12:[function(_dereq_,module,exports){
+},{"254":254,"283":283,"401":401,"410":410,"65":65,"66":66,"91":91,"93":93}],12:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(116),
-    _dereq_(155),
-    _dereq_(235),
-    _dereq_(153),
-    _dereq_(159),
+    _dereq_(95),
+    _dereq_(134),
+    _dereq_(214),
+    _dereq_(132),
+    _dereq_(138),
     _dereq_(72)
   ],
   __init__: [ 'contextPadProvider' ],
   contextPadProvider: [ 'type', _dereq_(11) ]
 };
-},{"11":11,"116":116,"153":153,"155":155,"159":159,"235":235,"72":72}],13:[function(_dereq_,module,exports){
+},{"11":11,"132":132,"134":134,"138":138,"214":214,"72":72,"95":95}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var ModelUtil = _dereq_(93),
     getBusinessObject = ModelUtil.getBusinessObject,
     is = ModelUtil.is;
 
-var map = _dereq_(307),
-    forEach = _dereq_(304);
+var map = _dereq_(286),
+    forEach = _dereq_(283);
 
 
 function setProperties(descriptor, data, properties) {
@@ -3566,19 +3566,19 @@ BpmnCopyPaste.$inject = [
 
 module.exports = BpmnCopyPaste;
 
-},{"304":304,"307":307,"93":93}],14:[function(_dereq_,module,exports){
+},{"283":283,"286":286,"93":93}],14:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(157)
+    _dereq_(136)
   ],
   __init__: [ 'bpmnCopyPaste' ],
   bpmnCopyPaste: [ 'type', _dereq_(13) ]
 };
 
-},{"13":13,"157":157}],15:[function(_dereq_,module,exports){
+},{"13":13,"136":136}],15:[function(_dereq_,module,exports){
 'use strict';
 
-var filter = _dereq_(302);
+var filter = _dereq_(281);
 
 var isAny = _dereq_(66).isAny;
 
@@ -3611,27 +3611,27 @@ BpmnDistributeElements.$inject = [ 'distributeElements' ];
 
 module.exports = BpmnDistributeElements;
 
-},{"302":302,"66":66}],16:[function(_dereq_,module,exports){
+},{"281":281,"66":66}],16:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(161)
+    _dereq_(140)
   ],
   __init__: [ 'bpmnDistributeElements' ],
   bpmnDistributeElements: [ 'type', _dereq_(15) ]
 };
 
-},{"15":15,"161":161}],17:[function(_dereq_,module,exports){
+},{"140":140,"15":15}],17:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var EditorActions = _dereq_(165);
+var EditorActions = _dereq_(144);
 
-var filter = _dereq_(302);
+var filter = _dereq_(281);
 
 var is = _dereq_(93).is;
 
-var getBBox = _dereq_(268).getBBox;
+var getBBox = _dereq_(247).getBBox;
 
 function BpmnEditorActions(
     injector,
@@ -3745,14 +3745,14 @@ BpmnEditorActions.$inject = [
 
 module.exports = BpmnEditorActions;
 
-},{"165":165,"268":268,"291":291,"302":302,"93":93}],18:[function(_dereq_,module,exports){
+},{"144":144,"247":247,"270":270,"281":281,"93":93}],18:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(135),
-    _dereq_(166),
-    _dereq_(170),
-    _dereq_(178),
-    _dereq_(242),
+    _dereq_(114),
+    _dereq_(145),
+    _dereq_(149),
+    _dereq_(157),
+    _dereq_(221),
     _dereq_(20),
     _dereq_(14),
     _dereq_(16),
@@ -3763,7 +3763,7 @@ module.exports = {
   editorActions: [ 'type', _dereq_(17) ]
 };
 
-},{"135":135,"14":14,"16":16,"166":166,"17":17,"170":170,"178":178,"20":20,"242":242,"64":64,"82":82}],19:[function(_dereq_,module,exports){
+},{"114":114,"14":14,"145":145,"149":149,"157":157,"16":16,"17":17,"20":20,"221":221,"64":64,"82":82}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var isAny = _dereq_(66).isAny;
@@ -3817,13 +3817,13 @@ function isLabel(element) {
 },{"66":66}],20:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(168)
+    _dereq_(147)
   ],
   __init__: [ 'bpmnGlobalConnect' ],
   bpmnGlobalConnect: [ 'type', _dereq_(19) ]
 };
 
-},{"168":168,"19":19}],21:[function(_dereq_,module,exports){
+},{"147":147,"19":19}],21:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -3900,13 +3900,13 @@ module.exports = BpmnKeyBindings;
 },{}],22:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(174)
+    _dereq_(153)
   ],
   __init__: [ 'bpmnKeyBindings' ],
   bpmnKeyBindings: [ 'type', _dereq_(21) ]
 };
 
-},{"174":174,"21":21}],23:[function(_dereq_,module,exports){
+},{"153":153,"21":21}],23:[function(_dereq_,module,exports){
 'use strict';
 
 var UpdateLabelHandler = _dereq_(25);
@@ -4196,19 +4196,19 @@ module.exports = UpdateLabelHandler;
 },{"24":24}],26:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(123),
-    _dereq_(149),
-    _dereq_(116)
+    _dereq_(102),
+    _dereq_(128),
+    _dereq_(95)
   ],
   __init__: [ 'labelEditingProvider' ],
   labelEditingProvider: [ 'type', _dereq_(23) ]
 };
-},{"116":116,"123":123,"149":149,"23":23}],27:[function(_dereq_,module,exports){
+},{"102":102,"128":128,"23":23,"95":95}],27:[function(_dereq_,module,exports){
 'use strict';
 
-var map = _dereq_(307),
-    assign = _dereq_(433),
-    pick = _dereq_(440);
+var map = _dereq_(286),
+    assign = _dereq_(410),
+    pick = _dereq_(417);
 
 
 function BpmnFactory(moddle) {
@@ -4302,17 +4302,17 @@ BpmnFactory.prototype.createDiPlane = function(semantic) {
 
 module.exports = BpmnFactory;
 
-},{"307":307,"433":433,"440":440}],28:[function(_dereq_,module,exports){
+},{"286":286,"410":410,"417":417}],28:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var assign = _dereq_(433);
+var assign = _dereq_(410);
 
-var BaseLayouter = _dereq_(252),
-    ManhattanLayout = _dereq_(255);
+var BaseLayouter = _dereq_(231),
+    ManhattanLayout = _dereq_(234);
 
-var LayoutUtil = _dereq_(254);
+var LayoutUtil = _dereq_(233);
 
 var isExpanded = _dereq_(91).isExpanded;
 
@@ -4495,20 +4495,20 @@ function isCompensationAssociation(connection) {
 function isExpandedSubProcess(element) {
   return is(element, 'bpmn:SubProcess') && isExpanded(element);
 }
-},{"252":252,"254":254,"255":255,"291":291,"433":433,"91":91,"93":93}],29:[function(_dereq_,module,exports){
+},{"231":231,"233":233,"234":234,"270":270,"410":410,"91":91,"93":93}],29:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433),
-    forEach = _dereq_(304),
-    inherits = _dereq_(291);
+var assign = _dereq_(410),
+    forEach = _dereq_(283),
+    inherits = _dereq_(270);
 
-var Collections = _dereq_(265),
-    Model = _dereq_(256);
+var Collections = _dereq_(244),
+    Model = _dereq_(235);
 
 var getBusinessObject = _dereq_(93).getBusinessObject,
     is = _dereq_(93).is;
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 /**
  * A handler responsible for updating the underlying BPMN 2.0 XML + DI
@@ -5168,17 +5168,17 @@ function ifBpmn(fn) {
   };
 }
 
-},{"121":121,"256":256,"265":265,"291":291,"304":304,"433":433,"93":93}],30:[function(_dereq_,module,exports){
+},{"100":100,"235":235,"244":244,"270":270,"283":283,"410":410,"93":93}],30:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433),
-    inherits = _dereq_(291);
+var assign = _dereq_(410),
+    inherits = _dereq_(270);
 
 var is = _dereq_(93).is;
 
 var isExpanded = _dereq_(91).isExpanded;
 
-var BaseElementFactory = _dereq_(125),
+var BaseElementFactory = _dereq_(104),
     LabelUtil = _dereq_(92);
 
 /**
@@ -5355,12 +5355,12 @@ ElementFactory.prototype.createParticipantShape = function(collapsed) {
   return this.createShape(attrs);
 };
 
-},{"125":125,"291":291,"433":433,"91":91,"92":92,"93":93}],31:[function(_dereq_,module,exports){
+},{"104":104,"270":270,"410":410,"91":91,"92":92,"93":93}],31:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var BaseModeling = _dereq_(179);
+var BaseModeling = _dereq_(158);
 
 var UpdatePropertiesHandler = _dereq_(63),
     UpdateCanvasRootHandler = _dereq_(61),
@@ -5523,14 +5523,14 @@ Modeling.prototype.unclaimId = function(id, moddleElement) {
   });
 };
 
-},{"179":179,"291":291,"57":57,"58":58,"59":59,"60":60,"61":61,"62":62,"63":63}],32:[function(_dereq_,module,exports){
+},{"158":158,"270":270,"57":57,"58":58,"59":59,"60":60,"61":61,"62":62,"63":63}],32:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
 var is = _dereq_(93).is;
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 
 function AppendBehavior(eventBus, elementFactory, bpmnRules) {
@@ -5567,16 +5567,16 @@ AppendBehavior.$inject = [ 'eventBus', 'elementFactory', 'bpmnRules' ];
 inherits(AppendBehavior, CommandInterceptor);
 
 module.exports = AppendBehavior;
-},{"121":121,"291":291,"93":93}],33:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"93":93}],33:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
 var is = _dereq_(93).is;
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 
 function CopyPasteBehavior(eventBus, modeling, canvas) {
@@ -5638,12 +5638,12 @@ inherits(CopyPasteBehavior, CommandInterceptor);
 
 module.exports = CopyPasteBehavior;
 
-},{"121":121,"291":291,"304":304,"93":93}],34:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"283":283,"93":93}],34:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 var is = _dereq_(93).is;
 
@@ -5691,12 +5691,12 @@ inherits(CreateBoundaryEventBehavior, CommandInterceptor);
 
 module.exports = CreateBoundaryEventBehavior;
 
-},{"121":121,"291":291,"93":93}],35:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"93":93}],35:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 var is = _dereq_(93).is;
 
@@ -5730,16 +5730,16 @@ inherits(CreateDataObjectBehavior, CommandInterceptor);
 
 module.exports = CreateDataObjectBehavior;
 
-},{"121":121,"291":291,"93":93}],36:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"93":93}],36:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var assign = _dereq_(433);
+var assign = _dereq_(410);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
-var getApproxIntersection = _dereq_(273).getApproxIntersection;
+var getApproxIntersection = _dereq_(252).getApproxIntersection;
 
 
 function copy(obj) {
@@ -5827,12 +5827,12 @@ CreateOnFlowBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
 
 module.exports = CreateOnFlowBehavior;
 
-},{"121":121,"273":273,"291":291,"433":433}],37:[function(_dereq_,module,exports){
+},{"100":100,"252":252,"270":270,"410":410}],37:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 var is = _dereq_(93).is;
 
@@ -5920,16 +5920,16 @@ inherits(CreateParticipantBehavior, CommandInterceptor);
 
 module.exports = CreateParticipantBehavior;
 
-},{"121":121,"291":291,"93":93}],38:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"93":93}],38:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
-var Collections = _dereq_(265);
+var Collections = _dereq_(244);
 
-var find = _dereq_(303);
+var find = _dereq_(282);
 
 var is = _dereq_(93).is;
 
@@ -6073,18 +6073,18 @@ function ifDataInputAssociation(fn) {
     }
   };
 }
-},{"121":121,"265":265,"291":291,"303":303,"93":93}],39:[function(_dereq_,module,exports){
+},{"100":100,"244":244,"270":270,"282":282,"93":93}],39:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 var is = _dereq_(93).is;
 
 var getChildLanes = _dereq_(65).getChildLanes;
 
-var eachElement = _dereq_(268).eachElement;
+var eachElement = _dereq_(247).eachElement;
 
 
 var LOW_PRIORITY = 500;
@@ -6182,10 +6182,10 @@ DeleteLaneBehavior.$inject = [ 'eventBus', 'modeling', 'spaceTool' ];
 inherits(DeleteLaneBehavior, CommandInterceptor);
 
 module.exports = DeleteLaneBehavior;
-},{"121":121,"268":268,"291":291,"65":65,"93":93}],40:[function(_dereq_,module,exports){
+},{"100":100,"247":247,"270":270,"65":65,"93":93}],40:[function(_dereq_,module,exports){
 'use strict';
 
-var getMid = _dereq_(254).getMid;
+var getMid = _dereq_(233).getMid;
 
 var lineIntersect = _dereq_(56);
 
@@ -6264,11 +6264,11 @@ module.exports = ImportDockingFix;
 function getDistance(p1, p2) {
   return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
 }
-},{"254":254,"56":56}],41:[function(_dereq_,module,exports){
+},{"233":233,"56":56}],41:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433),
-    inherits = _dereq_(291);
+var assign = _dereq_(410),
+    inherits = _dereq_(270);
 
 var LabelUtil = _dereq_(92),
     LabelLayoutUtil = _dereq_(54),
@@ -6280,7 +6280,7 @@ var hasExternalLabel = LabelUtil.hasExternalLabel,
     getExternalLabelMid = LabelUtil.getExternalLabelMid,
     getLabelAdjustment = LabelLayoutUtil.getLabelAdjustment;
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 
 /**
@@ -6441,7 +6441,7 @@ LabelSupport.$inject = [ 'eventBus', 'modeling', 'bpmnFactory' ];
 
 module.exports = LabelSupport;
 
-},{"121":121,"291":291,"433":433,"54":54,"92":92,"93":93}],42:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"410":410,"54":54,"92":92,"93":93}],42:[function(_dereq_,module,exports){
 'use strict';
 
 var is = _dereq_(93).is;
@@ -6496,9 +6496,9 @@ module.exports = ModelingFeedback;
 },{"93":93}],43:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 var lineIntersect = _dereq_(56);
 
@@ -6568,12 +6568,12 @@ function getNewWaypoints(inWaypoints, outWaypoints) {
     ];
   }
 }
-},{"121":121,"291":291,"56":56}],44:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"56":56}],44:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 var is = _dereq_(93).is;
 
@@ -6620,14 +6620,14 @@ RemoveParticipantBehavior.$inject = [ 'eventBus', 'modeling' ];
 inherits(RemoveParticipantBehavior, CommandInterceptor);
 
 module.exports = RemoveParticipantBehavior;
-},{"121":121,"291":291,"93":93}],45:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"93":93}],45:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    find = _dereq_(303),
-    inherits = _dereq_(291);
+var forEach = _dereq_(283),
+    find = _dereq_(282),
+    inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 var is = _dereq_(93).is;
 
@@ -6750,14 +6750,14 @@ ReplaceConnectionBehavior.$inject = [ 'eventBus', 'modeling', 'bpmnRules' ];
 
 module.exports = ReplaceConnectionBehavior;
 
-},{"121":121,"291":291,"303":303,"304":304,"93":93}],46:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"282":282,"283":283,"93":93}],46:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
 var isEventSubProcess = _dereq_(91).isEventSubProcess;
 var is = _dereq_(93).is;
@@ -6868,14 +6868,14 @@ ReplaceElementBehaviour.$inject = [ 'eventBus', 'bpmnReplace', 'bpmnRules', 'ele
 
 module.exports = ReplaceElementBehaviour;
 
-},{"121":121,"291":291,"304":304,"91":91,"93":93}],47:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"283":283,"91":91,"93":93}],47:[function(_dereq_,module,exports){
 'use strict';
 
 var is = _dereq_(93).is;
 
-var roundBounds = _dereq_(254).roundBounds;
+var roundBounds = _dereq_(233).roundBounds;
 
-var hasPrimaryModifier = _dereq_(275).hasPrimaryModifier;
+var hasPrimaryModifier = _dereq_(254).hasPrimaryModifier;
 
 var SLIGHTLY_HIGHER_PRIORITY = 1001;
 
@@ -6929,15 +6929,15 @@ ResizeLaneBehavior.$inject = [ 'eventBus', 'modeling' ];
 
 module.exports = ResizeLaneBehavior;
 
-},{"254":254,"275":275,"93":93}],48:[function(_dereq_,module,exports){
+},{"233":233,"254":254,"93":93}],48:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121),
+var CommandInterceptor = _dereq_(100),
     getBusinessObject = _dereq_(93).getBusinessObject,
     is = _dereq_(93).is,
-    computeChildrenBBox = _dereq_(225).computeChildrenBBox;
+    computeChildrenBBox = _dereq_(204).computeChildrenBBox;
 
 
 var LOW_PRIORITY = 500;
@@ -7069,14 +7069,14 @@ function filterVisible(elements) {
     return !e.hidden;
   });
 }
-},{"121":121,"225":225,"291":291,"93":93}],49:[function(_dereq_,module,exports){
+},{"100":100,"204":204,"270":270,"93":93}],49:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 function UnclaimIdBehavior(eventBus, modeling) {
 
@@ -7098,12 +7098,12 @@ inherits(UnclaimIdBehavior, CommandInterceptor);
 UnclaimIdBehavior.$inject = [ 'eventBus', 'modeling' ];
 
 module.exports = UnclaimIdBehavior;
-},{"121":121,"291":291,"304":304}],50:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"283":283}],50:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 var is = _dereq_(93).is,
     getBusinessObject = _dereq_(93).getBusinessObject;
@@ -7154,13 +7154,13 @@ function isDefaultFlow(connection, source) {
 
   return sourceBo.get('default') === sequenceFlow;
 }
-},{"121":121,"291":291,"93":93}],51:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"93":93}],51:[function(_dereq_,module,exports){
 'use strict';
 
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 var is = _dereq_(93).is;
 
@@ -7312,7 +7312,7 @@ function UpdateContext() {
     return !this.counter;
   };
 }
-},{"121":121,"291":291,"93":93}],52:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"93":93}],52:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [
     'appendBehavior',
@@ -7978,9 +7978,9 @@ module.exports = function lineIntersect(l1s, l1e, l2s, l2e) {
 },{}],57:[function(_dereq_,module,exports){
 'use strict';
 
-var filter = _dereq_(302);
+var filter = _dereq_(281);
 
-var Elements = _dereq_(268);
+var Elements = _dereq_(247);
 
 var getLanesRoot = _dereq_(65).getLanesRoot,
     getChildLanes = _dereq_(65).getChildLanes,
@@ -8060,7 +8060,7 @@ AddLaneHandler.prototype.preExecute = function(context) {
   }, laneParent);
 };
 
-},{"268":268,"302":302,"65":65}],58:[function(_dereq_,module,exports){
+},{"247":247,"281":281,"65":65}],58:[function(_dereq_,module,exports){
 'use strict';
 
 
@@ -8111,10 +8111,10 @@ var is = _dereq_(93).is;
 var getLanesRoot = _dereq_(65).getLanesRoot,
     computeLanesResize = _dereq_(65).computeLanesResize;
 
-var eachElement = _dereq_(268).eachElement;
+var eachElement = _dereq_(247).eachElement;
 
-var asTRBL = _dereq_(254).asTRBL,
-    substractTRBL = _dereq_(225).substractTRBL;
+var asTRBL = _dereq_(233).asTRBL,
+    substractTRBL = _dereq_(204).substractTRBL;
 
 
 /**
@@ -8230,7 +8230,7 @@ ResizeLaneHandler.prototype.resizeSpace = function(shape, newBounds) {
     spaceTool.makeSpace(adjustments.movingShapes, adjustments.resizingShapes, { x: change, y: 0 }, direction);
   }
 };
-},{"225":225,"254":254,"268":268,"65":65,"93":93}],60:[function(_dereq_,module,exports){
+},{"204":204,"233":233,"247":247,"65":65,"93":93}],60:[function(_dereq_,module,exports){
 'use strict';
 
 var getChildLanes = _dereq_(65).getChildLanes;
@@ -8317,7 +8317,7 @@ SplitLaneHandler.prototype.preExecute = function(context) {
 },{"65":65}],61:[function(_dereq_,module,exports){
 'use strict';
 
-var Collections = _dereq_(265);
+var Collections = _dereq_(244);
 
 
 function UpdateCanvasRootHandler(canvas, modeling) {
@@ -8394,7 +8394,7 @@ UpdateCanvasRootHandler.prototype.revert = function(context) {
   // TODO(nikku): return changed elements?
   // return [ newRoot, oldRoot ];
 };
-},{"265":265}],62:[function(_dereq_,module,exports){
+},{"244":244}],62:[function(_dereq_,module,exports){
 'use strict';
 
 var collectLanes = _dereq_(65).collectLanes;
@@ -8403,9 +8403,9 @@ var getLanesRoot = _dereq_(65).getLanesRoot;
 
 var is = _dereq_(93).is;
 
-var Collections = _dereq_(265);
+var Collections = _dereq_(244);
 
-var asTRBL = _dereq_(254).asTRBL;
+var asTRBL = _dereq_(233).asTRBL;
 
 var FLOW_NODE_REFS_ATTR = 'flowNodeRef',
     LANES_ATTR = 'lanes';
@@ -8581,13 +8581,13 @@ UpdateFlowNodeRefsHandler.prototype.revert = function(context) {
   // TODO(nikku): return changed elements
   // return [ ... ];
 };
-},{"254":254,"265":265,"65":65,"93":93}],63:[function(_dereq_,module,exports){
+},{"233":233,"244":244,"65":65,"93":93}],63:[function(_dereq_,module,exports){
 'use strict';
 
-var reduce = _dereq_(441),
-    keys = _dereq_(435),
-    forEach = _dereq_(304),
-    assign = _dereq_(433);
+var reduce = _dereq_(418),
+    keys = _dereq_(412),
+    forEach = _dereq_(283),
+    assign = _dereq_(410);
 
 var getBusinessObject = _dereq_(93).getBusinessObject;
 
@@ -8757,7 +8757,7 @@ function unwrapBusinessObjects(properties) {
 
   return unwrappedProps;
 }
-},{"304":304,"433":433,"435":435,"441":441,"93":93}],64:[function(_dereq_,module,exports){
+},{"283":283,"410":410,"412":412,"418":418,"93":93}],64:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'modeling', 'bpmnUpdater' ],
   __depends__: [
@@ -8766,32 +8766,32 @@ module.exports = {
     _dereq_(80),
     _dereq_(68),
     _dereq_(78),
-    _dereq_(123),
-    _dereq_(246),
-    _dereq_(176),
-    _dereq_(137),
-    _dereq_(235),
-    _dereq_(149),
-    _dereq_(242)
+    _dereq_(102),
+    _dereq_(225),
+    _dereq_(155),
+    _dereq_(116),
+    _dereq_(214),
+    _dereq_(128),
+    _dereq_(221)
   ],
   bpmnFactory: [ 'type', _dereq_(27) ],
   bpmnUpdater: [ 'type', _dereq_(29) ],
   elementFactory: [ 'type', _dereq_(30) ],
   modeling: [ 'type', _dereq_(31) ],
   layouter: [ 'type', _dereq_(28) ],
-  connectionDocking: [ 'type', _dereq_(253) ]
+  connectionDocking: [ 'type', _dereq_(232) ]
 };
 
-},{"123":123,"137":137,"149":149,"176":176,"235":235,"242":242,"246":246,"253":253,"26":26,"27":27,"28":28,"29":29,"30":30,"31":31,"52":52,"68":68,"78":78,"80":80}],65:[function(_dereq_,module,exports){
+},{"102":102,"116":116,"128":128,"155":155,"214":214,"221":221,"225":225,"232":232,"26":26,"27":27,"28":28,"29":29,"30":30,"31":31,"52":52,"68":68,"78":78,"80":80}],65:[function(_dereq_,module,exports){
 'use strict';
 
 var is = _dereq_(93).is;
 
 var getParent = _dereq_(66).getParent;
 
-var asTRBL = _dereq_(254).asTRBL,
-    substractTRBL = _dereq_(225).substractTRBL,
-    resizeTRBL = _dereq_(225).resizeTRBL;
+var asTRBL = _dereq_(233).asTRBL,
+    substractTRBL = _dereq_(204).substractTRBL,
+    resizeTRBL = _dereq_(204).resizeTRBL;
 
 var abs = Math.abs;
 
@@ -8941,10 +8941,10 @@ function computeLanesResize(shape, newBounds) {
 
 module.exports.computeLanesResize = computeLanesResize;
 
-},{"225":225,"254":254,"66":66,"93":93}],66:[function(_dereq_,module,exports){
+},{"204":204,"233":233,"66":66,"93":93}],66:[function(_dereq_,module,exports){
 'use strict';
 
-var any = _dereq_(300);
+var any = _dereq_(279);
 
 var is = _dereq_(93).is;
 
@@ -9009,18 +9009,18 @@ function getParent(element, anyType) {
 
 module.exports.getParent = getParent;
 
-},{"300":300,"93":93}],67:[function(_dereq_,module,exports){
+},{"279":279,"93":93}],67:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var OrderingProvider = _dereq_(209);
+var OrderingProvider = _dereq_(188);
 
 var isAny = _dereq_(66).isAny;
 
-var findIndex = _dereq_(292);
+var findIndex = _dereq_(271);
 
-var find = _dereq_(303);
+var find = _dereq_(282);
 
 
 /**
@@ -9158,18 +9158,18 @@ inherits(BpmnOrderingProvider, OrderingProvider);
 
 module.exports = BpmnOrderingProvider;
 
-},{"209":209,"291":291,"292":292,"303":303,"66":66}],68:[function(_dereq_,module,exports){
+},{"188":188,"270":270,"271":271,"282":282,"66":66}],68:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'bpmnOrderingProvider' ],
   __depends__: [
-    _dereq_(250)
+    _dereq_(229)
   ],
   bpmnOrderingProvider: [ 'type', _dereq_(67) ]
 };
-},{"250":250,"67":67}],69:[function(_dereq_,module,exports){
+},{"229":229,"67":67}],69:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433);
+var assign = _dereq_(410);
 
 /**
  * A palette provider for BPMN 2.0 elements.
@@ -9326,22 +9326,22 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
   return actions;
 };
 
-},{"433":433}],70:[function(_dereq_,module,exports){
+},{"410":410}],70:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(215),
-    _dereq_(159),
-    _dereq_(242),
-    _dereq_(178),
-    _dereq_(170),
-    _dereq_(250),
+    _dereq_(194),
+    _dereq_(138),
+    _dereq_(221),
+    _dereq_(157),
+    _dereq_(149),
+    _dereq_(229),
     _dereq_(20)
   ],
   __init__: [ 'paletteProvider' ],
   paletteProvider: [ 'type', _dereq_(69) ]
 };
 
-},{"159":159,"170":170,"178":178,"20":20,"215":215,"242":242,"250":250,"69":69}],71:[function(_dereq_,module,exports){
+},{"138":138,"149":149,"157":157,"194":194,"20":20,"221":221,"229":229,"69":69}],71:[function(_dereq_,module,exports){
 'use strict';
 
 var is = _dereq_(93).is,
@@ -9350,9 +9350,9 @@ var is = _dereq_(93).is,
     isExpanded = _dereq_(91).isExpanded,
     isDifferentType = _dereq_(73).isDifferentType;
 
-var forEach = _dereq_(304),
-    filter = _dereq_(302),
-    reject = _dereq_(309);
+var forEach = _dereq_(283),
+    filter = _dereq_(281),
+    reject = _dereq_(288);
 
 var replaceOptions = _dereq_(77);
 
@@ -9822,16 +9822,16 @@ ReplaceMenuProvider.prototype._getAdHocEntry = function(element) {
 
 module.exports = ReplaceMenuProvider;
 
-},{"302":302,"304":304,"309":309,"73":73,"77":77,"91":91,"93":93}],72:[function(_dereq_,module,exports){
+},{"281":281,"283":283,"288":288,"73":73,"77":77,"91":91,"93":93}],72:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(217),
+    _dereq_(196),
     _dereq_(78)
   ],
   __init__: [ 'replaceMenuProvider' ],
   replaceMenuProvider: [ 'type', _dereq_(71) ]
 };
-},{"217":217,"71":71,"78":78}],73:[function(_dereq_,module,exports){
+},{"196":196,"71":71,"78":78}],73:[function(_dereq_,module,exports){
 'use strict';
 
 var getBusinessObject = _dereq_(93).getBusinessObject;
@@ -9877,12 +9877,12 @@ module.exports.isDifferentType = isDifferentType;
 },{"91":91,"93":93}],74:[function(_dereq_,module,exports){
 'use strict';
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var assign = _dereq_(433),
-    forEach = _dereq_(304);
+var assign = _dereq_(410),
+    forEach = _dereq_(283);
 
 var LOW_PRIORITY = 250;
 
@@ -9985,19 +9985,19 @@ inherits(BpmnReplacePreview, CommandInterceptor);
 
 module.exports = BpmnReplacePreview;
 
-},{"121":121,"291":291,"304":304,"433":433}],75:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"283":283,"410":410}],75:[function(_dereq_,module,exports){
 module.exports = {
-  __depends__: [ _dereq_(219) ],
+  __depends__: [ _dereq_(198) ],
   __init__: [ 'bpmnReplacePreview' ],
   bpmnReplacePreview: [ 'type', _dereq_(74) ]
 };
 
-},{"219":219,"74":74}],76:[function(_dereq_,module,exports){
+},{"198":198,"74":74}],76:[function(_dereq_,module,exports){
 'use strict';
 
-var pick = _dereq_(440),
-    assign = _dereq_(433),
-    has = _dereq_(434);
+var pick = _dereq_(417),
+    assign = _dereq_(410),
+    has = _dereq_(411);
 
 var is = _dereq_(93).is,
     isExpanded = _dereq_(91).isExpanded,
@@ -10161,7 +10161,7 @@ BpmnReplace.$inject = [ 'bpmnFactory', 'replace', 'selection', 'modeling' ];
 
 module.exports = BpmnReplace;
 
-},{"433":433,"434":434,"440":440,"91":91,"93":93}],77:[function(_dereq_,module,exports){
+},{"410":410,"411":411,"417":417,"91":91,"93":93}],77:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports.START_EVENT = [
@@ -10953,20 +10953,20 @@ module.exports.PARTICIPANT = [
 },{}],78:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(221),
-    _dereq_(235)
+    _dereq_(200),
+    _dereq_(214)
   ],
   bpmnReplace: [ 'type', _dereq_(76) ]
 };
-},{"221":221,"235":235,"76":76}],79:[function(_dereq_,module,exports){
+},{"200":200,"214":214,"76":76}],79:[function(_dereq_,module,exports){
 'use strict';
 
-var find = _dereq_(303),
-    any = _dereq_(300),
-    every = _dereq_(301),
-    filter = _dereq_(302),
-    forEach = _dereq_(304),
-    inherits = _dereq_(291);
+var find = _dereq_(282),
+    any = _dereq_(279),
+    every = _dereq_(280),
+    filter = _dereq_(281),
+    forEach = _dereq_(283),
+    inherits = _dereq_(270);
 
 var getParents = _dereq_(66).getParents,
     is = _dereq_(93).is,
@@ -10977,7 +10977,7 @@ var getParents = _dereq_(66).getParents,
     isInterrupting = _dereq_(91).isInterrupting;
 
 
-var RuleProvider = _dereq_(227);
+var RuleProvider = _dereq_(206);
 
 var isBoundaryAttachment = _dereq_(84).getBoundaryAttachment;
 
@@ -11705,21 +11705,21 @@ function canCopy(collection, element) {
   return true;
 }
 
-},{"227":227,"291":291,"300":300,"301":301,"302":302,"303":303,"304":304,"66":66,"84":84,"91":91,"93":93}],80:[function(_dereq_,module,exports){
+},{"206":206,"270":270,"279":279,"280":280,"281":281,"282":282,"283":283,"66":66,"84":84,"91":91,"93":93}],80:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(229)
+    _dereq_(208)
   ],
   __init__: [ 'bpmnRules' ],
   bpmnRules: [ 'type', _dereq_(79) ]
 };
 
-},{"229":229,"79":79}],81:[function(_dereq_,module,exports){
+},{"208":208,"79":79}],81:[function(_dereq_,module,exports){
 'use strict';
 
-var map = _dereq_(307),
-    filter = _dereq_(302),
-    sortBy = _dereq_(312);
+var map = _dereq_(286),
+    filter = _dereq_(281),
+    sortBy = _dereq_(291);
 
 var labelUtil = _dereq_(24);
 
@@ -11844,36 +11844,36 @@ function matchAndSplit(text, pattern) {
 
   return tokens;
 }
-},{"24":24,"302":302,"307":307,"312":312}],82:[function(_dereq_,module,exports){
+},{"24":24,"281":281,"286":286,"291":291}],82:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(231)
+    _dereq_(210)
   ],
   __init__: [ 'bpmnSearch'],
   bpmnSearch: [ 'type', _dereq_(81) ]
 };
 
-},{"231":231,"81":81}],83:[function(_dereq_,module,exports){
+},{"210":210,"81":81}],83:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
 var abs = Math.abs;
 
-var forEach = _dereq_(304),
-    filter = _dereq_(302),
-    assign = _dereq_(433);
+var forEach = _dereq_(283),
+    filter = _dereq_(281),
+    assign = _dereq_(410);
 
-var getBoundingBox = _dereq_(268).getBBox;
+var getBoundingBox = _dereq_(247).getBBox;
 
 var is = _dereq_(93).is,
     isAny = _dereq_(66).isAny,
     isExpanded = _dereq_(91).isExpanded;
 
-var Snapping = _dereq_(238),
-    SnapUtil = _dereq_(237);
+var Snapping = _dereq_(217),
+    SnapUtil = _dereq_(216);
 
-var asTRBL = _dereq_(254).asTRBL;
+var asTRBL = _dereq_(233).asTRBL;
 
 var round = Math.round;
 
@@ -12350,10 +12350,10 @@ function snapBoundaryEvent(event, shape, target) {
   }
 }
 
-},{"237":237,"238":238,"254":254,"268":268,"291":291,"302":302,"304":304,"433":433,"65":65,"66":66,"84":84,"91":91,"93":93}],84:[function(_dereq_,module,exports){
+},{"216":216,"217":217,"233":233,"247":247,"270":270,"281":281,"283":283,"410":410,"65":65,"66":66,"84":84,"91":91,"93":93}],84:[function(_dereq_,module,exports){
 'use strict';
 
-var getOrientation = _dereq_(254).getOrientation;
+var getOrientation = _dereq_(233).getOrientation;
 
 
 function getBoundaryAttachment(position, targetBounds) {
@@ -12375,7 +12375,7 @@ module.exports.getBoundaryAttachment = getBoundaryAttachment;
 
 var is = _dereq_(93).is;
 
-var asTRBL = _dereq_(254).asTRBL;
+var asTRBL = _dereq_(233).asTRBL;
 
 var collectLanes = _dereq_(65).collectLanes,
     getLanesRoot = _dereq_(65).getLanesRoot;
@@ -12511,7 +12511,7 @@ function getParticipantSizeConstraints(laneShape, resizeDirection, balanced) {
 
 
 module.exports.getParticipantSizeConstraints = getParticipantSizeConstraints;
-},{"254":254,"65":65,"93":93}],85:[function(_dereq_,module,exports){
+},{"233":233,"65":65,"93":93}],85:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'snapping' ],
   snapping: [ 'type', _dereq_(83) ]
@@ -12519,8 +12519,89 @@ module.exports = {
 },{"83":83}],86:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433),
-    map = _dereq_(307);
+var VdmlTreeWalker = _dereq_(89);
+
+
+/**
+ * Import the definitions into a diagram.
+ *
+ * Errors and warnings are reported through the specified callback.
+ *
+ * @param  {Diagram} diagram
+ * @param  {ModdleElement} definitions
+ * @param  {Function} done the callback, invoked with (err, [ warning ]) once the import is done
+ */
+function importVdmlDiagram(diagram, definitions, done) {
+
+  var importer = diagram.get('vdmlImporter'),
+      eventBus = diagram.get('eventBus'),
+      translate = diagram.get('translate');
+
+  var error,
+      warnings = [];
+
+  /**
+   * Walk the diagram semantically, importing (=drawing)
+   * all elements you encounter.
+   *
+   * @param {ModdleElement} definitions
+   */
+  function render(definitions) {
+
+    var visitor = {
+
+      root: function(element) {
+        return importer.add(element);
+      },
+
+      element: function(element, parentShape) {
+        return importer.add(element, parentShape);
+      },
+
+      error: function(message, context) {
+        warnings.push({ message: message, context: context });
+      }
+    };
+
+    var walker = new VdmlTreeWalker(visitor, translate);
+
+    // traverse BPMN 2.0 document model,
+    // starting at definitions
+    walker.handleDefinitions(definitions);
+  }
+
+  eventBus.fire('import.render.start', { definitions: definitions });
+
+  try {
+    render(definitions);
+  } catch (e) {
+    error = e;
+  }
+
+  eventBus.fire('import.render.complete', {
+    error: error,
+    warnings: warnings
+  });
+
+  done(error, warnings);
+}
+
+module.exports.importVdmlDiagram = importVdmlDiagram;
+},{"89":89}],87:[function(_dereq_,module,exports){
+'use strict';
+
+module.exports.elementToString = function(e) {
+  if (!e) {
+    return '<null>';
+  }
+
+  return '<' + e.$type + (e.id ? ' id="' + e.id : '') + '" />';
+};
+},{}],88:[function(_dereq_,module,exports){
+'use strict';
+
+var assign = _dereq_(410),
+    map = _dereq_(286);
 
 var LabelUtil = _dereq_(92);
 
@@ -12529,7 +12610,7 @@ var is = _dereq_(93).is;
 var hasExternalLabel = LabelUtil.hasExternalLabel,
     getExternalLabelBounds = LabelUtil.getExternalLabelBounds,
     isExpanded = _dereq_(91).isExpanded,
-    elementToString = _dereq_(89).elementToString;
+    elementToString = _dereq_(87).elementToString;
 
 
 function elementData(semantic, attrs) {
@@ -12555,14 +12636,14 @@ function notYetDrawn(translate, semantic, refSemantic, property) {
 }
 
 /**
- * An importer that adds bpmn elements to the canvas
+ * An importer that adds vdml elements to the canvas
  *
  * @param {EventBus} eventBus
  * @param {Canvas} canvas
  * @param {ElementFactory} elementFactory
  * @param {ElementRegistry} elementRegistry
  */
-function BpmnImporter(eventBus, canvas, elementFactory, elementRegistry, translate) {
+function VdmlImporter(eventBus, canvas, elementFactory, elementRegistry, translate) {
   this._eventBus = eventBus;
   this._canvas = canvas;
 
@@ -12571,16 +12652,16 @@ function BpmnImporter(eventBus, canvas, elementFactory, elementRegistry, transla
   this._translate = translate;
 }
 
-BpmnImporter.$inject = [ 'eventBus', 'canvas', 'elementFactory', 'elementRegistry', 'translate' ];
+VdmlImporter.$inject = [ 'eventBus', 'canvas', 'elementFactory', 'elementRegistry', 'translate' ];
 
-module.exports = BpmnImporter;
+module.exports = VdmlImporter;
 
 
 /**
- * Add bpmn element (semantic) to the canvas onto the
+ * Add vdml element (semantic) to the canvas onto the
  * specified parent shape.
  */
-BpmnImporter.prototype.add = function(semantic, parentElement) {
+VdmlImporter.prototype.add = function(semantic, parentElement) {
 
   var di = semantic.di,
       element,
@@ -12590,7 +12671,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
   // ROOT ELEMENT
   // handle the special case that we deal with a
   // invisible root element (process or collaboration)
-  if (is(di, 'bpmndi:BPMNPlane')) {
+  if (is(di, 'vdmldi:VDMLPlane')) {
 
     // add a virtual element (not being drawn)
     element = this._elementFactory.createRoot(elementData(semantic));
@@ -12599,7 +12680,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
   }
 
   // SHAPE
-  else if (is(di, 'bpmndi:BPMNShape')) {
+  else if (is(di, 'vdmldi:VDMLShape')) {
 
     var collapsed = !isExpanded(semantic);
     hidden = parentElement && (parentElement.hidden || parentElement.collapsed);
@@ -12615,7 +12696,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
       height: Math.round(bounds.height)
     }));
 
-    if (is(semantic, 'bpmn:BoundaryEvent')) {
+    if (is(semantic, 'vdml:BoundaryEvent')) {
       this._attachBoundary(semantic, element);
     }
 
@@ -12623,7 +12704,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
   }
 
   // CONNECTION
-  else if (is(di, 'bpmndi:BPMNEdge')) {
+  else if (is(di, 'vdmldi:VDMLEdge')) {
 
     var source = this._getSource(semantic),
         target = this._getTarget(semantic);
@@ -12637,7 +12718,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
       waypoints: collectWaypoints(semantic.di.waypoint)
     }));
 
-    if (is(semantic, 'bpmn:DataInputAssociation') || is(semantic, 'bpmn:DataOutputAssociation')) {
+    if (is(semantic, 'vdml:DataInputAssociation') || is(semantic, 'vdml:DataOutputAssociation')) {
       // implicit root element
       parentElement = null;
     }
@@ -12655,7 +12736,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
   }
 
 
-  this._eventBus.fire('bpmnElement.added', { element: element });
+  this._eventBus.fire('vdmlElement.added', { element: element });
 
   return element;
 };
@@ -12667,7 +12748,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
  * @param {ModdleElement} boundarySemantic
  * @param {djs.model.Base} boundaryElement
  */
-BpmnImporter.prototype._attachBoundary = function(boundarySemantic, boundaryElement) {
+VdmlImporter.prototype._attachBoundary = function(boundarySemantic, boundaryElement) {
   var translate = this._translate;
   var hostSemantic = boundarySemantic.attachedToRef;
 
@@ -12700,7 +12781,7 @@ BpmnImporter.prototype._attachBoundary = function(boundarySemantic, boundaryElem
 /**
  * add label for an element
  */
-BpmnImporter.prototype.addLabel = function(semantic, element) {
+VdmlImporter.prototype.addLabel = function(semantic, element) {
   var bounds = getExternalLabelBounds(semantic, element);
 
   var label = this._elementFactory.createLabel(elementData(semantic, {
@@ -12722,7 +12803,7 @@ BpmnImporter.prototype.addLabel = function(semantic, element) {
  *
  * @throws {Error} if the end is not yet drawn
  */
-BpmnImporter.prototype._getEnd = function(semantic, side) {
+VdmlImporter.prototype._getEnd = function(semantic, side) {
 
   var element,
       refSemantic,
@@ -12732,13 +12813,13 @@ BpmnImporter.prototype._getEnd = function(semantic, side) {
   refSemantic = semantic[side + 'Ref'];
 
   // handle mysterious isMany DataAssociation#sourceRef
-  if (side === 'source' && type === 'bpmn:DataInputAssociation') {
+  if (side === 'source' && type === 'vdml:DataInputAssociation') {
     refSemantic = refSemantic && refSemantic[0];
   }
 
   // fix source / target for DataInputAssociation / DataOutputAssociation
-  if (side === 'source' && type === 'bpmn:DataOutputAssociation' ||
-      side === 'target' && type === 'bpmn:DataInputAssociation') {
+  if (side === 'source' && type === 'vdml:DataOutputAssociation' ||
+      side === 'target' && type === 'vdml:DataInputAssociation') {
 
     refSemantic = semantic.$parent;
   }
@@ -12759,31 +12840,31 @@ BpmnImporter.prototype._getEnd = function(semantic, side) {
   }
 };
 
-BpmnImporter.prototype._getSource = function(semantic) {
+VdmlImporter.prototype._getSource = function(semantic) {
   return this._getEnd(semantic, 'source');
 };
 
-BpmnImporter.prototype._getTarget = function(semantic) {
+VdmlImporter.prototype._getTarget = function(semantic) {
   return this._getEnd(semantic, 'target');
 };
 
 
-BpmnImporter.prototype._getElement = function(semantic) {
+VdmlImporter.prototype._getElement = function(semantic) {
   return this._elementRegistry.get(semantic.id);
 };
 
-},{"307":307,"433":433,"89":89,"91":91,"92":92,"93":93}],87:[function(_dereq_,module,exports){
+},{"286":286,"410":410,"87":87,"91":91,"92":92,"93":93}],89:[function(_dereq_,module,exports){
 'use strict';
 
-var filter = _dereq_(302),
-    find = _dereq_(303),
-    forEach = _dereq_(304);
+var filter = _dereq_(281),
+    find = _dereq_(282),
+    forEach = _dereq_(283);
 
-var Refs = _dereq_(464);
+var Refs = _dereq_(441);
 
-var elementToString = _dereq_(89).elementToString;
+var elementToString = _dereq_(87).elementToString;
 
-var diRefs = new Refs({ name: 'bpmnElement', enumerable: true }, { name: 'di' });
+var diRefs = new Refs({ name: 'vdmlElement', enumerable: true }, { name: 'di' });
 
 /**
  * Returns true if an element has the given meta-model type
@@ -12804,12 +12885,12 @@ function is(element, type) {
  */
 function findDisplayCandidate(definitions) {
   return find(definitions.rootElements, function(e) {
-    return is(e, 'bpmn:Process') || is(e, 'bpmn:Collaboration');
+    return is(e, 'vdml:Process') || is(e, 'vdml:Collaboration');
   });
 }
 
 
-function BpmnTreeWalker(handler, translate) {
+function VdmlTreeWalker(handler, translate) {
 
   // list of containers already walked
   var handledElements = {};
@@ -12876,23 +12957,23 @@ function BpmnTreeWalker(handler, translate) {
   ////// DI handling ////////////////////////////
 
   function registerDi(di) {
-    var bpmnElement = di.bpmnElement;
+    var vdmlElement = di.vdmlElement;
 
-    if (bpmnElement) {
-      if (bpmnElement.di) {
+    if (vdmlElement) {
+      if (vdmlElement.di) {
         logError(
           translate('multiple DI elements defined for {element}', {
-            element: elementToString(bpmnElement)
+            element: elementToString(vdmlElement)
           }),
-          { element: bpmnElement  }
+          { element: vdmlElement  }
         );
       } else {
-        diRefs.bind(bpmnElement, 'di');
-        bpmnElement.di = di;
+        diRefs.bind(vdmlElement, 'di');
+        vdmlElement.di = di;
       }
     } else {
       logError(
-        translate('no bpmnElement referenced in {element}', {
+        translate('no vdmlElement referenced in {element}', {
           element: elementToString(di)
         }),
         { element: di }
@@ -12926,12 +13007,12 @@ function BpmnTreeWalker(handler, translate) {
    * @throws {Error} if no diagram to display could be found
    */
   function handleDefinitions(definitions, diagram) {
-    // make sure we walk the correct bpmnElement
+    // make sure we walk the correct vdmlElement
 
     var diagrams = definitions.diagrams;
 
     if (diagram && diagrams.indexOf(diagram) === -1) {
-      throw new Error(translate('diagram not part of bpmn:Definitions'));
+      throw new Error(translate('diagram not part of vdml:Definitions'));
     }
 
     if (!diagram && diagrams && diagrams.length) {
@@ -12956,7 +13037,7 @@ function BpmnTreeWalker(handler, translate) {
       ));
     }
 
-    var rootElement = plane.bpmnElement;
+    var rootElement = plane.vdmlElement;
 
     // ensure we default to a suitable display candidate (process or collaboration),
     // even if non is specified in DI
@@ -12968,14 +13049,14 @@ function BpmnTreeWalker(handler, translate) {
       } else {
 
         logError(
-          translate('correcting missing bpmnElement on {plane} to {rootElement}', {
+          translate('correcting missing vdmlElement on {plane} to {rootElement}', {
             plane: elementToString(plane),
             rootElement: elementToString(rootElement)
           })
         );
 
         // correct DI on the fly
-        plane.bpmnElement = rootElement;
+        plane.vdmlElement = rootElement;
         registerDi(plane);
       }
     }
@@ -12983,16 +13064,16 @@ function BpmnTreeWalker(handler, translate) {
 
     var ctx = visitRoot(rootElement, plane);
 
-    if (is(rootElement, 'bpmn:Process')) {
+    if (is(rootElement, 'vdml:Process')) {
       handleProcess(rootElement, ctx);
-    } else if (is(rootElement, 'bpmn:Collaboration')) {
+    } else if (is(rootElement, 'vdml:Collaboration')) {
       handleCollaboration(rootElement, ctx);
 
       // force drawing of everything not yet drawn that is part of the target DI
       handleUnhandledProcesses(definitions.rootElements, ctx);
     } else {
       throw new Error(
-        translate('unsupported bpmnElement for {plane}: {rootElement}', {
+        translate('unsupported vdmlElement for {plane}: {rootElement}', {
           plane: elementToString(plane),
           rootElement: elementToString(rootElement)
         })
@@ -13023,7 +13104,7 @@ function BpmnTreeWalker(handler, translate) {
     // if they contain lanes with DI information.
     // we do this to pass the free-floating lane test cases in the MIWG test suite
     var processes = filter(rootElements, function(e) {
-      return !isHandled(e) && is(e, 'bpmn:Process') && e.laneSets;
+      return !isHandled(e) && is(e, 'vdml:Process') && e.laneSets;
     });
 
     processes.forEach(contextual(handleProcess));
@@ -13051,9 +13132,9 @@ function BpmnTreeWalker(handler, translate) {
 
   function handleArtifact(artifact, context) {
 
-    // bpmn:TextAnnotation
-    // bpmn:Group
-    // bpmn:Association
+    // vdml:TextAnnotation
+    // vdml:Group
+    // vdml:Association
 
     visitIfDi(artifact, context);
   }
@@ -13061,7 +13142,7 @@ function BpmnTreeWalker(handler, translate) {
   function handleArtifacts(artifacts, context) {
 
     forEach(artifacts, function(e) {
-      if (is(e, 'bpmn:Association')) {
+      if (is(e, 'vdml:Association')) {
         deferred.push(function() {
           handleArtifact(e, context);
         });
@@ -13089,20 +13170,20 @@ function BpmnTreeWalker(handler, translate) {
   function handleFlowNode(flowNode, context) {
     var childCtx = visitIfDi(flowNode, context);
 
-    if (is(flowNode, 'bpmn:SubProcess')) {
+    if (is(flowNode, 'vdml:SubProcess')) {
       handleSubProcess(flowNode, childCtx || context);
     }
 
-    if (is(flowNode, 'bpmn:Activity')) {
+    if (is(flowNode, 'vdml:Activity')) {
       handleIoSpecification(flowNode.ioSpecification, context);
     }
 
     // defer handling of associations
     // affected types:
     //
-    //   * bpmn:Activity
-    //   * bpmn:ThrowEvent
-    //   * bpmn:CatchEvent
+    //   * vdml:Activity
+    //   * vdml:ThrowEvent
+    //   * vdml:CatchEvent
     //
     deferred.push(function() {
       forEach(flowNode.dataInputAssociations, contextual(handleDataAssociation, context));
@@ -13150,21 +13231,21 @@ function BpmnTreeWalker(handler, translate) {
 
   function handleFlowElements(flowElements, context) {
     forEach(flowElements, function(e) {
-      if (is(e, 'bpmn:SequenceFlow')) {
+      if (is(e, 'vdml:SequenceFlow')) {
         deferred.push(function() {
           handleSequenceFlow(e, context);
         });
-      } else if (is(e, 'bpmn:BoundaryEvent')) {
+      } else if (is(e, 'vdml:BoundaryEvent')) {
         deferred.unshift(function() {
           handleBoundaryEvent(e, context);
         });
-      } else if (is(e, 'bpmn:FlowNode')) {
+      } else if (is(e, 'vdml:FlowNode')) {
         handleFlowNode(e, context);
-      } else if (is(e, 'bpmn:DataObject')) {
+      } else if (is(e, 'vdml:DataObject')) {
         // SKIP (assume correct referencing via DataObjectReference)
-      } else if (is(e, 'bpmn:DataStoreReference')) {
+      } else if (is(e, 'vdml:DataStoreReference')) {
         handleDataElement(e, context);
-      } else if (is(e, 'bpmn:DataObjectReference')) {
+      } else if (is(e, 'vdml:DataObjectReference')) {
         handleDataElement(e, context);
       } else {
         logError(
@@ -13218,96 +13299,15 @@ function BpmnTreeWalker(handler, translate) {
   };
 }
 
-module.exports = BpmnTreeWalker;
-},{"302":302,"303":303,"304":304,"464":464,"89":89}],88:[function(_dereq_,module,exports){
-'use strict';
-
-var BpmnTreeWalker = _dereq_(87);
-
-
-/**
- * Import the definitions into a diagram.
- *
- * Errors and warnings are reported through the specified callback.
- *
- * @param  {Diagram} diagram
- * @param  {ModdleElement} definitions
- * @param  {Function} done the callback, invoked with (err, [ warning ]) once the import is done
- */
-function importBpmnDiagram(diagram, definitions, done) {
-
-  var importer = diagram.get('bpmnImporter'),
-      eventBus = diagram.get('eventBus'),
-      translate = diagram.get('translate');
-
-  var error,
-      warnings = [];
-
-  /**
-   * Walk the diagram semantically, importing (=drawing)
-   * all elements you encounter.
-   *
-   * @param {ModdleElement} definitions
-   */
-  function render(definitions) {
-
-    var visitor = {
-
-      root: function(element) {
-        return importer.add(element);
-      },
-
-      element: function(element, parentShape) {
-        return importer.add(element, parentShape);
-      },
-
-      error: function(message, context) {
-        warnings.push({ message: message, context: context });
-      }
-    };
-
-    var walker = new BpmnTreeWalker(visitor, translate);
-
-    // traverse BPMN 2.0 document model,
-    // starting at definitions
-    walker.handleDefinitions(definitions);
-  }
-
-  eventBus.fire('import.render.start', { definitions: definitions });
-
-  try {
-    render(definitions);
-  } catch (e) {
-    error = e;
-  }
-
-  eventBus.fire('import.render.complete', {
-    error: error,
-    warnings: warnings
-  });
-
-  done(error, warnings);
-}
-
-module.exports.importBpmnDiagram = importBpmnDiagram;
-},{"87":87}],89:[function(_dereq_,module,exports){
-'use strict';
-
-module.exports.elementToString = function(e) {
-  if (!e) {
-    return '<null>';
-  }
-
-  return '<' + e.$type + (e.id ? ' id="' + e.id : '') + '" />';
-};
-},{}],90:[function(_dereq_,module,exports){
+module.exports = VdmlTreeWalker;
+},{"281":281,"282":282,"283":283,"441":441,"87":87}],90:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(250)
+    _dereq_(229)
   ],
-  bpmnImporter: [ 'type', _dereq_(86) ]
+  bpmnImporter: [ 'type', _dereq_(88) ]
 };
-},{"250":250,"86":86}],91:[function(_dereq_,module,exports){
+},{"229":229,"88":88}],91:[function(_dereq_,module,exports){
 'use strict';
 
 var is = _dereq_(93).is,
@@ -13315,15 +13315,15 @@ var is = _dereq_(93).is,
 
 module.exports.isExpanded = function(element) {
 
-  if (is(element, 'bpmn:CallActivity')) {
+  if (is(element, 'vdml:CallActivity')) {
     return false;
   }
 
-  if (is(element, 'bpmn:SubProcess')) {
+  if (is(element, 'vdml:SubProcess')) {
     return !!getBusinessObject(element).di.isExpanded;
   }
 
-  if (is(element, 'bpmn:Participant')) {
+  if (is(element, 'vdml:Participant')) {
     return !!getBusinessObject(element).processRef;
   }
 
@@ -13341,7 +13341,7 @@ module.exports.isEventSubProcess = function(element) {
 },{"93":93}],92:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433);
+var assign = _dereq_(410);
 
 var is = _dereq_(93).is;
 
@@ -13360,12 +13360,12 @@ var FLOW_LABEL_INDENT = module.exports.FLOW_LABEL_INDENT = 15;
  * @return {Boolean} true if has label
  */
 module.exports.hasExternalLabel = function(semantic) {
-  return is(semantic, 'bpmn:Event') ||
-         is(semantic, 'bpmn:Gateway') ||
-         is(semantic, 'bpmn:DataStoreReference') ||
-         is(semantic, 'bpmn:DataObjectReference') ||
-         is(semantic, 'bpmn:SequenceFlow') ||
-         is(semantic, 'bpmn:MessageFlow');
+  return is(semantic, 'vdml:Event') ||
+         is(semantic, 'vdml:Gateway') ||
+         is(semantic, 'vdml:DataStoreReference') ||
+         is(semantic, 'vdml:DataObjectReference') ||
+         is(semantic, 'vdml:SequenceFlow') ||
+         is(semantic, 'vdml:MessageFlow');
 };
 
 /**
@@ -13479,7 +13479,7 @@ module.exports.getExternalLabelBounds = function(semantic, element) {
   }, size);
 };
 
-},{"433":433,"93":93}],93:[function(_dereq_,module,exports){
+},{"410":410,"93":93}],93:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -13521,9 +13521,9 @@ module.exports.getBusinessObject = getBusinessObject;
 
 'use strict';
 
-var domify = _dereq_(451);
+var domify = _dereq_(428);
 
-var domDelegate = _dereq_(450);
+var domDelegate = _dereq_(427);
 
 /* jshint -W101 */
 
@@ -13596,7510 +13596,19 @@ function open() {
 }
 
 module.exports.open = open;
-},{"450":450,"451":451}],95:[function(_dereq_,module,exports){
-module.exports = _dereq_(97);
-},{"97":97}],96:[function(_dereq_,module,exports){
-'use strict';
-
-var isString = _dereq_(430),
-    isFunction = _dereq_(425),
-    assign = _dereq_(433);
-
-var Moddle = _dereq_(103),
-    XmlReader = _dereq_(99),
-    XmlWriter = _dereq_(100);
-
-/**
- * A sub class of {@link Moddle} with support for import and export of BPMN 2.0 xml files.
- *
- * @class BpmnModdle
- * @extends Moddle
- *
- * @param {Object|Array} packages to use for instantiating the model
- * @param {Object} [options] additional options to pass over
- */
-function BpmnModdle(packages, options) {
-  Moddle.call(this, packages, options);
-}
-
-BpmnModdle.prototype = Object.create(Moddle.prototype);
-
-module.exports = BpmnModdle;
-
-
-/**
- * Instantiates a BPMN model tree from a given xml string.
- *
- * @param {String}   xmlStr
- * @param {String}   [typeName='bpmn:Definitions'] name of the root element
- * @param {Object}   [options]  options to pass to the underlying reader
- * @param {Function} done       callback that is invoked with (err, result, parseContext)
- *                              once the import completes
- */
-BpmnModdle.prototype.fromXML = function(xmlStr, typeName, options, done) {
-
-  if (!isString(typeName)) {
-    done = options;
-    options = typeName;
-    typeName = 'bpmn:Definitions';
-  }
-
-  if (isFunction(options)) {
-    done = options;
-    options = {};
-  }
-
-  var reader = new XmlReader(assign({ model: this, lax: true }, options));
-  var rootHandler = reader.handler(typeName);
-
-  reader.fromXML(xmlStr, rootHandler, done);
-};
-
-
-/**
- * Serializes a BPMN 2.0 object tree to XML.
- *
- * @param {String}   element    the root element, typically an instance of `bpmn:Definitions`
- * @param {Object}   [options]  to pass to the underlying writer
- * @param {Function} done       callback invoked with (err, xmlStr) once the import completes
- */
-BpmnModdle.prototype.toXML = function(element, options, done) {
-
-  if (isFunction(options)) {
-    done = options;
-    options = {};
-  }
-
-  var writer = new XmlWriter(options);
-  try {
-    var result = writer.toXML(element);
-    done(null, result);
-  } catch (e) {
-    done(e);
-  }
-};
-
-},{"100":100,"103":103,"425":425,"430":430,"433":433,"99":99}],97:[function(_dereq_,module,exports){
-'use strict';
-
-var assign = _dereq_(433);
-
-var BpmnModdle = _dereq_(96);
-
-var packages = {
-  bpmn: _dereq_(112),
-  bpmndi: _dereq_(113),
-  dc: _dereq_(114),
-  di: _dereq_(115)
-};
-
-module.exports = function(additionalPackages, options) {
-  return new BpmnModdle(assign({}, packages, additionalPackages), options);
-};
-},{"112":112,"113":113,"114":114,"115":115,"433":433,"96":96}],98:[function(_dereq_,module,exports){
-'use strict';
-
-function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-function lower(string) {
-  return string.charAt(0).toLowerCase() + string.slice(1);
-}
-
-function hasLowerCaseAlias(pkg) {
-  return pkg.xml && pkg.xml.tagAlias === 'lowerCase';
-}
-
-
-module.exports.aliasToName = function(alias, pkg) {
-  if (hasLowerCaseAlias(pkg)) {
-    return capitalize(alias);
-  } else {
-    return alias;
-  }
-};
-
-module.exports.nameToAlias = function(name, pkg) {
-  if (hasLowerCaseAlias(pkg)) {
-    return lower(name);
-  } else {
-    return name;
-  }
-};
-
-module.exports.DEFAULT_NS_MAP = {
-  'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
-};
-
-var XSI_TYPE = module.exports.XSI_TYPE = 'xsi:type';
-
-function serializeFormat(element) {
-  return element.xml && element.xml.serialize;
-}
-
-module.exports.serializeAsType = function(element) {
-  return serializeFormat(element) === XSI_TYPE;
-};
-
-module.exports.serializeAsProperty = function(element) {
-  return serializeFormat(element) === 'property';
-};
-},{}],99:[function(_dereq_,module,exports){
-'use strict';
-
-var reduce = _dereq_(308),
-    forEach = _dereq_(304),
-    find = _dereq_(303),
-    assign = _dereq_(433),
-    defer = _dereq_(316);
-
-var Stack = _dereq_(102),
-    SaxParser = _dereq_(101).parser,
-    Moddle = _dereq_(103),
-    parseNameNs = _dereq_(108).parseName,
-    Types = _dereq_(111),
-    coerceType = Types.coerceType,
-    isSimpleType = Types.isSimple,
-    common = _dereq_(98),
-    XSI_TYPE = common.XSI_TYPE,
-    XSI_URI = common.DEFAULT_NS_MAP.xsi,
-    serializeAsType = common.serializeAsType,
-    aliasToName = common.aliasToName;
-
-function parseNodeAttributes(node) {
-  var nodeAttrs = node.attributes;
-
-  return reduce(nodeAttrs, function(result, v, k) {
-    var name, ns;
-
-    if (!v.local) {
-      name = v.prefix;
-    } else {
-      ns = parseNameNs(v.name, v.prefix);
-      name = ns.name;
-    }
-
-    result[name] = v.value;
-    return result;
-  }, {});
-}
-
-function normalizeType(node, attr, model) {
-  var nameNs = parseNameNs(attr.value);
-
-  var uri = node.ns[nameNs.prefix || ''],
-      localName = nameNs.localName,
-      pkg = uri && model.getPackage(uri),
-      typePrefix;
-
-  if (pkg) {
-    typePrefix = pkg.xml && pkg.xml.typePrefix;
-
-    if (typePrefix && localName.indexOf(typePrefix) === 0) {
-      localName = localName.slice(typePrefix.length);
-    }
-
-    attr.value = pkg.prefix + ':' + localName;
-  }
-}
-
-/**
- * Normalizes namespaces for a node given an optional default namespace and a
- * number of mappings from uris to default prefixes.
- *
- * @param  {XmlNode} node
- * @param  {Model} model the model containing all registered namespaces
- * @param  {Uri} defaultNsUri
- */
-function normalizeNamespaces(node, model, defaultNsUri) {
-  var uri, prefix;
-
-  uri = node.uri || defaultNsUri;
-
-  if (uri) {
-    var pkg = model.getPackage(uri);
-
-    if (pkg) {
-      prefix = pkg.prefix;
-    } else {
-      prefix = node.prefix;
-    }
-
-    node.prefix = prefix;
-    node.uri = uri;
-  }
-
-  forEach(node.attributes, function(attr) {
-
-    // normalize xsi:type attributes because the
-    // assigned type may or may not be namespace prefixed
-    if (attr.uri === XSI_URI && attr.local === 'type') {
-      normalizeType(node, attr, model);
-    }
-
-    normalizeNamespaces(attr, model, null);
-  });
-}
-
-
-function error(message) {
-  return new Error(message);
-}
-
-/**
- * Get the moddle descriptor for a given instance or type.
- *
- * @param  {ModdleElement|Function} element
- *
- * @return {Object} the moddle descriptor
- */
-function getModdleDescriptor(element) {
-  return element.$descriptor;
-}
-
-/**
- * A parse context.
- *
- * @class
- *
- * @param {Object} options
- * @param {ElementHandler} options.rootHandler the root handler for parsing a document
- * @param {boolean} [options.lax=false] whether or not to ignore invalid elements
- */
-function Context(options) {
-
-  /**
-   * @property {ElementHandler} rootHandler
-   */
-
-  /**
-   * @property {Boolean} lax
-   */
-
-  assign(this, options);
-
-  this.elementsById = {};
-  this.references = [];
-  this.warnings = [];
-
-  /**
-   * Add an unresolved reference.
-   *
-   * @param {Object} reference
-   */
-  this.addReference = function(reference) {
-    this.references.push(reference);
-  };
-
-  /**
-   * Add a processed element.
-   *
-   * @param {ModdleElement} element
-   */
-  this.addElement = function(element) {
-
-    if (!element) {
-      throw error('expected element');
-    }
-
-    var elementsById = this.elementsById;
-
-    var descriptor = getModdleDescriptor(element);
-
-    var idProperty = descriptor.idProperty,
-        id;
-
-    if (idProperty) {
-      id = element.get(idProperty.name);
-
-      if (id) {
-
-        if (elementsById[id]) {
-          throw error('duplicate ID <' + id + '>');
-        }
-
-        elementsById[id] = element;
-      }
-    }
-  };
-
-  /**
-   * Add an import warning.
-   *
-   * @param {Object} warning
-   * @param {String} warning.message
-   * @param {Error} [warning.error]
-   */
-  this.addWarning = function(warning) {
-    this.warnings.push(warning);
-  };
-}
-
-function BaseHandler() {}
-
-BaseHandler.prototype.handleEnd = function() {};
-BaseHandler.prototype.handleText = function() {};
-BaseHandler.prototype.handleNode = function() {};
-
-
-/**
- * A simple pass through handler that does nothing except for
- * ignoring all input it receives.
- *
- * This is used to ignore unknown elements and
- * attributes.
- */
-function NoopHandler() { }
-
-NoopHandler.prototype = new BaseHandler();
-
-NoopHandler.prototype.handleNode = function() {
-  return this;
-};
-
-function BodyHandler() {}
-
-BodyHandler.prototype = new BaseHandler();
-
-BodyHandler.prototype.handleText = function(text) {
-  this.body = (this.body || '') + text;
-};
-
-function ReferenceHandler(property, context) {
-  this.property = property;
-  this.context = context;
-}
-
-ReferenceHandler.prototype = new BodyHandler();
-
-ReferenceHandler.prototype.handleNode = function(node) {
-
-  if (this.element) {
-    throw error('expected no sub nodes');
-  } else {
-    this.element = this.createReference(node);
-  }
-
-  return this;
-};
-
-ReferenceHandler.prototype.handleEnd = function() {
-  this.element.id = this.body;
-};
-
-ReferenceHandler.prototype.createReference = function(node) {
-  return {
-    property: this.property.ns.name,
-    id: ''
-  };
-};
-
-function ValueHandler(propertyDesc, element) {
-  this.element = element;
-  this.propertyDesc = propertyDesc;
-}
-
-ValueHandler.prototype = new BodyHandler();
-
-ValueHandler.prototype.handleEnd = function() {
-
-  var value = this.body,
-      element = this.element,
-      propertyDesc = this.propertyDesc;
-
-  value = coerceType(propertyDesc.type, value);
-
-  if (propertyDesc.isMany) {
-    element.get(propertyDesc.name).push(value);
-  } else {
-    element.set(propertyDesc.name, value);
-  }
-};
-
-
-function BaseElementHandler() {}
-
-BaseElementHandler.prototype = Object.create(BodyHandler.prototype);
-
-BaseElementHandler.prototype.handleNode = function(node) {
-  var parser = this,
-      element = this.element;
-
-  if (!element) {
-    element = this.element = this.createElement(node);
-
-    this.context.addElement(element);
-  } else {
-    parser = this.handleChild(node);
-  }
-
-  return parser;
-};
-
-/**
- * @class XMLReader.ElementHandler
- *
- */
-function ElementHandler(model, type, context) {
-  this.model = model;
-  this.type = model.getType(type);
-  this.context = context;
-}
-
-ElementHandler.prototype = new BaseElementHandler();
-
-ElementHandler.prototype.addReference = function(reference) {
-  this.context.addReference(reference);
-};
-
-ElementHandler.prototype.handleEnd = function() {
-
-  var value = this.body,
-      element = this.element,
-      descriptor = getModdleDescriptor(element),
-      bodyProperty = descriptor.bodyProperty;
-
-  if (bodyProperty && value !== undefined) {
-    value = coerceType(bodyProperty.type, value);
-    element.set(bodyProperty.name, value);
-  }
-};
-
-/**
- * Create an instance of the model from the given node.
- *
- * @param  {Element} node the xml node
- */
-ElementHandler.prototype.createElement = function(node) {
-  var attributes = parseNodeAttributes(node),
-      Type = this.type,
-      descriptor = getModdleDescriptor(Type),
-      context = this.context,
-      instance = new Type({});
-
-  forEach(attributes, function(value, name) {
-
-    var prop = descriptor.propertiesByName[name],
-        values;
-
-    if (prop && prop.isReference) {
-
-      if (!prop.isMany) {
-        context.addReference({
-          element: instance,
-          property: prop.ns.name,
-          id: value
-        });
-      } else {
-        // IDREFS: parse references as whitespace-separated list
-        values = value.split(' ');
-
-        forEach(values, function(v) {
-          context.addReference({
-            element: instance,
-            property: prop.ns.name,
-            id: v
-          });
-        });
-      }
-
-    } else {
-      if (prop) {
-        value = coerceType(prop.type, value);
-      }
-
-      instance.set(name, value);
-    }
-  });
-
-  return instance;
-};
-
-ElementHandler.prototype.getPropertyForNode = function(node) {
-
-  var nameNs = parseNameNs(node.local, node.prefix);
-
-  var type = this.type,
-      model = this.model,
-      descriptor = getModdleDescriptor(type);
-
-  var propertyName = nameNs.name,
-      property = descriptor.propertiesByName[propertyName],
-      elementTypeName,
-      elementType,
-      typeAnnotation;
-
-  // search for properties by name first
-
-  if (property) {
-
-    if (serializeAsType(property)) {
-      typeAnnotation = node.attributes[XSI_TYPE];
-
-      // xsi type is optional, if it does not exists the
-      // default type is assumed
-      if (typeAnnotation) {
-
-        elementTypeName = typeAnnotation.value;
-
-        // TODO: extract real name from attribute
-        elementType = model.getType(elementTypeName);
-
-        return assign({}, property, { effectiveType: getModdleDescriptor(elementType).name });
-      }
-    }
-
-    // search for properties by name first
-    return property;
-  }
-
-
-  var pkg = model.getPackage(nameNs.prefix);
-
-  if (pkg) {
-    elementTypeName = nameNs.prefix + ':' + aliasToName(nameNs.localName, descriptor.$pkg);
-    elementType = model.getType(elementTypeName);
-
-    // search for collection members later
-    property = find(descriptor.properties, function(p) {
-      return !p.isVirtual && !p.isReference && !p.isAttribute && elementType.hasType(p.type);
-    });
-
-    if (property) {
-      return assign({}, property, { effectiveType: getModdleDescriptor(elementType).name });
-    }
-  } else {
-    // parse unknown element (maybe extension)
-    property = find(descriptor.properties, function(p) {
-      return !p.isReference && !p.isAttribute && p.type === 'Element';
-    });
-
-    if (property) {
-      return property;
-    }
-  }
-
-  throw error('unrecognized element <' + nameNs.name + '>');
-};
-
-ElementHandler.prototype.toString = function() {
-  return 'ElementDescriptor[' + getModdleDescriptor(this.type).name + ']';
-};
-
-ElementHandler.prototype.valueHandler = function(propertyDesc, element) {
-  return new ValueHandler(propertyDesc, element);
-};
-
-ElementHandler.prototype.referenceHandler = function(propertyDesc) {
-  return new ReferenceHandler(propertyDesc, this.context);
-};
-
-ElementHandler.prototype.handler = function(type) {
-  if (type === 'Element') {
-    return new GenericElementHandler(this.model, type, this.context);
-  } else {
-    return new ElementHandler(this.model, type, this.context);
-  }
-};
-
-/**
- * Handle the child element parsing
- *
- * @param  {Element} node the xml node
- */
-ElementHandler.prototype.handleChild = function(node) {
-  var propertyDesc, type, element, childHandler;
-
-  propertyDesc = this.getPropertyForNode(node);
-  element = this.element;
-
-  type = propertyDesc.effectiveType || propertyDesc.type;
-
-  if (isSimpleType(type)) {
-    return this.valueHandler(propertyDesc, element);
-  }
-
-  if (propertyDesc.isReference) {
-    childHandler = this.referenceHandler(propertyDesc).handleNode(node);
-  } else {
-    childHandler = this.handler(type).handleNode(node);
-  }
-
-  var newElement = childHandler.element;
-
-  // child handles may decide to skip elements
-  // by not returning anything
-  if (newElement !== undefined) {
-
-    if (propertyDesc.isMany) {
-      element.get(propertyDesc.name).push(newElement);
-    } else {
-      element.set(propertyDesc.name, newElement);
-    }
-
-    if (propertyDesc.isReference) {
-      assign(newElement, {
-        element: element
-      });
-
-      this.context.addReference(newElement);
-    } else {
-      // establish child -> parent relationship
-      newElement.$parent = element;
-    }
-  }
-
-  return childHandler;
-};
-
-
-function GenericElementHandler(model, type, context) {
-  this.model = model;
-  this.context = context;
-}
-
-GenericElementHandler.prototype = Object.create(BaseElementHandler.prototype);
-
-GenericElementHandler.prototype.createElement = function(node) {
-
-  var name = node.name,
-      prefix = node.prefix,
-      uri = node.ns[prefix],
-      attributes = node.attributes;
-
-  return this.model.createAny(name, uri, attributes);
-};
-
-GenericElementHandler.prototype.handleChild = function(node) {
-
-  var handler = new GenericElementHandler(this.model, 'Element', this.context).handleNode(node),
-      element = this.element;
-
-  var newElement = handler.element,
-      children;
-
-  if (newElement !== undefined) {
-    children = element.$children = element.$children || [];
-    children.push(newElement);
-
-    // establish child -> parent relationship
-    newElement.$parent = element;
-  }
-
-  return handler;
-};
-
-GenericElementHandler.prototype.handleText = function(text) {
-  this.body = this.body || '' + text;
-};
-
-GenericElementHandler.prototype.handleEnd = function() {
-  if (this.body) {
-    this.element.$body = this.body;
-  }
-};
-
-/**
- * A reader for a meta-model
- *
- * @param {Object} options
- * @param {Model} options.model used to read xml files
- * @param {Boolean} options.lax whether to make parse errors warnings
- */
-function XMLReader(options) {
-
-  if (options instanceof Moddle) {
-    options = {
-      model: options
-    };
-  }
-
-  assign(this, { lax: false }, options);
-}
-
-
-/**
- * Parse the given XML into a moddle document tree.
- *
- * @param {String} xml
- * @param {ElementHandler|Object} options or rootHandler
- * @param  {Function} done
- */
-XMLReader.prototype.fromXML = function(xml, options, done) {
-
-  var rootHandler = options.rootHandler;
-
-  if (options instanceof ElementHandler) {
-    // root handler passed via (xml, { rootHandler: ElementHandler }, ...)
-    rootHandler = options;
-    options = {};
-  } else {
-    if (typeof options === 'string') {
-      // rootHandler passed via (xml, 'someString', ...)
-      rootHandler = this.handler(options);
-      options = {};
-    } else if (typeof rootHandler === 'string') {
-      // rootHandler passed via (xml, { rootHandler: 'someString' }, ...)
-      rootHandler = this.handler(rootHandler);
-    }
-  }
-
-  var model = this.model,
-      lax = this.lax;
-
-  var context = new Context(assign({}, options, { rootHandler: rootHandler })),
-      parser = new SaxParser(true, { xmlns: true, trim: true }),
-      stack = new Stack();
-
-  rootHandler.context = context;
-
-  // push root handler
-  stack.push(rootHandler);
-
-
-  function resolveReferences() {
-
-    var elementsById = context.elementsById;
-    var references = context.references;
-
-    var i, r;
-
-    for (i = 0; !!(r = references[i]); i++) {
-      var element = r.element;
-      var reference = elementsById[r.id];
-      var property = getModdleDescriptor(element).propertiesByName[r.property];
-
-      if (!reference) {
-        context.addWarning({
-          message: 'unresolved reference <' + r.id + '>',
-          element: r.element,
-          property: r.property,
-          value: r.id
-        });
-      }
-
-      if (property.isMany) {
-        var collection = element.get(property.name),
-            idx = collection.indexOf(r);
-
-        // we replace an existing place holder (idx != -1) or
-        // append to the collection instead
-        if (idx === -1) {
-          idx = collection.length;
-        }
-
-        if (!reference) {
-          // remove unresolvable reference
-          collection.splice(idx, 1);
-        } else {
-          // add or update reference in collection
-          collection[idx] = reference;
-        }
-      } else {
-        element.set(property.name, reference);
-      }
-    }
-  }
-
-  function handleClose(tagName) {
-    stack.pop().handleEnd();
-  }
-
-  function handleOpen(node) {
-    var handler = stack.peek();
-
-    normalizeNamespaces(node, model);
-
-    try {
-      stack.push(handler.handleNode(node));
-    } catch (e) {
-
-      var line = this.line,
-          column = this.column;
-
-      var message =
-        'unparsable content <' + node.name + '> detected\n\t' +
-          'line: ' + line + '\n\t' +
-          'column: ' + column + '\n\t' +
-          'nested error: ' + e.message;
-
-      if (lax) {
-        context.addWarning({
-          message: message,
-          error: e
-        });
-
-        console.warn('could not parse node');
-        console.warn(e);
-
-        stack.push(new NoopHandler());
-      } else {
-        console.error('could not parse document');
-        console.error(e);
-
-        throw error(message);
-      }
-    }
-  }
-
-  function handleText(text) {
-    stack.peek().handleText(text);
-  }
-
-  parser.onopentag = handleOpen;
-  parser.oncdata = parser.ontext = handleText;
-  parser.onclosetag = handleClose;
-  parser.onend = resolveReferences;
-
-  // deferred parse XML to make loading really ascnchronous
-  // this ensures the execution environment (node or browser)
-  // is kept responsive and that certain optimization strategies
-  // can kick in
-  defer(function() {
-    var error;
-
-    try {
-      parser.write(xml).close();
-    } catch (e) {
-      error = e;
-    }
-
-    done(error, error ? undefined : rootHandler.element, context);
-  });
-};
-
-XMLReader.prototype.handler = function(name) {
-  return new ElementHandler(this.model, name);
-};
-
-module.exports = XMLReader;
-module.exports.ElementHandler = ElementHandler;
-},{"101":101,"102":102,"103":103,"108":108,"111":111,"303":303,"304":304,"308":308,"316":316,"433":433,"98":98}],100:[function(_dereq_,module,exports){
-'use strict';
-
-var map = _dereq_(307),
-    forEach = _dereq_(304),
-    isString = _dereq_(430),
-    filter = _dereq_(302),
-    assign = _dereq_(433);
-
-var Types = _dereq_(111),
-    parseNameNs = _dereq_(108).parseName,
-    common = _dereq_(98),
-    nameToAlias = common.nameToAlias,
-    serializeAsType = common.serializeAsType,
-    serializeAsProperty = common.serializeAsProperty;
-
-var XML_PREAMBLE = '<?xml version="1.0" encoding="UTF-8"?>\n',
-    ESCAPE_CHARS = /(<|>|'|"|&|\n\r|\n)/g,
-    DEFAULT_NS_MAP = common.DEFAULT_NS_MAP,
-    XSI_TYPE = common.XSI_TYPE;
-
-
-function nsName(ns) {
-  if (isString(ns)) {
-    return ns;
-  } else {
-    return (ns.prefix ? ns.prefix + ':' : '') + ns.localName;
-  }
-}
-
-function getNsAttrs(namespaces) {
-
-  function isUsed(ns) {
-    return namespaces.used[ns.uri];
-  }
-
-  function toAttr(ns) {
-    var name = 'xmlns' + (ns.prefix ? ':' + ns.prefix : '');
-    return { name: name, value: ns.uri };
-  }
-
-  var allNs = [].concat(namespaces.wellknown, namespaces.custom);
-
-  return map(filter(allNs, isUsed), toAttr);
-}
-
-function getElementNs(ns, descriptor) {
-  if (descriptor.isGeneric) {
-    return descriptor.name;
-  } else {
-    return assign({ localName: nameToAlias(descriptor.ns.localName, descriptor.$pkg) }, ns);
-  }
-}
-
-function getPropertyNs(ns, descriptor) {
-  return assign({ localName: descriptor.ns.localName }, ns);
-}
-
-function getSerializableProperties(element) {
-  var descriptor = element.$descriptor;
-
-  return filter(descriptor.properties, function(p) {
-    var name = p.name;
-
-    if (p.isVirtual) {
-      return false;
-    }
-
-    // do not serialize defaults
-    if (!element.hasOwnProperty(name)) {
-      return false;
-    }
-
-    var value = element[name];
-
-    // do not serialize default equals
-    if (value === p.default) {
-      return false;
-    }
-
-    // do not serialize null properties
-    if (value === null) {
-      return false;
-    }
-
-    return p.isMany ? value.length : true;
-  });
-}
-
-var ESCAPE_MAP = {
-  '\n': '10',
-  '\n\r': '10',
-  '"': '34',
-  '\'': '39',
-  '<': '60',
-  '>': '62',
-  '&': '38'
-};
-
-/**
- * Escape a string attribute to not contain any bad values (line breaks, '"', ...)
- *
- * @param {String} str the string to escape
- * @return {String} the escaped string
- */
-function escapeAttr(str) {
-
-  // ensure we are handling strings here
-  str = isString(str) ? str : '' + str;
-
-  return str.replace(ESCAPE_CHARS, function(str) {
-    return '&#' + ESCAPE_MAP[str] + ';';
-  });
-}
-
-function filterAttributes(props) {
-  return filter(props, function(p) { return p.isAttr; });
-}
-
-function filterContained(props) {
-  return filter(props, function(p) { return !p.isAttr; });
-}
-
-
-function ReferenceSerializer(parent, ns) {
-  this.ns = ns;
-}
-
-ReferenceSerializer.prototype.build = function(element) {
-  this.element = element;
-  return this;
-};
-
-ReferenceSerializer.prototype.serializeTo = function(writer) {
-  writer
-    .appendIndent()
-    .append('<' + nsName(this.ns) + '>' + this.element.id + '</' + nsName(this.ns) + '>')
-    .appendNewLine();
-};
-
-function BodySerializer() {}
-
-BodySerializer.prototype.serializeValue = BodySerializer.prototype.serializeTo = function(writer) {
-  var escape = this.escape;
-
-  if (escape) {
-    writer.append('<![CDATA[');
-  }
-
-  writer.append(this.value);
-
-  if (escape) {
-    writer.append(']]>');
-  }
-};
-
-BodySerializer.prototype.build = function(prop, value) {
-  this.value = value;
-
-  if (prop.type === 'String' && value.search(ESCAPE_CHARS) !== -1) {
-    this.escape = true;
-  }
-
-  return this;
-};
-
-function ValueSerializer(ns) {
-  this.ns = ns;
-}
-
-ValueSerializer.prototype = new BodySerializer();
-
-ValueSerializer.prototype.serializeTo = function(writer) {
-
-  writer
-    .appendIndent()
-    .append('<' + nsName(this.ns) + '>');
-
-  this.serializeValue(writer);
-
-  writer
-    .append( '</' + nsName(this.ns) + '>')
-    .appendNewLine();
-};
-
-function ElementSerializer(parent, ns) {
-  this.body = [];
-  this.attrs = [];
-
-  this.parent = parent;
-  this.ns = ns;
-}
-
-ElementSerializer.prototype.build = function(element) {
-  this.element = element;
-
-  var otherAttrs = this.parseNsAttributes(element);
-
-  if (!this.ns) {
-    this.ns = this.nsTagName(element.$descriptor);
-  }
-
-  if (element.$descriptor.isGeneric) {
-    this.parseGeneric(element);
-  } else {
-    var properties = getSerializableProperties(element);
-
-    this.parseAttributes(filterAttributes(properties));
-    this.parseContainments(filterContained(properties));
-
-    this.parseGenericAttributes(element, otherAttrs);
-  }
-
-  return this;
-};
-
-ElementSerializer.prototype.nsTagName = function(descriptor) {
-  var effectiveNs = this.logNamespaceUsed(descriptor.ns);
-  return getElementNs(effectiveNs, descriptor);
-};
-
-ElementSerializer.prototype.nsPropertyTagName = function(descriptor) {
-  var effectiveNs = this.logNamespaceUsed(descriptor.ns);
-  return getPropertyNs(effectiveNs, descriptor);
-};
-
-ElementSerializer.prototype.isLocalNs = function(ns) {
-  return ns.uri === this.ns.uri;
-};
-
-/**
- * Get the actual ns attribute name for the given element.
- *
- * @param {Object} element
- * @param {Boolean} [inherited=false]
- *
- * @return {Object} nsName
- */
-ElementSerializer.prototype.nsAttributeName = function(element) {
-
-  var ns;
-
-  if (isString(element)) {
-    ns = parseNameNs(element);
-  } else {
-    ns = element.ns;
-  }
-
-  // return just local name for inherited attributes
-  if (element.inherited) {
-    return { localName: ns.localName };
-  }
-
-  // parse + log effective ns
-  var effectiveNs = this.logNamespaceUsed(ns);
-
-  // strip prefix if same namespace like parent
-  if (this.isLocalNs(effectiveNs)) {
-    return { localName: ns.localName };
-  } else {
-    return assign({ localName: ns.localName }, effectiveNs);
-  }
-};
-
-ElementSerializer.prototype.parseGeneric = function(element) {
-
-  var self = this,
-      body = this.body,
-      attrs = this.attrs;
-
-  forEach(element, function(val, key) {
-
-    if (key === '$body') {
-      body.push(new BodySerializer().build({ type: 'String' }, val));
-    } else
-    if (key === '$children') {
-      forEach(val, function(child) {
-        body.push(new ElementSerializer(self).build(child));
-      });
-    } else
-    if (key.indexOf('$') !== 0) {
-      attrs.push({ name: key, value: escapeAttr(val) });
-    }
-  });
-};
-
-/**
- * Parse namespaces and return a list of left over generic attributes
- *
- * @param  {Object} element
- * @return {Array<Object>}
- */
-ElementSerializer.prototype.parseNsAttributes = function(element) {
-  var self = this;
-
-  var genericAttrs = element.$attrs;
-
-  var model = element.$model;
-
-  var attributes = [];
-
-  // parse namespace attributes first
-  // and log them. push non namespace attributes to a list
-  // and process them later
-  forEach(genericAttrs, function(value, name) {
-    var nameNs = parseNameNs(name);
-
-    var ns;
-
-    // parse xmlns:foo="http://foo.bar"
-    if (nameNs.prefix === 'xmlns') {
-      ns = { prefix: nameNs.localName, uri: value };
-    }
-
-    // parse xmlns="http://foo.bar"
-    if (!nameNs.prefix && nameNs.localName === 'xmlns') {
-      ns = { uri: value };
-    }
-
-    if (ns) {
-      if (model.getPackage(value)) {
-        // register well known namespace
-        self.logNamespace(ns, true);
-      } else {
-        // log custom namespace directly as used
-        self.logNamespaceUsed(ns);
-      }
-    } else {
-      attributes.push({ name: name, value: value });
-    }
-  });
-
-  return attributes;
-};
-
-ElementSerializer.prototype.parseGenericAttributes = function(element, attributes) {
-
-  var self = this;
-
-  forEach(attributes, function(attr) {
-
-    // do not serialize xsi:type attribute
-    // it is set manually based on the actual implementation type
-    if (attr.name === XSI_TYPE) {
-      return;
-    }
-
-    try {
-      self.addAttribute(self.nsAttributeName(attr.name), attr.value);
-    } catch (e) {
-      console.warn(
-        'missing namespace information for ',
-        attr.name, '=', attr.value, 'on', element,
-        e);
-    }
-  });
-};
-
-ElementSerializer.prototype.parseContainments = function(properties) {
-
-  var self = this,
-      body = this.body,
-      element = this.element;
-
-  forEach(properties, function(p) {
-    var value = element.get(p.name),
-        isReference = p.isReference,
-        isMany = p.isMany;
-
-    var ns = self.nsPropertyTagName(p);
-
-    if (!isMany) {
-      value = [ value ];
-    }
-
-    if (p.isBody) {
-      body.push(new BodySerializer().build(p, value[0]));
-    } else
-    if (Types.isSimple(p.type)) {
-      forEach(value, function(v) {
-        body.push(new ValueSerializer(ns).build(p, v));
-      });
-    } else
-    if (isReference) {
-      forEach(value, function(v) {
-        body.push(new ReferenceSerializer(self, ns).build(v));
-      });
-    } else {
-      // allow serialization via type
-      // rather than element name
-      var asType = serializeAsType(p),
-          asProperty = serializeAsProperty(p);
-
-      forEach(value, function(v) {
-        var serializer;
-
-        if (asType) {
-          serializer = new TypeSerializer(self, ns);
-        } else
-        if (asProperty) {
-          serializer = new ElementSerializer(self, ns);
-        } else {
-          serializer = new ElementSerializer(self);
-        }
-
-        body.push(serializer.build(v));
-      });
-    }
-  });
-};
-
-ElementSerializer.prototype.getNamespaces = function() {
-
-  var namespaces = this.namespaces,
-      parent = this.parent;
-
-  if (!namespaces) {
-    namespaces = this.namespaces = parent ? parent.getNamespaces() : {
-      prefixMap: {},
-      uriMap: {},
-      used: {},
-      wellknown: [],
-      custom: []
-    };
-  }
-
-  return namespaces;
-};
-
-ElementSerializer.prototype.logNamespace = function(ns, wellknown) {
-  var namespaces = this.getNamespaces();
-
-  var nsUri = ns.uri;
-
-  var existing = namespaces.uriMap[nsUri];
-
-  if (!existing) {
-    namespaces.uriMap[nsUri] = ns;
-
-    if (wellknown) {
-      namespaces.wellknown.push(ns);
-    } else {
-      namespaces.custom.push(ns);
-    }
-  }
-
-  namespaces.prefixMap[ns.prefix] = nsUri;
-
-  return ns;
-};
-
-ElementSerializer.prototype.logNamespaceUsed = function(ns) {
-  var element = this.element,
-      model = element.$model,
-      namespaces = this.getNamespaces();
-
-  // ns may be
-  //
-  //   * prefix only
-  //   * prefix:uri
-
-  var prefix = ns.prefix;
-
-  var wellknownUri = DEFAULT_NS_MAP[prefix] || model && (model.getPackage(prefix) || {}).uri;
-
-  var uri = ns.uri || namespaces.prefixMap[prefix] || wellknownUri;
-
-  if (!uri) {
-    throw new Error('no namespace uri given for prefix <' + ns.prefix + '>');
-  }
-
-  ns = namespaces.uriMap[uri];
-
-  if (!ns) {
-    ns = this.logNamespace({ prefix: prefix, uri: uri }, wellknownUri);
-  }
-
-  if (!namespaces.used[ns.uri]) {
-    namespaces.used[ns.uri] = ns;
-  }
-
-  return ns;
-};
-
-ElementSerializer.prototype.parseAttributes = function(properties) {
-  var self = this,
-      element = this.element;
-
-  forEach(properties, function(p) {
-
-    var value = element.get(p.name);
-
-    if (p.isReference) {
-
-      if (!p.isMany) {
-        value = value.id;
-      }
-      else {
-        var values = [];
-        forEach(value, function(v) {
-          values.push(v.id);
-        });
-        // IDREFS is a whitespace-separated list of references.
-        value = values.join(' ');
-      }
-
-    }
-
-    self.addAttribute(self.nsAttributeName(p), value);
-  });
-};
-
-ElementSerializer.prototype.addAttribute = function(name, value) {
-  var attrs = this.attrs;
-
-  if (isString(value)) {
-    value = escapeAttr(value);
-  }
-
-  attrs.push({ name: name, value: value });
-};
-
-ElementSerializer.prototype.serializeAttributes = function(writer) {
-  var attrs = this.attrs,
-      root = !this.parent;
-
-  if (root) {
-    attrs = getNsAttrs(this.namespaces).concat(attrs);
-  }
-
-  forEach(attrs, function(a) {
-    writer
-      .append(' ')
-      .append(nsName(a.name)).append('="').append(a.value).append('"');
-  });
-};
-
-ElementSerializer.prototype.serializeTo = function(writer) {
-  var hasBody = this.body.length,
-      indent = !(this.body.length === 1 && this.body[0] instanceof BodySerializer);
-
-  writer
-    .appendIndent()
-    .append('<' + nsName(this.ns));
-
-  this.serializeAttributes(writer);
-
-  writer.append(hasBody ? '>' : ' />');
-
-  if (hasBody) {
-
-    if (indent) {
-      writer
-        .appendNewLine()
-        .indent();
-    }
-
-    forEach(this.body, function(b) {
-      b.serializeTo(writer);
-    });
-
-    if (indent) {
-      writer
-        .unindent()
-        .appendIndent();
-    }
-
-    writer.append('</' + nsName(this.ns) + '>');
-  }
-
-  writer.appendNewLine();
-};
-
-/**
- * A serializer for types that handles serialization of data types
- */
-function TypeSerializer(parent, ns) {
-  ElementSerializer.call(this, parent, ns);
-}
-
-TypeSerializer.prototype = new ElementSerializer();
-
-TypeSerializer.prototype.build = function(element) {
-  var descriptor = element.$descriptor;
-
-  this.element = element;
-
-  this.typeNs = this.nsTagName(descriptor);
-
-  // add xsi:type attribute to represent the elements
-  // actual type
-
-  var typeNs = this.typeNs,
-      pkg = element.$model.getPackage(typeNs.uri),
-      typePrefix = (pkg.xml && pkg.xml.typePrefix) || '';
-
-  this.addAttribute(this.nsAttributeName(XSI_TYPE),
-    (typeNs.prefix ? typeNs.prefix + ':' : '') +
-    typePrefix + descriptor.ns.localName);
-
-  // do the usual stuff
-  return ElementSerializer.prototype.build.call(this, element);
-};
-
-TypeSerializer.prototype.isLocalNs = function(ns) {
-  return ns.uri === this.typeNs.uri;
-};
-
-function SavingWriter() {
-  this.value = '';
-
-  this.write = function(str) {
-    this.value += str;
-  };
-}
-
-function FormatingWriter(out, format) {
-
-  var indent = [''];
-
-  this.append = function(str) {
-    out.write(str);
-
-    return this;
-  };
-
-  this.appendNewLine = function() {
-    if (format) {
-      out.write('\n');
-    }
-
-    return this;
-  };
-
-  this.appendIndent = function() {
-    if (format) {
-      out.write(indent.join('  '));
-    }
-
-    return this;
-  };
-
-  this.indent = function() {
-    indent.push('');
-    return this;
-  };
-
-  this.unindent = function() {
-    indent.pop();
-    return this;
-  };
-}
-
-/**
- * A writer for meta-model backed document trees
- *
- * @param {Object} options output options to pass into the writer
- */
-function XMLWriter(options) {
-
-  options = assign({ format: false, preamble: true }, options || {});
-
-  function toXML(tree, writer) {
-    var internalWriter = writer || new SavingWriter();
-    var formatingWriter = new FormatingWriter(internalWriter, options.format);
-
-    if (options.preamble) {
-      formatingWriter.append(XML_PREAMBLE);
-    }
-
-    new ElementSerializer().build(tree).serializeTo(formatingWriter);
-
-    if (!writer) {
-      return internalWriter.value;
-    }
-  }
-
-  return {
-    toXML: toXML
-  };
-}
-
-module.exports = XMLWriter;
-
-},{"108":108,"111":111,"302":302,"304":304,"307":307,"430":430,"433":433,"98":98}],101:[function(_dereq_,module,exports){
-(function (Buffer){
-// wrapper for non-node envs
-;(function (sax) {
-
-sax.parser = function (strict, opt) { return new SAXParser(strict, opt) }
-sax.SAXParser = SAXParser
-sax.SAXStream = SAXStream
-sax.createStream = createStream
-
-// When we pass the MAX_BUFFER_LENGTH position, start checking for buffer overruns.
-// When we check, schedule the next check for MAX_BUFFER_LENGTH - (max(buffer lengths)),
-// since that's the earliest that a buffer overrun could occur.  This way, checks are
-// as rare as required, but as often as necessary to ensure never crossing this bound.
-// Furthermore, buffers are only tested at most once per write(), so passing a very
-// large string into write() might have undesirable effects, but this is manageable by
-// the caller, so it is assumed to be safe.  Thus, a call to write() may, in the extreme
-// edge case, result in creating at most one complete copy of the string passed in.
-// Set to Infinity to have unlimited buffers.
-sax.MAX_BUFFER_LENGTH = 64 * 1024
-
-var buffers = [
-  "comment", "sgmlDecl", "textNode", "tagName", "doctype",
-  "procInstName", "procInstBody", "entity", "attribName",
-  "attribValue", "cdata", "script"
-]
-
-sax.EVENTS = // for discoverability.
-  [ "text"
-  , "processinginstruction"
-  , "sgmldeclaration"
-  , "doctype"
-  , "comment"
-  , "attribute"
-  , "opentag"
-  , "closetag"
-  , "opencdata"
-  , "cdata"
-  , "closecdata"
-  , "error"
-  , "end"
-  , "ready"
-  , "script"
-  , "opennamespace"
-  , "closenamespace"
-  ]
-
-function SAXParser (strict, opt) {
-  if (!(this instanceof SAXParser)) return new SAXParser(strict, opt)
-
-  var parser = this
-  clearBuffers(parser)
-  parser.q = parser.c = ""
-  parser.bufferCheckPosition = sax.MAX_BUFFER_LENGTH
-  parser.opt = opt || {}
-  parser.opt.lowercase = parser.opt.lowercase || parser.opt.lowercasetags
-  parser.looseCase = parser.opt.lowercase ? "toLowerCase" : "toUpperCase"
-  parser.tags = []
-  parser.closed = parser.closedRoot = parser.sawRoot = false
-  parser.tag = parser.error = null
-  parser.strict = !!strict
-  parser.noscript = !!(strict || parser.opt.noscript)
-  parser.state = S.BEGIN
-  parser.ENTITIES = Object.create(sax.ENTITIES)
-  parser.attribList = []
-
-  // namespaces form a prototype chain.
-  // it always points at the current tag,
-  // which protos to its parent tag.
-  if (parser.opt.xmlns) parser.ns = Object.create(rootNS)
-
-  // mostly just for error reporting
-  parser.trackPosition = parser.opt.position !== false
-  if (parser.trackPosition) {
-    parser.position = parser.line = parser.column = 0
-  }
-  emit(parser, "onready")
-}
-
-if (!Object.create) Object.create = function (o) {
-  function f () { this.__proto__ = o }
-  f.prototype = o
-  return new f
-}
-
-if (!Object.getPrototypeOf) Object.getPrototypeOf = function (o) {
-  return o.__proto__
-}
-
-if (!Object.keys) Object.keys = function (o) {
-  var a = []
-  for (var i in o) if (o.hasOwnProperty(i)) a.push(i)
-  return a
-}
-
-function checkBufferLength (parser) {
-  var maxAllowed = Math.max(sax.MAX_BUFFER_LENGTH, 10)
-    , maxActual = 0
-  for (var i = 0, l = buffers.length; i < l; i ++) {
-    var len = parser[buffers[i]].length
-    if (len > maxAllowed) {
-      // Text/cdata nodes can get big, and since they're buffered,
-      // we can get here under normal conditions.
-      // Avoid issues by emitting the text node now,
-      // so at least it won't get any bigger.
-      switch (buffers[i]) {
-        case "textNode":
-          closeText(parser)
-        break
-
-        case "cdata":
-          emitNode(parser, "oncdata", parser.cdata)
-          parser.cdata = ""
-        break
-
-        case "script":
-          emitNode(parser, "onscript", parser.script)
-          parser.script = ""
-        break
-
-        default:
-          error(parser, "Max buffer length exceeded: "+buffers[i])
-      }
-    }
-    maxActual = Math.max(maxActual, len)
-  }
-  // schedule the next check for the earliest possible buffer overrun.
-  parser.bufferCheckPosition = (sax.MAX_BUFFER_LENGTH - maxActual)
-                             + parser.position
-}
-
-function clearBuffers (parser) {
-  for (var i = 0, l = buffers.length; i < l; i ++) {
-    parser[buffers[i]] = ""
-  }
-}
-
-function flushBuffers (parser) {
-  closeText(parser)
-  if (parser.cdata !== "") {
-    emitNode(parser, "oncdata", parser.cdata)
-    parser.cdata = ""
-  }
-  if (parser.script !== "") {
-    emitNode(parser, "onscript", parser.script)
-    parser.script = ""
-  }
-}
-
-SAXParser.prototype =
-  { end: function () { end(this) }
-  , write: write
-  , resume: function () { this.error = null; return this }
-  , close: function () { return this.write(null) }
-  , flush: function () { flushBuffers(this) }
-  }
-
-try {
-  var Stream = _dereq_("stream").Stream
-} catch (ex) {
-  var Stream = function () {}
-}
-
-
-var streamWraps = sax.EVENTS.filter(function (ev) {
-  return ev !== "error" && ev !== "end"
-})
-
-function createStream (strict, opt) {
-  return new SAXStream(strict, opt)
-}
-
-function SAXStream (strict, opt) {
-  if (!(this instanceof SAXStream)) return new SAXStream(strict, opt)
-
-  Stream.apply(this)
-
-  this._parser = new SAXParser(strict, opt)
-  this.writable = true
-  this.readable = true
-
-
-  var me = this
-
-  this._parser.onend = function () {
-    me.emit("end")
-  }
-
-  this._parser.onerror = function (er) {
-    me.emit("error", er)
-
-    // if didn't throw, then means error was handled.
-    // go ahead and clear error, so we can write again.
-    me._parser.error = null
-  }
-
-  this._decoder = null;
-
-  streamWraps.forEach(function (ev) {
-    Object.defineProperty(me, "on" + ev, {
-      get: function () { return me._parser["on" + ev] },
-      set: function (h) {
-        if (!h) {
-          me.removeAllListeners(ev)
-          return me._parser["on"+ev] = h
-        }
-        me.on(ev, h)
-      },
-      enumerable: true,
-      configurable: false
-    })
-  })
-}
-
-SAXStream.prototype = Object.create(Stream.prototype,
-  { constructor: { value: SAXStream } })
-
-SAXStream.prototype.write = function (data) {
-  if (typeof Buffer === 'function' &&
-      typeof Buffer.isBuffer === 'function' &&
-      Buffer.isBuffer(data)) {
-    if (!this._decoder) {
-      var SD = _dereq_('string_decoder').StringDecoder
-      this._decoder = new SD('utf8')
-    }
-    data = this._decoder.write(data);
-  }
-
-  this._parser.write(data.toString())
-  this.emit("data", data)
-  return true
-}
-
-SAXStream.prototype.end = function (chunk) {
-  if (chunk && chunk.length) this.write(chunk)
-  this._parser.end()
-  return true
-}
-
-SAXStream.prototype.on = function (ev, handler) {
-  var me = this
-  if (!me._parser["on"+ev] && streamWraps.indexOf(ev) !== -1) {
-    me._parser["on"+ev] = function () {
-      var args = arguments.length === 1 ? [arguments[0]]
-               : Array.apply(null, arguments)
-      args.splice(0, 0, ev)
-      me.emit.apply(me, args)
-    }
-  }
-
-  return Stream.prototype.on.call(me, ev, handler)
-}
-
-
-
-// character classes and tokens
-var whitespace = "\r\n\t "
-  // this really needs to be replaced with character classes.
-  // XML allows all manner of ridiculous numbers and digits.
-  , number = "0124356789"
-  , letter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-  // (Letter | "_" | ":")
-  , quote = "'\""
-  , entity = number+letter+"#"
-  , attribEnd = whitespace + ">"
-  , CDATA = "[CDATA["
-  , DOCTYPE = "DOCTYPE"
-  , XML_NAMESPACE = "http://www.w3.org/XML/1998/namespace"
-  , XMLNS_NAMESPACE = "http://www.w3.org/2000/xmlns/"
-  , rootNS = { xml: XML_NAMESPACE, xmlns: XMLNS_NAMESPACE }
-
-// turn all the string character sets into character class objects.
-whitespace = charClass(whitespace)
-number = charClass(number)
-letter = charClass(letter)
-
-// http://www.w3.org/TR/REC-xml/#NT-NameStartChar
-// This implementation works on strings, a single character at a time
-// as such, it cannot ever support astral-plane characters (10000-EFFFF)
-// without a significant breaking change to either this  parser, or the
-// JavaScript language.  Implementation of an emoji-capable xml parser
-// is left as an exercise for the reader.
-var nameStart = /[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/
-
-var nameBody = /[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u00B7\u0300-\u036F\u203F-\u2040\.\d-]/
-
-quote = charClass(quote)
-entity = charClass(entity)
-attribEnd = charClass(attribEnd)
-
-function charClass (str) {
-  return str.split("").reduce(function (s, c) {
-    s[c] = true
-    return s
-  }, {})
-}
-
-function isRegExp (c) {
-  return Object.prototype.toString.call(c) === '[object RegExp]'
-}
-
-function is (charclass, c) {
-  return isRegExp(charclass) ? !!c.match(charclass) : charclass[c]
-}
-
-function not (charclass, c) {
-  return !is(charclass, c)
-}
-
-var S = 0
-sax.STATE =
-{ BEGIN                     : S++
-, TEXT                      : S++ // general stuff
-, TEXT_ENTITY               : S++ // &amp and such.
-, OPEN_WAKA                 : S++ // <
-, SGML_DECL                 : S++ // <!BLARG
-, SGML_DECL_QUOTED          : S++ // <!BLARG foo "bar
-, DOCTYPE                   : S++ // <!DOCTYPE
-, DOCTYPE_QUOTED            : S++ // <!DOCTYPE "//blah
-, DOCTYPE_DTD               : S++ // <!DOCTYPE "//blah" [ ...
-, DOCTYPE_DTD_QUOTED        : S++ // <!DOCTYPE "//blah" [ "foo
-, COMMENT_STARTING          : S++ // <!-
-, COMMENT                   : S++ // <!--
-, COMMENT_ENDING            : S++ // <!-- blah -
-, COMMENT_ENDED             : S++ // <!-- blah --
-, CDATA                     : S++ // <![CDATA[ something
-, CDATA_ENDING              : S++ // ]
-, CDATA_ENDING_2            : S++ // ]]
-, PROC_INST                 : S++ // <?hi
-, PROC_INST_BODY            : S++ // <?hi there
-, PROC_INST_ENDING          : S++ // <?hi "there" ?
-, OPEN_TAG                  : S++ // <strong
-, OPEN_TAG_SLASH            : S++ // <strong /
-, ATTRIB                    : S++ // <a
-, ATTRIB_NAME               : S++ // <a foo
-, ATTRIB_NAME_SAW_WHITE     : S++ // <a foo _
-, ATTRIB_VALUE              : S++ // <a foo=
-, ATTRIB_VALUE_QUOTED       : S++ // <a foo="bar
-, ATTRIB_VALUE_CLOSED       : S++ // <a foo="bar"
-, ATTRIB_VALUE_UNQUOTED     : S++ // <a foo=bar
-, ATTRIB_VALUE_ENTITY_Q     : S++ // <foo bar="&quot;"
-, ATTRIB_VALUE_ENTITY_U     : S++ // <foo bar=&quot;
-, CLOSE_TAG                 : S++ // </a
-, CLOSE_TAG_SAW_WHITE       : S++ // </a   >
-, SCRIPT                    : S++ // <script> ...
-, SCRIPT_ENDING             : S++ // <script> ... <
-}
-
-sax.ENTITIES =
-{ "amp" : "&"
-, "gt" : ">"
-, "lt" : "<"
-, "quot" : "\""
-, "apos" : "'"
-, "AElig" : 198
-, "Aacute" : 193
-, "Acirc" : 194
-, "Agrave" : 192
-, "Aring" : 197
-, "Atilde" : 195
-, "Auml" : 196
-, "Ccedil" : 199
-, "ETH" : 208
-, "Eacute" : 201
-, "Ecirc" : 202
-, "Egrave" : 200
-, "Euml" : 203
-, "Iacute" : 205
-, "Icirc" : 206
-, "Igrave" : 204
-, "Iuml" : 207
-, "Ntilde" : 209
-, "Oacute" : 211
-, "Ocirc" : 212
-, "Ograve" : 210
-, "Oslash" : 216
-, "Otilde" : 213
-, "Ouml" : 214
-, "THORN" : 222
-, "Uacute" : 218
-, "Ucirc" : 219
-, "Ugrave" : 217
-, "Uuml" : 220
-, "Yacute" : 221
-, "aacute" : 225
-, "acirc" : 226
-, "aelig" : 230
-, "agrave" : 224
-, "aring" : 229
-, "atilde" : 227
-, "auml" : 228
-, "ccedil" : 231
-, "eacute" : 233
-, "ecirc" : 234
-, "egrave" : 232
-, "eth" : 240
-, "euml" : 235
-, "iacute" : 237
-, "icirc" : 238
-, "igrave" : 236
-, "iuml" : 239
-, "ntilde" : 241
-, "oacute" : 243
-, "ocirc" : 244
-, "ograve" : 242
-, "oslash" : 248
-, "otilde" : 245
-, "ouml" : 246
-, "szlig" : 223
-, "thorn" : 254
-, "uacute" : 250
-, "ucirc" : 251
-, "ugrave" : 249
-, "uuml" : 252
-, "yacute" : 253
-, "yuml" : 255
-, "copy" : 169
-, "reg" : 174
-, "nbsp" : 160
-, "iexcl" : 161
-, "cent" : 162
-, "pound" : 163
-, "curren" : 164
-, "yen" : 165
-, "brvbar" : 166
-, "sect" : 167
-, "uml" : 168
-, "ordf" : 170
-, "laquo" : 171
-, "not" : 172
-, "shy" : 173
-, "macr" : 175
-, "deg" : 176
-, "plusmn" : 177
-, "sup1" : 185
-, "sup2" : 178
-, "sup3" : 179
-, "acute" : 180
-, "micro" : 181
-, "para" : 182
-, "middot" : 183
-, "cedil" : 184
-, "ordm" : 186
-, "raquo" : 187
-, "frac14" : 188
-, "frac12" : 189
-, "frac34" : 190
-, "iquest" : 191
-, "times" : 215
-, "divide" : 247
-, "OElig" : 338
-, "oelig" : 339
-, "Scaron" : 352
-, "scaron" : 353
-, "Yuml" : 376
-, "fnof" : 402
-, "circ" : 710
-, "tilde" : 732
-, "Alpha" : 913
-, "Beta" : 914
-, "Gamma" : 915
-, "Delta" : 916
-, "Epsilon" : 917
-, "Zeta" : 918
-, "Eta" : 919
-, "Theta" : 920
-, "Iota" : 921
-, "Kappa" : 922
-, "Lambda" : 923
-, "Mu" : 924
-, "Nu" : 925
-, "Xi" : 926
-, "Omicron" : 927
-, "Pi" : 928
-, "Rho" : 929
-, "Sigma" : 931
-, "Tau" : 932
-, "Upsilon" : 933
-, "Phi" : 934
-, "Chi" : 935
-, "Psi" : 936
-, "Omega" : 937
-, "alpha" : 945
-, "beta" : 946
-, "gamma" : 947
-, "delta" : 948
-, "epsilon" : 949
-, "zeta" : 950
-, "eta" : 951
-, "theta" : 952
-, "iota" : 953
-, "kappa" : 954
-, "lambda" : 955
-, "mu" : 956
-, "nu" : 957
-, "xi" : 958
-, "omicron" : 959
-, "pi" : 960
-, "rho" : 961
-, "sigmaf" : 962
-, "sigma" : 963
-, "tau" : 964
-, "upsilon" : 965
-, "phi" : 966
-, "chi" : 967
-, "psi" : 968
-, "omega" : 969
-, "thetasym" : 977
-, "upsih" : 978
-, "piv" : 982
-, "ensp" : 8194
-, "emsp" : 8195
-, "thinsp" : 8201
-, "zwnj" : 8204
-, "zwj" : 8205
-, "lrm" : 8206
-, "rlm" : 8207
-, "ndash" : 8211
-, "mdash" : 8212
-, "lsquo" : 8216
-, "rsquo" : 8217
-, "sbquo" : 8218
-, "ldquo" : 8220
-, "rdquo" : 8221
-, "bdquo" : 8222
-, "dagger" : 8224
-, "Dagger" : 8225
-, "bull" : 8226
-, "hellip" : 8230
-, "permil" : 8240
-, "prime" : 8242
-, "Prime" : 8243
-, "lsaquo" : 8249
-, "rsaquo" : 8250
-, "oline" : 8254
-, "frasl" : 8260
-, "euro" : 8364
-, "image" : 8465
-, "weierp" : 8472
-, "real" : 8476
-, "trade" : 8482
-, "alefsym" : 8501
-, "larr" : 8592
-, "uarr" : 8593
-, "rarr" : 8594
-, "darr" : 8595
-, "harr" : 8596
-, "crarr" : 8629
-, "lArr" : 8656
-, "uArr" : 8657
-, "rArr" : 8658
-, "dArr" : 8659
-, "hArr" : 8660
-, "forall" : 8704
-, "part" : 8706
-, "exist" : 8707
-, "empty" : 8709
-, "nabla" : 8711
-, "isin" : 8712
-, "notin" : 8713
-, "ni" : 8715
-, "prod" : 8719
-, "sum" : 8721
-, "minus" : 8722
-, "lowast" : 8727
-, "radic" : 8730
-, "prop" : 8733
-, "infin" : 8734
-, "ang" : 8736
-, "and" : 8743
-, "or" : 8744
-, "cap" : 8745
-, "cup" : 8746
-, "int" : 8747
-, "there4" : 8756
-, "sim" : 8764
-, "cong" : 8773
-, "asymp" : 8776
-, "ne" : 8800
-, "equiv" : 8801
-, "le" : 8804
-, "ge" : 8805
-, "sub" : 8834
-, "sup" : 8835
-, "nsub" : 8836
-, "sube" : 8838
-, "supe" : 8839
-, "oplus" : 8853
-, "otimes" : 8855
-, "perp" : 8869
-, "sdot" : 8901
-, "lceil" : 8968
-, "rceil" : 8969
-, "lfloor" : 8970
-, "rfloor" : 8971
-, "lang" : 9001
-, "rang" : 9002
-, "loz" : 9674
-, "spades" : 9824
-, "clubs" : 9827
-, "hearts" : 9829
-, "diams" : 9830
-}
-
-Object.keys(sax.ENTITIES).forEach(function (key) {
-    var e = sax.ENTITIES[key]
-    var s = typeof e === 'number' ? String.fromCharCode(e) : e
-    sax.ENTITIES[key] = s
-})
-
-for (var S in sax.STATE) sax.STATE[sax.STATE[S]] = S
-
-// shorthand
-S = sax.STATE
-
-function emit (parser, event, data) {
-  parser[event] && parser[event](data)
-}
-
-function emitNode (parser, nodeType, data) {
-  if (parser.textNode) closeText(parser)
-  emit(parser, nodeType, data)
-}
-
-function closeText (parser) {
-  parser.textNode = textopts(parser.opt, parser.textNode)
-  if (parser.textNode) emit(parser, "ontext", parser.textNode)
-  parser.textNode = ""
-}
-
-function textopts (opt, text) {
-  if (opt.trim) text = text.trim()
-  if (opt.normalize) text = text.replace(/\s+/g, " ")
-  return text
-}
-
-function error (parser, er) {
-  closeText(parser)
-  if (parser.trackPosition) {
-    er += "\nLine: "+parser.line+
-          "\nColumn: "+parser.column+
-          "\nChar: "+parser.c
-  }
-  er = new Error(er)
-  parser.error = er
-  emit(parser, "onerror", er)
-  return parser
-}
-
-function end (parser) {
-  if (!parser.closedRoot) strictFail(parser, "Unclosed root tag")
-  if ((parser.state !== S.BEGIN) && (parser.state !== S.TEXT)) error(parser, "Unexpected end")
-  closeText(parser)
-  parser.c = ""
-  parser.closed = true
-  emit(parser, "onend")
-  SAXParser.call(parser, parser.strict, parser.opt)
-  return parser
-}
-
-function strictFail (parser, message) {
-  if (typeof parser !== 'object' || !(parser instanceof SAXParser))
-    throw new Error('bad call to strictFail');
-  if (parser.strict) error(parser, message)
-}
-
-function newTag (parser) {
-  if (!parser.strict) parser.tagName = parser.tagName[parser.looseCase]()
-  var parent = parser.tags[parser.tags.length - 1] || parser
-    , tag = parser.tag = { name : parser.tagName, attributes : {} }
-
-  // will be overridden if tag contails an xmlns="foo" or xmlns:foo="bar"
-  if (parser.opt.xmlns) tag.ns = parent.ns
-  parser.attribList.length = 0
-}
-
-function qname (name, attribute) {
-  var i = name.indexOf(":")
-    , qualName = i < 0 ? [ "", name ] : name.split(":")
-    , prefix = qualName[0]
-    , local = qualName[1]
-
-  // <x "xmlns"="http://foo">
-  if (attribute && name === "xmlns") {
-    prefix = "xmlns"
-    local = ""
-  }
-
-  return { prefix: prefix, local: local }
-}
-
-function attrib (parser) {
-  if (!parser.strict) parser.attribName = parser.attribName[parser.looseCase]()
-
-  if (parser.attribList.indexOf(parser.attribName) !== -1 ||
-      parser.tag.attributes.hasOwnProperty(parser.attribName)) {
-    return parser.attribName = parser.attribValue = ""
-  }
-
-  if (parser.opt.xmlns) {
-    var qn = qname(parser.attribName, true)
-      , prefix = qn.prefix
-      , local = qn.local
-
-    if (prefix === "xmlns") {
-      // namespace binding attribute; push the binding into scope
-      if (local === "xml" && parser.attribValue !== XML_NAMESPACE) {
-        strictFail( parser
-                  , "xml: prefix must be bound to " + XML_NAMESPACE + "\n"
-                  + "Actual: " + parser.attribValue )
-      } else if (local === "xmlns" && parser.attribValue !== XMLNS_NAMESPACE) {
-        strictFail( parser
-                  , "xmlns: prefix must be bound to " + XMLNS_NAMESPACE + "\n"
-                  + "Actual: " + parser.attribValue )
-      } else {
-        var tag = parser.tag
-          , parent = parser.tags[parser.tags.length - 1] || parser
-        if (tag.ns === parent.ns) {
-          tag.ns = Object.create(parent.ns)
-        }
-        tag.ns[local] = parser.attribValue
-      }
-    }
-
-    // defer onattribute events until all attributes have been seen
-    // so any new bindings can take effect; preserve attribute order
-    // so deferred events can be emitted in document order
-    parser.attribList.push([parser.attribName, parser.attribValue])
-  } else {
-    // in non-xmlns mode, we can emit the event right away
-    parser.tag.attributes[parser.attribName] = parser.attribValue
-    emitNode( parser
-            , "onattribute"
-            , { name: parser.attribName
-              , value: parser.attribValue } )
-  }
-
-  parser.attribName = parser.attribValue = ""
-}
-
-function openTag (parser, selfClosing) {
-  if (parser.opt.xmlns) {
-    // emit namespace binding events
-    var tag = parser.tag
-
-    // add namespace info to tag
-    var qn = qname(parser.tagName)
-    tag.prefix = qn.prefix
-    tag.local = qn.local
-    tag.uri = tag.ns[qn.prefix] || ""
-
-    if (tag.prefix && !tag.uri) {
-      strictFail(parser, "Unbound namespace prefix: "
-                       + JSON.stringify(parser.tagName))
-      tag.uri = qn.prefix
-    }
-
-    var parent = parser.tags[parser.tags.length - 1] || parser
-    if (tag.ns && parent.ns !== tag.ns) {
-      Object.keys(tag.ns).forEach(function (p) {
-        emitNode( parser
-                , "onopennamespace"
-                , { prefix: p , uri: tag.ns[p] } )
-      })
-    }
-
-    // handle deferred onattribute events
-    // Note: do not apply default ns to attributes:
-    //   http://www.w3.org/TR/REC-xml-names/#defaulting
-    for (var i = 0, l = parser.attribList.length; i < l; i ++) {
-      var nv = parser.attribList[i]
-      var name = nv[0]
-        , value = nv[1]
-        , qualName = qname(name, true)
-        , prefix = qualName.prefix
-        , local = qualName.local
-        , uri = prefix == "" ? "" : (tag.ns[prefix] || "")
-        , a = { name: name
-              , value: value
-              , prefix: prefix
-              , local: local
-              , uri: uri
-              }
-
-      // if there's any attributes with an undefined namespace,
-      // then fail on them now.
-      if (prefix && prefix != "xmlns" && !uri) {
-        strictFail(parser, "Unbound namespace prefix: "
-                         + JSON.stringify(prefix))
-        a.uri = prefix
-      }
-      parser.tag.attributes[name] = a
-      emitNode(parser, "onattribute", a)
-    }
-    parser.attribList.length = 0
-  }
-
-  parser.tag.isSelfClosing = !!selfClosing
-
-  // process the tag
-  parser.sawRoot = true
-  parser.tags.push(parser.tag)
-  emitNode(parser, "onopentag", parser.tag)
-  if (!selfClosing) {
-    // special case for <script> in non-strict mode.
-    if (!parser.noscript && parser.tagName.toLowerCase() === "script") {
-      parser.state = S.SCRIPT
-    } else {
-      parser.state = S.TEXT
-    }
-    parser.tag = null
-    parser.tagName = ""
-  }
-  parser.attribName = parser.attribValue = ""
-  parser.attribList.length = 0
-}
-
-function closeTag (parser) {
-  if (!parser.tagName) {
-    strictFail(parser, "Weird empty close tag.")
-    parser.textNode += "</>"
-    parser.state = S.TEXT
-    return
-  }
-
-  if (parser.script) {
-    if (parser.tagName !== "script") {
-      parser.script += "</" + parser.tagName + ">"
-      parser.tagName = ""
-      parser.state = S.SCRIPT
-      return
-    }
-    emitNode(parser, "onscript", parser.script)
-    parser.script = ""
-  }
-
-  // first make sure that the closing tag actually exists.
-  // <a><b></c></b></a> will close everything, otherwise.
-  var t = parser.tags.length
-  var tagName = parser.tagName
-  if (!parser.strict) tagName = tagName[parser.looseCase]()
-  var closeTo = tagName
-  while (t --) {
-    var close = parser.tags[t]
-    if (close.name !== closeTo) {
-      // fail the first time in strict mode
-      strictFail(parser, "Unexpected close tag")
-    } else break
-  }
-
-  // didn't find it.  we already failed for strict, so just abort.
-  if (t < 0) {
-    strictFail(parser, "Unmatched closing tag: "+parser.tagName)
-    parser.textNode += "</" + parser.tagName + ">"
-    parser.state = S.TEXT
-    return
-  }
-  parser.tagName = tagName
-  var s = parser.tags.length
-  while (s --> t) {
-    var tag = parser.tag = parser.tags.pop()
-    parser.tagName = parser.tag.name
-    emitNode(parser, "onclosetag", parser.tagName)
-
-    var x = {}
-    for (var i in tag.ns) x[i] = tag.ns[i]
-
-    var parent = parser.tags[parser.tags.length - 1] || parser
-    if (parser.opt.xmlns && tag.ns !== parent.ns) {
-      // remove namespace bindings introduced by tag
-      Object.keys(tag.ns).forEach(function (p) {
-        var n = tag.ns[p]
-        emitNode(parser, "onclosenamespace", { prefix: p, uri: n })
-      })
-    }
-  }
-  if (t === 0) parser.closedRoot = true
-  parser.tagName = parser.attribValue = parser.attribName = ""
-  parser.attribList.length = 0
-  parser.state = S.TEXT
-}
-
-function parseEntity (parser) {
-  var entity = parser.entity
-    , entityLC = entity.toLowerCase()
-    , num
-    , numStr = ""
-  if (parser.ENTITIES[entity])
-    return parser.ENTITIES[entity]
-  if (parser.ENTITIES[entityLC])
-    return parser.ENTITIES[entityLC]
-  entity = entityLC
-  if (entity.charAt(0) === "#") {
-    if (entity.charAt(1) === "x") {
-      entity = entity.slice(2)
-      num = parseInt(entity, 16)
-      numStr = num.toString(16)
-    } else {
-      entity = entity.slice(1)
-      num = parseInt(entity, 10)
-      numStr = num.toString(10)
-    }
-  }
-  entity = entity.replace(/^0+/, "")
-  if (numStr.toLowerCase() !== entity) {
-    strictFail(parser, "Invalid character entity")
-    return "&"+parser.entity + ";"
-  }
-
-  return String.fromCodePoint(num)
-}
-
-function write (chunk) {
-  var parser = this
-  if (this.error) throw this.error
-  if (parser.closed) return error(parser,
-    "Cannot write after close. Assign an onready handler.")
-  if (chunk === null) return end(parser)
-  var i = 0, c = ""
-  while (parser.c = c = chunk.charAt(i++)) {
-    if (parser.trackPosition) {
-      parser.position ++
-      if (c === "\n") {
-        parser.line ++
-        parser.column = 0
-      } else parser.column ++
-    }
-    switch (parser.state) {
-
-      case S.BEGIN:
-        if (c === "<") {
-          parser.state = S.OPEN_WAKA
-          parser.startTagPosition = parser.position
-        } else if (not(whitespace,c)) {
-          // have to process this as a text node.
-          // weird, but happens.
-          strictFail(parser, "Non-whitespace before first tag.")
-          parser.textNode = c
-          parser.state = S.TEXT
-        }
-      continue
-
-      case S.TEXT:
-        if (parser.sawRoot && !parser.closedRoot) {
-          var starti = i-1
-          while (c && c!=="<" && c!=="&") {
-            c = chunk.charAt(i++)
-            if (c && parser.trackPosition) {
-              parser.position ++
-              if (c === "\n") {
-                parser.line ++
-                parser.column = 0
-              } else parser.column ++
-            }
-          }
-          parser.textNode += chunk.substring(starti, i-1)
-        }
-        if (c === "<") {
-          parser.state = S.OPEN_WAKA
-          parser.startTagPosition = parser.position
-        } else {
-          if (not(whitespace, c) && (!parser.sawRoot || parser.closedRoot))
-            strictFail(parser, "Text data outside of root node.")
-          if (c === "&") parser.state = S.TEXT_ENTITY
-          else parser.textNode += c
-        }
-      continue
-
-      case S.SCRIPT:
-        // only non-strict
-        if (c === "<") {
-          parser.state = S.SCRIPT_ENDING
-        } else parser.script += c
-      continue
-
-      case S.SCRIPT_ENDING:
-        if (c === "/") {
-          parser.state = S.CLOSE_TAG
-        } else {
-          parser.script += "<" + c
-          parser.state = S.SCRIPT
-        }
-      continue
-
-      case S.OPEN_WAKA:
-        // either a /, ?, !, or text is coming next.
-        if (c === "!") {
-          parser.state = S.SGML_DECL
-          parser.sgmlDecl = ""
-        } else if (is(whitespace, c)) {
-          // wait for it...
-        } else if (is(nameStart,c)) {
-          parser.state = S.OPEN_TAG
-          parser.tagName = c
-        } else if (c === "/") {
-          parser.state = S.CLOSE_TAG
-          parser.tagName = ""
-        } else if (c === "?") {
-          parser.state = S.PROC_INST
-          parser.procInstName = parser.procInstBody = ""
-        } else {
-          strictFail(parser, "Unencoded <")
-          // if there was some whitespace, then add that in.
-          if (parser.startTagPosition + 1 < parser.position) {
-            var pad = parser.position - parser.startTagPosition
-            c = new Array(pad).join(" ") + c
-          }
-          parser.textNode += "<" + c
-          parser.state = S.TEXT
-        }
-      continue
-
-      case S.SGML_DECL:
-        if ((parser.sgmlDecl+c).toUpperCase() === CDATA) {
-          emitNode(parser, "onopencdata")
-          parser.state = S.CDATA
-          parser.sgmlDecl = ""
-          parser.cdata = ""
-        } else if (parser.sgmlDecl+c === "--") {
-          parser.state = S.COMMENT
-          parser.comment = ""
-          parser.sgmlDecl = ""
-        } else if ((parser.sgmlDecl+c).toUpperCase() === DOCTYPE) {
-          parser.state = S.DOCTYPE
-          if (parser.doctype || parser.sawRoot) strictFail(parser,
-            "Inappropriately located doctype declaration")
-          parser.doctype = ""
-          parser.sgmlDecl = ""
-        } else if (c === ">") {
-          emitNode(parser, "onsgmldeclaration", parser.sgmlDecl)
-          parser.sgmlDecl = ""
-          parser.state = S.TEXT
-        } else if (is(quote, c)) {
-          parser.state = S.SGML_DECL_QUOTED
-          parser.sgmlDecl += c
-        } else parser.sgmlDecl += c
-      continue
-
-      case S.SGML_DECL_QUOTED:
-        if (c === parser.q) {
-          parser.state = S.SGML_DECL
-          parser.q = ""
-        }
-        parser.sgmlDecl += c
-      continue
-
-      case S.DOCTYPE:
-        if (c === ">") {
-          parser.state = S.TEXT
-          emitNode(parser, "ondoctype", parser.doctype)
-          parser.doctype = true // just remember that we saw it.
-        } else {
-          parser.doctype += c
-          if (c === "[") parser.state = S.DOCTYPE_DTD
-          else if (is(quote, c)) {
-            parser.state = S.DOCTYPE_QUOTED
-            parser.q = c
-          }
-        }
-      continue
-
-      case S.DOCTYPE_QUOTED:
-        parser.doctype += c
-        if (c === parser.q) {
-          parser.q = ""
-          parser.state = S.DOCTYPE
-        }
-      continue
-
-      case S.DOCTYPE_DTD:
-        parser.doctype += c
-        if (c === "]") parser.state = S.DOCTYPE
-        else if (is(quote,c)) {
-          parser.state = S.DOCTYPE_DTD_QUOTED
-          parser.q = c
-        }
-      continue
-
-      case S.DOCTYPE_DTD_QUOTED:
-        parser.doctype += c
-        if (c === parser.q) {
-          parser.state = S.DOCTYPE_DTD
-          parser.q = ""
-        }
-      continue
-
-      case S.COMMENT:
-        if (c === "-") parser.state = S.COMMENT_ENDING
-        else parser.comment += c
-      continue
-
-      case S.COMMENT_ENDING:
-        if (c === "-") {
-          parser.state = S.COMMENT_ENDED
-          parser.comment = textopts(parser.opt, parser.comment)
-          if (parser.comment) emitNode(parser, "oncomment", parser.comment)
-          parser.comment = ""
-        } else {
-          parser.comment += "-" + c
-          parser.state = S.COMMENT
-        }
-      continue
-
-      case S.COMMENT_ENDED:
-        if (c !== ">") {
-          strictFail(parser, "Malformed comment")
-          // allow <!-- blah -- bloo --> in non-strict mode,
-          // which is a comment of " blah -- bloo "
-          parser.comment += "--" + c
-          parser.state = S.COMMENT
-        } else parser.state = S.TEXT
-      continue
-
-      case S.CDATA:
-        if (c === "]") parser.state = S.CDATA_ENDING
-        else parser.cdata += c
-      continue
-
-      case S.CDATA_ENDING:
-        if (c === "]") parser.state = S.CDATA_ENDING_2
-        else {
-          parser.cdata += "]" + c
-          parser.state = S.CDATA
-        }
-      continue
-
-      case S.CDATA_ENDING_2:
-        if (c === ">") {
-          if (parser.cdata) emitNode(parser, "oncdata", parser.cdata)
-          emitNode(parser, "onclosecdata")
-          parser.cdata = ""
-          parser.state = S.TEXT
-        } else if (c === "]") {
-          parser.cdata += "]"
-        } else {
-          parser.cdata += "]]" + c
-          parser.state = S.CDATA
-        }
-      continue
-
-      case S.PROC_INST:
-        if (c === "?") parser.state = S.PROC_INST_ENDING
-        else if (is(whitespace, c)) parser.state = S.PROC_INST_BODY
-        else parser.procInstName += c
-      continue
-
-      case S.PROC_INST_BODY:
-        if (!parser.procInstBody && is(whitespace, c)) continue
-        else if (c === "?") parser.state = S.PROC_INST_ENDING
-        else parser.procInstBody += c
-      continue
-
-      case S.PROC_INST_ENDING:
-        if (c === ">") {
-          emitNode(parser, "onprocessinginstruction", {
-            name : parser.procInstName,
-            body : parser.procInstBody
-          })
-          parser.procInstName = parser.procInstBody = ""
-          parser.state = S.TEXT
-        } else {
-          parser.procInstBody += "?" + c
-          parser.state = S.PROC_INST_BODY
-        }
-      continue
-
-      case S.OPEN_TAG:
-        if (is(nameBody, c)) parser.tagName += c
-        else {
-          newTag(parser)
-          if (c === ">") openTag(parser)
-          else if (c === "/") parser.state = S.OPEN_TAG_SLASH
-          else {
-            if (not(whitespace, c)) strictFail(
-              parser, "Invalid character in tag name")
-            parser.state = S.ATTRIB
-          }
-        }
-      continue
-
-      case S.OPEN_TAG_SLASH:
-        if (c === ">") {
-          openTag(parser, true)
-          closeTag(parser)
-        } else {
-          strictFail(parser, "Forward-slash in opening tag not followed by >")
-          parser.state = S.ATTRIB
-        }
-      continue
-
-      case S.ATTRIB:
-        // haven't read the attribute name yet.
-        if (is(whitespace, c)) continue
-        else if (c === ">") openTag(parser)
-        else if (c === "/") parser.state = S.OPEN_TAG_SLASH
-        else if (is(nameStart, c)) {
-          parser.attribName = c
-          parser.attribValue = ""
-          parser.state = S.ATTRIB_NAME
-        } else strictFail(parser, "Invalid attribute name")
-      continue
-
-      case S.ATTRIB_NAME:
-        if (c === "=") parser.state = S.ATTRIB_VALUE
-        else if (c === ">") {
-          strictFail(parser, "Attribute without value")
-          parser.attribValue = parser.attribName
-          attrib(parser)
-          openTag(parser)
-        }
-        else if (is(whitespace, c)) parser.state = S.ATTRIB_NAME_SAW_WHITE
-        else if (is(nameBody, c)) parser.attribName += c
-        else strictFail(parser, "Invalid attribute name")
-      continue
-
-      case S.ATTRIB_NAME_SAW_WHITE:
-        if (c === "=") parser.state = S.ATTRIB_VALUE
-        else if (is(whitespace, c)) continue
-        else {
-          strictFail(parser, "Attribute without value")
-          parser.tag.attributes[parser.attribName] = ""
-          parser.attribValue = ""
-          emitNode(parser, "onattribute",
-                   { name : parser.attribName, value : "" })
-          parser.attribName = ""
-          if (c === ">") openTag(parser)
-          else if (is(nameStart, c)) {
-            parser.attribName = c
-            parser.state = S.ATTRIB_NAME
-          } else {
-            strictFail(parser, "Invalid attribute name")
-            parser.state = S.ATTRIB
-          }
-        }
-      continue
-
-      case S.ATTRIB_VALUE:
-        if (is(whitespace, c)) continue
-        else if (is(quote, c)) {
-          parser.q = c
-          parser.state = S.ATTRIB_VALUE_QUOTED
-        } else {
-          strictFail(parser, "Unquoted attribute value")
-          parser.state = S.ATTRIB_VALUE_UNQUOTED
-          parser.attribValue = c
-        }
-      continue
-
-      case S.ATTRIB_VALUE_QUOTED:
-        if (c !== parser.q) {
-          if (c === "&") parser.state = S.ATTRIB_VALUE_ENTITY_Q
-          else parser.attribValue += c
-          continue
-        }
-        attrib(parser)
-        parser.q = ""
-        parser.state = S.ATTRIB_VALUE_CLOSED
-      continue
-
-      case S.ATTRIB_VALUE_CLOSED:
-        if (is(whitespace, c)) {
-          parser.state = S.ATTRIB
-        } else if (c === ">") openTag(parser)
-        else if (c === "/") parser.state = S.OPEN_TAG_SLASH
-        else if (is(nameStart, c)) {
-          strictFail(parser, "No whitespace between attributes")
-          parser.attribName = c
-          parser.attribValue = ""
-          parser.state = S.ATTRIB_NAME
-        } else strictFail(parser, "Invalid attribute name")
-      continue
-
-      case S.ATTRIB_VALUE_UNQUOTED:
-        if (not(attribEnd,c)) {
-          if (c === "&") parser.state = S.ATTRIB_VALUE_ENTITY_U
-          else parser.attribValue += c
-          continue
-        }
-        attrib(parser)
-        if (c === ">") openTag(parser)
-        else parser.state = S.ATTRIB
-      continue
-
-      case S.CLOSE_TAG:
-        if (!parser.tagName) {
-          if (is(whitespace, c)) continue
-          else if (not(nameStart, c)) {
-            if (parser.script) {
-              parser.script += "</" + c
-              parser.state = S.SCRIPT
-            } else {
-              strictFail(parser, "Invalid tagname in closing tag.")
-            }
-          } else parser.tagName = c
-        }
-        else if (c === ">") closeTag(parser)
-        else if (is(nameBody, c)) parser.tagName += c
-        else if (parser.script) {
-          parser.script += "</" + parser.tagName
-          parser.tagName = ""
-          parser.state = S.SCRIPT
-        } else {
-          if (not(whitespace, c)) strictFail(parser,
-            "Invalid tagname in closing tag")
-          parser.state = S.CLOSE_TAG_SAW_WHITE
-        }
-      continue
-
-      case S.CLOSE_TAG_SAW_WHITE:
-        if (is(whitespace, c)) continue
-        if (c === ">") closeTag(parser)
-        else strictFail(parser, "Invalid characters in closing tag")
-      continue
-
-      case S.TEXT_ENTITY:
-      case S.ATTRIB_VALUE_ENTITY_Q:
-      case S.ATTRIB_VALUE_ENTITY_U:
-        switch(parser.state) {
-          case S.TEXT_ENTITY:
-            var returnState = S.TEXT, buffer = "textNode"
-          break
-
-          case S.ATTRIB_VALUE_ENTITY_Q:
-            var returnState = S.ATTRIB_VALUE_QUOTED, buffer = "attribValue"
-          break
-
-          case S.ATTRIB_VALUE_ENTITY_U:
-            var returnState = S.ATTRIB_VALUE_UNQUOTED, buffer = "attribValue"
-          break
-        }
-        if (c === ";") {
-          parser[buffer] += parseEntity(parser)
-          parser.entity = ""
-          parser.state = returnState
-        }
-        else if (is(entity, c)) parser.entity += c
-        else {
-          strictFail(parser, "Invalid character entity")
-          parser[buffer] += "&" + parser.entity + c
-          parser.entity = ""
-          parser.state = returnState
-        }
-      continue
-
-      default:
-        throw new Error(parser, "Unknown state: " + parser.state)
-    }
-  } // while
-  // cdata blocks can get very big under normal conditions. emit and move on.
-  // if (parser.state === S.CDATA && parser.cdata) {
-  //   emitNode(parser, "oncdata", parser.cdata)
-  //   parser.cdata = ""
-  // }
-  if (parser.position >= parser.bufferCheckPosition) checkBufferLength(parser)
-  return parser
-}
-
-/*! http://mths.be/fromcodepoint v0.1.0 by @mathias */
-if (!String.fromCodePoint) {
-        (function() {
-                var stringFromCharCode = String.fromCharCode;
-                var floor = Math.floor;
-                var fromCodePoint = function() {
-                        var MAX_SIZE = 0x4000;
-                        var codeUnits = [];
-                        var highSurrogate;
-                        var lowSurrogate;
-                        var index = -1;
-                        var length = arguments.length;
-                        if (!length) {
-                                return '';
-                        }
-                        var result = '';
-                        while (++index < length) {
-                                var codePoint = Number(arguments[index]);
-                                if (
-                                        !isFinite(codePoint) || // `NaN`, `+Infinity`, or `-Infinity`
-                                        codePoint < 0 || // not a valid Unicode code point
-                                        codePoint > 0x10FFFF || // not a valid Unicode code point
-                                        floor(codePoint) != codePoint // not an integer
-                                ) {
-                                        throw RangeError('Invalid code point: ' + codePoint);
-                                }
-                                if (codePoint <= 0xFFFF) { // BMP code point
-                                        codeUnits.push(codePoint);
-                                } else { // Astral code point; split in surrogate halves
-                                        // http://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
-                                        codePoint -= 0x10000;
-                                        highSurrogate = (codePoint >> 10) + 0xD800;
-                                        lowSurrogate = (codePoint % 0x400) + 0xDC00;
-                                        codeUnits.push(highSurrogate, lowSurrogate);
-                                }
-                                if (index + 1 == length || codeUnits.length > MAX_SIZE) {
-                                        result += stringFromCharCode.apply(null, codeUnits);
-                                        codeUnits.length = 0;
-                                }
-                        }
-                        return result;
-                };
-                if (Object.defineProperty) {
-                        Object.defineProperty(String, 'fromCodePoint', {
-                                'value': fromCodePoint,
-                                'configurable': true,
-                                'writable': true
-                        });
-                } else {
-                        String.fromCodePoint = fromCodePoint;
-                }
-        }());
-}
-
-})(typeof exports === "undefined" ? sax = {} : exports);
-
-}).call(this,undefined)
-
-},{"undefined":undefined}],102:[function(_dereq_,module,exports){
-/**
- * Tiny stack for browser or server
- *
- * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @copyright 2014 Jason Mulligan
- * @license BSD-3 <https://raw.github.com/avoidwork/tiny-stack/master/LICENSE>
- * @link http://avoidwork.github.io/tiny-stack
- * @module tiny-stack
- * @version 0.1.0
- */
-
-( function ( global ) {
-
-"use strict";
-
-/**
- * TinyStack
- *
- * @constructor
- */
-function TinyStack () {
-	this.data = [null];
-	this.top  = 0;
-}
-
-/**
- * Clears the stack
- *
- * @method clear
- * @memberOf TinyStack
- * @return {Object} {@link TinyStack}
- */
-TinyStack.prototype.clear = function clear () {
-	this.data = [null];
-	this.top  = 0;
-
-	return this;
-};
-
-/**
- * Gets the size of the stack
- *
- * @method length
- * @memberOf TinyStack
- * @return {Number} Size of stack
- */
-TinyStack.prototype.length = function length () {
-	return this.top;
-};
-
-/**
- * Gets the item at the top of the stack
- *
- * @method peek
- * @memberOf TinyStack
- * @return {Mixed} Item at the top of the stack
- */
-TinyStack.prototype.peek = function peek () {
-	return this.data[this.top];
-};
-
-/**
- * Gets & removes the item at the top of the stack
- *
- * @method pop
- * @memberOf TinyStack
- * @return {Mixed} Item at the top of the stack
- */
-TinyStack.prototype.pop = function pop () {
-	if ( this.top > 0 ) {
-		this.top--;
-
-		return this.data.pop();
-	}
-	else {
-		return undefined;
-	}
-};
-
-/**
- * Pushes an item onto the stack
- *
- * @method push
- * @memberOf TinyStack
- * @return {Object} {@link TinyStack}
- */
-TinyStack.prototype.push = function push ( arg ) {
-	this.data[++this.top] = arg;
-
-	return this;
-};
-
-/**
- * TinyStack factory
- *
- * @method factory
- * @return {Object} {@link TinyStack}
- */
-function factory () {
-	return new TinyStack();
-}
-
-// Node, AMD & window supported
-if ( typeof exports != "undefined" ) {
-	module.exports = factory;
-}
-else if ( typeof define == "function" ) {
-	define( function () {
-		return factory;
-	} );
-}
-else {
-	global.stack = factory;
-}
-} )( this );
-
-},{}],103:[function(_dereq_,module,exports){
-module.exports = _dereq_(107);
-},{"107":107}],104:[function(_dereq_,module,exports){
-'use strict';
-
-function Base() { }
-
-Base.prototype.get = function(name) {
-  return this.$model.properties.get(this, name);
-};
-
-Base.prototype.set = function(name, value) {
-  this.$model.properties.set(this, name, value);
-};
-
-
-module.exports = Base;
-},{}],105:[function(_dereq_,module,exports){
-'use strict';
-
-var pick = _dereq_(440),
-    assign = _dereq_(433),
-    forEach = _dereq_(304);
-
-var parseNameNs = _dereq_(108).parseName;
-
-
-function DescriptorBuilder(nameNs) {
-  this.ns = nameNs;
-  this.name = nameNs.name;
-  this.allTypes = [];
-  this.properties = [];
-  this.propertiesByName = {};
-}
-
-module.exports = DescriptorBuilder;
-
-
-DescriptorBuilder.prototype.build = function() {
-  return pick(this, [
-    'ns',
-    'name',
-    'allTypes',
-    'properties',
-    'propertiesByName',
-    'bodyProperty',
-    'idProperty'
-  ]);
-};
-
-/**
- * Add property at given index.
- *
- * @param {Object} p
- * @param {Number} [idx]
- * @param {Boolean} [validate=true]
- */
-DescriptorBuilder.prototype.addProperty = function(p, idx, validate) {
-
-  if (typeof idx === 'boolean') {
-    validate = idx;
-    idx = undefined;
-  }
-
-  this.addNamedProperty(p, validate !== false);
-
-  var properties = this.properties;
-
-  if (idx !== undefined) {
-    properties.splice(idx, 0, p);
-  } else {
-    properties.push(p);
-  }
-};
-
-
-DescriptorBuilder.prototype.replaceProperty = function(oldProperty, newProperty, replace) {
-  var oldNameNs = oldProperty.ns;
-
-  var props = this.properties,
-      propertiesByName = this.propertiesByName,
-      rename = oldProperty.name !== newProperty.name;
-
-  if (oldProperty.isId) {
-    if (!newProperty.isId) {
-      throw new Error(
-        'property <' + newProperty.ns.name + '> must be id property ' +
-        'to refine <' + oldProperty.ns.name + '>');
-    }
-
-    this.setIdProperty(newProperty, false);
-  }
-
-  if (oldProperty.isBody) {
-
-    if (!newProperty.isBody) {
-      throw new Error(
-        'property <' + newProperty.ns.name + '> must be body property ' +
-        'to refine <' + oldProperty.ns.name + '>');
-    }
-
-    // TODO: Check compatibility
-    this.setBodyProperty(newProperty, false);
-  }
-
-  // validate existence and get location of old property
-  var idx = props.indexOf(oldProperty);
-  if (idx === -1) {
-    throw new Error('property <' + oldNameNs.name + '> not found in property list');
-  }
-
-  // remove old property
-  props.splice(idx, 1);
-
-  // replacing the named property is intentional
-  //
-  //  * validate only if this is a "rename" operation
-  //  * add at specific index unless we "replace"
-  //
-  this.addProperty(newProperty, replace ? undefined : idx, rename);
-
-  // make new property available under old name
-  propertiesByName[oldNameNs.name] = propertiesByName[oldNameNs.localName] = newProperty;
-};
-
-
-DescriptorBuilder.prototype.redefineProperty = function(p, targetPropertyName, replace) {
-
-  var nsPrefix = p.ns.prefix;
-  var parts = targetPropertyName.split('#');
-
-  var name = parseNameNs(parts[0], nsPrefix);
-  var attrName = parseNameNs(parts[1], name.prefix).name;
-
-  var redefinedProperty = this.propertiesByName[attrName];
-  if (!redefinedProperty) {
-    throw new Error('refined property <' + attrName + '> not found');
-  } else {
-    this.replaceProperty(redefinedProperty, p, replace);
-  }
-
-  delete p.redefines;
-};
-
-DescriptorBuilder.prototype.addNamedProperty = function(p, validate) {
-  var ns = p.ns,
-      propsByName = this.propertiesByName;
-
-  if (validate) {
-    this.assertNotDefined(p, ns.name);
-    this.assertNotDefined(p, ns.localName);
-  }
-
-  propsByName[ns.name] = propsByName[ns.localName] = p;
-};
-
-DescriptorBuilder.prototype.removeNamedProperty = function(p) {
-  var ns = p.ns,
-      propsByName = this.propertiesByName;
-
-  delete propsByName[ns.name];
-  delete propsByName[ns.localName];
-};
-
-DescriptorBuilder.prototype.setBodyProperty = function(p, validate) {
-
-  if (validate && this.bodyProperty) {
-    throw new Error(
-      'body property defined multiple times ' +
-      '(<' + this.bodyProperty.ns.name + '>, <' + p.ns.name + '>)');
-  }
-
-  this.bodyProperty = p;
-};
-
-DescriptorBuilder.prototype.setIdProperty = function(p, validate) {
-
-  if (validate && this.idProperty) {
-    throw new Error(
-      'id property defined multiple times ' +
-      '(<' + this.idProperty.ns.name + '>, <' + p.ns.name + '>)');
-  }
-
-  this.idProperty = p;
-};
-
-DescriptorBuilder.prototype.assertNotDefined = function(p, name) {
-  var propertyName = p.name,
-      definedProperty = this.propertiesByName[propertyName];
-
-  if (definedProperty) {
-    throw new Error(
-      'property <' + propertyName + '> already defined; ' +
-      'override of <' + definedProperty.definedBy.ns.name + '#' + definedProperty.ns.name + '> by ' +
-      '<' + p.definedBy.ns.name + '#' + p.ns.name + '> not allowed without redefines');
-  }
-};
-
-DescriptorBuilder.prototype.hasProperty = function(name) {
-  return this.propertiesByName[name];
-};
-
-DescriptorBuilder.prototype.addTrait = function(t, inherited) {
-
-  var allTypes = this.allTypes;
-
-  if (allTypes.indexOf(t) !== -1) {
-    return;
-  }
-
-  forEach(t.properties, function(p) {
-
-    // clone property to allow extensions
-    p = assign({}, p, {
-      name: p.ns.localName,
-      inherited: inherited
-    });
-
-    Object.defineProperty(p, 'definedBy', {
-      value: t
-    });
-
-    var replaces = p.replaces,
-        redefines = p.redefines;
-
-    // add replace/redefine support
-    if (replaces || redefines) {
-      this.redefineProperty(p, replaces || redefines, replaces);
-    } else {
-      if (p.isBody) {
-        this.setBodyProperty(p);
-      }
-      if (p.isId) {
-        this.setIdProperty(p);
-      }
-      this.addProperty(p);
-    }
-  }, this);
-
-  allTypes.push(t);
-};
-
-},{"108":108,"304":304,"433":433,"440":440}],106:[function(_dereq_,module,exports){
-'use strict';
-
-var forEach = _dereq_(304);
-
-var Base = _dereq_(104);
-
-
-function Factory(model, properties) {
-  this.model = model;
-  this.properties = properties;
-}
-
-module.exports = Factory;
-
-
-Factory.prototype.createType = function(descriptor) {
-
-  var model = this.model;
-
-  var props = this.properties,
-      prototype = Object.create(Base.prototype);
-
-  // initialize default values
-  forEach(descriptor.properties, function(p) {
-    if (!p.isMany && p.default !== undefined) {
-      prototype[p.name] = p.default;
-    }
-  });
-
-  props.defineModel(prototype, model);
-  props.defineDescriptor(prototype, descriptor);
-
-  var name = descriptor.ns.name;
-
-  /**
-   * The new type constructor
-   */
-  function ModdleElement(attrs) {
-    props.define(this, '$type', { value: name, enumerable: true });
-    props.define(this, '$attrs', { value: {} });
-    props.define(this, '$parent', { writable: true });
-
-    forEach(attrs, function(val, key) {
-      this.set(key, val);
-    }, this);
-  }
-
-  ModdleElement.prototype = prototype;
-
-  ModdleElement.hasType = prototype.$instanceOf = this.model.hasType;
-
-  // static links
-  props.defineModel(ModdleElement, model);
-  props.defineDescriptor(ModdleElement, descriptor);
-
-  return ModdleElement;
-};
-},{"104":104,"304":304}],107:[function(_dereq_,module,exports){
-'use strict';
-
-var isString = _dereq_(430),
-    isObject = _dereq_(428),
-    forEach = _dereq_(304),
-    find = _dereq_(303);
-
-
-var Factory = _dereq_(106),
-    Registry = _dereq_(110),
-    Properties = _dereq_(109);
-
-var parseNameNs = _dereq_(108).parseName;
-
-
-//// Moddle implementation /////////////////////////////////////////////////
-
-/**
- * @class Moddle
- *
- * A model that can be used to create elements of a specific type.
- *
- * @example
- *
- * var Moddle = require('moddle');
- *
- * var pkg = {
- *   name: 'mypackage',
- *   prefix: 'my',
- *   types: [
- *     { name: 'Root' }
- *   ]
- * };
- *
- * var moddle = new Moddle([pkg]);
- *
- * @param {Array<Package>} packages the packages to contain
- */
-function Moddle(packages) {
-
-  this.properties = new Properties(this);
-
-  this.factory = new Factory(this, this.properties);
-  this.registry = new Registry(packages, this.properties);
-
-  this.typeCache = {};
-}
-
-module.exports = Moddle;
-
-
-/**
- * Create an instance of the specified type.
- *
- * @method Moddle#create
- *
- * @example
- *
- * var foo = moddle.create('my:Foo');
- * var bar = moddle.create('my:Bar', { id: 'BAR_1' });
- *
- * @param  {String|Object} descriptor the type descriptor or name know to the model
- * @param  {Object} attrs   a number of attributes to initialize the model instance with
- * @return {Object}         model instance
- */
-Moddle.prototype.create = function(descriptor, attrs) {
-  var Type = this.getType(descriptor);
-
-  if (!Type) {
-    throw new Error('unknown type <' + descriptor + '>');
-  }
-
-  return new Type(attrs);
-};
-
-
-/**
- * Returns the type representing a given descriptor
- *
- * @method Moddle#getType
- *
- * @example
- *
- * var Foo = moddle.getType('my:Foo');
- * var foo = new Foo({ 'id' : 'FOO_1' });
- *
- * @param  {String|Object} descriptor the type descriptor or name know to the model
- * @return {Object}         the type representing the descriptor
- */
-Moddle.prototype.getType = function(descriptor) {
-
-  var cache = this.typeCache;
-
-  var name = isString(descriptor) ? descriptor : descriptor.ns.name;
-
-  var type = cache[name];
-
-  if (!type) {
-    descriptor = this.registry.getEffectiveDescriptor(name);
-    type = cache[name] = this.factory.createType(descriptor);
-  }
-
-  return type;
-};
-
-
-/**
- * Creates an any-element type to be used within model instances.
- *
- * This can be used to create custom elements that lie outside the meta-model.
- * The created element contains all the meta-data required to serialize it
- * as part of meta-model elements.
- *
- * @method Moddle#createAny
- *
- * @example
- *
- * var foo = moddle.createAny('vendor:Foo', 'http://vendor', {
- *   value: 'bar'
- * });
- *
- * var container = moddle.create('my:Container', 'http://my', {
- *   any: [ foo ]
- * });
- *
- * // go ahead and serialize the stuff
- *
- *
- * @param  {String} name  the name of the element
- * @param  {String} nsUri the namespace uri of the element
- * @param  {Object} [properties] a map of properties to initialize the instance with
- * @return {Object} the any type instance
- */
-Moddle.prototype.createAny = function(name, nsUri, properties) {
-
-  var nameNs = parseNameNs(name);
-
-  var element = {
-    $type: name
-  };
-
-  var descriptor = {
-    name: name,
-    isGeneric: true,
-    ns: {
-      prefix: nameNs.prefix,
-      localName: nameNs.localName,
-      uri: nsUri
-    }
-  };
-
-  this.properties.defineDescriptor(element, descriptor);
-  this.properties.defineModel(element, this);
-  this.properties.define(element, '$parent', { enumerable: false, writable: true });
-
-  forEach(properties, function(a, key) {
-    if (isObject(a) && a.value !== undefined) {
-      element[a.name] = a.value;
-    } else {
-      element[key] = a;
-    }
-  });
-
-  return element;
-};
-
-/**
- * Returns a registered package by uri or prefix
- *
- * @return {Object} the package
- */
-Moddle.prototype.getPackage = function(uriOrPrefix) {
-  return this.registry.getPackage(uriOrPrefix);
-};
-
-/**
- * Returns a snapshot of all known packages
- *
- * @return {Object} the package
- */
-Moddle.prototype.getPackages = function() {
-  return this.registry.getPackages();
-};
-
-/**
- * Returns the descriptor for an element
- */
-Moddle.prototype.getElementDescriptor = function(element) {
-  return element.$descriptor;
-};
-
-/**
- * Returns true if the given descriptor or instance
- * represents the given type.
- *
- * May be applied to this, if element is omitted.
- */
-Moddle.prototype.hasType = function(element, type) {
-  if (type === undefined) {
-    type = element;
-    element = this;
-  }
-
-  var descriptor = element.$model.getElementDescriptor(element);
-
-  return !!find(descriptor.allTypes, function(t) {
-    return t.name === type;
-  });
-};
-
-
-/**
- * Returns the descriptor of an elements named property
- */
-Moddle.prototype.getPropertyDescriptor = function(element, property) {
-  return this.getElementDescriptor(element).propertiesByName[property];
-};
-
-},{"106":106,"108":108,"109":109,"110":110,"303":303,"304":304,"428":428,"430":430}],108:[function(_dereq_,module,exports){
-'use strict';
-
-/**
- * Parses a namespaced attribute name of the form (ns:)localName to an object,
- * given a default prefix to assume in case no explicit namespace is given.
- *
- * @param {String} name
- * @param {String} [defaultPrefix] the default prefix to take, if none is present.
- *
- * @return {Object} the parsed name
- */
-module.exports.parseName = function(name, defaultPrefix) {
-  var parts = name.split(/:/),
-      localName, prefix;
-
-  // no prefix (i.e. only local name)
-  if (parts.length === 1) {
-    localName = name;
-    prefix = defaultPrefix;
-  } else
-  // prefix + local name
-  if (parts.length === 2) {
-    localName = parts[1];
-    prefix = parts[0];
-  } else {
-    throw new Error('expected <prefix:localName> or <localName>, got ' + name);
-  }
-
-  name = (prefix ? prefix + ':' : '') + localName;
-
-  return {
-    name: name,
-    prefix: prefix,
-    localName: localName
-  };
-};
-},{}],109:[function(_dereq_,module,exports){
-'use strict';
-
-
-/**
- * A utility that gets and sets properties of model elements.
- *
- * @param {Model} model
- */
-function Properties(model) {
-  this.model = model;
-}
-
-module.exports = Properties;
-
-
-/**
- * Sets a named property on the target element.
- * If the value is undefined, the property gets deleted.
- *
- * @param {Object} target
- * @param {String} name
- * @param {Object} value
- */
-Properties.prototype.set = function(target, name, value) {
-
-  var property = this.model.getPropertyDescriptor(target, name);
-
-  var propertyName = property && property.name;
-
-  if (isUndefined(value)) {
-    // unset the property, if the specified value is undefined;
-    // delete from $attrs (for extensions) or the target itself
-    if (property) {
-      delete target[propertyName];
-    } else {
-      delete target.$attrs[name];
-    }
-  } else {
-    // set the property, defining well defined properties on the fly
-    // or simply updating them in target.$attrs (for extensions)
-    if (property) {
-      if (propertyName in target) {
-        target[propertyName] = value;
-      } else {
-        defineProperty(target, property, value);
-      }
-    } else {
-      target.$attrs[name] = value;
-    }
-  }
-};
-
-/**
- * Returns the named property of the given element
- *
- * @param  {Object} target
- * @param  {String} name
- *
- * @return {Object}
- */
-Properties.prototype.get = function(target, name) {
-
-  var property = this.model.getPropertyDescriptor(target, name);
-
-  if (!property) {
-    return target.$attrs[name];
-  }
-
-  var propertyName = property.name;
-
-  // check if access to collection property and lazily initialize it
-  if (!target[propertyName] && property.isMany) {
-    defineProperty(target, property, []);
-  }
-
-  return target[propertyName];
-};
-
-
-/**
- * Define a property on the target element
- *
- * @param  {Object} target
- * @param  {String} name
- * @param  {Object} options
- */
-Properties.prototype.define = function(target, name, options) {
-  Object.defineProperty(target, name, options);
-};
-
-
-/**
- * Define the descriptor for an element
- */
-Properties.prototype.defineDescriptor = function(target, descriptor) {
-  this.define(target, '$descriptor', { value: descriptor });
-};
-
-/**
- * Define the model for an element
- */
-Properties.prototype.defineModel = function(target, model) {
-  this.define(target, '$model', { value: model });
-};
-
-
-function isUndefined(val) {
-  return typeof val === 'undefined';
-}
-
-function defineProperty(target, property, value) {
-  Object.defineProperty(target, property.name, {
-    enumerable: !property.isReference,
-    writable: true,
-    value: value,
-    configurable: true
-  });
-}
-},{}],110:[function(_dereq_,module,exports){
-'use strict';
-
-var assign = _dereq_(433),
-    forEach = _dereq_(304);
-
-var Types = _dereq_(111),
-    DescriptorBuilder = _dereq_(105);
-
-var parseNameNs = _dereq_(108).parseName,
-    isBuiltInType = Types.isBuiltIn;
-
-
-function Registry(packages, properties) {
-  this.packageMap = {};
-  this.typeMap = {};
-
-  this.packages = [];
-
-  this.properties = properties;
-
-  forEach(packages, this.registerPackage, this);
-}
-
-module.exports = Registry;
-
-
-Registry.prototype.getPackage = function(uriOrPrefix) {
-  return this.packageMap[uriOrPrefix];
-};
-
-Registry.prototype.getPackages = function() {
-  return this.packages;
-};
-
-
-Registry.prototype.registerPackage = function(pkg) {
-
-  // copy package
-  pkg = assign({}, pkg);
-
-  // register types
-  forEach(pkg.types, function(descriptor) {
-    this.registerType(descriptor, pkg);
-  }, this);
-
-  this.packageMap[pkg.uri] = this.packageMap[pkg.prefix] = pkg;
-  this.packages.push(pkg);
-};
-
-
-/**
- * Register a type from a specific package with us
- */
-Registry.prototype.registerType = function(type, pkg) {
-
-  type = assign({}, type, {
-    superClass: (type.superClass || []).slice(),
-    extends: (type.extends || []).slice(),
-    properties: (type.properties || []).slice()
-  });
-
-  var ns = parseNameNs(type.name, pkg.prefix),
-      name = ns.name,
-      propertiesByName = {};
-
-  // parse properties
-  forEach(type.properties, function(p) {
-
-    // namespace property names
-    var propertyNs = parseNameNs(p.name, ns.prefix),
-        propertyName = propertyNs.name;
-
-    // namespace property types
-    if (!isBuiltInType(p.type)) {
-      p.type = parseNameNs(p.type, propertyNs.prefix).name;
-    }
-
-    assign(p, {
-      ns: propertyNs,
-      name: propertyName
-    });
-
-    propertiesByName[propertyName] = p;
-  });
-
-  // update ns + name
-  assign(type, {
-    ns: ns,
-    name: name,
-    propertiesByName: propertiesByName
-  });
-
-  forEach(type.extends, function(extendsName) {
-    var extended = this.typeMap[extendsName];
-
-    extended.traits = extended.traits || [];
-    extended.traits.push(name);
-  }, this);
-
-  // link to package
-  this.definePackage(type, pkg);
-
-  // register
-  this.typeMap[name] = type;
-};
-
-
-/**
- * Traverse the type hierarchy from bottom to top,
- * calling iterator with (type, inherited) for all elements in
- * the inheritance chain.
- *
- * @param {Object} nsName
- * @param {Function} iterator
- * @param {Boolean} [trait=false]
- */
-Registry.prototype.mapTypes = function(nsName, iterator, trait) {
-
-  var type = isBuiltInType(nsName.name) ? { name: nsName.name } : this.typeMap[nsName.name];
-
-  var self = this;
-
-  /**
-   * Traverse the selected trait.
-   *
-   * @param {String} cls
-   */
-  function traverseTrait(cls) {
-    return traverseSuper(cls, true);
-  }
-
-  /**
-   * Traverse the selected super type or trait
-   *
-   * @param {String} cls
-   * @param {Boolean} [trait=false]
-   */
-  function traverseSuper(cls, trait) {
-    var parentNs = parseNameNs(cls, isBuiltInType(cls) ? '' : nsName.prefix);
-    self.mapTypes(parentNs, iterator, trait);
-  }
-
-  if (!type) {
-    throw new Error('unknown type <' + nsName.name + '>');
-  }
-
-  forEach(type.superClass, trait ? traverseTrait : traverseSuper);
-
-  // call iterator with (type, inherited=!trait)
-  iterator(type, !trait);
-
-  forEach(type.traits, traverseTrait);
-};
-
-
-/**
- * Returns the effective descriptor for a type.
- *
- * @param  {String} type the namespaced name (ns:localName) of the type
- *
- * @return {Descriptor} the resulting effective descriptor
- */
-Registry.prototype.getEffectiveDescriptor = function(name) {
-
-  var nsName = parseNameNs(name);
-
-  var builder = new DescriptorBuilder(nsName);
-
-  this.mapTypes(nsName, function(type, inherited) {
-    builder.addTrait(type, inherited);
-  });
-
-  var descriptor = builder.build();
-
-  // define package link
-  this.definePackage(descriptor, descriptor.allTypes[descriptor.allTypes.length - 1].$pkg);
-
-  return descriptor;
-};
-
-
-Registry.prototype.definePackage = function(target, pkg) {
-  this.properties.define(target, '$pkg', { value: pkg });
-};
-},{"105":105,"108":108,"111":111,"304":304,"433":433}],111:[function(_dereq_,module,exports){
-'use strict';
-
-/**
- * Built-in moddle types
- */
-var BUILTINS = {
-  String: true,
-  Boolean: true,
-  Integer: true,
-  Real: true,
-  Element: true
-};
-
-/**
- * Converters for built in types from string representations
- */
-var TYPE_CONVERTERS = {
-  String: function(s) { return s; },
-  Boolean: function(s) { return s === 'true'; },
-  Integer: function(s) { return parseInt(s, 10); },
-  Real: function(s) { return parseFloat(s, 10); }
-};
-
-/**
- * Convert a type to its real representation
- */
-module.exports.coerceType = function(type, value) {
-
-  var converter = TYPE_CONVERTERS[type];
-
-  if (converter) {
-    return converter(value);
-  } else {
-    return value;
-  }
-};
-
-/**
- * Return whether the given type is built-in
- */
-module.exports.isBuiltIn = function(type) {
-  return !!BUILTINS[type];
-};
-
-/**
- * Return whether the given type is simple
- */
-module.exports.isSimple = function(type) {
-  return !!TYPE_CONVERTERS[type];
-};
-},{}],112:[function(_dereq_,module,exports){
-module.exports={
-  "name": "BPMN20",
-  "uri": "http://www.omg.org/spec/BPMN/20100524/MODEL",
-  "associations": [],
-  "types": [
-    {
-      "name": "Interface",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "operations",
-          "type": "Operation",
-          "isMany": true
-        },
-        {
-          "name": "implementationRef",
-          "type": "String",
-          "isAttr": true
-        }
-      ]
-    },
-    {
-      "name": "Operation",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "inMessageRef",
-          "type": "Message",
-          "isReference": true
-        },
-        {
-          "name": "outMessageRef",
-          "type": "Message",
-          "isReference": true
-        },
-        {
-          "name": "errorRef",
-          "type": "Error",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "implementationRef",
-          "type": "String",
-          "isAttr": true
-        }
-      ]
-    },
-    {
-      "name": "EndPoint",
-      "superClass": [
-        "RootElement"
-      ]
-    },
-    {
-      "name": "Auditing",
-      "superClass": [
-        "BaseElement"
-      ]
-    },
-    {
-      "name": "GlobalTask",
-      "superClass": [
-        "CallableElement"
-      ],
-      "properties": [
-        {
-          "name": "resources",
-          "type": "ResourceRole",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "Monitoring",
-      "superClass": [
-        "BaseElement"
-      ]
-    },
-    {
-      "name": "Performer",
-      "superClass": [
-        "ResourceRole"
-      ]
-    },
-    {
-      "name": "Process",
-      "superClass": [
-        "FlowElementsContainer",
-        "CallableElement"
-      ],
-      "properties": [
-        {
-          "name": "processType",
-          "type": "ProcessType",
-          "isAttr": true
-        },
-        {
-          "name": "isClosed",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "auditing",
-          "type": "Auditing"
-        },
-        {
-          "name": "monitoring",
-          "type": "Monitoring"
-        },
-        {
-          "name": "properties",
-          "type": "Property",
-          "isMany": true
-        },
-        {
-          "name": "laneSets",
-          "type": "LaneSet",
-          "isMany": true,
-          "replaces": "FlowElementsContainer#laneSets"
-        },
-        {
-          "name": "flowElements",
-          "type": "FlowElement",
-          "isMany": true,
-          "replaces": "FlowElementsContainer#flowElements"
-        },
-        {
-          "name": "artifacts",
-          "type": "Artifact",
-          "isMany": true
-        },
-        {
-          "name": "resources",
-          "type": "ResourceRole",
-          "isMany": true
-        },
-        {
-          "name": "correlationSubscriptions",
-          "type": "CorrelationSubscription",
-          "isMany": true
-        },
-        {
-          "name": "supports",
-          "type": "Process",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "definitionalCollaborationRef",
-          "type": "Collaboration",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "isExecutable",
-          "isAttr": true,
-          "type": "Boolean"
-        }
-      ]
-    },
-    {
-      "name": "LaneSet",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "lanes",
-          "type": "Lane",
-          "isMany": true
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "Lane",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "partitionElementRef",
-          "type": "BaseElement",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "partitionElement",
-          "type": "BaseElement"
-        },
-        {
-          "name": "flowNodeRef",
-          "type": "FlowNode",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "childLaneSet",
-          "type": "LaneSet",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        }
-      ]
-    },
-    {
-      "name": "GlobalManualTask",
-      "superClass": [
-        "GlobalTask"
-      ]
-    },
-    {
-      "name": "ManualTask",
-      "superClass": [
-        "Task"
-      ]
-    },
-    {
-      "name": "UserTask",
-      "superClass": [
-        "Task"
-      ],
-      "properties": [
-        {
-          "name": "renderings",
-          "type": "Rendering",
-          "isMany": true
-        },
-        {
-          "name": "implementation",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "Rendering",
-      "superClass": [
-        "BaseElement"
-      ]
-    },
-    {
-      "name": "HumanPerformer",
-      "superClass": [
-        "Performer"
-      ]
-    },
-    {
-      "name": "PotentialOwner",
-      "superClass": [
-        "HumanPerformer"
-      ]
-    },
-    {
-      "name": "GlobalUserTask",
-      "superClass": [
-        "GlobalTask"
-      ],
-      "properties": [
-        {
-          "name": "implementation",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "renderings",
-          "type": "Rendering",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "Gateway",
-      "isAbstract": true,
-      "superClass": [
-        "FlowNode"
-      ],
-      "properties": [
-        {
-          "name": "gatewayDirection",
-          "type": "GatewayDirection",
-          "default": "Unspecified",
-          "isAttr": true
-        }
-      ]
-    },
-    {
-      "name": "EventBasedGateway",
-      "superClass": [
-        "Gateway"
-      ],
-      "properties": [
-        {
-          "name": "instantiate",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "eventGatewayType",
-          "type": "EventBasedGatewayType",
-          "isAttr": true,
-          "default": "Exclusive"
-        }
-      ]
-    },
-    {
-      "name": "ComplexGateway",
-      "superClass": [
-        "Gateway"
-      ],
-      "properties": [
-        {
-          "name": "activationCondition",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        },
-        {
-          "name": "default",
-          "type": "SequenceFlow",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ExclusiveGateway",
-      "superClass": [
-        "Gateway"
-      ],
-      "properties": [
-        {
-          "name": "default",
-          "type": "SequenceFlow",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "InclusiveGateway",
-      "superClass": [
-        "Gateway"
-      ],
-      "properties": [
-        {
-          "name": "default",
-          "type": "SequenceFlow",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ParallelGateway",
-      "superClass": [
-        "Gateway"
-      ]
-    },
-    {
-      "name": "RootElement",
-      "isAbstract": true,
-      "superClass": [
-        "BaseElement"
-      ]
-    },
-    {
-      "name": "Relationship",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "type",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "direction",
-          "type": "RelationshipDirection",
-          "isAttr": true
-        },
-        {
-          "name": "source",
-          "isMany": true,
-          "isReference": true,
-          "type": "Element"
-        },
-        {
-          "name": "target",
-          "isMany": true,
-          "isReference": true,
-          "type": "Element"
-        }
-      ]
-    },
-    {
-      "name": "BaseElement",
-      "isAbstract": true,
-      "properties": [
-        {
-          "name": "id",
-          "isAttr": true,
-          "type": "String",
-          "isId": true
-        },
-        {
-          "name": "documentation",
-          "type": "Documentation",
-          "isMany": true
-        },
-        {
-          "name": "extensionDefinitions",
-          "type": "ExtensionDefinition",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "extensionElements",
-          "type": "ExtensionElements"
-        }
-      ]
-    },
-    {
-      "name": "Extension",
-      "properties": [
-        {
-          "name": "mustUnderstand",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "definition",
-          "type": "ExtensionDefinition",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ExtensionDefinition",
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "extensionAttributeDefinitions",
-          "type": "ExtensionAttributeDefinition",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "ExtensionAttributeDefinition",
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "type",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "isReference",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "extensionDefinition",
-          "type": "ExtensionDefinition",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ExtensionElements",
-      "properties": [
-        {
-          "name": "valueRef",
-          "isAttr": true,
-          "isReference": true,
-          "type": "Element"
-        },
-        {
-          "name": "values",
-          "type": "Element",
-          "isMany": true
-        },
-        {
-          "name": "extensionAttributeDefinition",
-          "type": "ExtensionAttributeDefinition",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Documentation",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "text",
-          "type": "String",
-          "isBody": true
-        },
-        {
-          "name": "textFormat",
-          "default": "text/plain",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "Event",
-      "isAbstract": true,
-      "superClass": [
-        "FlowNode",
-        "InteractionNode"
-      ],
-      "properties": [
-        {
-          "name": "properties",
-          "type": "Property",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "IntermediateCatchEvent",
-      "superClass": [
-        "CatchEvent"
-      ]
-    },
-    {
-      "name": "IntermediateThrowEvent",
-      "superClass": [
-        "ThrowEvent"
-      ]
-    },
-    {
-      "name": "EndEvent",
-      "superClass": [
-        "ThrowEvent"
-      ]
-    },
-    {
-      "name": "StartEvent",
-      "superClass": [
-        "CatchEvent"
-      ],
-      "properties": [
-        {
-          "name": "isInterrupting",
-          "default": true,
-          "isAttr": true,
-          "type": "Boolean"
-        }
-      ]
-    },
-    {
-      "name": "ThrowEvent",
-      "isAbstract": true,
-      "superClass": [
-        "Event"
-      ],
-      "properties": [
-        {
-          "name": "dataInputs",
-          "type": "DataInput",
-          "isMany": true
-        },
-        {
-          "name": "dataInputAssociations",
-          "type": "DataInputAssociation",
-          "isMany": true
-        },
-        {
-          "name": "inputSet",
-          "type": "InputSet"
-        },
-        {
-          "name": "eventDefinitions",
-          "type": "EventDefinition",
-          "isMany": true
-        },
-        {
-          "name": "eventDefinitionRef",
-          "type": "EventDefinition",
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "CatchEvent",
-      "isAbstract": true,
-      "superClass": [
-        "Event"
-      ],
-      "properties": [
-        {
-          "name": "parallelMultiple",
-          "isAttr": true,
-          "type": "Boolean",
-          "default": false
-        },
-        {
-          "name": "dataOutputs",
-          "type": "DataOutput",
-          "isMany": true
-        },
-        {
-          "name": "dataOutputAssociations",
-          "type": "DataOutputAssociation",
-          "isMany": true
-        },
-        {
-          "name": "outputSet",
-          "type": "OutputSet"
-        },
-        {
-          "name": "eventDefinitions",
-          "type": "EventDefinition",
-          "isMany": true
-        },
-        {
-          "name": "eventDefinitionRef",
-          "type": "EventDefinition",
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "BoundaryEvent",
-      "superClass": [
-        "CatchEvent"
-      ],
-      "properties": [
-        {
-          "name": "cancelActivity",
-          "default": true,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "attachedToRef",
-          "type": "Activity",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "EventDefinition",
-      "isAbstract": true,
-      "superClass": [
-        "RootElement"
-      ]
-    },
-    {
-      "name": "CancelEventDefinition",
-      "superClass": [
-        "EventDefinition"
-      ]
-    },
-    {
-      "name": "ErrorEventDefinition",
-      "superClass": [
-        "EventDefinition"
-      ],
-      "properties": [
-        {
-          "name": "errorRef",
-          "type": "Error",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "TerminateEventDefinition",
-      "superClass": [
-        "EventDefinition"
-      ]
-    },
-    {
-      "name": "EscalationEventDefinition",
-      "superClass": [
-        "EventDefinition"
-      ],
-      "properties": [
-        {
-          "name": "escalationRef",
-          "type": "Escalation",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Escalation",
-      "properties": [
-        {
-          "name": "structureRef",
-          "type": "ItemDefinition",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "escalationCode",
-          "isAttr": true,
-          "type": "String"
-        }
-      ],
-      "superClass": [
-        "RootElement"
-      ]
-    },
-    {
-      "name": "CompensateEventDefinition",
-      "superClass": [
-        "EventDefinition"
-      ],
-      "properties": [
-        {
-          "name": "waitForCompletion",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "activityRef",
-          "type": "Activity",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "TimerEventDefinition",
-      "superClass": [
-        "EventDefinition"
-      ],
-      "properties": [
-        {
-          "name": "timeDate",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        },
-        {
-          "name": "timeCycle",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        },
-        {
-          "name": "timeDuration",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        }
-      ]
-    },
-    {
-      "name": "LinkEventDefinition",
-      "superClass": [
-        "EventDefinition"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "target",
-          "type": "LinkEventDefinition",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "source",
-          "type": "LinkEventDefinition",
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "MessageEventDefinition",
-      "superClass": [
-        "EventDefinition"
-      ],
-      "properties": [
-        {
-          "name": "messageRef",
-          "type": "Message",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "operationRef",
-          "type": "Operation",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ConditionalEventDefinition",
-      "superClass": [
-        "EventDefinition"
-      ],
-      "properties": [
-        {
-          "name": "condition",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        }
-      ]
-    },
-    {
-      "name": "SignalEventDefinition",
-      "superClass": [
-        "EventDefinition"
-      ],
-      "properties": [
-        {
-          "name": "signalRef",
-          "type": "Signal",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Signal",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "structureRef",
-          "type": "ItemDefinition",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "ImplicitThrowEvent",
-      "superClass": [
-        "ThrowEvent"
-      ]
-    },
-    {
-      "name": "DataState",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "ItemAwareElement",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "itemSubjectRef",
-          "type": "ItemDefinition",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "dataState",
-          "type": "DataState"
-        }
-      ]
-    },
-    {
-      "name": "DataAssociation",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "assignment",
-          "type": "Assignment",
-          "isMany": true
-        },
-        {
-          "name": "sourceRef",
-          "type": "ItemAwareElement",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "targetRef",
-          "type": "ItemAwareElement",
-          "isReference": true
-        },
-        {
-          "name": "transformation",
-          "type": "FormalExpression",
-          "xml": {
-            "serialize": "property"
-          }
-        }
-      ]
-    },
-    {
-      "name": "DataInput",
-      "superClass": [
-        "ItemAwareElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "isCollection",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "inputSetRef",
-          "type": "InputSet",
-          "isVirtual": true,
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "inputSetWithOptional",
-          "type": "InputSet",
-          "isVirtual": true,
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "inputSetWithWhileExecuting",
-          "type": "InputSet",
-          "isVirtual": true,
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "DataOutput",
-      "superClass": [
-        "ItemAwareElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "isCollection",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "outputSetRef",
-          "type": "OutputSet",
-          "isVirtual": true,
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "outputSetWithOptional",
-          "type": "OutputSet",
-          "isVirtual": true,
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "outputSetWithWhileExecuting",
-          "type": "OutputSet",
-          "isVirtual": true,
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "InputSet",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "dataInputRefs",
-          "type": "DataInput",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "optionalInputRefs",
-          "type": "DataInput",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "whileExecutingInputRefs",
-          "type": "DataInput",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "outputSetRefs",
-          "type": "OutputSet",
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "OutputSet",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "dataOutputRefs",
-          "type": "DataOutput",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "inputSetRefs",
-          "type": "InputSet",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "optionalOutputRefs",
-          "type": "DataOutput",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "whileExecutingOutputRefs",
-          "type": "DataOutput",
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Property",
-      "superClass": [
-        "ItemAwareElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "DataInputAssociation",
-      "superClass": [
-        "DataAssociation"
-      ]
-    },
-    {
-      "name": "DataOutputAssociation",
-      "superClass": [
-        "DataAssociation"
-      ]
-    },
-    {
-      "name": "InputOutputSpecification",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "dataInputs",
-          "type": "DataInput",
-          "isMany": true
-        },
-        {
-          "name": "dataOutputs",
-          "type": "DataOutput",
-          "isMany": true
-        },
-        {
-          "name": "inputSets",
-          "type": "InputSet",
-          "isMany": true
-        },
-        {
-          "name": "outputSets",
-          "type": "OutputSet",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "DataObject",
-      "superClass": [
-        "FlowElement",
-        "ItemAwareElement"
-      ],
-      "properties": [
-        {
-          "name": "isCollection",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        }
-      ]
-    },
-    {
-      "name": "InputOutputBinding",
-      "properties": [
-        {
-          "name": "inputDataRef",
-          "type": "InputSet",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "outputDataRef",
-          "type": "OutputSet",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "operationRef",
-          "type": "Operation",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Assignment",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "from",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        },
-        {
-          "name": "to",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        }
-      ]
-    },
-    {
-      "name": "DataStore",
-      "superClass": [
-        "RootElement",
-        "ItemAwareElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "capacity",
-          "isAttr": true,
-          "type": "Integer"
-        },
-        {
-          "name": "isUnlimited",
-          "default": true,
-          "isAttr": true,
-          "type": "Boolean"
-        }
-      ]
-    },
-    {
-      "name": "DataStoreReference",
-      "superClass": [
-        "ItemAwareElement",
-        "FlowElement"
-      ],
-      "properties": [
-        {
-          "name": "dataStoreRef",
-          "type": "DataStore",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "DataObjectReference",
-      "superClass": [
-        "ItemAwareElement",
-        "FlowElement"
-      ],
-      "properties": [
-        {
-          "name": "dataObjectRef",
-          "type": "DataObject",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ConversationLink",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "sourceRef",
-          "type": "InteractionNode",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "targetRef",
-          "type": "InteractionNode",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "ConversationAssociation",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "innerConversationNodeRef",
-          "type": "ConversationNode",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "outerConversationNodeRef",
-          "type": "ConversationNode",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "CallConversation",
-      "superClass": [
-        "ConversationNode"
-      ],
-      "properties": [
-        {
-          "name": "calledCollaborationRef",
-          "type": "Collaboration",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "participantAssociations",
-          "type": "ParticipantAssociation",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "Conversation",
-      "superClass": [
-        "ConversationNode"
-      ]
-    },
-    {
-      "name": "SubConversation",
-      "superClass": [
-        "ConversationNode"
-      ],
-      "properties": [
-        {
-          "name": "conversationNodes",
-          "type": "ConversationNode",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "ConversationNode",
-      "isAbstract": true,
-      "superClass": [
-        "InteractionNode",
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "participantRefs",
-          "type": "Participant",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "messageFlowRefs",
-          "type": "MessageFlow",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "correlationKeys",
-          "type": "CorrelationKey",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "GlobalConversation",
-      "superClass": [
-        "Collaboration"
-      ]
-    },
-    {
-      "name": "PartnerEntity",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "participantRef",
-          "type": "Participant",
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "PartnerRole",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "participantRef",
-          "type": "Participant",
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "CorrelationProperty",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "correlationPropertyRetrievalExpression",
-          "type": "CorrelationPropertyRetrievalExpression",
-          "isMany": true
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "type",
-          "type": "ItemDefinition",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Error",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "structureRef",
-          "type": "ItemDefinition",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "errorCode",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "CorrelationKey",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "correlationPropertyRef",
-          "type": "CorrelationProperty",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "Expression",
-      "superClass": [
-        "BaseElement"
-      ],
-      "isAbstract": true
-    },
-    {
-      "name": "FormalExpression",
-      "superClass": [
-        "Expression"
-      ],
-      "properties": [
-        {
-          "name": "language",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "body",
-          "type": "String",
-          "isBody": true
-        },
-        {
-          "name": "evaluatesToTypeRef",
-          "type": "ItemDefinition",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Message",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "itemRef",
-          "type": "ItemDefinition",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ItemDefinition",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "itemKind",
-          "type": "ItemKind",
-          "isAttr": true
-        },
-        {
-          "name": "structureRef",
-          "type": "String",
-          "isAttr": true
-        },
-        {
-          "name": "isCollection",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "import",
-          "type": "Import",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "FlowElement",
-      "isAbstract": true,
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "auditing",
-          "type": "Auditing"
-        },
-        {
-          "name": "monitoring",
-          "type": "Monitoring"
-        },
-        {
-          "name": "categoryValueRef",
-          "type": "CategoryValue",
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "SequenceFlow",
-      "superClass": [
-        "FlowElement"
-      ],
-      "properties": [
-        {
-          "name": "isImmediate",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "conditionExpression",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        },
-        {
-          "name": "sourceRef",
-          "type": "FlowNode",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "targetRef",
-          "type": "FlowNode",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "FlowElementsContainer",
-      "isAbstract": true,
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "laneSets",
-          "type": "LaneSet",
-          "isMany": true
-        },
-        {
-          "name": "flowElements",
-          "type": "FlowElement",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "CallableElement",
-      "isAbstract": true,
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "ioSpecification",
-          "type": "InputOutputSpecification",
-          "xml": {
-            "serialize": "property"
-          }
-        },
-        {
-          "name": "supportedInterfaceRef",
-          "type": "Interface",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "ioBinding",
-          "type": "InputOutputBinding",
-          "isMany": true,
-          "xml": {
-            "serialize": "property"
-          }
-        }
-      ]
-    },
-    {
-      "name": "FlowNode",
-      "isAbstract": true,
-      "superClass": [
-        "FlowElement"
-      ],
-      "properties": [
-        {
-          "name": "incoming",
-          "type": "SequenceFlow",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "outgoing",
-          "type": "SequenceFlow",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "lanes",
-          "type": "Lane",
-          "isVirtual": true,
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "CorrelationPropertyRetrievalExpression",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "messagePath",
-          "type": "FormalExpression"
-        },
-        {
-          "name": "messageRef",
-          "type": "Message",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "CorrelationPropertyBinding",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "dataPath",
-          "type": "FormalExpression"
-        },
-        {
-          "name": "correlationPropertyRef",
-          "type": "CorrelationProperty",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Resource",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "resourceParameters",
-          "type": "ResourceParameter",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "ResourceParameter",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "isRequired",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "type",
-          "type": "ItemDefinition",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "CorrelationSubscription",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "correlationKeyRef",
-          "type": "CorrelationKey",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "correlationPropertyBinding",
-          "type": "CorrelationPropertyBinding",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "MessageFlow",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "sourceRef",
-          "type": "InteractionNode",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "targetRef",
-          "type": "InteractionNode",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "messageRef",
-          "type": "Message",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "MessageFlowAssociation",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "innerMessageFlowRef",
-          "type": "MessageFlow",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "outerMessageFlowRef",
-          "type": "MessageFlow",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "InteractionNode",
-      "isAbstract": true,
-      "properties": [
-        {
-          "name": "incomingConversationLinks",
-          "type": "ConversationLink",
-          "isVirtual": true,
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "outgoingConversationLinks",
-          "type": "ConversationLink",
-          "isVirtual": true,
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Participant",
-      "superClass": [
-        "InteractionNode",
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "interfaceRef",
-          "type": "Interface",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "participantMultiplicity",
-          "type": "ParticipantMultiplicity"
-        },
-        {
-          "name": "endPointRefs",
-          "type": "EndPoint",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "processRef",
-          "type": "Process",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ParticipantAssociation",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "innerParticipantRef",
-          "type": "Participant",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "outerParticipantRef",
-          "type": "Participant",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ParticipantMultiplicity",
-      "properties": [
-        {
-          "name": "minimum",
-          "default": 0,
-          "isAttr": true,
-          "type": "Integer"
-        },
-        {
-          "name": "maximum",
-          "default": 1,
-          "isAttr": true,
-          "type": "Integer"
-        }
-      ]
-    },
-    {
-      "name": "Collaboration",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "isClosed",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "participants",
-          "type": "Participant",
-          "isMany": true
-        },
-        {
-          "name": "messageFlows",
-          "type": "MessageFlow",
-          "isMany": true
-        },
-        {
-          "name": "artifacts",
-          "type": "Artifact",
-          "isMany": true
-        },
-        {
-          "name": "conversations",
-          "type": "ConversationNode",
-          "isMany": true
-        },
-        {
-          "name": "conversationAssociations",
-          "type": "ConversationAssociation"
-        },
-        {
-          "name": "participantAssociations",
-          "type": "ParticipantAssociation",
-          "isMany": true
-        },
-        {
-          "name": "messageFlowAssociations",
-          "type": "MessageFlowAssociation",
-          "isMany": true
-        },
-        {
-          "name": "correlationKeys",
-          "type": "CorrelationKey",
-          "isMany": true
-        },
-        {
-          "name": "choreographyRef",
-          "type": "Choreography",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "conversationLinks",
-          "type": "ConversationLink",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "ChoreographyActivity",
-      "isAbstract": true,
-      "superClass": [
-        "FlowNode"
-      ],
-      "properties": [
-        {
-          "name": "participantRefs",
-          "type": "Participant",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "initiatingParticipantRef",
-          "type": "Participant",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "correlationKeys",
-          "type": "CorrelationKey",
-          "isMany": true
-        },
-        {
-          "name": "loopType",
-          "type": "ChoreographyLoopType",
-          "default": "None",
-          "isAttr": true
-        }
-      ]
-    },
-    {
-      "name": "CallChoreography",
-      "superClass": [
-        "ChoreographyActivity"
-      ],
-      "properties": [
-        {
-          "name": "calledChoreographyRef",
-          "type": "Choreography",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "participantAssociations",
-          "type": "ParticipantAssociation",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "SubChoreography",
-      "superClass": [
-        "ChoreographyActivity",
-        "FlowElementsContainer"
-      ],
-      "properties": [
-        {
-          "name": "artifacts",
-          "type": "Artifact",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "ChoreographyTask",
-      "superClass": [
-        "ChoreographyActivity"
-      ],
-      "properties": [
-        {
-          "name": "messageFlowRef",
-          "type": "MessageFlow",
-          "isMany": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Choreography",
-      "superClass": [
-        "FlowElementsContainer",
-        "Collaboration"
-      ]
-    },
-    {
-      "name": "GlobalChoreographyTask",
-      "superClass": [
-        "Choreography"
-      ],
-      "properties": [
-        {
-          "name": "initiatingParticipantRef",
-          "type": "Participant",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "TextAnnotation",
-      "superClass": [
-        "Artifact"
-      ],
-      "properties": [
-        {
-          "name": "text",
-          "type": "String"
-        },
-        {
-          "name": "textFormat",
-          "default": "text/plain",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "Group",
-      "superClass": [
-        "Artifact"
-      ],
-      "properties": [
-        {
-          "name": "categoryValueRef",
-          "type": "CategoryValue",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Association",
-      "superClass": [
-        "Artifact"
-      ],
-      "properties": [
-        {
-          "name": "associationDirection",
-          "type": "AssociationDirection",
-          "isAttr": true
-        },
-        {
-          "name": "sourceRef",
-          "type": "BaseElement",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "targetRef",
-          "type": "BaseElement",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "Category",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "categoryValue",
-          "type": "CategoryValue",
-          "isMany": true
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "Artifact",
-      "isAbstract": true,
-      "superClass": [
-        "BaseElement"
-      ]
-    },
-    {
-      "name": "CategoryValue",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "categorizedFlowElements",
-          "type": "FlowElement",
-          "isVirtual": true,
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "value",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "Activity",
-      "isAbstract": true,
-      "superClass": [
-        "FlowNode"
-      ],
-      "properties": [
-        {
-          "name": "isForCompensation",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "default",
-          "type": "SequenceFlow",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "ioSpecification",
-          "type": "InputOutputSpecification",
-          "xml": {
-            "serialize": "property"
-          }
-        },
-        {
-          "name": "boundaryEventRefs",
-          "type": "BoundaryEvent",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "properties",
-          "type": "Property",
-          "isMany": true
-        },
-        {
-          "name": "dataInputAssociations",
-          "type": "DataInputAssociation",
-          "isMany": true
-        },
-        {
-          "name": "dataOutputAssociations",
-          "type": "DataOutputAssociation",
-          "isMany": true
-        },
-        {
-          "name": "startQuantity",
-          "default": 1,
-          "isAttr": true,
-          "type": "Integer"
-        },
-        {
-          "name": "resources",
-          "type": "ResourceRole",
-          "isMany": true
-        },
-        {
-          "name": "completionQuantity",
-          "default": 1,
-          "isAttr": true,
-          "type": "Integer"
-        },
-        {
-          "name": "loopCharacteristics",
-          "type": "LoopCharacteristics"
-        }
-      ]
-    },
-    {
-      "name": "ServiceTask",
-      "superClass": [
-        "Task"
-      ],
-      "properties": [
-        {
-          "name": "implementation",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "operationRef",
-          "type": "Operation",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "SubProcess",
-      "superClass": [
-        "Activity",
-        "FlowElementsContainer",
-        "InteractionNode"
-      ],
-      "properties": [
-        {
-          "name": "triggeredByEvent",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "artifacts",
-          "type": "Artifact",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "LoopCharacteristics",
-      "isAbstract": true,
-      "superClass": [
-        "BaseElement"
-      ]
-    },
-    {
-      "name": "MultiInstanceLoopCharacteristics",
-      "superClass": [
-        "LoopCharacteristics"
-      ],
-      "properties": [
-        {
-          "name": "isSequential",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "behavior",
-          "type": "MultiInstanceBehavior",
-          "default": "All",
-          "isAttr": true
-        },
-        {
-          "name": "loopCardinality",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        },
-        {
-          "name": "loopDataInputRef",
-          "type": "ItemAwareElement",
-          "isReference": true
-        },
-        {
-          "name": "loopDataOutputRef",
-          "type": "ItemAwareElement",
-          "isReference": true
-        },
-        {
-          "name": "inputDataItem",
-          "type": "DataInput",
-          "xml": {
-            "serialize": "property"
-          }
-        },
-        {
-          "name": "outputDataItem",
-          "type": "DataOutput",
-          "xml": {
-            "serialize": "property"
-          }
-        },
-        {
-          "name": "complexBehaviorDefinition",
-          "type": "ComplexBehaviorDefinition",
-          "isMany": true
-        },
-        {
-          "name": "completionCondition",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        },
-        {
-          "name": "oneBehaviorEventRef",
-          "type": "EventDefinition",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "noneBehaviorEventRef",
-          "type": "EventDefinition",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "StandardLoopCharacteristics",
-      "superClass": [
-        "LoopCharacteristics"
-      ],
-      "properties": [
-        {
-          "name": "testBefore",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "loopCondition",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        },
-        {
-          "name": "loopMaximum",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        }
-      ]
-    },
-    {
-      "name": "CallActivity",
-      "superClass": [
-        "Activity"
-      ],
-      "properties": [
-        {
-          "name": "calledElement",
-          "type": "String",
-          "isAttr": true
-        }
-      ]
-    },
-    {
-      "name": "Task",
-      "superClass": [
-        "Activity",
-        "InteractionNode"
-      ]
-    },
-    {
-      "name": "SendTask",
-      "superClass": [
-        "Task"
-      ],
-      "properties": [
-        {
-          "name": "implementation",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "operationRef",
-          "type": "Operation",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "messageRef",
-          "type": "Message",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ReceiveTask",
-      "superClass": [
-        "Task"
-      ],
-      "properties": [
-        {
-          "name": "implementation",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "instantiate",
-          "default": false,
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "operationRef",
-          "type": "Operation",
-          "isAttr": true,
-          "isReference": true
-        },
-        {
-          "name": "messageRef",
-          "type": "Message",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ScriptTask",
-      "superClass": [
-        "Task"
-      ],
-      "properties": [
-        {
-          "name": "scriptFormat",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "script",
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "BusinessRuleTask",
-      "superClass": [
-        "Task"
-      ],
-      "properties": [
-        {
-          "name": "implementation",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "AdHocSubProcess",
-      "superClass": [
-        "SubProcess"
-      ],
-      "properties": [
-        {
-          "name": "completionCondition",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        },
-        {
-          "name": "ordering",
-          "type": "AdHocOrdering",
-          "isAttr": true
-        },
-        {
-          "name": "cancelRemainingInstances",
-          "default": true,
-          "isAttr": true,
-          "type": "Boolean"
-        }
-      ]
-    },
-    {
-      "name": "Transaction",
-      "superClass": [
-        "SubProcess"
-      ],
-      "properties": [
-        {
-          "name": "protocol",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "method",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "GlobalScriptTask",
-      "superClass": [
-        "GlobalTask"
-      ],
-      "properties": [
-        {
-          "name": "scriptLanguage",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "script",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "GlobalBusinessRuleTask",
-      "superClass": [
-        "GlobalTask"
-      ],
-      "properties": [
-        {
-          "name": "implementation",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "ComplexBehaviorDefinition",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "condition",
-          "type": "FormalExpression"
-        },
-        {
-          "name": "event",
-          "type": "ImplicitThrowEvent"
-        }
-      ]
-    },
-    {
-      "name": "ResourceRole",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "resourceRef",
-          "type": "Resource",
-          "isReference": true
-        },
-        {
-          "name": "resourceParameterBindings",
-          "type": "ResourceParameterBinding",
-          "isMany": true
-        },
-        {
-          "name": "resourceAssignmentExpression",
-          "type": "ResourceAssignmentExpression"
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "ResourceParameterBinding",
-      "properties": [
-        {
-          "name": "expression",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        },
-        {
-          "name": "parameterRef",
-          "type": "ResourceParameter",
-          "isAttr": true,
-          "isReference": true
-        }
-      ]
-    },
-    {
-      "name": "ResourceAssignmentExpression",
-      "properties": [
-        {
-          "name": "expression",
-          "type": "Expression",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        }
-      ],
-      "superClass": [
-        "BaseElement"
-      ]
-    },
-    {
-      "name": "Import",
-      "properties": [
-        {
-          "name": "importType",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "location",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "namespace",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },
-    {
-      "name": "Definitions",
-      "superClass": [
-        "BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "targetNamespace",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "expressionLanguage",
-          "default": "http://www.w3.org/1999/XPath",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "typeLanguage",
-          "default": "http://www.w3.org/2001/XMLSchema",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "imports",
-          "type": "Import",
-          "isMany": true
-        },
-        {
-          "name": "extensions",
-          "type": "Extension",
-          "isMany": true
-        },
-        {
-          "name": "rootElements",
-          "type": "RootElement",
-          "isMany": true
-        },
-        {
-          "name": "diagrams",
-          "isMany": true,
-          "type": "bpmndi:BPMNDiagram"
-        },
-        {
-          "name": "exporter",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "relationships",
-          "type": "Relationship",
-          "isMany": true
-        },
-        {
-          "name": "exporterVersion",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    }
-  ],
-  "emumerations": [
-    {
-      "name": "ProcessType",
-      "literalValues": [
-        {
-          "name": "None"
-        },
-        {
-          "name": "Public"
-        },
-        {
-          "name": "Private"
-        }
-      ]
-    },
-    {
-      "name": "GatewayDirection",
-      "literalValues": [
-        {
-          "name": "Unspecified"
-        },
-        {
-          "name": "Converging"
-        },
-        {
-          "name": "Diverging"
-        },
-        {
-          "name": "Mixed"
-        }
-      ]
-    },
-    {
-      "name": "EventBasedGatewayType",
-      "literalValues": [
-        {
-          "name": "Parallel"
-        },
-        {
-          "name": "Exclusive"
-        }
-      ]
-    },
-    {
-      "name": "RelationshipDirection",
-      "literalValues": [
-        {
-          "name": "None"
-        },
-        {
-          "name": "Forward"
-        },
-        {
-          "name": "Backward"
-        },
-        {
-          "name": "Both"
-        }
-      ]
-    },
-    {
-      "name": "ItemKind",
-      "literalValues": [
-        {
-          "name": "Physical"
-        },
-        {
-          "name": "Information"
-        }
-      ]
-    },
-    {
-      "name": "ChoreographyLoopType",
-      "literalValues": [
-        {
-          "name": "None"
-        },
-        {
-          "name": "Standard"
-        },
-        {
-          "name": "MultiInstanceSequential"
-        },
-        {
-          "name": "MultiInstanceParallel"
-        }
-      ]
-    },
-    {
-      "name": "AssociationDirection",
-      "literalValues": [
-        {
-          "name": "None"
-        },
-        {
-          "name": "One"
-        },
-        {
-          "name": "Both"
-        }
-      ]
-    },
-    {
-      "name": "MultiInstanceBehavior",
-      "literalValues": [
-        {
-          "name": "None"
-        },
-        {
-          "name": "One"
-        },
-        {
-          "name": "All"
-        },
-        {
-          "name": "Complex"
-        }
-      ]
-    },
-    {
-      "name": "AdHocOrdering",
-      "literalValues": [
-        {
-          "name": "Parallel"
-        },
-        {
-          "name": "Sequential"
-        }
-      ]
-    }
-  ],
-  "prefix": "bpmn",
-  "xml": {
-    "tagAlias": "lowerCase",
-    "typePrefix": "t"
-  }
-}
-},{}],113:[function(_dereq_,module,exports){
-module.exports={
-  "name": "BPMNDI",
-  "uri": "http://www.omg.org/spec/BPMN/20100524/DI",
-  "types": [
-    {
-      "name": "BPMNDiagram",
-      "properties": [
-        {
-          "name": "plane",
-          "type": "BPMNPlane",
-          "redefines": "di:Diagram#rootElement"
-        },
-        {
-          "name": "labelStyle",
-          "type": "BPMNLabelStyle",
-          "isMany": true
-        }
-      ],
-      "superClass": [
-        "di:Diagram"
-      ]
-    },
-    {
-      "name": "BPMNPlane",
-      "properties": [
-        {
-          "name": "bpmnElement",
-          "isAttr": true,
-          "isReference": true,
-          "type": "bpmn:BaseElement",
-          "redefines": "di:DiagramElement#modelElement"
-        }
-      ],
-      "superClass": [
-        "di:Plane"
-      ]
-    },
-    {
-      "name": "BPMNShape",
-      "properties": [
-        {
-          "name": "bpmnElement",
-          "isAttr": true,
-          "isReference": true,
-          "type": "bpmn:BaseElement",
-          "redefines": "di:DiagramElement#modelElement"
-        },
-        {
-          "name": "isHorizontal",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "isExpanded",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "isMarkerVisible",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "label",
-          "type": "BPMNLabel"
-        },
-        {
-          "name": "isMessageVisible",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "participantBandKind",
-          "type": "ParticipantBandKind",
-          "isAttr": true
-        },
-        {
-          "name": "choreographyActivityShape",
-          "type": "BPMNShape",
-          "isAttr": true,
-          "isReference": true
-        }
-      ],
-      "superClass": [
-        "di:LabeledShape"
-      ]
-    },
-    {
-      "name": "BPMNEdge",
-      "properties": [
-        {
-          "name": "label",
-          "type": "BPMNLabel"
-        },
-        {
-          "name": "bpmnElement",
-          "isAttr": true,
-          "isReference": true,
-          "type": "bpmn:BaseElement",
-          "redefines": "di:DiagramElement#modelElement"
-        },
-        {
-          "name": "sourceElement",
-          "isAttr": true,
-          "isReference": true,
-          "type": "di:DiagramElement",
-          "redefines": "di:Edge#source"
-        },
-        {
-          "name": "targetElement",
-          "isAttr": true,
-          "isReference": true,
-          "type": "di:DiagramElement",
-          "redefines": "di:Edge#target"
-        },
-        {
-          "name": "messageVisibleKind",
-          "type": "MessageVisibleKind",
-          "isAttr": true,
-          "default": "initiating"
-        }
-      ],
-      "superClass": [
-        "di:LabeledEdge"
-      ]
-    },
-    {
-      "name": "BPMNLabel",
-      "properties": [
-        {
-          "name": "labelStyle",
-          "type": "BPMNLabelStyle",
-          "isAttr": true,
-          "isReference": true,
-          "redefines": "di:DiagramElement#style"
-        }
-      ],
-      "superClass": [
-        "di:Label"
-      ]
-    },
-    {
-      "name": "BPMNLabelStyle",
-      "properties": [
-        {
-          "name": "font",
-          "type": "dc:Font"
-        }
-      ],
-      "superClass": [
-        "di:Style"
-      ]
-    }
-  ],
-  "emumerations": [
-    {
-      "name": "ParticipantBandKind",
-      "literalValues": [
-        {
-          "name": "top_initiating"
-        },
-        {
-          "name": "middle_initiating"
-        },
-        {
-          "name": "bottom_initiating"
-        },
-        {
-          "name": "top_non_initiating"
-        },
-        {
-          "name": "middle_non_initiating"
-        },
-        {
-          "name": "bottom_non_initiating"
-        }
-      ]
-    },
-    {
-      "name": "MessageVisibleKind",
-      "literalValues": [
-        {
-          "name": "initiating"
-        },
-        {
-          "name": "non_initiating"
-        }
-      ]
-    }
-  ],
-  "associations": [],
-  "prefix": "bpmndi"
-}
-},{}],114:[function(_dereq_,module,exports){
-module.exports={
-  "name": "DC",
-  "uri": "http://www.omg.org/spec/DD/20100524/DC",
-  "types": [
-    {
-      "name": "Boolean"
-    },
-    {
-      "name": "Integer"
-    },
-    {
-      "name": "Real"
-    },
-    {
-      "name": "String"
-    },
-    {
-      "name": "Font",
-      "properties": [
-        {
-          "name": "name",
-          "type": "String",
-          "isAttr": true
-        },
-        {
-          "name": "size",
-          "type": "Real",
-          "isAttr": true
-        },
-        {
-          "name": "isBold",
-          "type": "Boolean",
-          "isAttr": true
-        },
-        {
-          "name": "isItalic",
-          "type": "Boolean",
-          "isAttr": true
-        },
-        {
-          "name": "isUnderline",
-          "type": "Boolean",
-          "isAttr": true
-        },
-        {
-          "name": "isStrikeThrough",
-          "type": "Boolean",
-          "isAttr": true
-        }
-      ]
-    },
-    {
-      "name": "Point",
-      "properties": [
-        {
-          "name": "x",
-          "type": "Real",
-          "default": "0",
-          "isAttr": true
-        },
-        {
-          "name": "y",
-          "type": "Real",
-          "default": "0",
-          "isAttr": true
-        }
-      ]
-    },
-    {
-      "name": "Bounds",
-      "properties": [
-        {
-          "name": "x",
-          "type": "Real",
-          "default": "0",
-          "isAttr": true
-        },
-        {
-          "name": "y",
-          "type": "Real",
-          "default": "0",
-          "isAttr": true
-        },
-        {
-          "name": "width",
-          "type": "Real",
-          "isAttr": true
-        },
-        {
-          "name": "height",
-          "type": "Real",
-          "isAttr": true
-        }
-      ]
-    }
-  ],
-  "prefix": "dc",
-  "associations": []
-}
-},{}],115:[function(_dereq_,module,exports){
-module.exports={
-  "name": "DI",
-  "uri": "http://www.omg.org/spec/DD/20100524/DI",
-  "types": [
-    {
-      "name": "DiagramElement",
-      "isAbstract": true,
-      "properties": [
-        {
-          "name": "id",
-          "type": "String",
-          "isAttr": true,
-          "isId": true
-        },
-        {
-          "name": "extension",
-          "type": "Extension"
-        },
-        {
-          "name": "owningDiagram",
-          "type": "Diagram",
-          "isReadOnly": true,
-          "isVirtual": true,
-          "isReference": true
-        },
-        {
-          "name": "owningElement",
-          "type": "DiagramElement",
-          "isReadOnly": true,
-          "isVirtual": true,
-          "isReference": true
-        },
-        {
-          "name": "modelElement",
-          "isReadOnly": true,
-          "isVirtual": true,
-          "isReference": true,
-          "type": "Element"
-        },
-        {
-          "name": "style",
-          "type": "Style",
-          "isReadOnly": true,
-          "isVirtual": true,
-          "isReference": true
-        },
-        {
-          "name": "ownedElement",
-          "type": "DiagramElement",
-          "isReadOnly": true,
-          "isVirtual": true,
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "Node",
-      "isAbstract": true,
-      "superClass": [
-        "DiagramElement"
-      ]
-    },
-    {
-      "name": "Edge",
-      "isAbstract": true,
-      "superClass": [
-        "DiagramElement"
-      ],
-      "properties": [
-        {
-          "name": "source",
-          "type": "DiagramElement",
-          "isReadOnly": true,
-          "isVirtual": true,
-          "isReference": true
-        },
-        {
-          "name": "target",
-          "type": "DiagramElement",
-          "isReadOnly": true,
-          "isVirtual": true,
-          "isReference": true
-        },
-        {
-          "name": "waypoint",
-          "isUnique": false,
-          "isMany": true,
-          "type": "dc:Point",
-          "xml": {
-            "serialize": "xsi:type"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Diagram",
-      "isAbstract": true,
-      "properties": [
-        {
-          "name": "id",
-          "type": "String",
-          "isAttr": true,
-          "isId": true
-        },
-        {
-          "name": "rootElement",
-          "type": "DiagramElement",
-          "isReadOnly": true,
-          "isVirtual": true
-        },
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "documentation",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "resolution",
-          "isAttr": true,
-          "type": "Real"
-        },
-        {
-          "name": "ownedStyle",
-          "type": "Style",
-          "isReadOnly": true,
-          "isVirtual": true,
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "Shape",
-      "isAbstract": true,
-      "superClass": [
-        "Node"
-      ],
-      "properties": [
-        {
-          "name": "bounds",
-          "type": "dc:Bounds"
-        }
-      ]
-    },
-    {
-      "name": "Plane",
-      "isAbstract": true,
-      "superClass": [
-        "Node"
-      ],
-      "properties": [
-        {
-          "name": "planeElement",
-          "type": "DiagramElement",
-          "subsettedProperty": "DiagramElement-ownedElement",
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "LabeledEdge",
-      "isAbstract": true,
-      "superClass": [
-        "Edge"
-      ],
-      "properties": [
-        {
-          "name": "ownedLabel",
-          "type": "Label",
-          "isReadOnly": true,
-          "subsettedProperty": "DiagramElement-ownedElement",
-          "isVirtual": true,
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "LabeledShape",
-      "isAbstract": true,
-      "superClass": [
-        "Shape"
-      ],
-      "properties": [
-        {
-          "name": "ownedLabel",
-          "type": "Label",
-          "isReadOnly": true,
-          "subsettedProperty": "DiagramElement-ownedElement",
-          "isVirtual": true,
-          "isMany": true
-        }
-      ]
-    },
-    {
-      "name": "Label",
-      "isAbstract": true,
-      "superClass": [
-        "Node"
-      ],
-      "properties": [
-        {
-          "name": "bounds",
-          "type": "dc:Bounds"
-        }
-      ]
-    },
-    {
-      "name": "Style",
-      "isAbstract": true,
-      "properties": [
-        {
-          "name": "id",
-          "type": "String",
-          "isAttr": true,
-          "isId": true
-        }
-      ]
-    },
-    {
-      "name": "Extension",
-      "properties": [
-        {
-          "name": "values",
-          "type": "Element",
-          "isMany": true
-        }
-      ]
-    }
-  ],
-  "associations": [],
-  "prefix": "di",
-  "xml": {
-    "tagAlias": "lowerCase"
-  }
-}
-},{}],116:[function(_dereq_,module,exports){
+},{"427":427,"428":428}],95:[function(_dereq_,module,exports){
 module.exports = {
-  __depends__: [ _dereq_(172) ],
+  __depends__: [ _dereq_(151) ],
   __init__: [ 'directEditing' ],
-  directEditing: [ 'type', _dereq_(117) ]
+  directEditing: [ 'type', _dereq_(96) ]
 };
-},{"117":117,"172":172}],117:[function(_dereq_,module,exports){
+},{"151":151,"96":96}],96:[function(_dereq_,module,exports){
 'use strict';
 
-var bind = _dereq_(314),
-    find = _dereq_(303);
+var bind = _dereq_(293),
+    find = _dereq_(282);
 
-var TextBox = _dereq_(118);
+var TextBox = _dereq_(97);
 
 
 /**
@@ -21255,12 +13764,12 @@ DirectEditing.prototype.activate = function(element) {
 
 
 module.exports = DirectEditing;
-},{"118":118,"303":303,"314":314}],118:[function(_dereq_,module,exports){
+},{"282":282,"293":293,"97":97}],97:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433),
-    domEvent = _dereq_(452),
-    domRemove = _dereq_(455);
+var assign = _dereq_(410),
+    domEvent = _dereq_(429),
+    domRemove = _dereq_(432);
 
 function stopPropagation(event) {
   event.stopPropagation();
@@ -21400,12 +13909,12 @@ TextBox.prototype.setCursor = function() {
   selection.addRange(range);
 };
 
-},{"433":433,"452":452,"455":455}],119:[function(_dereq_,module,exports){
-module.exports = _dereq_(120);
-},{"120":120}],120:[function(_dereq_,module,exports){
+},{"410":410,"429":429,"432":432}],98:[function(_dereq_,module,exports){
+module.exports = _dereq_(99);
+},{"99":99}],99:[function(_dereq_,module,exports){
 'use strict';
 
-var di = _dereq_(282);
+var di = _dereq_(261);
 
 
 /**
@@ -21482,7 +13991,7 @@ function createInjector(options) {
     'config': ['value', options]
   };
 
-  var coreModule = _dereq_(129);
+  var coreModule = _dereq_(108);
 
   var modules = [ configModule, coreModule ].concat(options.modules || []);
 
@@ -21603,13 +14112,13 @@ Diagram.prototype.destroy = function() {
 Diagram.prototype.clear = function() {
   this.get('eventBus').fire('diagram.clear');
 };
-},{"129":129,"282":282}],121:[function(_dereq_,module,exports){
+},{"108":108,"261":261}],100:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    isFunction = _dereq_(425),
-    isArray = _dereq_(424),
-    isNumber = _dereq_(427);
+var forEach = _dereq_(283),
+    isFunction = _dereq_(402),
+    isArray = _dereq_(401),
+    isNumber = _dereq_(404);
 
 
 var DEFAULT_PRIORITY = 1000;
@@ -21754,14 +14263,14 @@ forEach(hooks, function(hook) {
   };
 });
 
-},{"304":304,"424":424,"425":425,"427":427}],122:[function(_dereq_,module,exports){
+},{"283":283,"401":401,"402":402,"404":404}],101:[function(_dereq_,module,exports){
 'use strict';
 
-var unique = _dereq_(297),
-    isArray = _dereq_(424),
-    assign = _dereq_(433);
+var unique = _dereq_(276),
+    isArray = _dereq_(401),
+    assign = _dereq_(410);
 
-var InternalEvent = _dereq_(127).Event;
+var InternalEvent = _dereq_(106).Event;
 
 
 /**
@@ -22258,24 +14767,24 @@ CommandStack.prototype._setHandler = function(command, handler) {
   this._handlerMap[command] = handler;
 };
 
-},{"127":127,"297":297,"424":424,"433":433}],123:[function(_dereq_,module,exports){
+},{"106":106,"276":276,"401":401,"410":410}],102:[function(_dereq_,module,exports){
 module.exports = {
-  commandStack: [ 'type', _dereq_(122) ]
+  commandStack: [ 'type', _dereq_(101) ]
 };
 
-},{"122":122}],124:[function(_dereq_,module,exports){
+},{"101":101}],103:[function(_dereq_,module,exports){
 'use strict';
 
-var isNumber = _dereq_(427),
-    assign = _dereq_(433),
-    forEach = _dereq_(304),
-    every = _dereq_(301),
-    debounce = _dereq_(315);
+var isNumber = _dereq_(404),
+    assign = _dereq_(410),
+    forEach = _dereq_(283),
+    every = _dereq_(280),
+    debounce = _dereq_(294);
 
-var Collections = _dereq_(265),
-    Elements = _dereq_(268);
+var Collections = _dereq_(244),
+    Elements = _dereq_(247);
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 function round(number, resolution) {
   return Math.round(number * resolution) / resolution;
@@ -23225,12 +15734,12 @@ Canvas.prototype.resized = function() {
   this._eventBus.fire('canvas.resized');
 };
 
-},{"265":265,"268":268,"288":288,"301":301,"304":304,"315":315,"427":427,"433":433}],125:[function(_dereq_,module,exports){
+},{"244":244,"247":247,"267":267,"280":280,"283":283,"294":294,"404":404,"410":410}],104:[function(_dereq_,module,exports){
 'use strict';
 
-var Model = _dereq_(256);
+var Model = _dereq_(235);
 
-var assign = _dereq_(433);
+var assign = _dereq_(410);
 
 /**
  * A factory for diagram-js shapes
@@ -23276,7 +15785,7 @@ ElementFactory.prototype.create = function(type, attrs) {
 
   return Model.create(type, attrs);
 };
-},{"256":256,"433":433}],126:[function(_dereq_,module,exports){
+},{"235":235,"410":410}],105:[function(_dereq_,module,exports){
 'use strict';
 
 var ELEMENT_ID = 'data-element-id';
@@ -23475,14 +15984,14 @@ ElementRegistry.prototype._validateId = function(id) {
     throw new Error('element with id ' + id + ' already added');
   }
 };
-},{}],127:[function(_dereq_,module,exports){
+},{}],106:[function(_dereq_,module,exports){
 'use strict';
 
-var isFunction = _dereq_(425),
-    isArray = _dereq_(424),
-    isNumber = _dereq_(427),
-    bind = _dereq_(314),
-    assign = _dereq_(433);
+var isFunction = _dereq_(402),
+    isArray = _dereq_(401),
+    isNumber = _dereq_(404),
+    bind = _dereq_(293),
+    assign = _dereq_(410);
 
 var FN_REF = '__fn';
 
@@ -23933,14 +16442,14 @@ function invokeFunction(fn, args) {
   return fn.apply(null, args);
 }
 
-},{"314":314,"424":424,"425":425,"427":427,"433":433}],128:[function(_dereq_,module,exports){
+},{"293":293,"401":401,"402":402,"404":404,"410":410}],107:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    reduce = _dereq_(308);
+var forEach = _dereq_(283),
+    reduce = _dereq_(287);
 
-var GraphicsUtil = _dereq_(271),
-    domClear = _dereq_(448);
+var GraphicsUtil = _dereq_(250),
+    domClear = _dereq_(425);
 
 /**
  * A factory that creates graphical elements
@@ -24117,17 +16626,17 @@ GraphicsFactory.prototype.remove = function(element) {
   gfx.parent().remove();
 };
 
-},{"271":271,"304":304,"308":308,"448":448}],129:[function(_dereq_,module,exports){
+},{"250":250,"283":283,"287":287,"425":425}],108:[function(_dereq_,module,exports){
 module.exports = {
-  __depends__: [ _dereq_(133) ],
+  __depends__: [ _dereq_(112) ],
   __init__: [ 'canvas' ],
-  canvas: [ 'type', _dereq_(124) ],
-  elementRegistry: [ 'type', _dereq_(126) ],
-  elementFactory: [ 'type', _dereq_(125) ],
-  eventBus: [ 'type', _dereq_(127) ],
-  graphicsFactory: [ 'type', _dereq_(128) ]
+  canvas: [ 'type', _dereq_(103) ],
+  elementRegistry: [ 'type', _dereq_(105) ],
+  elementFactory: [ 'type', _dereq_(104) ],
+  eventBus: [ 'type', _dereq_(106) ],
+  graphicsFactory: [ 'type', _dereq_(107) ]
 };
-},{"124":124,"125":125,"126":126,"127":127,"128":128,"133":133}],130:[function(_dereq_,module,exports){
+},{"103":103,"104":104,"105":105,"106":106,"107":107,"112":112}],109:[function(_dereq_,module,exports){
 'use strict';
 
 var DEFAULT_RENDER_PRIORITY = 1000;
@@ -24218,14 +16727,14 @@ BaseRenderer.prototype.getConnectionPath = function() {};
 
 module.exports = BaseRenderer;
 
-},{}],131:[function(_dereq_,module,exports){
+},{}],110:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var BaseRenderer = _dereq_(130);
+var BaseRenderer = _dereq_(109);
 
-var renderUtil = _dereq_(279);
+var renderUtil = _dereq_(258);
 
 var componentsToPath = renderUtil.componentsToPath,
     createLine = renderUtil.createLine;
@@ -24303,12 +16812,12 @@ DefaultRenderer.$inject = [ 'eventBus', 'styles' ];
 
 module.exports = DefaultRenderer;
 
-},{"130":130,"279":279,"291":291}],132:[function(_dereq_,module,exports){
+},{"109":109,"258":258,"270":270}],111:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(424),
-    assign = _dereq_(433),
-    reduce = _dereq_(308);
+var isArray = _dereq_(401),
+    assign = _dereq_(410),
+    reduce = _dereq_(287);
 
 
 /**
@@ -24380,19 +16889,19 @@ function Styles() {
 
 module.exports = Styles;
 
-},{"308":308,"424":424,"433":433}],133:[function(_dereq_,module,exports){
+},{"287":287,"401":401,"410":410}],112:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'defaultRenderer' ],
-  defaultRenderer: [ 'type', _dereq_(131) ],
-  styles: [ 'type', _dereq_(132) ]
+  defaultRenderer: [ 'type', _dereq_(110) ],
+  styles: [ 'type', _dereq_(111) ]
 };
 
-},{"131":131,"132":132}],134:[function(_dereq_,module,exports){
+},{"110":110,"111":111}],113:[function(_dereq_,module,exports){
 'use strict';
 
-var filter = _dereq_(302),
-    forEach = _dereq_(304),
-    sortBy = _dereq_(312);
+var filter = _dereq_(281),
+    forEach = _dereq_(283),
+    sortBy = _dereq_(291);
 
 function last(arr) {
   return arr && arr[arr.length - 1];
@@ -24561,34 +17070,34 @@ AlignElements.prototype.trigger = function(elements, type) {
   modeling.alignElements(sortedElements, alignment);
 };
 
-},{"302":302,"304":304,"312":312}],135:[function(_dereq_,module,exports){
+},{"281":281,"283":283,"291":291}],114:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
   __init__: [ 'alignElements' ],
-  alignElements: [ 'type', _dereq_(134) ]
+  alignElements: [ 'type', _dereq_(113) ]
 };
 
-},{"134":134}],136:[function(_dereq_,module,exports){
+},{"113":113}],115:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    flatten = _dereq_(293),
-    union = _dereq_(295),
-    filter = _dereq_(302),
-    groupBy = _dereq_(305),
-    map = _dereq_(307);
+var forEach = _dereq_(283),
+    flatten = _dereq_(272),
+    union = _dereq_(274),
+    filter = _dereq_(281),
+    groupBy = _dereq_(284),
+    map = _dereq_(286);
 
-var saveClear = _dereq_(278).saveClear,
-    Collections = _dereq_(265);
+var saveClear = _dereq_(257).saveClear,
+    Collections = _dereq_(244);
 
-var getNewAttachShapeDelta = _dereq_(263).getNewAttachShapeDelta;
+var getNewAttachShapeDelta = _dereq_(242).getNewAttachShapeDelta;
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
 var HIGH_PRIORITY = 1500;
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 
 function AttachSupport(eventBus, modeling, movePreview, rules) {
@@ -24858,33 +17367,33 @@ function removeAttached(elements) {
   });
 }
 
-},{"121":121,"263":263,"265":265,"278":278,"291":291,"293":293,"295":295,"302":302,"304":304,"305":305,"307":307}],137:[function(_dereq_,module,exports){
+},{"100":100,"242":242,"244":244,"257":257,"270":270,"272":272,"274":274,"281":281,"283":283,"284":284,"286":286}],116:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(208),
-    _dereq_(176)
+    _dereq_(187),
+    _dereq_(155)
   ],
   __init__: [ 'attachSupport'],
-  attachSupport: [ 'type', _dereq_(136) ]
+  attachSupport: [ 'type', _dereq_(115) ]
 };
 
-},{"136":136,"176":176,"208":208}],138:[function(_dereq_,module,exports){
+},{"115":115,"155":155,"187":187}],117:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var getBoundingBox = _dereq_(268).getBBox;
+var getBoundingBox = _dereq_(247).getBBox;
 
-var asTRBL = _dereq_(254).asTRBL,
-    asBounds = _dereq_(254).asBounds;
+var asTRBL = _dereq_(233).asTRBL,
+    asBounds = _dereq_(233).asBounds;
 
-var assign = _dereq_(433),
-    forEach = _dereq_(304),
-    values = _dereq_(442),
-    flatten = _dereq_(293),
-    groupBy = _dereq_(305);
+var assign = _dereq_(410),
+    forEach = _dereq_(283),
+    values = _dereq_(419),
+    flatten = _dereq_(272),
+    groupBy = _dereq_(284);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 
 /**
@@ -25058,10 +17567,10 @@ AutoResize.prototype.resize = function(target, newBounds) {
   this._modeling.resizeShape(target, newBounds);
 };
 
-},{"121":121,"254":254,"268":268,"291":291,"293":293,"304":304,"305":305,"433":433,"442":442}],139:[function(_dereq_,module,exports){
-var RuleProvider = _dereq_(227);
+},{"100":100,"233":233,"247":247,"270":270,"272":272,"283":283,"284":284,"410":410,"419":419}],118:[function(_dereq_,module,exports){
+var RuleProvider = _dereq_(206);
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
 /**
  * This is a base rule provider for the element.autoResize rule.
@@ -25094,12 +17603,12 @@ module.exports = AutoResizeProvider;
 AutoResizeProvider.prototype.canResize = function(elements, target) {
   return false;
 };
-},{"227":227,"291":291}],140:[function(_dereq_,module,exports){
+},{"206":206,"270":270}],119:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433);
+var assign = _dereq_(410);
 
-var EventUtil = _dereq_(269);
+var EventUtil = _dereq_(248);
 
 
 /**
@@ -25238,20 +17747,20 @@ AutoScroll.prototype._toBorderPoint = function(event) {
     y: globalPosition.y - clientRect.top
   };
 };
-},{"269":269,"433":433}],141:[function(_dereq_,module,exports){
+},{"248":248,"410":410}],120:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(164),
-    _dereq_(205)
+    _dereq_(143),
+    _dereq_(184)
   ],
   __init__: [ 'autoScroll' ],
-  autoScroll: [ 'type', _dereq_(140) ]
+  autoScroll: [ 'type', _dereq_(119) ]
 };
-},{"140":140,"164":164,"205":205}],142:[function(_dereq_,module,exports){
+},{"119":119,"143":143,"184":184}],121:[function(_dereq_,module,exports){
 'use strict';
 
-var Geometry = _dereq_(270),
-    BendpointUtil = _dereq_(144);
+var Geometry = _dereq_(249),
+    BendpointUtil = _dereq_(123);
 
 var MARKER_OK = 'connect-ok',
     MARKER_NOT_OK = 'connect-not-ok',
@@ -25512,13 +18021,13 @@ BendpointMove.$inject = [ 'injector', 'eventBus', 'canvas', 'dragging', 'graphic
 
 module.exports = BendpointMove;
 
-},{"144":144,"270":270}],143:[function(_dereq_,module,exports){
+},{"123":123,"249":249}],122:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433),
-    forEach = _dereq_(304);
+var assign = _dereq_(410),
+    forEach = _dereq_(283);
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 var round = Math.round;
 
@@ -25689,13 +18198,13 @@ function BendpointSnapping(eventBus) {
 BendpointSnapping.$inject = [ 'eventBus' ];
 
 module.exports = BendpointSnapping;
-},{"288":288,"304":304,"433":433}],144:[function(_dereq_,module,exports){
+},{"267":267,"283":283,"410":410}],123:[function(_dereq_,module,exports){
 'use strict';
 
-var Events = _dereq_(269),
-    Geometry = _dereq_(270);
+var Events = _dereq_(248),
+    Geometry = _dereq_(249);
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 var BENDPOINT_CLS = module.exports.BENDPOINT_CLS = 'djs-bendpoint';
 var SEGMENT_DRAGGER_CLS = module.exports.SEGMENT_DRAGGER_CLS = 'djs-segment-dragger';
@@ -25772,19 +18281,19 @@ module.exports.addSegmentDragger = function(parentGfx, segmentStart, segmentEnd)
   return groupGfx;
 };
 
-},{"269":269,"270":270,"288":288}],145:[function(_dereq_,module,exports){
+},{"248":248,"249":249,"267":267}],124:[function(_dereq_,module,exports){
 'use strict';
 
-var domEvent = _dereq_(452),
-    BendpointUtil = _dereq_(144);
+var domEvent = _dereq_(429),
+    BendpointUtil = _dereq_(123);
 
-var pointsAligned = _dereq_(270).pointsAligned,
-    getMidPoint = _dereq_(270).getMidPoint;
+var pointsAligned = _dereq_(249).pointsAligned,
+    getMidPoint = _dereq_(249).getMidPoint;
 
 var BENDPOINT_CLS = BendpointUtil.BENDPOINT_CLS,
     SEGMENT_DRAGGER_CLS = BendpointUtil.SEGMENT_DRAGGER_CLS;
 
-var getApproxIntersection = _dereq_(273).getApproxIntersection;
+var getApproxIntersection = _dereq_(252).getApproxIntersection;
 
 
 /**
@@ -26022,12 +18531,12 @@ Bendpoints.$inject = [
 
 module.exports = Bendpoints;
 
-},{"144":144,"270":270,"273":273,"452":452}],146:[function(_dereq_,module,exports){
+},{"123":123,"249":249,"252":252,"429":429}],125:[function(_dereq_,module,exports){
 'use strict';
 
-var Geometry = _dereq_(270),
-    BendpointUtil = _dereq_(144),
-    LayoutUtil = _dereq_(254);
+var Geometry = _dereq_(249),
+    BendpointUtil = _dereq_(123),
+    LayoutUtil = _dereq_(233);
 
 var MARKER_CONNECT_HOVER = 'connect-hover',
     MARKER_CONNECT_UPDATING = 'djs-updating';
@@ -26419,20 +18928,20 @@ ConnectionSegmentMove.$inject = [
 
 module.exports = ConnectionSegmentMove;
 
-},{"144":144,"254":254,"270":270}],147:[function(_dereq_,module,exports){
+},{"123":123,"233":233,"249":249}],126:[function(_dereq_,module,exports){
 module.exports = {
-  __depends__: [ _dereq_(164), _dereq_(229) ],
+  __depends__: [ _dereq_(143), _dereq_(208) ],
   __init__: [ 'bendpoints', 'bendpointSnapping' ],
-  bendpoints: [ 'type', _dereq_(145) ],
-  bendpointMove: [ 'type', _dereq_(142) ],
-  connectionSegmentMove: [ 'type', _dereq_(146) ],
-  bendpointSnapping: [ 'type', _dereq_(143) ]
+  bendpoints: [ 'type', _dereq_(124) ],
+  bendpointMove: [ 'type', _dereq_(121) ],
+  connectionSegmentMove: [ 'type', _dereq_(125) ],
+  bendpointSnapping: [ 'type', _dereq_(122) ]
 };
 
-},{"142":142,"143":143,"145":145,"146":146,"164":164,"229":229}],148:[function(_dereq_,module,exports){
+},{"121":121,"122":122,"124":124,"125":125,"143":143,"208":208}],127:[function(_dereq_,module,exports){
 'use strict';
 
-var getElementType = _dereq_(268).getType;
+var getElementType = _dereq_(247).getType;
 
 /**
  * Adds change support to the diagram, including
@@ -26492,12 +19001,12 @@ ChangeSupport.$inject = [ 'eventBus', 'canvas', 'elementRegistry', 'graphicsFact
 
 module.exports = ChangeSupport;
 
-},{"268":268}],149:[function(_dereq_,module,exports){
+},{"247":247}],128:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'changeSupport'],
-  changeSupport: [ 'type', _dereq_(148) ]
+  changeSupport: [ 'type', _dereq_(127) ]
 };
-},{"148":148}],150:[function(_dereq_,module,exports){
+},{"127":127}],129:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -26527,15 +19036,15 @@ Clipboard.prototype.clear = function() {
 Clipboard.prototype.isEmpty = function() {
   return !this._data;
 };
-},{}],151:[function(_dereq_,module,exports){
+},{}],130:[function(_dereq_,module,exports){
 module.exports = {
-  clipboard: [ 'type', _dereq_(150) ]
+  clipboard: [ 'type', _dereq_(129) ]
 };
 
-},{"150":150}],152:[function(_dereq_,module,exports){
+},{"129":129}],131:[function(_dereq_,module,exports){
 'use strict';
 
-var LayoutUtil = _dereq_(254);
+var LayoutUtil = _dereq_(233);
 
 var MARKER_OK = 'connect-ok',
     MARKER_NOT_OK = 'connect-not-ok';
@@ -26708,28 +19217,28 @@ Connect.$inject = [ 'eventBus', 'dragging', 'modeling', 'rules', 'canvas', 'grap
 
 module.exports = Connect;
 
-},{"254":254}],153:[function(_dereq_,module,exports){
+},{"233":233}],132:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(235),
-    _dereq_(229),
-    _dereq_(164)
+    _dereq_(214),
+    _dereq_(208),
+    _dereq_(143)
   ],
-  connect: [ 'type', _dereq_(152) ]
+  connect: [ 'type', _dereq_(131) ]
 };
 
-},{"152":152,"164":164,"229":229,"235":235}],154:[function(_dereq_,module,exports){
+},{"131":131,"143":143,"208":208,"214":214}],133:[function(_dereq_,module,exports){
 'use strict';
 
-var isFunction = _dereq_(425),
-    forEach = _dereq_(304),
+var isFunction = _dereq_(402),
+    forEach = _dereq_(283),
 
-    domDelegate = _dereq_(450),
-    domEvent = _dereq_(452),
-    domAttr = _dereq_(446),
-    domQuery = _dereq_(454),
-    domClasses = _dereq_(447),
-    domify = _dereq_(451);
+    domDelegate = _dereq_(427),
+    domEvent = _dereq_(429),
+    domAttr = _dereq_(423),
+    domQuery = _dereq_(431),
+    domClasses = _dereq_(424),
+    domify = _dereq_(428);
 
 
 var entrySelector = '.entry';
@@ -27005,31 +19514,31 @@ ContextPad.prototype.isOpen = function(element) {
 
 module.exports = ContextPad;
 
-},{"304":304,"425":425,"446":446,"447":447,"450":450,"451":451,"452":452,"454":454}],155:[function(_dereq_,module,exports){
+},{"283":283,"402":402,"423":423,"424":424,"427":427,"428":428,"429":429,"431":431}],134:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(172),
-    _dereq_(213)
+    _dereq_(151),
+    _dereq_(192)
   ],
-  contextPad: [ 'type', _dereq_(154) ]
+  contextPad: [ 'type', _dereq_(133) ]
 };
-},{"154":154,"172":172,"213":213}],156:[function(_dereq_,module,exports){
+},{"133":133,"151":151,"192":192}],135:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(424),
-    forEach = _dereq_(304),
-    map = _dereq_(307),
-    find = _dereq_(303),
-    findIndex = _dereq_(292),
-    sortBy = _dereq_(312),
-    reduce = _dereq_(308);
+var isArray = _dereq_(401),
+    forEach = _dereq_(283),
+    map = _dereq_(286),
+    find = _dereq_(282),
+    findIndex = _dereq_(271),
+    sortBy = _dereq_(291),
+    reduce = _dereq_(287);
 
-var getBBox = _dereq_(268).getBBox;
+var getBBox = _dereq_(247).getBBox;
 
-var PositionUtil = _dereq_(277);
+var PositionUtil = _dereq_(256);
 
-var CopyPasteUtil = _dereq_(266),
-    ElementsUtil = _dereq_(268);
+var CopyPasteUtil = _dereq_(245),
+    ElementsUtil = _dereq_(247);
 
 
 
@@ -27476,18 +19985,18 @@ CopyPaste.prototype.createTree = function(elements) {
   return tree;
 };
 
-},{"266":266,"268":268,"277":277,"292":292,"303":303,"304":304,"307":307,"308":308,"312":312,"424":424}],157:[function(_dereq_,module,exports){
+},{"245":245,"247":247,"256":256,"271":271,"282":282,"283":283,"286":286,"287":287,"291":291,"401":401}],136:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(151),
-    _dereq_(229),
-    _dereq_(205)
+    _dereq_(130),
+    _dereq_(208),
+    _dereq_(184)
   ],
   __init__: [ 'copyPaste' ],
-  copyPaste: [ 'type', _dereq_(156) ]
+  copyPaste: [ 'type', _dereq_(135) ]
 };
 
-},{"151":151,"156":156,"205":205,"229":229}],158:[function(_dereq_,module,exports){
+},{"130":130,"135":135,"184":184,"208":208}],137:[function(_dereq_,module,exports){
 'use strict';
 
 var LOW_PRIORITY = 750;
@@ -27669,22 +20178,22 @@ Create.$inject = [ 'eventBus', 'dragging', 'rules', 'modeling', 'canvas', 'style
 
 module.exports = Create;
 
-},{}],159:[function(_dereq_,module,exports){
+},{}],138:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(164),
-    _dereq_(235),
-    _dereq_(229)
+    _dereq_(143),
+    _dereq_(214),
+    _dereq_(208)
   ],
-  create: [ 'type', _dereq_(158) ]
+  create: [ 'type', _dereq_(137) ]
 };
 
-},{"158":158,"164":164,"229":229,"235":235}],160:[function(_dereq_,module,exports){
+},{"137":137,"143":143,"208":208,"214":214}],139:[function(_dereq_,module,exports){
 'use strict';
 
-var sortBy = _dereq_(312),
-    forEach = _dereq_(304),
-    filter = _dereq_(302);
+var sortBy = _dereq_(291),
+    forEach = _dereq_(283),
+    filter = _dereq_(281);
 
 var AXIS_DIMENSIONS = {
   horizontal: [ 'x', 'width' ],
@@ -27898,29 +20407,29 @@ DistributeElements.prototype._findRange = function(element) {
   };
 };
 
-},{"302":302,"304":304,"312":312}],161:[function(_dereq_,module,exports){
+},{"281":281,"283":283,"291":291}],140:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
   __init__: [ 'distributeElements' ],
-  distributeElements: [ 'type', _dereq_(160) ]
+  distributeElements: [ 'type', _dereq_(139) ]
 };
 
-},{"160":160}],162:[function(_dereq_,module,exports){
+},{"139":139}],141:[function(_dereq_,module,exports){
 'use strict';
 
 /* global TouchEvent */
 
 var round = Math.round;
 
-var assign = _dereq_(433);
+var assign = _dereq_(410);
 
-var domEvent = _dereq_(452),
-    Event = _dereq_(269),
-    ClickTrap = _dereq_(264),
-    Cursor = _dereq_(267);
+var domEvent = _dereq_(429),
+    Event = _dereq_(248),
+    ClickTrap = _dereq_(243),
+    Cursor = _dereq_(246);
 
-var EventBusEvent = _dereq_(127).Event;
+var EventBusEvent = _dereq_(106).Event;
 
 var DRAG_ACTIVE_CLS = 'djs-drag-active';
 
@@ -28416,14 +20925,14 @@ Dragging.$inject = [ 'eventBus', 'canvas', 'selection' ];
 
 module.exports = Dragging;
 
-},{"127":127,"264":264,"267":267,"269":269,"433":433,"452":452}],163:[function(_dereq_,module,exports){
+},{"106":106,"243":243,"246":246,"248":248,"410":410,"429":429}],142:[function(_dereq_,module,exports){
 'use strict';
 
-var domClosest = _dereq_(449);
+var domClosest = _dereq_(426);
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
-var Event = _dereq_(269);
+var Event = _dereq_(248);
 
 function getGfx(target) {
   var node = domClosest(target, 'svg, .djs-element', true);
@@ -28508,22 +21017,22 @@ function HoverFix(eventBus, dragging, elementRegistry) {
 HoverFix.$inject = [ 'eventBus', 'dragging', 'elementRegistry' ];
 
 module.exports = HoverFix;
-},{"269":269,"288":288,"449":449}],164:[function(_dereq_,module,exports){
+},{"248":248,"267":267,"426":426}],143:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [
     'hoverFix'
   ],
   __depends__: [
-    _dereq_(235)
+    _dereq_(214)
   ],
-  dragging: [ 'type', _dereq_(162) ],
-  hoverFix: [ 'type', _dereq_(163) ]
+  dragging: [ 'type', _dereq_(141) ],
+  hoverFix: [ 'type', _dereq_(142) ]
 };
-},{"162":162,"163":163,"235":235}],165:[function(_dereq_,module,exports){
+},{"141":141,"142":142,"214":214}],144:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    isArray = _dereq_(424);
+var forEach = _dereq_(283),
+    isArray = _dereq_(401);
 
 var NOT_REGISTERED_ERROR = 'is not a registered action',
     IS_REGISTERED_ERROR = 'is already registered';
@@ -28733,18 +21242,18 @@ function error(action, message) {
   return new Error(action + ' ' + message);
 }
 
-},{"304":304,"424":424}],166:[function(_dereq_,module,exports){
+},{"283":283,"401":401}],145:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(235),
-    _dereq_(157),
-    _dereq_(262)
+    _dereq_(214),
+    _dereq_(136),
+    _dereq_(241)
   ],
   __init__: [ 'editorActions' ],
-  editorActions: [ 'type', _dereq_(165) ]
+  editorActions: [ 'type', _dereq_(144) ]
 };
 
-},{"157":157,"165":165,"235":235,"262":262}],167:[function(_dereq_,module,exports){
+},{"136":136,"144":144,"214":214,"241":241}],146:[function(_dereq_,module,exports){
 'use strict';
 
 var MARKER_OK = 'connect-ok',
@@ -28862,21 +21371,21 @@ GlobalConnect.prototype.canStartConnect = function(startTarget) {
   return this._provider.canStartConnect(startTarget);
 };
 
-},{}],168:[function(_dereq_,module,exports){
+},{}],147:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(153),
-    _dereq_(229),
-    _dereq_(164),
-    _dereq_(244)
+    _dereq_(132),
+    _dereq_(208),
+    _dereq_(143),
+    _dereq_(223)
   ],
-  globalConnect: [ 'type', _dereq_(167) ]
+  globalConnect: [ 'type', _dereq_(146) ]
 };
 
-},{"153":153,"164":164,"167":167,"229":229,"244":244}],169:[function(_dereq_,module,exports){
+},{"132":132,"143":143,"146":146,"208":208,"223":223}],148:[function(_dereq_,module,exports){
 'use strict';
 
-var hasPrimaryModifier = _dereq_(275).hasPrimaryModifier;
+var hasPrimaryModifier = _dereq_(254).hasPrimaryModifier;
 
 
 var HIGH_PRIORITY = 1500;
@@ -28995,27 +21504,27 @@ HandTool.prototype.isActive = function() {
   return context && /^hand/.test(context.prefix);
 };
 
-},{"275":275}],170:[function(_dereq_,module,exports){
+},{"254":254}],149:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
-  __depends__: [ _dereq_(244) ],
+  __depends__: [ _dereq_(223) ],
   __init__: [ 'handTool' ],
-  handTool: [ 'type', _dereq_(169) ]
+  handTool: [ 'type', _dereq_(148) ]
 };
 
-},{"169":169,"244":244}],171:[function(_dereq_,module,exports){
+},{"148":148,"223":223}],150:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    domDelegate = _dereq_(450);
+var forEach = _dereq_(283),
+    domDelegate = _dereq_(427);
 
 
-var isPrimaryButton = _dereq_(275).isPrimaryButton;
+var isPrimaryButton = _dereq_(254).isPrimaryButton;
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
-var renderUtil = _dereq_(279);
+var renderUtil = _dereq_(258);
 
 var createLine = renderUtil.createLine,
     updateLine = renderUtil.updateLine;
@@ -29293,16 +21802,16 @@ module.exports = InteractionEvents;
  * @property {Event} originalEvent
  */
 
-},{"275":275,"279":279,"288":288,"304":304,"450":450}],172:[function(_dereq_,module,exports){
+},{"254":254,"258":258,"267":267,"283":283,"427":427}],151:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'interactionEvents' ],
-  interactionEvents: [ 'type', _dereq_(171) ]
+  interactionEvents: [ 'type', _dereq_(150) ]
 };
-},{"171":171}],173:[function(_dereq_,module,exports){
+},{"150":150}],152:[function(_dereq_,module,exports){
 'use strict';
 
-var domEvent = _dereq_(452),
-    domMatches = _dereq_(453);
+var domEvent = _dereq_(429),
+    domMatches = _dereq_(430);
 
 /**
  * A keyboard abstraction that may be activated and
@@ -29613,23 +22122,23 @@ function isShift(modifiers) {
   return modifiers.shiftKey;
 }
 
-},{"452":452,"453":453}],174:[function(_dereq_,module,exports){
+},{"429":429,"430":430}],153:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'keyboard' ],
-  keyboard: [ 'type', _dereq_(173) ]
+  keyboard: [ 'type', _dereq_(152) ]
 };
 
-},{"173":173}],175:[function(_dereq_,module,exports){
+},{"152":152}],154:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    filter = _dereq_(302),
-    inherits = _dereq_(291);
+var forEach = _dereq_(283),
+    filter = _dereq_(281),
+    inherits = _dereq_(270);
 
 var LOW_PRIORITY = 250,
     HIGH_PRIORITY = 1400;
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 
 /**
@@ -29724,25 +22233,25 @@ function removeLabels(elements) {
   });
 }
 
-},{"121":121,"291":291,"302":302,"304":304}],176:[function(_dereq_,module,exports){
+},{"100":100,"270":270,"281":281,"283":283}],155:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(208)
+    _dereq_(187)
   ],
   __init__: [ 'labelSupport'],
-  labelSupport: [ 'type', _dereq_(175) ]
+  labelSupport: [ 'type', _dereq_(154) ]
 };
 
-},{"175":175,"208":208}],177:[function(_dereq_,module,exports){
+},{"154":154,"187":187}],156:[function(_dereq_,module,exports){
 'use strict';
 
-var values = _dereq_(442);
+var values = _dereq_(419);
 
-var getEnclosedElements = _dereq_(268).getEnclosedElements;
+var getEnclosedElements = _dereq_(247).getEnclosedElements;
 
-var hasSecondaryModifier = _dereq_(275).hasSecondaryModifier;
+var hasSecondaryModifier = _dereq_(254).hasSecondaryModifier;
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 var LASSO_TOOL_CURSOR = 'crosshair';
 
@@ -29990,21 +22499,21 @@ function toBBox(event) {
   return bbox;
 }
 
-},{"268":268,"275":275,"288":288,"442":442}],178:[function(_dereq_,module,exports){
+},{"247":247,"254":254,"267":267,"419":419}],157:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
-  __depends__: [ _dereq_(244) ],
+  __depends__: [ _dereq_(223) ],
   __init__: [ 'lassoTool' ],
-  lassoTool: [ 'type', _dereq_(177) ]
+  lassoTool: [ 'type', _dereq_(156) ]
 };
 
-},{"177":177,"244":244}],179:[function(_dereq_,module,exports){
+},{"156":156,"223":223}],158:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
-var model = _dereq_(256);
+var model = _dereq_(235);
 
 
 /**
@@ -30034,37 +22543,37 @@ module.exports = Modeling;
 
 Modeling.prototype.getHandlers = function() {
   return {
-    'shape.append': _dereq_(181),
-    'shape.create': _dereq_(184),
-    'shape.delete': _dereq_(187),
-    'shape.move': _dereq_(192),
-    'shape.resize': _dereq_(197),
-    'shape.replace': _dereq_(196),
-    'shape.toggleCollapse': _dereq_(199),
+    'shape.append': _dereq_(160),
+    'shape.create': _dereq_(163),
+    'shape.delete': _dereq_(166),
+    'shape.move': _dereq_(171),
+    'shape.resize': _dereq_(176),
+    'shape.replace': _dereq_(175),
+    'shape.toggleCollapse': _dereq_(178),
 
-    'spaceTool': _dereq_(198),
+    'spaceTool': _dereq_(177),
 
-    'label.create': _dereq_(183),
+    'label.create': _dereq_(162),
 
-    'connection.create': _dereq_(182),
-    'connection.delete': _dereq_(185),
-    'connection.move': _dereq_(190),
-    'connection.layout': _dereq_(189),
+    'connection.create': _dereq_(161),
+    'connection.delete': _dereq_(164),
+    'connection.move': _dereq_(169),
+    'connection.layout': _dereq_(168),
 
-    'connection.updateWaypoints': _dereq_(201),
+    'connection.updateWaypoints': _dereq_(180),
 
-    'connection.reconnectStart': _dereq_(195),
-    'connection.reconnectEnd': _dereq_(195),
+    'connection.reconnectStart': _dereq_(174),
+    'connection.reconnectEnd': _dereq_(174),
 
-    'elements.move': _dereq_(191),
-    'elements.delete': _dereq_(186),
+    'elements.move': _dereq_(170),
+    'elements.delete': _dereq_(165),
 
-    'elements.distribute': _dereq_(188),
-    'elements.align': _dereq_(180),
+    'elements.distribute': _dereq_(167),
+    'elements.align': _dereq_(159),
 
-    'element.updateAttachment': _dereq_(200),
+    'element.updateAttachment': _dereq_(179),
 
-    'elements.paste': _dereq_(194)
+    'elements.paste': _dereq_(173)
   };
 };
 
@@ -30431,10 +22940,10 @@ Modeling.prototype.toggleCollapse = function(shape, hints) {
   this._commandStack.execute('shape.toggleCollapse', context);
 };
 
-},{"180":180,"181":181,"182":182,"183":183,"184":184,"185":185,"186":186,"187":187,"188":188,"189":189,"190":190,"191":191,"192":192,"194":194,"195":195,"196":196,"197":197,"198":198,"199":199,"200":200,"201":201,"256":256,"304":304}],180:[function(_dereq_,module,exports){
+},{"159":159,"160":160,"161":161,"162":162,"163":163,"164":164,"165":165,"166":166,"167":167,"168":168,"169":169,"170":170,"171":171,"173":173,"174":174,"175":175,"176":176,"177":177,"178":178,"179":179,"180":180,"235":235,"283":283}],159:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
 /**
  * A handler that align elements in a certain way.
@@ -30490,12 +22999,12 @@ AlignElements.prototype.postExecute = function(context) {
 
 };
 
-},{"304":304}],181:[function(_dereq_,module,exports){
+},{"283":283}],160:[function(_dereq_,module,exports){
 'use strict';
 
-var any = _dereq_(300);
+var any = _dereq_(279);
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
 
 /**
@@ -30510,7 +23019,7 @@ function AppendShapeHandler(modeling) {
   this._modeling = modeling;
 }
 
-inherits(AppendShapeHandler, _dereq_(193));
+inherits(AppendShapeHandler, _dereq_(172));
 
 
 AppendShapeHandler.$inject = [ 'modeling' ];
@@ -30557,7 +23066,7 @@ function existsConnection(source, target) {
     return c.target === target;
   });
 }
-},{"193":193,"291":291,"300":300}],182:[function(_dereq_,module,exports){
+},{"172":172,"270":270,"279":279}],161:[function(_dereq_,module,exports){
 'use strict';
 
 
@@ -30619,12 +23128,12 @@ CreateConnectionHandler.prototype.revert = function(context) {
   connection.source = null;
   connection.target = null;
 };
-},{}],183:[function(_dereq_,module,exports){
+},{}],162:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CreateShapeHandler = _dereq_(184);
+var CreateShapeHandler = _dereq_(163);
 
 
 /**
@@ -30692,10 +23201,10 @@ function ensureValidDimensions(label) {
     }
   });
 }
-},{"184":184,"291":291}],184:[function(_dereq_,module,exports){
+},{"163":163,"270":270}],163:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433);
+var assign = _dereq_(410);
 
 var round = Math.round;
 
@@ -30765,10 +23274,10 @@ CreateShapeHandler.prototype.revert = function(context) {
   // (3) remove form canvas
   this._canvas.removeShape(context.shape);
 };
-},{"433":433}],185:[function(_dereq_,module,exports){
+},{"410":410}],164:[function(_dereq_,module,exports){
 'use strict';
 
-var Collections = _dereq_(265);
+var Collections = _dereq_(244);
 
 
 /**
@@ -30838,11 +23347,11 @@ DeleteConnectionHandler.prototype.revert = function(context) {
   return connection;
 };
 
-},{"265":265}],186:[function(_dereq_,module,exports){
+},{"244":244}],165:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    inherits = _dereq_(291);
+var forEach = _dereq_(283),
+    inherits = _dereq_(270);
 
 
 function DeleteElementsHandler(modeling, elementRegistry) {
@@ -30850,7 +23359,7 @@ function DeleteElementsHandler(modeling, elementRegistry) {
   this._elementRegistry = elementRegistry;
 }
 
-inherits(DeleteElementsHandler, _dereq_(193));
+inherits(DeleteElementsHandler, _dereq_(172));
 
 DeleteElementsHandler.$inject = [ 'modeling', 'elementRegistry' ];
 
@@ -30878,12 +23387,12 @@ DeleteElementsHandler.prototype.postExecute = function(context) {
     }
   });
 };
-},{"193":193,"291":291,"304":304}],187:[function(_dereq_,module,exports){
+},{"172":172,"270":270,"283":283}],166:[function(_dereq_,module,exports){
 'use strict';
 
-var Collections = _dereq_(265);
+var Collections = _dereq_(244);
 
-var saveClear = _dereq_(278).saveClear;
+var saveClear = _dereq_(257).saveClear;
 
 
 /**
@@ -30984,11 +23493,11 @@ DeleteShapeHandler.prototype.revert = function(context) {
   return shape;
 };
 
-},{"265":265,"278":278}],188:[function(_dereq_,module,exports){
+},{"244":244,"257":257}],167:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    sortBy = _dereq_(312);
+var forEach = _dereq_(283),
+    sortBy = _dereq_(291);
 
 /**
  * A handler that distributes elements evenly.
@@ -31141,10 +23650,10 @@ DistributeElements.prototype.postExecute = function(context) {
 
 };
 
-},{"304":304,"312":312}],189:[function(_dereq_,module,exports){
+},{"283":283,"291":291}],168:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433);
+var assign = _dereq_(410);
 
 
 /**
@@ -31236,12 +23745,12 @@ function sendToFront(connection) {
   return insertIndex;
 }
 
-},{"433":433}],190:[function(_dereq_,module,exports){
+},{"410":410}],169:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
-var Collections = _dereq_(265);
+var Collections = _dereq_(244);
 
 
 /**
@@ -31318,10 +23827,10 @@ MoveConnectionHandler.prototype.revert = function(context) {
 
   return connection;
 };
-},{"265":265,"304":304}],191:[function(_dereq_,module,exports){
+},{"244":244,"283":283}],170:[function(_dereq_,module,exports){
 'use strict';
 
-var MoveHelper = _dereq_(203);
+var MoveHelper = _dereq_(182);
 
 
 /**
@@ -31356,18 +23865,18 @@ MoveElementsHandler.prototype.postExecute = function(context) {
 MoveElementsHandler.prototype.execute = function(context) { };
 MoveElementsHandler.prototype.revert = function(context) { };
 
-},{"203":203}],192:[function(_dereq_,module,exports){
+},{"182":182}],171:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433),
-    forEach = _dereq_(304),
-    pick = _dereq_(440);
+var assign = _dereq_(410),
+    forEach = _dereq_(283),
+    pick = _dereq_(417);
 
-var MoveHelper = _dereq_(203),
-    Collections = _dereq_(265);
+var MoveHelper = _dereq_(182),
+    Collections = _dereq_(244);
 
-var getMovedSourceAnchor = _dereq_(202).getMovedSourceAnchor,
-    getMovedTargetAnchor = _dereq_(202).getMovedTargetAnchor;
+var getMovedSourceAnchor = _dereq_(181).getMovedSourceAnchor,
+    getMovedTargetAnchor = _dereq_(181).getMovedTargetAnchor;
 
 
 /**
@@ -31471,7 +23980,7 @@ MoveShapeHandler.prototype.getNewParent = function(context) {
   return context.newParent || context.shape.parent;
 };
 
-},{"202":202,"203":203,"265":265,"304":304,"433":433,"440":440}],193:[function(_dereq_,module,exports){
+},{"181":181,"182":182,"244":244,"283":283,"410":410,"417":417}],172:[function(_dereq_,module,exports){
 'use strict';
 
 function NoopHandler() {}
@@ -31480,15 +23989,15 @@ module.exports = NoopHandler;
 
 NoopHandler.prototype.execute = function() {};
 NoopHandler.prototype.revert = function() {};
-},{}],194:[function(_dereq_,module,exports){
+},{}],173:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    map = _dereq_(307),
-    sortBy = _dereq_(312),
-    clone = _dereq_(422);
+var forEach = _dereq_(283),
+    map = _dereq_(286),
+    sortBy = _dereq_(291),
+    clone = _dereq_(399);
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
 
 
@@ -31519,7 +24028,7 @@ function PasteHandler(eventBus, canvas, selection, elementFactory, modeling, rul
   this._rules = rules;
 }
 
-inherits(PasteHandler, _dereq_(193));
+inherits(PasteHandler, _dereq_(172));
 
 
 PasteHandler.$inject = [
@@ -31765,10 +24274,10 @@ PasteHandler.prototype._getCreatedElement = function(id, tree) {
   return tree.createdElements[id] && tree.createdElements[id].element;
 };
 
-},{"193":193,"291":291,"304":304,"307":307,"312":312,"422":422}],195:[function(_dereq_,module,exports){
+},{"172":172,"270":270,"283":283,"286":286,"291":291,"399":399}],174:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(424);
+var isArray = _dereq_(401);
 
 
 /**
@@ -31840,10 +24349,10 @@ ReconnectConnectionHandler.prototype.revert = function(context) {
 
   return connection;
 };
-},{"424":424}],196:[function(_dereq_,module,exports){
+},{"401":401}],175:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
 
 /**
@@ -31998,14 +24507,14 @@ ReplaceShapeHandler.prototype.reconnectEnd = function(connection, newTarget, doc
   modeling.reconnectEnd(connection, newTarget, dockingPoint);
 };
 
-},{"304":304}],197:[function(_dereq_,module,exports){
+},{"283":283}],176:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433),
-    forEach = _dereq_(304);
+var assign = _dereq_(410),
+    forEach = _dereq_(283);
 
-var getResizedSourceAnchor = _dereq_(202).getResizedSourceAnchor,
-    getResizedTargetAnchor = _dereq_(202).getResizedTargetAnchor;
+var getResizedSourceAnchor = _dereq_(181).getResizedSourceAnchor,
+    getResizedTargetAnchor = _dereq_(181).getResizedTargetAnchor;
 
 /**
  * A handler that implements reversible resizing of shapes.
@@ -32102,12 +24611,12 @@ ResizeShapeHandler.prototype.revert = function(context) {
   return shape;
 };
 
-},{"202":202,"304":304,"433":433}],198:[function(_dereq_,module,exports){
+},{"181":181,"283":283,"410":410}],177:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
-var SpaceUtil = _dereq_(241);
+var SpaceUtil = _dereq_(220);
 
 /**
  * A handler that implements reversible creating and removing of space.
@@ -32153,7 +24662,7 @@ SpaceToolHandler.prototype.postExecute = function(context) {
 SpaceToolHandler.prototype.execute = function(context) {};
 SpaceToolHandler.prototype.revert = function(context) {};
 
-},{"241":241,"304":304}],199:[function(_dereq_,module,exports){
+},{"220":220,"283":283}],178:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -32239,10 +24748,10 @@ function restoreVisibility(elements, lastState) {
   });
 }
 
-},{}],200:[function(_dereq_,module,exports){
+},{}],179:[function(_dereq_,module,exports){
 'use strict';
 
-var Collections = _dereq_(265);
+var Collections = _dereq_(244);
 
 /**
  * A handler that implements reversible attaching/detaching of shapes.
@@ -32313,7 +24822,7 @@ function addAttacher(host, attacher, idx) {
   Collections.add(attachers, attacher, idx);
 }
 
-},{"265":265}],201:[function(_dereq_,module,exports){
+},{"244":244}],180:[function(_dereq_,module,exports){
 'use strict';
 
 function UpdateWaypointsHandler() { }
@@ -32341,10 +24850,10 @@ UpdateWaypointsHandler.prototype.revert = function(context) {
 
   return connection;
 };
-},{}],202:[function(_dereq_,module,exports){
+},{}],181:[function(_dereq_,module,exports){
 'use strict';
 
-var getNewAttachPoint = _dereq_(263).getNewAttachPoint;
+var getNewAttachPoint = _dereq_(242).getNewAttachPoint;
 
 function getResizedSourceAnchor(connection, shape, oldBounds) {
 
@@ -32412,15 +24921,15 @@ function safeGetWaypoints(connection) {
   return waypoints;
 }
 
-},{"263":263}],203:[function(_dereq_,module,exports){
+},{"242":242}],182:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
-var Elements = _dereq_(268);
+var Elements = _dereq_(247);
 
-var getMovedSourceAnchor = _dereq_(202).getMovedSourceAnchor,
-    getMovedTargetAnchor = _dereq_(202).getMovedTargetAnchor;
+var getMovedSourceAnchor = _dereq_(181).getMovedSourceAnchor,
+    getMovedTargetAnchor = _dereq_(181).getMovedTargetAnchor;
 
 /**
  * A helper that is able to carry out serialized move operations on multiple elements.
@@ -32511,10 +25020,10 @@ MoveHelper.prototype.getClosure = function(elements) {
   return Elements.getClosure(elements);
 };
 
-},{"202":202,"268":268,"304":304}],204:[function(_dereq_,module,exports){
+},{"181":181,"247":247,"283":283}],183:[function(_dereq_,module,exports){
 'use strict';
 
-var bind = _dereq_(314);
+var bind = _dereq_(293);
 
 
 function MouseTracking(eventBus, canvas) {
@@ -32572,26 +25081,26 @@ MouseTracking.prototype._setMousePosition = function(event) {
   this._mouseY = event.layerY;
 };
 
-},{"314":314}],205:[function(_dereq_,module,exports){
+},{"293":293}],184:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
   __init__: [ 'mouseTracking' ],
-  mouseTracking: [ 'type', _dereq_(204) ]
+  mouseTracking: [ 'type', _dereq_(183) ]
 };
 
-},{"204":204}],206:[function(_dereq_,module,exports){
+},{"183":183}],185:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433),
-    filter = _dereq_(302),
-    groupBy = _dereq_(305);
+var assign = _dereq_(410),
+    filter = _dereq_(281),
+    groupBy = _dereq_(284);
 
 var LOW_PRIORITY = 500,
     MEDIUM_PRIORITY = 1250,
     HIGH_PRIORITY = 1500;
 
-var getOriginalEvent = _dereq_(269).getOriginal;
+var getOriginalEvent = _dereq_(248).getOriginal;
 
 var round = Math.round;
 
@@ -32804,18 +25313,18 @@ function removeNested(elements) {
   });
 }
 
-},{"269":269,"302":302,"305":305,"433":433}],207:[function(_dereq_,module,exports){
+},{"248":248,"281":281,"284":284,"410":410}],186:[function(_dereq_,module,exports){
 'use strict';
 
-var flatten = _dereq_(293),
-    forEach = _dereq_(304),
-    filter = _dereq_(302),
-    find = _dereq_(303),
-    size = _dereq_(310),
-    groupBy = _dereq_(305),
-    map = _dereq_(307);
+var flatten = _dereq_(272),
+    forEach = _dereq_(283),
+    filter = _dereq_(281),
+    find = _dereq_(282),
+    size = _dereq_(289),
+    groupBy = _dereq_(284),
+    map = _dereq_(286);
 
-var Elements = _dereq_(268);
+var Elements = _dereq_(247);
 
 var LOW_PRIORITY = 500;
 
@@ -33011,27 +25520,27 @@ function isConnection(element) {
   return element.waypoints;
 }
 
-},{"268":268,"293":293,"302":302,"303":303,"304":304,"305":305,"307":307,"310":310}],208:[function(_dereq_,module,exports){
+},{"247":247,"272":272,"281":281,"282":282,"283":283,"284":284,"286":286,"289":289}],187:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(172),
-    _dereq_(235),
-    _dereq_(211),
-    _dereq_(229),
-    _dereq_(164),
-    _dereq_(219)
+    _dereq_(151),
+    _dereq_(214),
+    _dereq_(190),
+    _dereq_(208),
+    _dereq_(143),
+    _dereq_(198)
   ],
   __init__: [ 'move', 'movePreview' ],
-  move: [ 'type', _dereq_(206) ],
-  movePreview: [ 'type', _dereq_(207) ]
+  move: [ 'type', _dereq_(185) ],
+  movePreview: [ 'type', _dereq_(186) ]
 };
 
-},{"164":164,"172":172,"206":206,"207":207,"211":211,"219":219,"229":229,"235":235}],209:[function(_dereq_,module,exports){
+},{"143":143,"151":151,"185":185,"186":186,"190":190,"198":198,"208":208,"214":214}],188:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 
 /**
@@ -33126,10 +25635,10 @@ OrderingProvider.prototype.getOrdering = function(element, newParent) {
 inherits(OrderingProvider, CommandInterceptor);
 
 module.exports = OrderingProvider;
-},{"121":121,"291":291}],210:[function(_dereq_,module,exports){
+},{"100":100,"270":270}],189:[function(_dereq_,module,exports){
 'use strict';
 
-var getBBox = _dereq_(268).getBBox;
+var getBBox = _dereq_(247).getBBox;
 
 var LOW_PRIORITY = 500;
 
@@ -33229,34 +25738,34 @@ Outline.$inject = ['eventBus', 'styles', 'elementRegistry'];
 
 module.exports = Outline;
 
-},{"268":268}],211:[function(_dereq_,module,exports){
+},{"247":247}],190:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
   __init__: [ 'outline' ],
-  outline: [ 'type', _dereq_(210) ]
+  outline: [ 'type', _dereq_(189) ]
 };
-},{"210":210}],212:[function(_dereq_,module,exports){
+},{"189":189}],191:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(424),
-    isString = _dereq_(430),
-    isObject = _dereq_(428),
-    assign = _dereq_(433),
-    forEach = _dereq_(304),
-    find = _dereq_(303),
-    filter = _dereq_(302);
+var isArray = _dereq_(401),
+    isString = _dereq_(407),
+    isObject = _dereq_(405),
+    assign = _dereq_(410),
+    forEach = _dereq_(283),
+    find = _dereq_(282),
+    filter = _dereq_(281);
 
-var domify = _dereq_(451),
-    domClasses = _dereq_(447),
-    domAttr = _dereq_(446),
-    domRemove = _dereq_(455),
-    domClear = _dereq_(448);
+var domify = _dereq_(428),
+    domClasses = _dereq_(424),
+    domAttr = _dereq_(423),
+    domRemove = _dereq_(432),
+    domClear = _dereq_(425);
 
-var getBBox = _dereq_(268).getBBox;
+var getBBox = _dereq_(247).getBBox;
 
 // document wide unique overlay ids
-var ids = new (_dereq_(272))('ov');
+var ids = new (_dereq_(251))('ov');
 
 
 function createRoot(parent) {
@@ -33787,25 +26296,25 @@ Overlays.prototype._init = function() {
   eventBus.on('diagram.clear', this.clear, this);
 };
 
-},{"268":268,"272":272,"302":302,"303":303,"304":304,"424":424,"428":428,"430":430,"433":433,"446":446,"447":447,"448":448,"451":451,"455":455}],213:[function(_dereq_,module,exports){
+},{"247":247,"251":251,"281":281,"282":282,"283":283,"401":401,"405":405,"407":407,"410":410,"423":423,"424":424,"425":425,"428":428,"432":432}],192:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'overlays' ],
-  overlays: [ 'type', _dereq_(212) ]
+  overlays: [ 'type', _dereq_(191) ]
 };
-},{"212":212}],214:[function(_dereq_,module,exports){
+},{"191":191}],193:[function(_dereq_,module,exports){
 'use strict';
 
-var isFunction = _dereq_(425),
-    forEach = _dereq_(304);
+var isFunction = _dereq_(402),
+    forEach = _dereq_(283);
 
-var domify = _dereq_(451),
-    domQuery = _dereq_(454),
-    domAttr = _dereq_(446),
-    domClear = _dereq_(448),
-    domClasses = _dereq_(447),
-    domMatches = _dereq_(453),
-    domDelegate = _dereq_(450),
-    domEvent = _dereq_(452);
+var domify = _dereq_(428),
+    domQuery = _dereq_(431),
+    domAttr = _dereq_(423),
+    domClear = _dereq_(425),
+    domClasses = _dereq_(424),
+    domMatches = _dereq_(430),
+    domDelegate = _dereq_(427),
+    domEvent = _dereq_(429);
 
 
 var toggleSelector = '.djs-palette-toggle',
@@ -34105,27 +26614,27 @@ Palette.HTML_MARKUP =
     '<div class="djs-palette-toggle"></div>' +
   '</div>';
 
-},{"304":304,"425":425,"446":446,"447":447,"448":448,"450":450,"451":451,"452":452,"453":453,"454":454}],215:[function(_dereq_,module,exports){
+},{"283":283,"402":402,"423":423,"424":424,"425":425,"427":427,"428":428,"429":429,"430":430,"431":431}],194:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
-  __depends__: [ _dereq_(244) ],
+  __depends__: [ _dereq_(223) ],
   __init__: [ 'palette' ],
-  palette: [ 'type', _dereq_(214) ]
+  palette: [ 'type', _dereq_(193) ]
 };
 
-},{"214":214,"244":244}],216:[function(_dereq_,module,exports){
+},{"193":193,"223":223}],195:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    assign = _dereq_(433),
-    find = _dereq_(303);
+var forEach = _dereq_(283),
+    assign = _dereq_(410),
+    find = _dereq_(282);
 
-var domDelegate = _dereq_(450),
-    domify = _dereq_(451),
-    domClasses = _dereq_(447),
-    domAttr = _dereq_(446),
-    domRemove = _dereq_(455);
+var domDelegate = _dereq_(427),
+    domify = _dereq_(428),
+    domClasses = _dereq_(424),
+    domAttr = _dereq_(423),
+    domRemove = _dereq_(432);
 
 var DATA_REF = 'data-id';
 
@@ -34550,20 +27059,20 @@ PopupMenu.prototype._unbindHandlers = function() {
 
 module.exports = PopupMenu;
 
-},{"303":303,"304":304,"433":433,"446":446,"447":447,"450":450,"451":451,"455":455}],217:[function(_dereq_,module,exports){
+},{"282":282,"283":283,"410":410,"423":423,"424":424,"427":427,"428":428,"432":432}],196:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
   __init__: [ 'popupMenu' ],
-  popupMenu: [ 'type', _dereq_(216) ]
+  popupMenu: [ 'type', _dereq_(195) ]
 };
 
-},{"216":216}],218:[function(_dereq_,module,exports){
+},{"195":195}],197:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 /**
  * Adds support for previews of moving/resizing elements.
@@ -34686,15 +27195,15 @@ function isConnection(element) {
   return element.waypoints;
 }
 
-},{"288":288,"304":304}],219:[function(_dereq_,module,exports){
+},{"267":267,"283":283}],198:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
   __init__: [ 'previewSupport' ],
-  previewSupport: [ 'type', _dereq_(218) ]
+  previewSupport: [ 'type', _dereq_(197) ]
 };
 
-},{"218":218}],220:[function(_dereq_,module,exports){
+},{"197":197}],199:[function(_dereq_,module,exports){
 'use strict';
 
 
@@ -34743,24 +27252,24 @@ Replace.prototype.replaceElement = function(oldElement, newElementData, options)
   return newElement;
 };
 
-},{}],221:[function(_dereq_,module,exports){
+},{}],200:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
   __init__: [ 'replace' ],
-  replace: [ 'type', _dereq_(220) ]
+  replace: [ 'type', _dereq_(199) ]
 };
 
-},{"220":220}],222:[function(_dereq_,module,exports){
+},{"199":199}],201:[function(_dereq_,module,exports){
 'use strict';
 
-var pick = _dereq_(440),
-    assign = _dereq_(433);
+var pick = _dereq_(417),
+    assign = _dereq_(410);
 
-var ResizeUtil = _dereq_(225);
+var ResizeUtil = _dereq_(204);
 
-var asTRBL = _dereq_(254).asTRBL,
-    roundBounds = _dereq_(254).roundBounds;
+var asTRBL = _dereq_(233).asTRBL,
+    roundBounds = _dereq_(233).roundBounds;
 
 var DEFAULT_MIN_WIDTH = 10;
 
@@ -34942,12 +27451,12 @@ Resize.$inject = [ 'eventBus', 'rules', 'modeling', 'dragging' ];
 
 module.exports = Resize;
 
-},{"225":225,"254":254,"433":433,"440":440}],223:[function(_dereq_,module,exports){
+},{"204":204,"233":233,"410":410,"417":417}],202:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 var HANDLE_OFFSET = -2,
     HANDLE_SIZE  = 5,
@@ -34955,11 +27464,11 @@ var HANDLE_OFFSET = -2,
 
 var CLS_RESIZER   = 'djs-resizer';
 
-var domEvent = _dereq_(452);
+var domEvent = _dereq_(429);
 
-var isPrimaryButton = _dereq_(275).isPrimaryButton;
+var isPrimaryButton = _dereq_(254).isPrimaryButton;
 
-var asTRBL = _dereq_(254).asTRBL;
+var asTRBL = _dereq_(233).asTRBL;
 
 
 /**
@@ -35097,7 +27606,7 @@ ResizeHandles.$inject = [ 'eventBus', 'canvas', 'selection', 'resize' ];
 
 module.exports = ResizeHandles;
 
-},{"254":254,"275":275,"288":288,"304":304,"452":452}],224:[function(_dereq_,module,exports){
+},{"233":233,"254":254,"267":267,"283":283,"429":429}],203:[function(_dereq_,module,exports){
 'use strict';
 
 var MARKER_RESIZING = 'djs-resizing',
@@ -35157,21 +27666,21 @@ ResizePreview.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles', 'pr
 
 module.exports = ResizePreview;
 
-},{}],225:[function(_dereq_,module,exports){
+},{}],204:[function(_dereq_,module,exports){
 'use strict';
 
-var filter = _dereq_(302);
+var filter = _dereq_(281);
 
 var max = Math.max,
     min = Math.min;
 
 var DEFAULT_CHILD_BOX_PADDING = 20;
 
-var getBBox = _dereq_(268).getBBox;
+var getBBox = _dereq_(247).getBBox;
 
 
-var asTRBL = _dereq_(254).asTRBL,
-    asBounds = _dereq_(254).asBounds;
+var asTRBL = _dereq_(233).asTRBL,
+    asBounds = _dereq_(233).asBounds;
 
 function isNumber(a) {
   return typeof a === 'number';
@@ -35421,26 +27930,26 @@ function computeChildrenBBox(shapeOrChildren, padding) {
 
 module.exports.computeChildrenBBox = computeChildrenBBox;
 
-},{"254":254,"268":268,"302":302}],226:[function(_dereq_,module,exports){
+},{"233":233,"247":247,"281":281}],205:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(229),
-    _dereq_(164),
-    _dereq_(219)
+    _dereq_(208),
+    _dereq_(143),
+    _dereq_(198)
   ],
   __init__: [ 'resize', 'resizePreview', 'resizeHandles' ],
-  resize: [ 'type', _dereq_(222) ],
-  resizePreview: [ 'type', _dereq_(224) ],
-  resizeHandles: [ 'type', _dereq_(223) ]
+  resize: [ 'type', _dereq_(201) ],
+  resizePreview: [ 'type', _dereq_(203) ],
+  resizeHandles: [ 'type', _dereq_(202) ]
 };
 
-},{"164":164,"219":219,"222":222,"223":223,"224":224,"229":229}],227:[function(_dereq_,module,exports){
+},{"143":143,"198":198,"201":201,"202":202,"203":203,"208":208}],206:[function(_dereq_,module,exports){
 
 'use strict';
 
-var inherits = _dereq_(291);
+var inherits = _dereq_(270);
 
-var CommandInterceptor = _dereq_(121);
+var CommandInterceptor = _dereq_(100);
 
 /**
  * A basic provider that may be extended to implement modeling rules.
@@ -35527,7 +28036,7 @@ RuleProvider.prototype.addRule = function(actions, priority, fn) {
  * Implement this method to add new rules during provider initialization.
  */
 RuleProvider.prototype.init = function() {};
-},{"121":121,"291":291}],228:[function(_dereq_,module,exports){
+},{"100":100,"270":270}],207:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -35578,23 +28087,23 @@ Rules.prototype.allowed = function(action, context) {
   // map undefined to true, i.e. no rules
   return allowed === undefined ? true : allowed;
 };
-},{}],229:[function(_dereq_,module,exports){
+},{}],208:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'rules' ],
-  rules: [ 'type', _dereq_(228) ]
+  rules: [ 'type', _dereq_(207) ]
 };
 
-},{"228":228}],230:[function(_dereq_,module,exports){
+},{"207":207}],209:[function(_dereq_,module,exports){
 'use strict';
 
-var domClear = _dereq_(448),
-    domDelegate = _dereq_(450),
-    domQuery = _dereq_(454),
-    domClasses = _dereq_(447),
-    domAttr = _dereq_(446),
-    domify = _dereq_(451);
+var domClear = _dereq_(425),
+    domDelegate = _dereq_(427),
+    domQuery = _dereq_(431),
+    domClasses = _dereq_(424),
+    domAttr = _dereq_(423),
+    domify = _dereq_(428);
 
-var getBoundingBox = _dereq_(268).getBBox;
+var getBoundingBox = _dereq_(247).getBBox;
 
 
 /**
@@ -36134,20 +28643,20 @@ SearchPad.RESULT_PRIMARY_HTML =
 SearchPad.RESULT_SECONDARY_HTML =
   '<p class="djs-search-result-secondary"></p>';
 
-},{"268":268,"446":446,"447":447,"448":448,"450":450,"451":451,"454":454}],231:[function(_dereq_,module,exports){
+},{"247":247,"423":423,"424":424,"425":425,"427":427,"428":428,"431":431}],210:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(213),
-    _dereq_(235)
+    _dereq_(192),
+    _dereq_(214)
   ],
-  searchPad: [ 'type', _dereq_(230) ]
+  searchPad: [ 'type', _dereq_(209) ]
 };
 
-},{"213":213,"230":230,"235":235}],232:[function(_dereq_,module,exports){
+},{"192":192,"209":209,"214":214}],211:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(424),
-    forEach = _dereq_(304);
+var isArray = _dereq_(401),
+    forEach = _dereq_(283);
 
 
 /**
@@ -36242,12 +28751,12 @@ Selection.prototype.select = function(elements, add) {
   this._eventBus.fire('selection.changed', { oldSelection: oldSelection, newSelection: selectedElements });
 };
 
-},{"304":304,"424":424}],233:[function(_dereq_,module,exports){
+},{"283":283,"401":401}],212:[function(_dereq_,module,exports){
 'use strict';
 
-var hasPrimaryModifier = _dereq_(275).hasPrimaryModifier;
+var hasPrimaryModifier = _dereq_(254).hasPrimaryModifier;
 
-var find = _dereq_(303);
+var find = _dereq_(282);
 
 
 function SelectionBehavior(eventBus, selection, canvas, elementRegistry) {
@@ -36322,10 +28831,10 @@ function SelectionBehavior(eventBus, selection, canvas, elementRegistry) {
 SelectionBehavior.$inject = [ 'eventBus', 'selection', 'canvas', 'elementRegistry' ];
 module.exports = SelectionBehavior;
 
-},{"275":275,"303":303}],234:[function(_dereq_,module,exports){
+},{"254":254,"282":282}],213:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
 var MARKER_HOVER = 'hover',
     MARKER_SELECTED = 'selected';
@@ -36400,24 +28909,24 @@ SelectionVisuals.$inject = [
 
 module.exports = SelectionVisuals;
 
-},{"304":304}],235:[function(_dereq_,module,exports){
+},{"283":283}],214:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'selectionVisuals', 'selectionBehavior' ],
   __depends__: [
-    _dereq_(172),
-    _dereq_(211)
+    _dereq_(151),
+    _dereq_(190)
   ],
-  selection: [ 'type', _dereq_(232) ],
-  selectionVisuals: [ 'type', _dereq_(234) ],
-  selectionBehavior: [ 'type', _dereq_(233) ]
+  selection: [ 'type', _dereq_(211) ],
+  selectionVisuals: [ 'type', _dereq_(213) ],
+  selectionBehavior: [ 'type', _dereq_(212) ]
 };
 
-},{"172":172,"211":211,"232":232,"233":233,"234":234}],236:[function(_dereq_,module,exports){
+},{"151":151,"190":190,"211":211,"212":212,"213":213}],215:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
-var snapTo = _dereq_(237).snapTo;
+var snapTo = _dereq_(216).snapTo;
 
 
 /**
@@ -36583,7 +29092,7 @@ SnapPoints.prototype.initDefaults = function(defaultSnaps) {
     });
   });
 };
-},{"237":237,"304":304}],237:[function(_dereq_,module,exports){
+},{"216":216,"283":283}],216:[function(_dereq_,module,exports){
 'use strict';
 
 var abs = Math.abs,
@@ -36714,19 +29223,19 @@ module.exports.setSnapped = function(event, axis, value) {
 
   return previousValue;
 };
-},{}],238:[function(_dereq_,module,exports){
+},{}],217:[function(_dereq_,module,exports){
 'use strict';
 
-var filter = _dereq_(302),
-    forEach = _dereq_(304),
-    debounce = _dereq_(315);
+var filter = _dereq_(281),
+    forEach = _dereq_(283),
+    debounce = _dereq_(294);
 
 
-var mid = _dereq_(237).mid;
+var mid = _dereq_(216).mid;
 
-var SnapContext = _dereq_(236);
+var SnapContext = _dereq_(215);
 
-var SnapUtil = _dereq_(237);
+var SnapUtil = _dereq_(216);
 
 var HIGHER_PRIORITY = 1250;
 
@@ -36954,14 +29463,14 @@ Snapping.prototype.getSiblings = function(element, target) {
     return !e.hidden && !e.labelTarget && !e.waypoints && e.host !== element && e !== element;
   });
 };
-},{"236":236,"237":237,"302":302,"304":304,"315":315}],239:[function(_dereq_,module,exports){
+},{"215":215,"216":216,"281":281,"283":283,"294":294}],218:[function(_dereq_,module,exports){
 'use strict';
 
-var SpaceUtil = _dereq_(241);
+var SpaceUtil = _dereq_(220);
 
-var Cursor = _dereq_(267);
+var Cursor = _dereq_(246);
 
-var hasPrimaryModifier = _dereq_(275).hasPrimaryModifier;
+var hasPrimaryModifier = _dereq_(254).hasPrimaryModifier;
 
 var abs = Math.abs,
     round = Math.round;
@@ -36972,10 +29481,10 @@ var HIGH_PRIORITY = 1500,
 var AXIS_TO_DIMENSION = { x: 'width', y: 'height' },
     AXIS_INVERTED = { x: 'y', y: 'x' };
 
-var getAllChildren = _dereq_(268).selfAndAllChildren;
+var getAllChildren = _dereq_(247).selfAndAllChildren;
 
-var assign = _dereq_(433),
-    forEach = _dereq_(304);
+var assign = _dereq_(410),
+    forEach = _dereq_(283);
 
 
 /**
@@ -37240,10 +29749,10 @@ SpaceTool.prototype.isActive = function() {
   return context && /^spaceTool/.test(context.prefix);
 };
 
-},{"241":241,"267":267,"268":268,"275":275,"304":304,"433":433}],240:[function(_dereq_,module,exports){
+},{"220":220,"246":246,"247":247,"254":254,"283":283,"410":410}],219:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
 var MARKER_DRAGGING = 'djs-dragging',
     MARKER_RESIZING = 'djs-resizing';
@@ -37480,7 +29989,7 @@ function isConnection(element) {
   return element.waypoints;
 }
 
-},{"304":304}],241:[function(_dereq_,module,exports){
+},{"283":283}],220:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -37570,25 +30079,25 @@ module.exports.resizeBounds = function(bounds, direction, delta) {
     throw new Error('unrecognized direction: ' + direction);
   }
 };
-},{}],242:[function(_dereq_,module,exports){
+},{}],221:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
   __init__: ['spaceToolPreview'],
   __depends__: [
-    _dereq_(164),
-    _dereq_(229),
-    _dereq_(244),
-    _dereq_(219)
+    _dereq_(143),
+    _dereq_(208),
+    _dereq_(223),
+    _dereq_(198)
   ],
-  spaceTool: ['type', _dereq_(239)],
-  spaceToolPreview: ['type', _dereq_(240) ]
+  spaceTool: ['type', _dereq_(218)],
+  spaceToolPreview: ['type', _dereq_(219) ]
 };
 
-},{"164":164,"219":219,"229":229,"239":239,"240":240,"244":244}],243:[function(_dereq_,module,exports){
+},{"143":143,"198":198,"208":208,"218":218,"219":219,"223":223}],222:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
 var LOW_PRIORITY = 250;
 
@@ -37682,31 +30191,31 @@ ToolManager.prototype.bindEvents = function(name, events) {
   }, this);
 };
 
-},{"304":304}],244:[function(_dereq_,module,exports){
+},{"283":283}],223:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
-  __depends__: [ _dereq_(164) ],
+  __depends__: [ _dereq_(143) ],
   __init__: [ 'toolManager' ],
-  toolManager: [ 'type', _dereq_(243) ]
+  toolManager: [ 'type', _dereq_(222) ]
 };
 
-},{"164":164,"243":243}],245:[function(_dereq_,module,exports){
+},{"143":143,"222":222}],224:[function(_dereq_,module,exports){
 'use strict';
 
-var isString = _dereq_(430),
-    assign = _dereq_(433),
-    forEach = _dereq_(304);
+var isString = _dereq_(407),
+    assign = _dereq_(410),
+    forEach = _dereq_(283);
 
-var domify = _dereq_(451),
-    domAttr = _dereq_(446),
-    domClasses = _dereq_(447),
-    domRemove = _dereq_(455),
-    domDelegate = _dereq_(450);
+var domify = _dereq_(428),
+    domAttr = _dereq_(423),
+    domClasses = _dereq_(424),
+    domRemove = _dereq_(432),
+    domDelegate = _dereq_(427);
 
 
 // document wide unique tooltip ids
-var ids = new (_dereq_(272))('tt');
+var ids = new (_dereq_(251))('tt');
 
 
 function createRoot(parent) {
@@ -38056,12 +30565,12 @@ Tooltips.prototype._init = function() {
   });
 };
 
-},{"272":272,"304":304,"430":430,"433":433,"446":446,"447":447,"450":450,"451":451,"455":455}],246:[function(_dereq_,module,exports){
+},{"251":251,"283":283,"407":407,"410":410,"423":423,"424":424,"427":427,"428":428,"432":432}],225:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'tooltips' ],
-  tooltips: [ 'type', _dereq_(245) ]
+  tooltips: [ 'type', _dereq_(224) ]
 };
-},{"245":245}],247:[function(_dereq_,module,exports){
+},{"224":224}],226:[function(_dereq_,module,exports){
 'use strict';
 
 function TouchFix(canvas, eventBus) {
@@ -38096,15 +30605,15 @@ TouchFix.prototype.addBBoxMarker = function(paper) {
   paper.rect(10000, 10000, 10, 10).attr(markerStyle);
 };
 
-},{}],248:[function(_dereq_,module,exports){
+},{}],227:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304),
-    domEvent = _dereq_(452),
-    domClosest = _dereq_(449),
-    Hammer = _dereq_(286),
-    Snap = _dereq_(288),
-    Event = _dereq_(269);
+var forEach = _dereq_(283),
+    domEvent = _dereq_(429),
+    domClosest = _dereq_(426),
+    Hammer = _dereq_(265),
+    Snap = _dereq_(267),
+    Event = _dereq_(248);
 
 var MIN_ZOOM = 0.2,
     MAX_ZOOM = 4;
@@ -38427,18 +30936,18 @@ TouchInteractionEvents.$inject = [
 ];
 
 module.exports = TouchInteractionEvents;
-},{"269":269,"286":286,"288":288,"304":304,"449":449,"452":452}],249:[function(_dereq_,module,exports){
+},{"248":248,"265":265,"267":267,"283":283,"426":426,"429":429}],228:[function(_dereq_,module,exports){
 module.exports = {
-  __depends__: [ _dereq_(172) ],
+  __depends__: [ _dereq_(151) ],
   __init__: [ 'touchInteractionEvents' ],
-  touchInteractionEvents: [ 'type', _dereq_(248) ],
-  touchFix: [ 'type', _dereq_(247) ]
+  touchInteractionEvents: [ 'type', _dereq_(227) ],
+  touchFix: [ 'type', _dereq_(226) ]
 };
-},{"172":172,"247":247,"248":248}],250:[function(_dereq_,module,exports){
+},{"151":151,"226":226,"227":227}],229:[function(_dereq_,module,exports){
 module.exports = {
-  translate: [ 'value', _dereq_(251) ]
+  translate: [ 'value', _dereq_(230) ]
 };
-},{"251":251}],251:[function(_dereq_,module,exports){
+},{"230":230}],230:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -38467,10 +30976,10 @@ module.exports = function translate(template, replacements) {
     return replacements[key] || '{' + key + '}';
   });
 };
-},{}],252:[function(_dereq_,module,exports){
+},{}],231:[function(_dereq_,module,exports){
 'use strict';
 
-var getMid = _dereq_(254).getMid;
+var getMid = _dereq_(233).getMid;
 
 
 /**
@@ -38506,12 +31015,12 @@ BaseLayouter.prototype.layoutConnection = function(connection, hints) {
   ];
 };
 
-},{"254":254}],253:[function(_dereq_,module,exports){
+},{"233":233}],232:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433);
+var assign = _dereq_(410);
 
-var LayoutUtil = _dereq_(254);
+var LayoutUtil = _dereq_(233);
 
 
 function dockingToPoint(docking) {
@@ -38603,14 +31112,14 @@ CroppingConnectionDocking.prototype._getGfx = function(element) {
   return this._elementRegistry.getGraphics(element);
 };
 
-},{"254":254,"433":433}],254:[function(_dereq_,module,exports){
+},{"233":233,"410":410}],233:[function(_dereq_,module,exports){
 'use strict';
 
-var isObject = _dereq_(428),
-    sortBy = _dereq_(312),
-    pointDistance = _dereq_(270).pointDistance;
+var isObject = _dereq_(405),
+    sortBy = _dereq_(291),
+    pointDistance = _dereq_(249).pointDistance;
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 
 function roundBounds(bounds) {
@@ -38793,16 +31302,16 @@ function getIntersections(a, b) {
 
 module.exports.getIntersections = getIntersections;
 
-},{"270":270,"288":288,"312":312,"428":428}],255:[function(_dereq_,module,exports){
+},{"249":249,"267":267,"291":291,"405":405}],234:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(424),
-    find = _dereq_(303),
-    without = _dereq_(298),
-    assign = _dereq_(433);
+var isArray = _dereq_(401),
+    find = _dereq_(282),
+    without = _dereq_(277),
+    assign = _dereq_(410);
 
-var LayoutUtil = _dereq_(254),
-    Geometry = _dereq_(270);
+var LayoutUtil = _dereq_(233),
+    Geometry = _dereq_(249);
 
 var getOrientation = LayoutUtil.getOrientation,
     getMid = LayoutUtil.getMid,
@@ -39276,13 +31785,13 @@ function getDirections(orientation, defaultLayout) {
   }
 }
 
-},{"254":254,"270":270,"298":298,"303":303,"424":424,"433":433}],256:[function(_dereq_,module,exports){
+},{"233":233,"249":249,"277":277,"282":282,"401":401,"410":410}],235:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(433),
-    inherits = _dereq_(291);
+var assign = _dereq_(410),
+    inherits = _dereq_(270);
 
-var Refs = _dereq_(464);
+var Refs = _dereq_(441);
 
 var parentRefs = new Refs({ name: 'children', enumerable: true, collection: true }, { name: 'parent' }),
     labelRefs = new Refs({ name: 'label', enumerable: true }, { name: 'labelTarget' }),
@@ -39492,15 +32001,15 @@ module.exports.Shape = Shape;
 module.exports.Connection = Connection;
 module.exports.Label = Label;
 
-},{"291":291,"433":433,"464":464}],257:[function(_dereq_,module,exports){
+},{"270":270,"410":410,"441":441}],236:[function(_dereq_,module,exports){
 'use strict';
 
-var Cursor = _dereq_(267),
-    ClickTrap = _dereq_(264),
-    substract = _dereq_(274).substract,
-    domEvent = _dereq_(452),
-    domClosest = _dereq_(449),
-    EventUtil = _dereq_(269);
+var Cursor = _dereq_(246),
+    ClickTrap = _dereq_(243),
+    substract = _dereq_(253).substract,
+    domEvent = _dereq_(429),
+    domClosest = _dereq_(426),
+    EventUtil = _dereq_(248);
 
 
 function length(point) {
@@ -39589,32 +32098,32 @@ MoveCanvas.$inject = [ 'eventBus', 'canvas' ];
 
 module.exports = MoveCanvas;
 
-},{"264":264,"267":267,"269":269,"274":274,"449":449,"452":452}],258:[function(_dereq_,module,exports){
+},{"243":243,"246":246,"248":248,"253":253,"426":426,"429":429}],237:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'moveCanvas' ],
-  moveCanvas: [ 'type', _dereq_(257) ]
+  moveCanvas: [ 'type', _dereq_(236) ]
 };
-},{"257":257}],259:[function(_dereq_,module,exports){
+},{"236":236}],238:[function(_dereq_,module,exports){
 module.exports = {
-  __depends__: [ _dereq_(249) ]
+  __depends__: [ _dereq_(228) ]
 };
-},{"249":249}],260:[function(_dereq_,module,exports){
+},{"228":228}],239:[function(_dereq_,module,exports){
 'use strict';
 
-var domEvent = _dereq_(452),
-    domClosest = _dereq_(449);
+var domEvent = _dereq_(429),
+    domClosest = _dereq_(426);
 
-var hasPrimaryModifier = _dereq_(275).hasPrimaryModifier,
-    hasSecondaryModifier = _dereq_(275).hasSecondaryModifier;
+var hasPrimaryModifier = _dereq_(254).hasPrimaryModifier,
+    hasSecondaryModifier = _dereq_(254).hasSecondaryModifier;
 
-var isMac = _dereq_(276).isMac;
+var isMac = _dereq_(255).isMac;
 
-var getStepRange = _dereq_(261).getStepRange,
-    cap = _dereq_(261).cap;
+var getStepRange = _dereq_(240).getStepRange,
+    cap = _dereq_(240).cap;
 
-var log10 = _dereq_(274).log10;
+var log10 = _dereq_(253).log10;
 
-var bind = _dereq_(314);
+var bind = _dereq_(293);
 
 var RANGE = { min: 0.2, max: 4 },
     NUM_STEPS = 10;
@@ -39787,11 +32296,11 @@ ZoomScroll.prototype._init = function(newEnabled) {
   this.toggle(newEnabled);
 };
 
-},{"261":261,"274":274,"275":275,"276":276,"314":314,"449":449,"452":452}],261:[function(_dereq_,module,exports){
+},{"240":240,"253":253,"254":254,"255":255,"293":293,"426":426,"429":429}],240:[function(_dereq_,module,exports){
 'use strict';
 
 
-var log10 = _dereq_(274).log10;
+var log10 = _dereq_(253).log10;
 
 /**
  * Get the linear range between two zoom steps based on the
@@ -39811,18 +32320,18 @@ module.exports.cap = function(range, scale) {
   return Math.max(range.min, Math.min(range.max, scale));
 };
 
-},{"274":274}],262:[function(_dereq_,module,exports){
+},{"253":253}],241:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'zoomScroll' ],
-  zoomScroll: [ 'type', _dereq_(260) ]
+  zoomScroll: [ 'type', _dereq_(239) ]
 };
-},{"260":260}],263:[function(_dereq_,module,exports){
+},{"239":239}],242:[function(_dereq_,module,exports){
 'use strict';
 
-var roundPoint = _dereq_(254).roundPoint;
+var roundPoint = _dereq_(233).roundPoint;
 
-var center = _dereq_(277).center,
-    delta = _dereq_(277).delta;
+var center = _dereq_(256).center,
+    delta = _dereq_(256).delta;
 
 
 /**
@@ -39888,11 +32397,11 @@ function getNewAttachShapeDelta(shape, oldBounds, newBounds) {
 
 module.exports.getNewAttachShapeDelta = getNewAttachShapeDelta;
 
-},{"254":254,"277":277}],264:[function(_dereq_,module,exports){
+},{"233":233,"256":256}],243:[function(_dereq_,module,exports){
 'use strict';
 
-var domEvent = _dereq_(452),
-    stopEvent = _dereq_(269).stopEvent;
+var domEvent = _dereq_(429),
+    stopEvent = _dereq_(248).stopEvent;
 
 function trap(event) {
   stopEvent(event);
@@ -39919,7 +32428,7 @@ function install() {
 }
 
 module.exports.install = install;
-},{"269":269,"452":452}],265:[function(_dereq_,module,exports){
+},{"248":248,"429":429}],244:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -40010,10 +32519,10 @@ module.exports.indexOf = function(collection, element) {
   return collection.indexOf(element);
 };
 
-},{}],266:[function(_dereq_,module,exports){
+},{}],245:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(304);
+var forEach = _dereq_(283);
 
 function getTopLevel(elements) {
   var topLevel = {},
@@ -40056,10 +32565,10 @@ function getTopLevel(elements) {
 
 module.exports.getTopLevel = getTopLevel;
 
-},{"304":304}],267:[function(_dereq_,module,exports){
+},{"283":283}],246:[function(_dereq_,module,exports){
 'use strict';
 
-var domClasses = _dereq_(447);
+var domClasses = _dereq_(424);
 
 var CURSOR_CLS_PATTERN = /^djs-cursor-.*$/;
 
@@ -40084,13 +32593,13 @@ module.exports.has = function(mode) {
   return classes.has('djs-cursor-' + mode);
 };
 
-},{"447":447}],268:[function(_dereq_,module,exports){
+},{"424":424}],247:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(424),
-    isNumber = _dereq_(427),
-    groupBy = _dereq_(305),
-    forEach = _dereq_(304);
+var isArray = _dereq_(401),
+    isNumber = _dereq_(404),
+    groupBy = _dereq_(284),
+    forEach = _dereq_(283);
 
 /**
  * Adds an element to a collection and returns true if the
@@ -40382,7 +32891,7 @@ function getElementType(element) {
 }
 
 module.exports.getType = getElementType;
-},{"304":304,"305":305,"424":424,"427":427}],269:[function(_dereq_,module,exports){
+},{"283":283,"284":284,"401":401,"404":404}],248:[function(_dereq_,module,exports){
 'use strict';
 
 function __preventDefault(event) {
@@ -40453,7 +32962,7 @@ function toPoint(event) {
 
 module.exports.toPoint = toPoint;
 
-},{}],270:[function(_dereq_,module,exports){
+},{}],249:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -40558,7 +33067,7 @@ module.exports.getMidPoint = function(p, q) {
   };
 };
 
-},{}],271:[function(_dereq_,module,exports){
+},{}],250:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -40604,7 +33113,7 @@ function getBBox(gfx) {
 module.exports.getVisual = getVisual;
 module.exports.getChildren = getChildren;
 module.exports.getBBox = getBBox;
-},{}],272:[function(_dereq_,module,exports){
+},{}],251:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -40637,12 +33146,12 @@ IdGenerator.prototype.next = function() {
   return this._prefix + (++this._counter);
 };
 
-},{}],273:[function(_dereq_,module,exports){
+},{}],252:[function(_dereq_,module,exports){
 'use strict';
 
-var pointDistance = _dereq_(270).pointDistance;
+var pointDistance = _dereq_(249).pointDistance;
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 var round = Math.round,
     max = Math.max;
@@ -40749,7 +33258,7 @@ function getPathIntersection(waypoints, reference) {
 module.exports.getApproxIntersection = function(waypoints, reference) {
   return getBendpointIntersection(waypoints, reference) || getPathIntersection(waypoints, reference);
 };
-},{"270":270,"288":288}],274:[function(_dereq_,module,exports){
+},{"249":249,"267":267}],253:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -40772,12 +33281,12 @@ function substract(p1, p2) {
 
 module.exports.substract = substract;
 
-},{}],275:[function(_dereq_,module,exports){
+},{}],254:[function(_dereq_,module,exports){
 'use strict';
 
-var getOriginalEvent = _dereq_(269).getOriginal;
+var getOriginalEvent = _dereq_(248).getOriginal;
 
-var isMac = _dereq_(276).isMac;
+var isMac = _dereq_(255).isMac;
 
 
 function isPrimaryButton(event) {
@@ -40811,13 +33320,13 @@ module.exports.hasSecondaryModifier = function(event) {
   return isPrimaryButton(event) && originalEvent.shiftKey;
 };
 
-},{"269":269,"276":276}],276:[function(_dereq_,module,exports){
+},{"248":248,"255":255}],255:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports.isMac = function isMac() {
   return (/mac/i).test(navigator.platform);
 };
-},{}],277:[function(_dereq_,module,exports){
+},{}],256:[function(_dereq_,module,exports){
 'use strict';
 
 function center(bounds) {
@@ -40839,7 +33348,7 @@ function delta(a, b) {
 
 module.exports.delta = delta;
 
-},{}],278:[function(_dereq_,module,exports){
+},{}],257:[function(_dereq_,module,exports){
 'use strict';
 
 
@@ -40878,10 +33387,10 @@ module.exports.saveClear = function(collection, removeFn) {
   return collection;
 };
 
-},{}],279:[function(_dereq_,module,exports){
+},{}],258:[function(_dereq_,module,exports){
 'use strict';
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 
 module.exports.componentsToPath = function(elements) {
@@ -40908,17 +33417,17 @@ module.exports.updateLine = function(gfx, points) {
   return gfx.attr({ points: toSVGPoints(points) });
 };
 
-},{"288":288}],280:[function(_dereq_,module,exports){
+},{"267":267}],259:[function(_dereq_,module,exports){
 'use strict';
 
-var isObject = _dereq_(428),
-    assign = _dereq_(433),
-    pick = _dereq_(440),
-    forEach = _dereq_(304),
-    reduce = _dereq_(308),
-    merge = _dereq_(437);
+var isObject = _dereq_(405),
+    assign = _dereq_(410),
+    pick = _dereq_(417),
+    forEach = _dereq_(283),
+    reduce = _dereq_(287),
+    merge = _dereq_(414);
 
-var Snap = _dereq_(288);
+var Snap = _dereq_(267);
 
 var DEFAULT_BOX_PADDING = 0;
 
@@ -41160,7 +33669,7 @@ Text.prototype.createText = function(parent, text, options) {
 
 module.exports = Text;
 
-},{"288":288,"304":304,"308":308,"428":428,"433":433,"437":437,"440":440}],281:[function(_dereq_,module,exports){
+},{"267":267,"283":283,"287":287,"405":405,"410":410,"414":414,"417":417}],260:[function(_dereq_,module,exports){
 
 var isArray = function(obj) {
   return Object.prototype.toString.call(obj) === '[object Array]';
@@ -41210,18 +33719,18 @@ exports.annotate = annotate;
 exports.parse = parse;
 exports.isArray = isArray;
 
-},{}],282:[function(_dereq_,module,exports){
+},{}],261:[function(_dereq_,module,exports){
 module.exports = {
-  annotate: _dereq_(281).annotate,
-  Module: _dereq_(284),
-  Injector: _dereq_(283)
+  annotate: _dereq_(260).annotate,
+  Module: _dereq_(263),
+  Injector: _dereq_(262)
 };
 
-},{"281":281,"283":283,"284":284}],283:[function(_dereq_,module,exports){
-var Module = _dereq_(284);
-var autoAnnotate = _dereq_(281).parse;
-var annotate = _dereq_(281).annotate;
-var isArray = _dereq_(281).isArray;
+},{"260":260,"262":262,"263":263}],262:[function(_dereq_,module,exports){
+var Module = _dereq_(263);
+var autoAnnotate = _dereq_(260).parse;
+var annotate = _dereq_(260).annotate;
+var isArray = _dereq_(260).isArray;
 
 
 var Injector = function(modules, parent) {
@@ -41447,7 +33956,7 @@ var Injector = function(modules, parent) {
 
 module.exports = Injector;
 
-},{"281":281,"284":284}],284:[function(_dereq_,module,exports){
+},{"260":260,"263":263}],263:[function(_dereq_,module,exports){
 var Module = function() {
   var providers = [];
 
@@ -41473,7 +33982,7 @@ var Module = function() {
 
 module.exports = Module;
 
-},{}],285:[function(_dereq_,module,exports){
+},{}],264:[function(_dereq_,module,exports){
 // Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -41878,7 +34387,7 @@ module.exports = Module;
     (typeof module != "undefined" && module.exports) ? (module.exports = eve) : (typeof define === "function" && define.amd ? (define("eve", [], function() { return eve; })) : (glob.eve = eve));
 })(this);
 
-},{}],286:[function(_dereq_,module,exports){
+},{}],265:[function(_dereq_,module,exports){
 /*! Hammer.JS - v2.0.7 - 2016-04-22
  * http://hammerjs.github.io/
  *
@@ -44523,7 +37032,7 @@ if (typeof define === 'function' && define.amd) {
 
 })(window, document, 'Hammer');
 
-},{}],287:[function(_dereq_,module,exports){
+},{}],266:[function(_dereq_,module,exports){
 // Snap.svg 0.3.0
 // 
 // Copyright (c) 2013 – 2014 Adobe Systems Incorporated. All rights reserved.
@@ -44551,7 +37060,7 @@ if (typeof define === 'function' && define.amd) {
         });
     } else if (typeof exports !== 'undefined') {
         // Next for Node.js or CommonJS
-        var eve = _dereq_(285);
+        var eve = _dereq_(264);
         module.exports = factory(glob, eve);
     } else {
         // Browser globals (glob is window)
@@ -51176,10 +43685,10 @@ Snap.plugin(function (Snap, Element, Paper, glob) {
 
 return Snap;
 }));
-},{"285":285}],288:[function(_dereq_,module,exports){
+},{"264":264}],267:[function(_dereq_,module,exports){
 'use strict';
 
-var snapsvg = module.exports = _dereq_(287);
+var snapsvg = module.exports = _dereq_(266);
 
 snapsvg.plugin(function(Snap, Element) {
 
@@ -51385,10 +43894,10 @@ snapsvg.plugin(function(Snap, Element, Paper, global) {
     return new Snap(svg);
   };
 });
-},{"287":287}],289:[function(_dereq_,module,exports){
+},{"266":266}],268:[function(_dereq_,module,exports){
 'use strict';
 
-var hat = _dereq_(290);
+var hat = _dereq_(269);
 
 
 /**
@@ -51484,7 +43993,7 @@ Ids.prototype.clear = function() {
     this.unclaim(id);
   }
 };
-},{"290":290}],290:[function(_dereq_,module,exports){
+},{"269":269}],269:[function(_dereq_,module,exports){
 var hat = module.exports = function (bits, base) {
     if (!base) base = 16;
     if (bits === undefined) bits = 128;
@@ -51548,7 +44057,7 @@ hat.rack = function (bits, base, expandBy) {
     return fn;
 };
 
-},{}],291:[function(_dereq_,module,exports){
+},{}],270:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -51573,8 +44082,8 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],292:[function(_dereq_,module,exports){
-var createFindIndex = _dereq_(383);
+},{}],271:[function(_dereq_,module,exports){
+var createFindIndex = _dereq_(360);
 
 /**
  * This method is like `_.find` except that it returns the index of the first
@@ -51628,9 +44137,9 @@ var findIndex = createFindIndex();
 
 module.exports = findIndex;
 
-},{"383":383}],293:[function(_dereq_,module,exports){
-var baseFlatten = _dereq_(343),
-    isIterateeCall = _dereq_(403);
+},{"360":360}],272:[function(_dereq_,module,exports){
+var baseFlatten = _dereq_(320),
+    isIterateeCall = _dereq_(380);
 
 /**
  * Flattens a nested array. If `isDeep` is `true` the array is recursively
@@ -51662,7 +44171,7 @@ function flatten(array, isDeep, guard) {
 
 module.exports = flatten;
 
-},{"343":343,"403":403}],294:[function(_dereq_,module,exports){
+},{"320":320,"380":380}],273:[function(_dereq_,module,exports){
 /**
  * Gets the last element of `array`.
  *
@@ -51683,10 +44192,10 @@ function last(array) {
 
 module.exports = last;
 
-},{}],295:[function(_dereq_,module,exports){
-var baseFlatten = _dereq_(343),
-    baseUniq = _dereq_(366),
-    restParam = _dereq_(317);
+},{}],274:[function(_dereq_,module,exports){
+var baseFlatten = _dereq_(320),
+    baseUniq = _dereq_(343),
+    restParam = _dereq_(295);
 
 /**
  * Creates an array of unique values, in order, from all of the provided arrays
@@ -51709,11 +44218,11 @@ var union = restParam(function(arrays) {
 
 module.exports = union;
 
-},{"317":317,"343":343,"366":366}],296:[function(_dereq_,module,exports){
-var baseCallback = _dereq_(331),
-    baseUniq = _dereq_(366),
-    isIterateeCall = _dereq_(403),
-    sortedUniq = _dereq_(418);
+},{"295":295,"320":320,"343":343}],275:[function(_dereq_,module,exports){
+var baseCallback = _dereq_(309),
+    baseUniq = _dereq_(343),
+    isIterateeCall = _dereq_(380),
+    sortedUniq = _dereq_(395);
 
 /**
  * Creates a duplicate-free version of an array, using
@@ -51782,13 +44291,13 @@ function uniq(array, isSorted, iteratee, thisArg) {
 
 module.exports = uniq;
 
-},{"331":331,"366":366,"403":403,"418":418}],297:[function(_dereq_,module,exports){
-module.exports = _dereq_(296);
+},{"309":309,"343":343,"380":380,"395":395}],276:[function(_dereq_,module,exports){
+module.exports = _dereq_(275);
 
-},{"296":296}],298:[function(_dereq_,module,exports){
-var baseDifference = _dereq_(337),
-    isArrayLike = _dereq_(401),
-    restParam = _dereq_(317);
+},{"275":275}],277:[function(_dereq_,module,exports){
+var baseDifference = _dereq_(314),
+    isArrayLike = _dereq_(378),
+    restParam = _dereq_(295);
 
 /**
  * Creates an array excluding all provided values using
@@ -51814,13 +44323,13 @@ var without = restParam(function(array, values) {
 
 module.exports = without;
 
-},{"317":317,"337":337,"401":401}],299:[function(_dereq_,module,exports){
-var LazyWrapper = _dereq_(318),
-    LodashWrapper = _dereq_(319),
-    baseLodash = _dereq_(352),
-    isArray = _dereq_(424),
-    isObjectLike = _dereq_(407),
-    wrapperClone = _dereq_(421);
+},{"295":295,"314":314,"378":378}],278:[function(_dereq_,module,exports){
+var LazyWrapper = _dereq_(296),
+    LodashWrapper = _dereq_(297),
+    baseLodash = _dereq_(329),
+    isArray = _dereq_(401),
+    isObjectLike = _dereq_(384),
+    wrapperClone = _dereq_(398);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -51941,15 +44450,15 @@ lodash.prototype = baseLodash.prototype;
 
 module.exports = lodash;
 
-},{"318":318,"319":319,"352":352,"407":407,"421":421,"424":424}],300:[function(_dereq_,module,exports){
-module.exports = _dereq_(311);
+},{"296":296,"297":297,"329":329,"384":384,"398":398,"401":401}],279:[function(_dereq_,module,exports){
+module.exports = _dereq_(290);
 
-},{"311":311}],301:[function(_dereq_,module,exports){
-var arrayEvery = _dereq_(323),
-    baseCallback = _dereq_(331),
-    baseEvery = _dereq_(339),
-    isArray = _dereq_(424),
-    isIterateeCall = _dereq_(403);
+},{"290":290}],280:[function(_dereq_,module,exports){
+var arrayEvery = _dereq_(301),
+    baseCallback = _dereq_(309),
+    baseEvery = _dereq_(316),
+    isArray = _dereq_(401),
+    isIterateeCall = _dereq_(380);
 
 /**
  * Checks if `predicate` returns truthy for **all** elements of `collection`.
@@ -52012,11 +44521,11 @@ function every(collection, predicate, thisArg) {
 
 module.exports = every;
 
-},{"323":323,"331":331,"339":339,"403":403,"424":424}],302:[function(_dereq_,module,exports){
-var arrayFilter = _dereq_(324),
-    baseCallback = _dereq_(331),
-    baseFilter = _dereq_(340),
-    isArray = _dereq_(424);
+},{"301":301,"309":309,"316":316,"380":380,"401":401}],281:[function(_dereq_,module,exports){
+var arrayFilter = _dereq_(302),
+    baseCallback = _dereq_(309),
+    baseFilter = _dereq_(317),
+    isArray = _dereq_(401);
 
 /**
  * Iterates over elements of `collection`, returning an array of all elements
@@ -52075,9 +44584,9 @@ function filter(collection, predicate, thisArg) {
 
 module.exports = filter;
 
-},{"324":324,"331":331,"340":340,"424":424}],303:[function(_dereq_,module,exports){
-var baseEach = _dereq_(338),
-    createFind = _dereq_(382);
+},{"302":302,"309":309,"317":317,"401":401}],282:[function(_dereq_,module,exports){
+var baseEach = _dereq_(315),
+    createFind = _dereq_(359);
 
 /**
  * Iterates over elements of `collection`, returning the first element
@@ -52133,10 +44642,10 @@ var find = createFind(baseEach);
 
 module.exports = find;
 
-},{"338":338,"382":382}],304:[function(_dereq_,module,exports){
-var arrayEach = _dereq_(322),
-    baseEach = _dereq_(338),
-    createForEach = _dereq_(384);
+},{"315":315,"359":359}],283:[function(_dereq_,module,exports){
+var arrayEach = _dereq_(300),
+    baseEach = _dereq_(315),
+    createForEach = _dereq_(361);
 
 /**
  * Iterates over elements of `collection` invoking `iteratee` for each element.
@@ -52172,8 +44681,8 @@ var forEach = createForEach(arrayEach, baseEach);
 
 module.exports = forEach;
 
-},{"322":322,"338":338,"384":384}],305:[function(_dereq_,module,exports){
-var createAggregator = _dereq_(375);
+},{"300":300,"315":315,"361":361}],284:[function(_dereq_,module,exports){
+var createAggregator = _dereq_(352);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -52233,14 +44742,14 @@ var groupBy = createAggregator(function(result, value, key) {
 
 module.exports = groupBy;
 
-},{"375":375}],306:[function(_dereq_,module,exports){
-var baseIndexOf = _dereq_(348),
-    getLength = _dereq_(394),
-    isArray = _dereq_(424),
-    isIterateeCall = _dereq_(403),
-    isLength = _dereq_(406),
-    isString = _dereq_(430),
-    values = _dereq_(442);
+},{"352":352}],285:[function(_dereq_,module,exports){
+var baseIndexOf = _dereq_(325),
+    getLength = _dereq_(371),
+    isArray = _dereq_(401),
+    isIterateeCall = _dereq_(380),
+    isLength = _dereq_(383),
+    isString = _dereq_(407),
+    values = _dereq_(419);
 
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
@@ -52292,11 +44801,11 @@ function includes(collection, target, fromIndex, guard) {
 
 module.exports = includes;
 
-},{"348":348,"394":394,"403":403,"406":406,"424":424,"430":430,"442":442}],307:[function(_dereq_,module,exports){
-var arrayMap = _dereq_(325),
-    baseCallback = _dereq_(331),
-    baseMap = _dereq_(353),
-    isArray = _dereq_(424);
+},{"325":325,"371":371,"380":380,"383":383,"401":401,"407":407,"419":419}],286:[function(_dereq_,module,exports){
+var arrayMap = _dereq_(303),
+    baseCallback = _dereq_(309),
+    baseMap = _dereq_(330),
+    isArray = _dereq_(401);
 
 /**
  * Creates an array of values by running each element in `collection` through
@@ -52362,10 +44871,10 @@ function map(collection, iteratee, thisArg) {
 
 module.exports = map;
 
-},{"325":325,"331":331,"353":353,"424":424}],308:[function(_dereq_,module,exports){
-var arrayReduce = _dereq_(327),
-    baseEach = _dereq_(338),
-    createReduce = _dereq_(387);
+},{"303":303,"309":309,"330":330,"401":401}],287:[function(_dereq_,module,exports){
+var arrayReduce = _dereq_(305),
+    baseEach = _dereq_(315),
+    createReduce = _dereq_(364);
 
 /**
  * Reduces `collection` to a value which is the accumulated result of running
@@ -52408,11 +44917,11 @@ var reduce = createReduce(arrayReduce, baseEach);
 
 module.exports = reduce;
 
-},{"327":327,"338":338,"387":387}],309:[function(_dereq_,module,exports){
-var arrayFilter = _dereq_(324),
-    baseCallback = _dereq_(331),
-    baseFilter = _dereq_(340),
-    isArray = _dereq_(424);
+},{"305":305,"315":315,"364":364}],288:[function(_dereq_,module,exports){
+var arrayFilter = _dereq_(302),
+    baseCallback = _dereq_(309),
+    baseFilter = _dereq_(317),
+    isArray = _dereq_(401);
 
 /**
  * The opposite of `_.filter`; this method returns the elements of `collection`
@@ -52460,10 +44969,10 @@ function reject(collection, predicate, thisArg) {
 
 module.exports = reject;
 
-},{"324":324,"331":331,"340":340,"424":424}],310:[function(_dereq_,module,exports){
-var getLength = _dereq_(394),
-    isLength = _dereq_(406),
-    keys = _dereq_(435);
+},{"302":302,"309":309,"317":317,"401":401}],289:[function(_dereq_,module,exports){
+var getLength = _dereq_(371),
+    isLength = _dereq_(383),
+    keys = _dereq_(412);
 
 /**
  * Gets the size of `collection` by returning its length for array-like
@@ -52492,12 +45001,12 @@ function size(collection) {
 
 module.exports = size;
 
-},{"394":394,"406":406,"435":435}],311:[function(_dereq_,module,exports){
-var arraySome = _dereq_(328),
-    baseCallback = _dereq_(331),
-    baseSome = _dereq_(363),
-    isArray = _dereq_(424),
-    isIterateeCall = _dereq_(403);
+},{"371":371,"383":383,"412":412}],290:[function(_dereq_,module,exports){
+var arraySome = _dereq_(306),
+    baseCallback = _dereq_(309),
+    baseSome = _dereq_(340),
+    isArray = _dereq_(401),
+    isIterateeCall = _dereq_(380);
 
 /**
  * Checks if `predicate` returns truthy for **any** element of `collection`.
@@ -52561,12 +45070,12 @@ function some(collection, predicate, thisArg) {
 
 module.exports = some;
 
-},{"328":328,"331":331,"363":363,"403":403,"424":424}],312:[function(_dereq_,module,exports){
-var baseCallback = _dereq_(331),
-    baseMap = _dereq_(353),
-    baseSortBy = _dereq_(364),
-    compareAscending = _dereq_(372),
-    isIterateeCall = _dereq_(403);
+},{"306":306,"309":309,"340":340,"380":380,"401":401}],291:[function(_dereq_,module,exports){
+var baseCallback = _dereq_(309),
+    baseMap = _dereq_(330),
+    baseSortBy = _dereq_(341),
+    compareAscending = _dereq_(349),
+    isIterateeCall = _dereq_(380);
 
 /**
  * Creates an array of elements, sorted in ascending order by the results of
@@ -52634,8 +45143,8 @@ function sortBy(collection, iteratee, thisArg) {
 
 module.exports = sortBy;
 
-},{"331":331,"353":353,"364":364,"372":372,"403":403}],313:[function(_dereq_,module,exports){
-var getNative = _dereq_(396);
+},{"309":309,"330":330,"341":341,"349":349,"380":380}],292:[function(_dereq_,module,exports){
+var getNative = _dereq_(373);
 
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeNow = getNative(Date, 'now');
@@ -52660,10 +45169,10 @@ var now = nativeNow || function() {
 
 module.exports = now;
 
-},{"396":396}],314:[function(_dereq_,module,exports){
-var createWrapper = _dereq_(388),
-    replaceHolders = _dereq_(415),
-    restParam = _dereq_(317);
+},{"373":373}],293:[function(_dereq_,module,exports){
+var createWrapper = _dereq_(365),
+    replaceHolders = _dereq_(392),
+    restParam = _dereq_(295);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1,
@@ -52718,9 +45227,9 @@ bind.placeholder = {};
 
 module.exports = bind;
 
-},{"317":317,"388":388,"415":415}],315:[function(_dereq_,module,exports){
-var isObject = _dereq_(428),
-    now = _dereq_(313);
+},{"295":295,"365":365,"392":392}],294:[function(_dereq_,module,exports){
+var isObject = _dereq_(405),
+    now = _dereq_(292);
 
 /** Used as the `TypeError` message for "Functions" methods. */
 var FUNC_ERROR_TEXT = 'Expected a function';
@@ -52901,34 +45410,7 @@ function debounce(func, wait, options) {
 
 module.exports = debounce;
 
-},{"313":313,"428":428}],316:[function(_dereq_,module,exports){
-var baseDelay = _dereq_(336),
-    restParam = _dereq_(317);
-
-/**
- * Defers invoking the `func` until the current call stack has cleared. Any
- * additional arguments are provided to `func` when it's invoked.
- *
- * @static
- * @memberOf _
- * @category Function
- * @param {Function} func The function to defer.
- * @param {...*} [args] The arguments to invoke the function with.
- * @returns {number} Returns the timer id.
- * @example
- *
- * _.defer(function(text) {
- *   console.log(text);
- * }, 'deferred');
- * // logs 'deferred' after one or more milliseconds
- */
-var defer = restParam(function(func, args) {
-  return baseDelay(func, 1, args);
-});
-
-module.exports = defer;
-
-},{"317":317,"336":336}],317:[function(_dereq_,module,exports){
+},{"292":292,"405":405}],295:[function(_dereq_,module,exports){
 /** Used as the `TypeError` message for "Functions" methods. */
 var FUNC_ERROR_TEXT = 'Expected a function';
 
@@ -52988,9 +45470,9 @@ function restParam(func, start) {
 
 module.exports = restParam;
 
-},{}],318:[function(_dereq_,module,exports){
-var baseCreate = _dereq_(335),
-    baseLodash = _dereq_(352);
+},{}],296:[function(_dereq_,module,exports){
+var baseCreate = _dereq_(313),
+    baseLodash = _dereq_(329);
 
 /** Used as references for `-Infinity` and `Infinity`. */
 var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
@@ -53016,9 +45498,9 @@ LazyWrapper.prototype.constructor = LazyWrapper;
 
 module.exports = LazyWrapper;
 
-},{"335":335,"352":352}],319:[function(_dereq_,module,exports){
-var baseCreate = _dereq_(335),
-    baseLodash = _dereq_(352);
+},{"313":313,"329":329}],297:[function(_dereq_,module,exports){
+var baseCreate = _dereq_(313),
+    baseLodash = _dereq_(329);
 
 /**
  * The base constructor for creating `lodash` wrapper objects.
@@ -53039,10 +45521,10 @@ LodashWrapper.prototype.constructor = LodashWrapper;
 
 module.exports = LodashWrapper;
 
-},{"335":335,"352":352}],320:[function(_dereq_,module,exports){
+},{"313":313,"329":329}],298:[function(_dereq_,module,exports){
 (function (global){
-var cachePush = _dereq_(371),
-    getNative = _dereq_(396);
+var cachePush = _dereq_(348),
+    getNative = _dereq_(373);
 
 /** Native method references. */
 var Set = getNative(global, 'Set');
@@ -53073,7 +45555,7 @@ module.exports = SetCache;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"371":371,"396":396}],321:[function(_dereq_,module,exports){
+},{"348":348,"373":373}],299:[function(_dereq_,module,exports){
 /**
  * Copies the values of `source` to `array`.
  *
@@ -53095,7 +45577,7 @@ function arrayCopy(source, array) {
 
 module.exports = arrayCopy;
 
-},{}],322:[function(_dereq_,module,exports){
+},{}],300:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.forEach` for arrays without support for callback
  * shorthands and `this` binding.
@@ -53119,7 +45601,7 @@ function arrayEach(array, iteratee) {
 
 module.exports = arrayEach;
 
-},{}],323:[function(_dereq_,module,exports){
+},{}],301:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.every` for arrays without support for callback
  * shorthands and `this` binding.
@@ -53144,7 +45626,7 @@ function arrayEvery(array, predicate) {
 
 module.exports = arrayEvery;
 
-},{}],324:[function(_dereq_,module,exports){
+},{}],302:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.filter` for arrays without support for callback
  * shorthands and `this` binding.
@@ -53171,7 +45653,7 @@ function arrayFilter(array, predicate) {
 
 module.exports = arrayFilter;
 
-},{}],325:[function(_dereq_,module,exports){
+},{}],303:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.map` for arrays without support for callback
  * shorthands and `this` binding.
@@ -53194,7 +45676,7 @@ function arrayMap(array, iteratee) {
 
 module.exports = arrayMap;
 
-},{}],326:[function(_dereq_,module,exports){
+},{}],304:[function(_dereq_,module,exports){
 /**
  * Appends the elements of `values` to `array`.
  *
@@ -53216,7 +45698,7 @@ function arrayPush(array, values) {
 
 module.exports = arrayPush;
 
-},{}],327:[function(_dereq_,module,exports){
+},{}],305:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.reduce` for arrays without support for callback
  * shorthands and `this` binding.
@@ -53244,7 +45726,7 @@ function arrayReduce(array, iteratee, accumulator, initFromArray) {
 
 module.exports = arrayReduce;
 
-},{}],328:[function(_dereq_,module,exports){
+},{}],306:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.some` for arrays without support for callback
  * shorthands and `this` binding.
@@ -53269,8 +45751,8 @@ function arraySome(array, predicate) {
 
 module.exports = arraySome;
 
-},{}],329:[function(_dereq_,module,exports){
-var keys = _dereq_(435);
+},{}],307:[function(_dereq_,module,exports){
+var keys = _dereq_(412);
 
 /**
  * A specialized version of `_.assign` for customizing assigned values without
@@ -53303,9 +45785,9 @@ function assignWith(object, source, customizer) {
 
 module.exports = assignWith;
 
-},{"435":435}],330:[function(_dereq_,module,exports){
-var baseCopy = _dereq_(334),
-    keys = _dereq_(435);
+},{"412":412}],308:[function(_dereq_,module,exports){
+var baseCopy = _dereq_(312),
+    keys = _dereq_(412);
 
 /**
  * The base implementation of `_.assign` without support for argument juggling,
@@ -53324,12 +45806,12 @@ function baseAssign(object, source) {
 
 module.exports = baseAssign;
 
-},{"334":334,"435":435}],331:[function(_dereq_,module,exports){
-var baseMatches = _dereq_(354),
-    baseMatchesProperty = _dereq_(355),
-    bindCallback = _dereq_(368),
-    identity = _dereq_(443),
-    property = _dereq_(445);
+},{"312":312,"412":412}],309:[function(_dereq_,module,exports){
+var baseMatches = _dereq_(331),
+    baseMatchesProperty = _dereq_(332),
+    bindCallback = _dereq_(345),
+    identity = _dereq_(420),
+    property = _dereq_(422);
 
 /**
  * The base implementation of `_.callback` which supports specifying the
@@ -53361,16 +45843,16 @@ function baseCallback(func, thisArg, argCount) {
 
 module.exports = baseCallback;
 
-},{"354":354,"355":355,"368":368,"443":443,"445":445}],332:[function(_dereq_,module,exports){
-var arrayCopy = _dereq_(321),
-    arrayEach = _dereq_(322),
-    baseAssign = _dereq_(330),
-    baseForOwn = _dereq_(346),
-    initCloneArray = _dereq_(398),
-    initCloneByTag = _dereq_(399),
-    initCloneObject = _dereq_(400),
-    isArray = _dereq_(424),
-    isObject = _dereq_(428);
+},{"331":331,"332":332,"345":345,"420":420,"422":422}],310:[function(_dereq_,module,exports){
+var arrayCopy = _dereq_(299),
+    arrayEach = _dereq_(300),
+    baseAssign = _dereq_(308),
+    baseForOwn = _dereq_(323),
+    initCloneArray = _dereq_(375),
+    initCloneByTag = _dereq_(376),
+    initCloneObject = _dereq_(377),
+    isArray = _dereq_(401),
+    isObject = _dereq_(405);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]',
@@ -53491,7 +45973,7 @@ function baseClone(value, isDeep, customizer, key, object, stackA, stackB) {
 
 module.exports = baseClone;
 
-},{"321":321,"322":322,"330":330,"346":346,"398":398,"399":399,"400":400,"424":424,"428":428}],333:[function(_dereq_,module,exports){
+},{"299":299,"300":300,"308":308,"323":323,"375":375,"376":376,"377":377,"401":401,"405":405}],311:[function(_dereq_,module,exports){
 /**
  * The base implementation of `compareAscending` which compares values and
  * sorts them in ascending order without guaranteeing a stable sort.
@@ -53527,7 +46009,7 @@ function baseCompareAscending(value, other) {
 
 module.exports = baseCompareAscending;
 
-},{}],334:[function(_dereq_,module,exports){
+},{}],312:[function(_dereq_,module,exports){
 /**
  * Copies properties of `source` to `object`.
  *
@@ -53552,8 +46034,8 @@ function baseCopy(source, props, object) {
 
 module.exports = baseCopy;
 
-},{}],335:[function(_dereq_,module,exports){
-var isObject = _dereq_(428);
+},{}],313:[function(_dereq_,module,exports){
+var isObject = _dereq_(405);
 
 /**
  * The base implementation of `_.create` without support for assigning
@@ -53577,33 +46059,10 @@ var baseCreate = (function() {
 
 module.exports = baseCreate;
 
-},{"428":428}],336:[function(_dereq_,module,exports){
-/** Used as the `TypeError` message for "Functions" methods. */
-var FUNC_ERROR_TEXT = 'Expected a function';
-
-/**
- * The base implementation of `_.delay` and `_.defer` which accepts an index
- * of where to slice the arguments to provide to `func`.
- *
- * @private
- * @param {Function} func The function to delay.
- * @param {number} wait The number of milliseconds to delay invocation.
- * @param {Object} args The arguments provide to `func`.
- * @returns {number} Returns the timer id.
- */
-function baseDelay(func, wait, args) {
-  if (typeof func != 'function') {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  return setTimeout(function() { func.apply(undefined, args); }, wait);
-}
-
-module.exports = baseDelay;
-
-},{}],337:[function(_dereq_,module,exports){
-var baseIndexOf = _dereq_(348),
-    cacheIndexOf = _dereq_(370),
-    createCache = _dereq_(380);
+},{"405":405}],314:[function(_dereq_,module,exports){
+var baseIndexOf = _dereq_(325),
+    cacheIndexOf = _dereq_(347),
+    createCache = _dereq_(357);
 
 /** Used as the size to enable large array optimizations. */
 var LARGE_ARRAY_SIZE = 200;
@@ -53657,9 +46116,9 @@ function baseDifference(array, values) {
 
 module.exports = baseDifference;
 
-},{"348":348,"370":370,"380":380}],338:[function(_dereq_,module,exports){
-var baseForOwn = _dereq_(346),
-    createBaseEach = _dereq_(377);
+},{"325":325,"347":347,"357":357}],315:[function(_dereq_,module,exports){
+var baseForOwn = _dereq_(323),
+    createBaseEach = _dereq_(354);
 
 /**
  * The base implementation of `_.forEach` without support for callback
@@ -53674,8 +46133,8 @@ var baseEach = createBaseEach(baseForOwn);
 
 module.exports = baseEach;
 
-},{"346":346,"377":377}],339:[function(_dereq_,module,exports){
-var baseEach = _dereq_(338);
+},{"323":323,"354":354}],316:[function(_dereq_,module,exports){
+var baseEach = _dereq_(315);
 
 /**
  * The base implementation of `_.every` without support for callback
@@ -53698,8 +46157,8 @@ function baseEvery(collection, predicate) {
 
 module.exports = baseEvery;
 
-},{"338":338}],340:[function(_dereq_,module,exports){
-var baseEach = _dereq_(338);
+},{"315":315}],317:[function(_dereq_,module,exports){
+var baseEach = _dereq_(315);
 
 /**
  * The base implementation of `_.filter` without support for callback
@@ -53722,7 +46181,7 @@ function baseFilter(collection, predicate) {
 
 module.exports = baseFilter;
 
-},{"338":338}],341:[function(_dereq_,module,exports){
+},{"315":315}],318:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
  * without support for callback shorthands and `this` binding, which iterates
@@ -53749,7 +46208,7 @@ function baseFind(collection, predicate, eachFunc, retKey) {
 
 module.exports = baseFind;
 
-},{}],342:[function(_dereq_,module,exports){
+},{}],319:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.findIndex` and `_.findLastIndex` without
  * support for callback shorthands and `this` binding.
@@ -53774,12 +46233,12 @@ function baseFindIndex(array, predicate, fromRight) {
 
 module.exports = baseFindIndex;
 
-},{}],343:[function(_dereq_,module,exports){
-var arrayPush = _dereq_(326),
-    isArguments = _dereq_(423),
-    isArray = _dereq_(424),
-    isArrayLike = _dereq_(401),
-    isObjectLike = _dereq_(407);
+},{}],320:[function(_dereq_,module,exports){
+var arrayPush = _dereq_(304),
+    isArguments = _dereq_(400),
+    isArray = _dereq_(401),
+    isArrayLike = _dereq_(378),
+    isObjectLike = _dereq_(384);
 
 /**
  * The base implementation of `_.flatten` with added support for restricting
@@ -53817,8 +46276,8 @@ function baseFlatten(array, isDeep, isStrict, result) {
 
 module.exports = baseFlatten;
 
-},{"326":326,"401":401,"407":407,"423":423,"424":424}],344:[function(_dereq_,module,exports){
-var createBaseFor = _dereq_(378);
+},{"304":304,"378":378,"384":384,"400":400,"401":401}],321:[function(_dereq_,module,exports){
+var createBaseFor = _dereq_(355);
 
 /**
  * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -53836,9 +46295,9 @@ var baseFor = createBaseFor();
 
 module.exports = baseFor;
 
-},{"378":378}],345:[function(_dereq_,module,exports){
-var baseFor = _dereq_(344),
-    keysIn = _dereq_(436);
+},{"355":355}],322:[function(_dereq_,module,exports){
+var baseFor = _dereq_(321),
+    keysIn = _dereq_(413);
 
 /**
  * The base implementation of `_.forIn` without support for callback
@@ -53855,9 +46314,9 @@ function baseForIn(object, iteratee) {
 
 module.exports = baseForIn;
 
-},{"344":344,"436":436}],346:[function(_dereq_,module,exports){
-var baseFor = _dereq_(344),
-    keys = _dereq_(435);
+},{"321":321,"413":413}],323:[function(_dereq_,module,exports){
+var baseFor = _dereq_(321),
+    keys = _dereq_(412);
 
 /**
  * The base implementation of `_.forOwn` without support for callback
@@ -53874,8 +46333,8 @@ function baseForOwn(object, iteratee) {
 
 module.exports = baseForOwn;
 
-},{"344":344,"435":435}],347:[function(_dereq_,module,exports){
-var toObject = _dereq_(419);
+},{"321":321,"412":412}],324:[function(_dereq_,module,exports){
+var toObject = _dereq_(396);
 
 /**
  * The base implementation of `get` without support for string paths
@@ -53905,8 +46364,8 @@ function baseGet(object, path, pathKey) {
 
 module.exports = baseGet;
 
-},{"419":419}],348:[function(_dereq_,module,exports){
-var indexOfNaN = _dereq_(397);
+},{"396":396}],325:[function(_dereq_,module,exports){
+var indexOfNaN = _dereq_(374);
 
 /**
  * The base implementation of `_.indexOf` without support for binary searches.
@@ -53934,10 +46393,10 @@ function baseIndexOf(array, value, fromIndex) {
 
 module.exports = baseIndexOf;
 
-},{"397":397}],349:[function(_dereq_,module,exports){
-var baseIsEqualDeep = _dereq_(350),
-    isObject = _dereq_(428),
-    isObjectLike = _dereq_(407);
+},{"374":374}],326:[function(_dereq_,module,exports){
+var baseIsEqualDeep = _dereq_(327),
+    isObject = _dereq_(405),
+    isObjectLike = _dereq_(384);
 
 /**
  * The base implementation of `_.isEqual` without support for `this` binding
@@ -53964,12 +46423,12 @@ function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
 
 module.exports = baseIsEqual;
 
-},{"350":350,"407":407,"428":428}],350:[function(_dereq_,module,exports){
-var equalArrays = _dereq_(389),
-    equalByTag = _dereq_(390),
-    equalObjects = _dereq_(391),
-    isArray = _dereq_(424),
-    isTypedArray = _dereq_(431);
+},{"327":327,"384":384,"405":405}],327:[function(_dereq_,module,exports){
+var equalArrays = _dereq_(366),
+    equalByTag = _dereq_(367),
+    equalObjects = _dereq_(368),
+    isArray = _dereq_(401),
+    isTypedArray = _dereq_(408);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]',
@@ -54068,9 +46527,9 @@ function baseIsEqualDeep(object, other, equalFunc, customizer, isLoose, stackA, 
 
 module.exports = baseIsEqualDeep;
 
-},{"389":389,"390":390,"391":391,"424":424,"431":431}],351:[function(_dereq_,module,exports){
-var baseIsEqual = _dereq_(349),
-    toObject = _dereq_(419);
+},{"366":366,"367":367,"368":368,"401":401,"408":408}],328:[function(_dereq_,module,exports){
+var baseIsEqual = _dereq_(326),
+    toObject = _dereq_(396);
 
 /**
  * The base implementation of `_.isMatch` without support for callback
@@ -54122,7 +46581,7 @@ function baseIsMatch(object, matchData, customizer) {
 
 module.exports = baseIsMatch;
 
-},{"349":349,"419":419}],352:[function(_dereq_,module,exports){
+},{"326":326,"396":396}],329:[function(_dereq_,module,exports){
 /**
  * The function whose prototype all chaining wrappers inherit from.
  *
@@ -54134,9 +46593,9 @@ function baseLodash() {
 
 module.exports = baseLodash;
 
-},{}],353:[function(_dereq_,module,exports){
-var baseEach = _dereq_(338),
-    isArrayLike = _dereq_(401);
+},{}],330:[function(_dereq_,module,exports){
+var baseEach = _dereq_(315),
+    isArrayLike = _dereq_(378);
 
 /**
  * The base implementation of `_.map` without support for callback shorthands
@@ -54159,10 +46618,10 @@ function baseMap(collection, iteratee) {
 
 module.exports = baseMap;
 
-},{"338":338,"401":401}],354:[function(_dereq_,module,exports){
-var baseIsMatch = _dereq_(351),
-    getMatchData = _dereq_(395),
-    toObject = _dereq_(419);
+},{"315":315,"378":378}],331:[function(_dereq_,module,exports){
+var baseIsMatch = _dereq_(328),
+    getMatchData = _dereq_(372),
+    toObject = _dereq_(396);
 
 /**
  * The base implementation of `_.matches` which does not clone `source`.
@@ -54191,16 +46650,16 @@ function baseMatches(source) {
 
 module.exports = baseMatches;
 
-},{"351":351,"395":395,"419":419}],355:[function(_dereq_,module,exports){
-var baseGet = _dereq_(347),
-    baseIsEqual = _dereq_(349),
-    baseSlice = _dereq_(362),
-    isArray = _dereq_(424),
-    isKey = _dereq_(404),
-    isStrictComparable = _dereq_(408),
-    last = _dereq_(294),
-    toObject = _dereq_(419),
-    toPath = _dereq_(420);
+},{"328":328,"372":372,"396":396}],332:[function(_dereq_,module,exports){
+var baseGet = _dereq_(324),
+    baseIsEqual = _dereq_(326),
+    baseSlice = _dereq_(339),
+    isArray = _dereq_(401),
+    isKey = _dereq_(381),
+    isStrictComparable = _dereq_(385),
+    last = _dereq_(273),
+    toObject = _dereq_(396),
+    toPath = _dereq_(397);
 
 /**
  * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
@@ -54238,15 +46697,15 @@ function baseMatchesProperty(path, srcValue) {
 
 module.exports = baseMatchesProperty;
 
-},{"294":294,"347":347,"349":349,"362":362,"404":404,"408":408,"419":419,"420":420,"424":424}],356:[function(_dereq_,module,exports){
-var arrayEach = _dereq_(322),
-    baseMergeDeep = _dereq_(357),
-    isArray = _dereq_(424),
-    isArrayLike = _dereq_(401),
-    isObject = _dereq_(428),
-    isObjectLike = _dereq_(407),
-    isTypedArray = _dereq_(431),
-    keys = _dereq_(435);
+},{"273":273,"324":324,"326":326,"339":339,"381":381,"385":385,"396":396,"397":397,"401":401}],333:[function(_dereq_,module,exports){
+var arrayEach = _dereq_(300),
+    baseMergeDeep = _dereq_(334),
+    isArray = _dereq_(401),
+    isArrayLike = _dereq_(378),
+    isObject = _dereq_(405),
+    isObjectLike = _dereq_(384),
+    isTypedArray = _dereq_(408),
+    keys = _dereq_(412);
 
 /**
  * The base implementation of `_.merge` without support for argument juggling,
@@ -54296,14 +46755,14 @@ function baseMerge(object, source, customizer, stackA, stackB) {
 
 module.exports = baseMerge;
 
-},{"322":322,"357":357,"401":401,"407":407,"424":424,"428":428,"431":431,"435":435}],357:[function(_dereq_,module,exports){
-var arrayCopy = _dereq_(321),
-    isArguments = _dereq_(423),
-    isArray = _dereq_(424),
-    isArrayLike = _dereq_(401),
-    isPlainObject = _dereq_(429),
-    isTypedArray = _dereq_(431),
-    toPlainObject = _dereq_(432);
+},{"300":300,"334":334,"378":378,"384":384,"401":401,"405":405,"408":408,"412":412}],334:[function(_dereq_,module,exports){
+var arrayCopy = _dereq_(299),
+    isArguments = _dereq_(400),
+    isArray = _dereq_(401),
+    isArrayLike = _dereq_(378),
+    isPlainObject = _dereq_(406),
+    isTypedArray = _dereq_(408),
+    toPlainObject = _dereq_(409);
 
 /**
  * A specialized version of `baseMerge` for arrays and objects which performs
@@ -54365,7 +46824,7 @@ function baseMergeDeep(object, source, key, mergeFunc, customizer, stackA, stack
 
 module.exports = baseMergeDeep;
 
-},{"321":321,"401":401,"423":423,"424":424,"429":429,"431":431,"432":432}],358:[function(_dereq_,module,exports){
+},{"299":299,"378":378,"400":400,"401":401,"406":406,"408":408,"409":409}],335:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.property` without support for deep paths.
  *
@@ -54381,9 +46840,9 @@ function baseProperty(key) {
 
 module.exports = baseProperty;
 
-},{}],359:[function(_dereq_,module,exports){
-var baseGet = _dereq_(347),
-    toPath = _dereq_(420);
+},{}],336:[function(_dereq_,module,exports){
+var baseGet = _dereq_(324),
+    toPath = _dereq_(397);
 
 /**
  * A specialized version of `baseProperty` which supports deep paths.
@@ -54402,7 +46861,7 @@ function basePropertyDeep(path) {
 
 module.exports = basePropertyDeep;
 
-},{"347":347,"420":420}],360:[function(_dereq_,module,exports){
+},{"324":324,"397":397}],337:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.reduce` and `_.reduceRight` without support
  * for callback shorthands and `this` binding, which iterates over `collection`
@@ -54428,9 +46887,9 @@ function baseReduce(collection, iteratee, accumulator, initFromCollection, eachF
 
 module.exports = baseReduce;
 
-},{}],361:[function(_dereq_,module,exports){
-var identity = _dereq_(443),
-    metaMap = _dereq_(410);
+},{}],338:[function(_dereq_,module,exports){
+var identity = _dereq_(420),
+    metaMap = _dereq_(387);
 
 /**
  * The base implementation of `setData` without support for hot loop detection.
@@ -54447,7 +46906,7 @@ var baseSetData = !metaMap ? identity : function(func, data) {
 
 module.exports = baseSetData;
 
-},{"410":410,"443":443}],362:[function(_dereq_,module,exports){
+},{"387":387,"420":420}],339:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.slice` without an iteratee call guard.
  *
@@ -54481,8 +46940,8 @@ function baseSlice(array, start, end) {
 
 module.exports = baseSlice;
 
-},{}],363:[function(_dereq_,module,exports){
-var baseEach = _dereq_(338);
+},{}],340:[function(_dereq_,module,exports){
+var baseEach = _dereq_(315);
 
 /**
  * The base implementation of `_.some` without support for callback shorthands
@@ -54506,7 +46965,7 @@ function baseSome(collection, predicate) {
 
 module.exports = baseSome;
 
-},{"338":338}],364:[function(_dereq_,module,exports){
+},{"315":315}],341:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.sortBy` which uses `comparer` to define
  * the sort order of `array` and replaces criteria objects with their
@@ -54529,7 +46988,7 @@ function baseSortBy(array, comparer) {
 
 module.exports = baseSortBy;
 
-},{}],365:[function(_dereq_,module,exports){
+},{}],342:[function(_dereq_,module,exports){
 /**
  * Converts `value` to a string if it's not one. An empty string is returned
  * for `null` or `undefined` values.
@@ -54544,10 +47003,10 @@ function baseToString(value) {
 
 module.exports = baseToString;
 
-},{}],366:[function(_dereq_,module,exports){
-var baseIndexOf = _dereq_(348),
-    cacheIndexOf = _dereq_(370),
-    createCache = _dereq_(380);
+},{}],343:[function(_dereq_,module,exports){
+var baseIndexOf = _dereq_(325),
+    cacheIndexOf = _dereq_(347),
+    createCache = _dereq_(357);
 
 /** Used as the size to enable large array optimizations. */
 var LARGE_ARRAY_SIZE = 200;
@@ -54606,7 +47065,7 @@ function baseUniq(array, iteratee) {
 
 module.exports = baseUniq;
 
-},{"348":348,"370":370,"380":380}],367:[function(_dereq_,module,exports){
+},{"325":325,"347":347,"357":357}],344:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.values` and `_.valuesIn` which creates an
  * array of `object` property values corresponding to the property names
@@ -54630,8 +47089,8 @@ function baseValues(object, props) {
 
 module.exports = baseValues;
 
-},{}],368:[function(_dereq_,module,exports){
-var identity = _dereq_(443);
+},{}],345:[function(_dereq_,module,exports){
+var identity = _dereq_(420);
 
 /**
  * A specialized version of `baseCallback` which only supports `this` binding
@@ -54671,7 +47130,7 @@ function bindCallback(func, thisArg, argCount) {
 
 module.exports = bindCallback;
 
-},{"443":443}],369:[function(_dereq_,module,exports){
+},{"420":420}],346:[function(_dereq_,module,exports){
 (function (global){
 /** Native method references. */
 var ArrayBuffer = global.ArrayBuffer,
@@ -54696,8 +47155,8 @@ module.exports = bufferClone;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],370:[function(_dereq_,module,exports){
-var isObject = _dereq_(428);
+},{}],347:[function(_dereq_,module,exports){
+var isObject = _dereq_(405);
 
 /**
  * Checks if `value` is in `cache` mimicking the return signature of
@@ -54717,8 +47176,8 @@ function cacheIndexOf(cache, value) {
 
 module.exports = cacheIndexOf;
 
-},{"428":428}],371:[function(_dereq_,module,exports){
-var isObject = _dereq_(428);
+},{"405":405}],348:[function(_dereq_,module,exports){
+var isObject = _dereq_(405);
 
 /**
  * Adds `value` to the cache.
@@ -54739,8 +47198,8 @@ function cachePush(value) {
 
 module.exports = cachePush;
 
-},{"428":428}],372:[function(_dereq_,module,exports){
-var baseCompareAscending = _dereq_(333);
+},{"405":405}],349:[function(_dereq_,module,exports){
+var baseCompareAscending = _dereq_(311);
 
 /**
  * Used by `_.sortBy` to compare transformed elements of a collection and stable
@@ -54757,7 +47216,7 @@ function compareAscending(object, other) {
 
 module.exports = compareAscending;
 
-},{"333":333}],373:[function(_dereq_,module,exports){
+},{"311":311}],350:[function(_dereq_,module,exports){
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
 
@@ -54793,7 +47252,7 @@ function composeArgs(args, partials, holders) {
 
 module.exports = composeArgs;
 
-},{}],374:[function(_dereq_,module,exports){
+},{}],351:[function(_dereq_,module,exports){
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
 
@@ -54831,10 +47290,10 @@ function composeArgsRight(args, partials, holders) {
 
 module.exports = composeArgsRight;
 
-},{}],375:[function(_dereq_,module,exports){
-var baseCallback = _dereq_(331),
-    baseEach = _dereq_(338),
-    isArray = _dereq_(424);
+},{}],352:[function(_dereq_,module,exports){
+var baseCallback = _dereq_(309),
+    baseEach = _dereq_(315),
+    isArray = _dereq_(401);
 
 /**
  * Creates a `_.countBy`, `_.groupBy`, `_.indexBy`, or `_.partition` function.
@@ -54868,10 +47327,10 @@ function createAggregator(setter, initializer) {
 
 module.exports = createAggregator;
 
-},{"331":331,"338":338,"424":424}],376:[function(_dereq_,module,exports){
-var bindCallback = _dereq_(368),
-    isIterateeCall = _dereq_(403),
-    restParam = _dereq_(317);
+},{"309":309,"315":315,"401":401}],353:[function(_dereq_,module,exports){
+var bindCallback = _dereq_(345),
+    isIterateeCall = _dereq_(380),
+    restParam = _dereq_(295);
 
 /**
  * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -54911,10 +47370,10 @@ function createAssigner(assigner) {
 
 module.exports = createAssigner;
 
-},{"317":317,"368":368,"403":403}],377:[function(_dereq_,module,exports){
-var getLength = _dereq_(394),
-    isLength = _dereq_(406),
-    toObject = _dereq_(419);
+},{"295":295,"345":345,"380":380}],354:[function(_dereq_,module,exports){
+var getLength = _dereq_(371),
+    isLength = _dereq_(383),
+    toObject = _dereq_(396);
 
 /**
  * Creates a `baseEach` or `baseEachRight` function.
@@ -54944,8 +47403,8 @@ function createBaseEach(eachFunc, fromRight) {
 
 module.exports = createBaseEach;
 
-},{"394":394,"406":406,"419":419}],378:[function(_dereq_,module,exports){
-var toObject = _dereq_(419);
+},{"371":371,"383":383,"396":396}],355:[function(_dereq_,module,exports){
+var toObject = _dereq_(396);
 
 /**
  * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -54973,9 +47432,9 @@ function createBaseFor(fromRight) {
 
 module.exports = createBaseFor;
 
-},{"419":419}],379:[function(_dereq_,module,exports){
+},{"396":396}],356:[function(_dereq_,module,exports){
 (function (global){
-var createCtorWrapper = _dereq_(381);
+var createCtorWrapper = _dereq_(358);
 
 /**
  * Creates a function that wraps `func` and invokes it with the `this`
@@ -55000,10 +47459,10 @@ module.exports = createBindWrapper;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"381":381}],380:[function(_dereq_,module,exports){
+},{"358":358}],357:[function(_dereq_,module,exports){
 (function (global){
-var SetCache = _dereq_(320),
-    getNative = _dereq_(396);
+var SetCache = _dereq_(298),
+    getNative = _dereq_(373);
 
 /** Native method references. */
 var Set = getNative(global, 'Set');
@@ -55026,9 +47485,9 @@ module.exports = createCache;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"320":320,"396":396}],381:[function(_dereq_,module,exports){
-var baseCreate = _dereq_(335),
-    isObject = _dereq_(428);
+},{"298":298,"373":373}],358:[function(_dereq_,module,exports){
+var baseCreate = _dereq_(313),
+    isObject = _dereq_(405);
 
 /**
  * Creates a function that produces an instance of `Ctor` regardless of
@@ -55065,11 +47524,11 @@ function createCtorWrapper(Ctor) {
 
 module.exports = createCtorWrapper;
 
-},{"335":335,"428":428}],382:[function(_dereq_,module,exports){
-var baseCallback = _dereq_(331),
-    baseFind = _dereq_(341),
-    baseFindIndex = _dereq_(342),
-    isArray = _dereq_(424);
+},{"313":313,"405":405}],359:[function(_dereq_,module,exports){
+var baseCallback = _dereq_(309),
+    baseFind = _dereq_(318),
+    baseFindIndex = _dereq_(319),
+    isArray = _dereq_(401);
 
 /**
  * Creates a `_.find` or `_.findLast` function.
@@ -55092,9 +47551,9 @@ function createFind(eachFunc, fromRight) {
 
 module.exports = createFind;
 
-},{"331":331,"341":341,"342":342,"424":424}],383:[function(_dereq_,module,exports){
-var baseCallback = _dereq_(331),
-    baseFindIndex = _dereq_(342);
+},{"309":309,"318":318,"319":319,"401":401}],360:[function(_dereq_,module,exports){
+var baseCallback = _dereq_(309),
+    baseFindIndex = _dereq_(319);
 
 /**
  * Creates a `_.findIndex` or `_.findLastIndex` function.
@@ -55115,9 +47574,9 @@ function createFindIndex(fromRight) {
 
 module.exports = createFindIndex;
 
-},{"331":331,"342":342}],384:[function(_dereq_,module,exports){
-var bindCallback = _dereq_(368),
-    isArray = _dereq_(424);
+},{"309":309,"319":319}],361:[function(_dereq_,module,exports){
+var bindCallback = _dereq_(345),
+    isArray = _dereq_(401);
 
 /**
  * Creates a function for `_.forEach` or `_.forEachRight`.
@@ -55137,16 +47596,16 @@ function createForEach(arrayFunc, eachFunc) {
 
 module.exports = createForEach;
 
-},{"368":368,"424":424}],385:[function(_dereq_,module,exports){
+},{"345":345,"401":401}],362:[function(_dereq_,module,exports){
 (function (global){
-var arrayCopy = _dereq_(321),
-    composeArgs = _dereq_(373),
-    composeArgsRight = _dereq_(374),
-    createCtorWrapper = _dereq_(381),
-    isLaziable = _dereq_(405),
-    reorder = _dereq_(414),
-    replaceHolders = _dereq_(415),
-    setData = _dereq_(416);
+var arrayCopy = _dereq_(299),
+    composeArgs = _dereq_(350),
+    composeArgsRight = _dereq_(351),
+    createCtorWrapper = _dereq_(358),
+    isLaziable = _dereq_(382),
+    reorder = _dereq_(391),
+    replaceHolders = _dereq_(392),
+    setData = _dereq_(393);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1,
@@ -55253,9 +47712,9 @@ module.exports = createHybridWrapper;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"321":321,"373":373,"374":374,"381":381,"405":405,"414":414,"415":415,"416":416}],386:[function(_dereq_,module,exports){
+},{"299":299,"350":350,"351":351,"358":358,"382":382,"391":391,"392":392,"393":393}],363:[function(_dereq_,module,exports){
 (function (global){
-var createCtorWrapper = _dereq_(381);
+var createCtorWrapper = _dereq_(358);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1;
@@ -55301,10 +47760,10 @@ module.exports = createPartialWrapper;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"381":381}],387:[function(_dereq_,module,exports){
-var baseCallback = _dereq_(331),
-    baseReduce = _dereq_(360),
-    isArray = _dereq_(424);
+},{"358":358}],364:[function(_dereq_,module,exports){
+var baseCallback = _dereq_(309),
+    baseReduce = _dereq_(337),
+    isArray = _dereq_(401);
 
 /**
  * Creates a function for `_.reduce` or `_.reduceRight`.
@@ -55325,14 +47784,14 @@ function createReduce(arrayFunc, eachFunc) {
 
 module.exports = createReduce;
 
-},{"331":331,"360":360,"424":424}],388:[function(_dereq_,module,exports){
-var baseSetData = _dereq_(361),
-    createBindWrapper = _dereq_(379),
-    createHybridWrapper = _dereq_(385),
-    createPartialWrapper = _dereq_(386),
-    getData = _dereq_(392),
-    mergeData = _dereq_(409),
-    setData = _dereq_(416);
+},{"309":309,"337":337,"401":401}],365:[function(_dereq_,module,exports){
+var baseSetData = _dereq_(338),
+    createBindWrapper = _dereq_(356),
+    createHybridWrapper = _dereq_(362),
+    createPartialWrapper = _dereq_(363),
+    getData = _dereq_(369),
+    mergeData = _dereq_(386),
+    setData = _dereq_(393);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1,
@@ -55413,8 +47872,8 @@ function createWrapper(func, bitmask, thisArg, partials, holders, argPos, ary, a
 
 module.exports = createWrapper;
 
-},{"361":361,"379":379,"385":385,"386":386,"392":392,"409":409,"416":416}],389:[function(_dereq_,module,exports){
-var arraySome = _dereq_(328);
+},{"338":338,"356":356,"362":362,"363":363,"369":369,"386":386,"393":393}],366:[function(_dereq_,module,exports){
+var arraySome = _dereq_(306);
 
 /**
  * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -55466,7 +47925,7 @@ function equalArrays(array, other, equalFunc, customizer, isLoose, stackA, stack
 
 module.exports = equalArrays;
 
-},{"328":328}],390:[function(_dereq_,module,exports){
+},{"306":306}],367:[function(_dereq_,module,exports){
 /** `Object#toString` result references. */
 var boolTag = '[object Boolean]',
     dateTag = '[object Date]',
@@ -55516,8 +47975,8 @@ function equalByTag(object, other, tag) {
 
 module.exports = equalByTag;
 
-},{}],391:[function(_dereq_,module,exports){
-var keys = _dereq_(435);
+},{}],368:[function(_dereq_,module,exports){
+var keys = _dereq_(412);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -55585,9 +48044,9 @@ function equalObjects(object, other, equalFunc, customizer, isLoose, stackA, sta
 
 module.exports = equalObjects;
 
-},{"435":435}],392:[function(_dereq_,module,exports){
-var metaMap = _dereq_(410),
-    noop = _dereq_(444);
+},{"412":412}],369:[function(_dereq_,module,exports){
+var metaMap = _dereq_(387),
+    noop = _dereq_(421);
 
 /**
  * Gets metadata for `func`.
@@ -55602,8 +48061,8 @@ var getData = !metaMap ? noop : function(func) {
 
 module.exports = getData;
 
-},{"410":410,"444":444}],393:[function(_dereq_,module,exports){
-var realNames = _dereq_(413);
+},{"387":387,"421":421}],370:[function(_dereq_,module,exports){
+var realNames = _dereq_(390);
 
 /**
  * Gets the name of `func`.
@@ -55629,8 +48088,8 @@ function getFuncName(func) {
 
 module.exports = getFuncName;
 
-},{"413":413}],394:[function(_dereq_,module,exports){
-var baseProperty = _dereq_(358);
+},{"390":390}],371:[function(_dereq_,module,exports){
+var baseProperty = _dereq_(335);
 
 /**
  * Gets the "length" property value of `object`.
@@ -55646,9 +48105,9 @@ var getLength = baseProperty('length');
 
 module.exports = getLength;
 
-},{"358":358}],395:[function(_dereq_,module,exports){
-var isStrictComparable = _dereq_(408),
-    pairs = _dereq_(439);
+},{"335":335}],372:[function(_dereq_,module,exports){
+var isStrictComparable = _dereq_(385),
+    pairs = _dereq_(416);
 
 /**
  * Gets the propery names, values, and compare flags of `object`.
@@ -55669,8 +48128,8 @@ function getMatchData(object) {
 
 module.exports = getMatchData;
 
-},{"408":408,"439":439}],396:[function(_dereq_,module,exports){
-var isNative = _dereq_(426);
+},{"385":385,"416":416}],373:[function(_dereq_,module,exports){
+var isNative = _dereq_(403);
 
 /**
  * Gets the native function at `key` of `object`.
@@ -55687,7 +48146,7 @@ function getNative(object, key) {
 
 module.exports = getNative;
 
-},{"426":426}],397:[function(_dereq_,module,exports){
+},{"403":403}],374:[function(_dereq_,module,exports){
 /**
  * Gets the index at which the first occurrence of `NaN` is found in `array`.
  *
@@ -55712,7 +48171,7 @@ function indexOfNaN(array, fromIndex, fromRight) {
 
 module.exports = indexOfNaN;
 
-},{}],398:[function(_dereq_,module,exports){
+},{}],375:[function(_dereq_,module,exports){
 /** Used for native method references. */
 var objectProto = Object.prototype;
 
@@ -55740,8 +48199,8 @@ function initCloneArray(array) {
 
 module.exports = initCloneArray;
 
-},{}],399:[function(_dereq_,module,exports){
-var bufferClone = _dereq_(369);
+},{}],376:[function(_dereq_,module,exports){
+var bufferClone = _dereq_(346);
 
 /** `Object#toString` result references. */
 var boolTag = '[object Boolean]',
@@ -55805,7 +48264,7 @@ function initCloneByTag(object, tag, isDeep) {
 
 module.exports = initCloneByTag;
 
-},{"369":369}],400:[function(_dereq_,module,exports){
+},{"346":346}],377:[function(_dereq_,module,exports){
 /**
  * Initializes an object clone.
  *
@@ -55823,9 +48282,9 @@ function initCloneObject(object) {
 
 module.exports = initCloneObject;
 
-},{}],401:[function(_dereq_,module,exports){
-var getLength = _dereq_(394),
-    isLength = _dereq_(406);
+},{}],378:[function(_dereq_,module,exports){
+var getLength = _dereq_(371),
+    isLength = _dereq_(383);
 
 /**
  * Checks if `value` is array-like.
@@ -55840,7 +48299,7 @@ function isArrayLike(value) {
 
 module.exports = isArrayLike;
 
-},{"394":394,"406":406}],402:[function(_dereq_,module,exports){
+},{"371":371,"383":383}],379:[function(_dereq_,module,exports){
 /** Used to detect unsigned integer values. */
 var reIsUint = /^\d+$/;
 
@@ -55866,10 +48325,10 @@ function isIndex(value, length) {
 
 module.exports = isIndex;
 
-},{}],403:[function(_dereq_,module,exports){
-var isArrayLike = _dereq_(401),
-    isIndex = _dereq_(402),
-    isObject = _dereq_(428);
+},{}],380:[function(_dereq_,module,exports){
+var isArrayLike = _dereq_(378),
+    isIndex = _dereq_(379),
+    isObject = _dereq_(405);
 
 /**
  * Checks if the provided arguments are from an iteratee call.
@@ -55896,9 +48355,9 @@ function isIterateeCall(value, index, object) {
 
 module.exports = isIterateeCall;
 
-},{"401":401,"402":402,"428":428}],404:[function(_dereq_,module,exports){
-var isArray = _dereq_(424),
-    toObject = _dereq_(419);
+},{"378":378,"379":379,"405":405}],381:[function(_dereq_,module,exports){
+var isArray = _dereq_(401),
+    toObject = _dereq_(396);
 
 /** Used to match property names within property paths. */
 var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
@@ -55926,11 +48385,11 @@ function isKey(value, object) {
 
 module.exports = isKey;
 
-},{"419":419,"424":424}],405:[function(_dereq_,module,exports){
-var LazyWrapper = _dereq_(318),
-    getData = _dereq_(392),
-    getFuncName = _dereq_(393),
-    lodash = _dereq_(299);
+},{"396":396,"401":401}],382:[function(_dereq_,module,exports){
+var LazyWrapper = _dereq_(296),
+    getData = _dereq_(369),
+    getFuncName = _dereq_(370),
+    lodash = _dereq_(278);
 
 /**
  * Checks if `func` has a lazy counterpart.
@@ -55955,7 +48414,7 @@ function isLaziable(func) {
 
 module.exports = isLaziable;
 
-},{"299":299,"318":318,"392":392,"393":393}],406:[function(_dereq_,module,exports){
+},{"278":278,"296":296,"369":369,"370":370}],383:[function(_dereq_,module,exports){
 /**
  * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
@@ -55977,7 +48436,7 @@ function isLength(value) {
 
 module.exports = isLength;
 
-},{}],407:[function(_dereq_,module,exports){
+},{}],384:[function(_dereq_,module,exports){
 /**
  * Checks if `value` is object-like.
  *
@@ -55991,8 +48450,8 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],408:[function(_dereq_,module,exports){
-var isObject = _dereq_(428);
+},{}],385:[function(_dereq_,module,exports){
+var isObject = _dereq_(405);
 
 /**
  * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -56008,11 +48467,11 @@ function isStrictComparable(value) {
 
 module.exports = isStrictComparable;
 
-},{"428":428}],409:[function(_dereq_,module,exports){
-var arrayCopy = _dereq_(321),
-    composeArgs = _dereq_(373),
-    composeArgsRight = _dereq_(374),
-    replaceHolders = _dereq_(415);
+},{"405":405}],386:[function(_dereq_,module,exports){
+var arrayCopy = _dereq_(299),
+    composeArgs = _dereq_(350),
+    composeArgsRight = _dereq_(351),
+    replaceHolders = _dereq_(392);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1,
@@ -56099,9 +48558,9 @@ function mergeData(data, source) {
 
 module.exports = mergeData;
 
-},{"321":321,"373":373,"374":374,"415":415}],410:[function(_dereq_,module,exports){
+},{"299":299,"350":350,"351":351,"392":392}],387:[function(_dereq_,module,exports){
 (function (global){
-var getNative = _dereq_(396);
+var getNative = _dereq_(373);
 
 /** Native method references. */
 var WeakMap = getNative(global, 'WeakMap');
@@ -56113,8 +48572,8 @@ module.exports = metaMap;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"396":396}],411:[function(_dereq_,module,exports){
-var toObject = _dereq_(419);
+},{"373":373}],388:[function(_dereq_,module,exports){
+var toObject = _dereq_(396);
 
 /**
  * A specialized version of `_.pick` which picks `object` properties specified
@@ -56143,8 +48602,8 @@ function pickByArray(object, props) {
 
 module.exports = pickByArray;
 
-},{"419":419}],412:[function(_dereq_,module,exports){
-var baseForIn = _dereq_(345);
+},{"396":396}],389:[function(_dereq_,module,exports){
+var baseForIn = _dereq_(322);
 
 /**
  * A specialized version of `_.pick` which picks `object` properties `predicate`
@@ -56167,15 +48626,15 @@ function pickByCallback(object, predicate) {
 
 module.exports = pickByCallback;
 
-},{"345":345}],413:[function(_dereq_,module,exports){
+},{"322":322}],390:[function(_dereq_,module,exports){
 /** Used to lookup unminified function names. */
 var realNames = {};
 
 module.exports = realNames;
 
-},{}],414:[function(_dereq_,module,exports){
-var arrayCopy = _dereq_(321),
-    isIndex = _dereq_(402);
+},{}],391:[function(_dereq_,module,exports){
+var arrayCopy = _dereq_(299),
+    isIndex = _dereq_(379);
 
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeMin = Math.min;
@@ -56204,7 +48663,7 @@ function reorder(array, indexes) {
 
 module.exports = reorder;
 
-},{"321":321,"402":402}],415:[function(_dereq_,module,exports){
+},{"299":299,"379":379}],392:[function(_dereq_,module,exports){
 /** Used as the internal argument placeholder. */
 var PLACEHOLDER = '__lodash_placeholder__';
 
@@ -56234,9 +48693,9 @@ function replaceHolders(array, placeholder) {
 
 module.exports = replaceHolders;
 
-},{}],416:[function(_dereq_,module,exports){
-var baseSetData = _dereq_(361),
-    now = _dereq_(313);
+},{}],393:[function(_dereq_,module,exports){
+var baseSetData = _dereq_(338),
+    now = _dereq_(292);
 
 /** Used to detect when a function becomes hot. */
 var HOT_COUNT = 150,
@@ -56277,12 +48736,12 @@ var setData = (function() {
 
 module.exports = setData;
 
-},{"313":313,"361":361}],417:[function(_dereq_,module,exports){
-var isArguments = _dereq_(423),
-    isArray = _dereq_(424),
-    isIndex = _dereq_(402),
-    isLength = _dereq_(406),
-    keysIn = _dereq_(436);
+},{"292":292,"338":338}],394:[function(_dereq_,module,exports){
+var isArguments = _dereq_(400),
+    isArray = _dereq_(401),
+    isIndex = _dereq_(379),
+    isLength = _dereq_(383),
+    keysIn = _dereq_(413);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -56320,7 +48779,7 @@ function shimKeys(object) {
 
 module.exports = shimKeys;
 
-},{"402":402,"406":406,"423":423,"424":424,"436":436}],418:[function(_dereq_,module,exports){
+},{"379":379,"383":383,"400":400,"401":401,"413":413}],395:[function(_dereq_,module,exports){
 /**
  * An implementation of `_.uniq` optimized for sorted arrays without support
  * for callback shorthands and `this` binding.
@@ -56351,8 +48810,8 @@ function sortedUniq(array, iteratee) {
 
 module.exports = sortedUniq;
 
-},{}],419:[function(_dereq_,module,exports){
-var isObject = _dereq_(428);
+},{}],396:[function(_dereq_,module,exports){
+var isObject = _dereq_(405);
 
 /**
  * Converts `value` to an object if it's not one.
@@ -56367,9 +48826,9 @@ function toObject(value) {
 
 module.exports = toObject;
 
-},{"428":428}],420:[function(_dereq_,module,exports){
-var baseToString = _dereq_(365),
-    isArray = _dereq_(424);
+},{"405":405}],397:[function(_dereq_,module,exports){
+var baseToString = _dereq_(342),
+    isArray = _dereq_(401);
 
 /** Used to match property names within property paths. */
 var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
@@ -56397,10 +48856,10 @@ function toPath(value) {
 
 module.exports = toPath;
 
-},{"365":365,"424":424}],421:[function(_dereq_,module,exports){
-var LazyWrapper = _dereq_(318),
-    LodashWrapper = _dereq_(319),
-    arrayCopy = _dereq_(321);
+},{"342":342,"401":401}],398:[function(_dereq_,module,exports){
+var LazyWrapper = _dereq_(296),
+    LodashWrapper = _dereq_(297),
+    arrayCopy = _dereq_(299);
 
 /**
  * Creates a clone of `wrapper`.
@@ -56417,10 +48876,10 @@ function wrapperClone(wrapper) {
 
 module.exports = wrapperClone;
 
-},{"318":318,"319":319,"321":321}],422:[function(_dereq_,module,exports){
-var baseClone = _dereq_(332),
-    bindCallback = _dereq_(368),
-    isIterateeCall = _dereq_(403);
+},{"296":296,"297":297,"299":299}],399:[function(_dereq_,module,exports){
+var baseClone = _dereq_(310),
+    bindCallback = _dereq_(345),
+    isIterateeCall = _dereq_(380);
 
 /**
  * Creates a clone of `value`. If `isDeep` is `true` nested objects are cloned,
@@ -56489,9 +48948,9 @@ function clone(value, isDeep, customizer, thisArg) {
 
 module.exports = clone;
 
-},{"332":332,"368":368,"403":403}],423:[function(_dereq_,module,exports){
-var isArrayLike = _dereq_(401),
-    isObjectLike = _dereq_(407);
+},{"310":310,"345":345,"380":380}],400:[function(_dereq_,module,exports){
+var isArrayLike = _dereq_(378),
+    isObjectLike = _dereq_(384);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -56525,10 +48984,10 @@ function isArguments(value) {
 
 module.exports = isArguments;
 
-},{"401":401,"407":407}],424:[function(_dereq_,module,exports){
-var getNative = _dereq_(396),
-    isLength = _dereq_(406),
-    isObjectLike = _dereq_(407);
+},{"378":378,"384":384}],401:[function(_dereq_,module,exports){
+var getNative = _dereq_(373),
+    isLength = _dereq_(383),
+    isObjectLike = _dereq_(384);
 
 /** `Object#toString` result references. */
 var arrayTag = '[object Array]';
@@ -56567,8 +49026,8 @@ var isArray = nativeIsArray || function(value) {
 
 module.exports = isArray;
 
-},{"396":396,"406":406,"407":407}],425:[function(_dereq_,module,exports){
-var isObject = _dereq_(428);
+},{"373":373,"383":383,"384":384}],402:[function(_dereq_,module,exports){
+var isObject = _dereq_(405);
 
 /** `Object#toString` result references. */
 var funcTag = '[object Function]';
@@ -56607,9 +49066,9 @@ function isFunction(value) {
 
 module.exports = isFunction;
 
-},{"428":428}],426:[function(_dereq_,module,exports){
-var isFunction = _dereq_(425),
-    isObjectLike = _dereq_(407);
+},{"405":405}],403:[function(_dereq_,module,exports){
+var isFunction = _dereq_(402),
+    isObjectLike = _dereq_(384);
 
 /** Used to detect host constructors (Safari > 5). */
 var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -56657,8 +49116,8 @@ function isNative(value) {
 
 module.exports = isNative;
 
-},{"407":407,"425":425}],427:[function(_dereq_,module,exports){
-var isObjectLike = _dereq_(407);
+},{"384":384,"402":402}],404:[function(_dereq_,module,exports){
+var isObjectLike = _dereq_(384);
 
 /** `Object#toString` result references. */
 var numberTag = '[object Number]';
@@ -56700,7 +49159,7 @@ function isNumber(value) {
 
 module.exports = isNumber;
 
-},{"407":407}],428:[function(_dereq_,module,exports){
+},{"384":384}],405:[function(_dereq_,module,exports){
 /**
  * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
  * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
@@ -56730,10 +49189,10 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],429:[function(_dereq_,module,exports){
-var baseForIn = _dereq_(345),
-    isArguments = _dereq_(423),
-    isObjectLike = _dereq_(407);
+},{}],406:[function(_dereq_,module,exports){
+var baseForIn = _dereq_(322),
+    isArguments = _dereq_(400),
+    isObjectLike = _dereq_(384);
 
 /** `Object#toString` result references. */
 var objectTag = '[object Object]';
@@ -56803,8 +49262,8 @@ function isPlainObject(value) {
 
 module.exports = isPlainObject;
 
-},{"345":345,"407":407,"423":423}],430:[function(_dereq_,module,exports){
-var isObjectLike = _dereq_(407);
+},{"322":322,"384":384,"400":400}],407:[function(_dereq_,module,exports){
+var isObjectLike = _dereq_(384);
 
 /** `Object#toString` result references. */
 var stringTag = '[object String]';
@@ -56840,9 +49299,9 @@ function isString(value) {
 
 module.exports = isString;
 
-},{"407":407}],431:[function(_dereq_,module,exports){
-var isLength = _dereq_(406),
-    isObjectLike = _dereq_(407);
+},{"384":384}],408:[function(_dereq_,module,exports){
+var isLength = _dereq_(383),
+    isObjectLike = _dereq_(384);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]',
@@ -56916,9 +49375,9 @@ function isTypedArray(value) {
 
 module.exports = isTypedArray;
 
-},{"406":406,"407":407}],432:[function(_dereq_,module,exports){
-var baseCopy = _dereq_(334),
-    keysIn = _dereq_(436);
+},{"383":383,"384":384}],409:[function(_dereq_,module,exports){
+var baseCopy = _dereq_(312),
+    keysIn = _dereq_(413);
 
 /**
  * Converts `value` to a plain object flattening inherited enumerable
@@ -56949,10 +49408,10 @@ function toPlainObject(value) {
 
 module.exports = toPlainObject;
 
-},{"334":334,"436":436}],433:[function(_dereq_,module,exports){
-var assignWith = _dereq_(329),
-    baseAssign = _dereq_(330),
-    createAssigner = _dereq_(376);
+},{"312":312,"413":413}],410:[function(_dereq_,module,exports){
+var assignWith = _dereq_(307),
+    baseAssign = _dereq_(308),
+    createAssigner = _dereq_(353);
 
 /**
  * Assigns own enumerable properties of source object(s) to the destination
@@ -56994,16 +49453,16 @@ var assign = createAssigner(function(object, source, customizer) {
 
 module.exports = assign;
 
-},{"329":329,"330":330,"376":376}],434:[function(_dereq_,module,exports){
-var baseGet = _dereq_(347),
-    baseSlice = _dereq_(362),
-    isArguments = _dereq_(423),
-    isArray = _dereq_(424),
-    isIndex = _dereq_(402),
-    isKey = _dereq_(404),
-    isLength = _dereq_(406),
-    last = _dereq_(294),
-    toPath = _dereq_(420);
+},{"307":307,"308":308,"353":353}],411:[function(_dereq_,module,exports){
+var baseGet = _dereq_(324),
+    baseSlice = _dereq_(339),
+    isArguments = _dereq_(400),
+    isArray = _dereq_(401),
+    isIndex = _dereq_(379),
+    isKey = _dereq_(381),
+    isLength = _dereq_(383),
+    last = _dereq_(273),
+    toPath = _dereq_(397);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -57053,11 +49512,11 @@ function has(object, path) {
 
 module.exports = has;
 
-},{"294":294,"347":347,"362":362,"402":402,"404":404,"406":406,"420":420,"423":423,"424":424}],435:[function(_dereq_,module,exports){
-var getNative = _dereq_(396),
-    isArrayLike = _dereq_(401),
-    isObject = _dereq_(428),
-    shimKeys = _dereq_(417);
+},{"273":273,"324":324,"339":339,"379":379,"381":381,"383":383,"397":397,"400":400,"401":401}],412:[function(_dereq_,module,exports){
+var getNative = _dereq_(373),
+    isArrayLike = _dereq_(378),
+    isObject = _dereq_(405),
+    shimKeys = _dereq_(394);
 
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeKeys = getNative(Object, 'keys');
@@ -57100,12 +49559,12 @@ var keys = !nativeKeys ? shimKeys : function(object) {
 
 module.exports = keys;
 
-},{"396":396,"401":401,"417":417,"428":428}],436:[function(_dereq_,module,exports){
-var isArguments = _dereq_(423),
-    isArray = _dereq_(424),
-    isIndex = _dereq_(402),
-    isLength = _dereq_(406),
-    isObject = _dereq_(428);
+},{"373":373,"378":378,"394":394,"405":405}],413:[function(_dereq_,module,exports){
+var isArguments = _dereq_(400),
+    isArray = _dereq_(401),
+    isIndex = _dereq_(379),
+    isLength = _dereq_(383),
+    isObject = _dereq_(405);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -57166,9 +49625,9 @@ function keysIn(object) {
 
 module.exports = keysIn;
 
-},{"402":402,"406":406,"423":423,"424":424,"428":428}],437:[function(_dereq_,module,exports){
-var baseMerge = _dereq_(356),
-    createAssigner = _dereq_(376);
+},{"379":379,"383":383,"400":400,"401":401,"405":405}],414:[function(_dereq_,module,exports){
+var baseMerge = _dereq_(333),
+    createAssigner = _dereq_(353);
 
 /**
  * Recursively merges own enumerable properties of the source object(s), that
@@ -57222,15 +49681,15 @@ var merge = createAssigner(baseMerge);
 
 module.exports = merge;
 
-},{"356":356,"376":376}],438:[function(_dereq_,module,exports){
-var arrayMap = _dereq_(325),
-    baseDifference = _dereq_(337),
-    baseFlatten = _dereq_(343),
-    bindCallback = _dereq_(368),
-    keysIn = _dereq_(436),
-    pickByArray = _dereq_(411),
-    pickByCallback = _dereq_(412),
-    restParam = _dereq_(317);
+},{"333":333,"353":353}],415:[function(_dereq_,module,exports){
+var arrayMap = _dereq_(303),
+    baseDifference = _dereq_(314),
+    baseFlatten = _dereq_(320),
+    bindCallback = _dereq_(345),
+    keysIn = _dereq_(413),
+    pickByArray = _dereq_(388),
+    pickByCallback = _dereq_(389),
+    restParam = _dereq_(295);
 
 /**
  * The opposite of `_.pick`; this method creates an object composed of the
@@ -57271,9 +49730,9 @@ var omit = restParam(function(object, props) {
 
 module.exports = omit;
 
-},{"317":317,"325":325,"337":337,"343":343,"368":368,"411":411,"412":412,"436":436}],439:[function(_dereq_,module,exports){
-var keys = _dereq_(435),
-    toObject = _dereq_(419);
+},{"295":295,"303":303,"314":314,"320":320,"345":345,"388":388,"389":389,"413":413}],416:[function(_dereq_,module,exports){
+var keys = _dereq_(412),
+    toObject = _dereq_(396);
 
 /**
  * Creates a two dimensional array of the key-value pairs for `object`,
@@ -57306,12 +49765,12 @@ function pairs(object) {
 
 module.exports = pairs;
 
-},{"419":419,"435":435}],440:[function(_dereq_,module,exports){
-var baseFlatten = _dereq_(343),
-    bindCallback = _dereq_(368),
-    pickByArray = _dereq_(411),
-    pickByCallback = _dereq_(412),
-    restParam = _dereq_(317);
+},{"396":396,"412":412}],417:[function(_dereq_,module,exports){
+var baseFlatten = _dereq_(320),
+    bindCallback = _dereq_(345),
+    pickByArray = _dereq_(388),
+    pickByCallback = _dereq_(389),
+    restParam = _dereq_(295);
 
 /**
  * Creates an object composed of the picked `object` properties. Property
@@ -57350,15 +49809,15 @@ var pick = restParam(function(object, props) {
 
 module.exports = pick;
 
-},{"317":317,"343":343,"368":368,"411":411,"412":412}],441:[function(_dereq_,module,exports){
-var arrayEach = _dereq_(322),
-    baseCallback = _dereq_(331),
-    baseCreate = _dereq_(335),
-    baseForOwn = _dereq_(346),
-    isArray = _dereq_(424),
-    isFunction = _dereq_(425),
-    isObject = _dereq_(428),
-    isTypedArray = _dereq_(431);
+},{"295":295,"320":320,"345":345,"388":388,"389":389}],418:[function(_dereq_,module,exports){
+var arrayEach = _dereq_(300),
+    baseCallback = _dereq_(309),
+    baseCreate = _dereq_(313),
+    baseForOwn = _dereq_(323),
+    isArray = _dereq_(401),
+    isFunction = _dereq_(402),
+    isObject = _dereq_(405),
+    isTypedArray = _dereq_(408);
 
 /**
  * An alternative to `_.reduce`; this method transforms `object` to a new
@@ -57413,9 +49872,9 @@ function transform(object, iteratee, accumulator, thisArg) {
 
 module.exports = transform;
 
-},{"322":322,"331":331,"335":335,"346":346,"424":424,"425":425,"428":428,"431":431}],442:[function(_dereq_,module,exports){
-var baseValues = _dereq_(367),
-    keys = _dereq_(435);
+},{"300":300,"309":309,"313":313,"323":323,"401":401,"402":402,"405":405,"408":408}],419:[function(_dereq_,module,exports){
+var baseValues = _dereq_(344),
+    keys = _dereq_(412);
 
 /**
  * Creates an array of the own enumerable property values of `object`.
@@ -57448,7 +49907,7 @@ function values(object) {
 
 module.exports = values;
 
-},{"367":367,"435":435}],443:[function(_dereq_,module,exports){
+},{"344":344,"412":412}],420:[function(_dereq_,module,exports){
 /**
  * This method returns the first argument provided to it.
  *
@@ -57470,7 +49929,7 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],444:[function(_dereq_,module,exports){
+},{}],421:[function(_dereq_,module,exports){
 /**
  * A no-operation function that returns `undefined` regardless of the
  * arguments it receives.
@@ -57491,10 +49950,10 @@ function noop() {
 
 module.exports = noop;
 
-},{}],445:[function(_dereq_,module,exports){
-var baseProperty = _dereq_(358),
-    basePropertyDeep = _dereq_(359),
-    isKey = _dereq_(404);
+},{}],422:[function(_dereq_,module,exports){
+var baseProperty = _dereq_(335),
+    basePropertyDeep = _dereq_(336),
+    isKey = _dereq_(381);
 
 /**
  * Creates a function that returns the property value at `path` on a
@@ -57524,7 +49983,7 @@ function property(path) {
 
 module.exports = property;
 
-},{"358":358,"359":359,"404":404}],446:[function(_dereq_,module,exports){
+},{"335":335,"336":336,"381":381}],423:[function(_dereq_,module,exports){
 /**
  * Set attribute `name` to `val`, or get attr `name`.
  *
@@ -57550,9 +50009,9 @@ module.exports = function(el, name, val) {
 
   return el;
 };
-},{}],447:[function(_dereq_,module,exports){
-module.exports = _dereq_(456);
-},{"456":456}],448:[function(_dereq_,module,exports){
+},{}],424:[function(_dereq_,module,exports){
+module.exports = _dereq_(433);
+},{"433":433}],425:[function(_dereq_,module,exports){
 module.exports = function(el) {
 
   var c;
@@ -57564,31 +50023,31 @@ module.exports = function(el) {
 
   return el;
 };
-},{}],449:[function(_dereq_,module,exports){
-module.exports = _dereq_(458);
-},{"458":458}],450:[function(_dereq_,module,exports){
-module.exports = _dereq_(459);
-},{"459":459}],451:[function(_dereq_,module,exports){
-module.exports = _dereq_(463);
-},{"463":463}],452:[function(_dereq_,module,exports){
-module.exports = _dereq_(460);
-},{"460":460}],453:[function(_dereq_,module,exports){
-module.exports = _dereq_(461);
-},{"461":461}],454:[function(_dereq_,module,exports){
-module.exports = _dereq_(462);
-},{"462":462}],455:[function(_dereq_,module,exports){
+},{}],426:[function(_dereq_,module,exports){
+module.exports = _dereq_(435);
+},{"435":435}],427:[function(_dereq_,module,exports){
+module.exports = _dereq_(436);
+},{"436":436}],428:[function(_dereq_,module,exports){
+module.exports = _dereq_(440);
+},{"440":440}],429:[function(_dereq_,module,exports){
+module.exports = _dereq_(437);
+},{"437":437}],430:[function(_dereq_,module,exports){
+module.exports = _dereq_(438);
+},{"438":438}],431:[function(_dereq_,module,exports){
+module.exports = _dereq_(439);
+},{"439":439}],432:[function(_dereq_,module,exports){
 module.exports = function(el) {
   el.parentNode && el.parentNode.removeChild(el);
 };
-},{}],456:[function(_dereq_,module,exports){
+},{}],433:[function(_dereq_,module,exports){
 /**
  * Module dependencies.
  */
 
 try {
-  var index = _dereq_(457);
+  var index = _dereq_(434);
 } catch (err) {
-  var index = _dereq_(457);
+  var index = _dereq_(434);
 }
 
 /**
@@ -57773,7 +50232,7 @@ ClassList.prototype.contains = function(name){
     : !! ~index(this.array(), name);
 };
 
-},{"457":457}],457:[function(_dereq_,module,exports){
+},{"434":434}],434:[function(_dereq_,module,exports){
 module.exports = function(arr, obj){
   if (arr.indexOf) return arr.indexOf(obj);
   for (var i = 0; i < arr.length; ++i) {
@@ -57781,8 +50240,8 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],458:[function(_dereq_,module,exports){
-var matches = _dereq_(461)
+},{}],435:[function(_dereq_,module,exports){
+var matches = _dereq_(438)
 
 module.exports = function (element, selector, checkYoSelf, root) {
   element = checkYoSelf ? {parentNode: element} : element
@@ -57802,21 +50261,21 @@ module.exports = function (element, selector, checkYoSelf, root) {
   }
 }
 
-},{"461":461}],459:[function(_dereq_,module,exports){
+},{"438":438}],436:[function(_dereq_,module,exports){
 /**
  * Module dependencies.
  */
 
 try {
-  var closest = _dereq_(458);
+  var closest = _dereq_(435);
 } catch(err) {
-  var closest = _dereq_(458);
+  var closest = _dereq_(435);
 }
 
 try {
-  var event = _dereq_(460);
+  var event = _dereq_(437);
 } catch(err) {
-  var event = _dereq_(460);
+  var event = _dereq_(437);
 }
 
 /**
@@ -57855,7 +50314,7 @@ exports.unbind = function(el, type, fn, capture){
   event.unbind(el, type, fn, capture);
 };
 
-},{"458":458,"460":460}],460:[function(_dereq_,module,exports){
+},{"435":435,"437":437}],437:[function(_dereq_,module,exports){
 var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
     unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
     prefix = bind !== 'addEventListener' ? 'on' : '';
@@ -57891,15 +50350,15 @@ exports.unbind = function(el, type, fn, capture){
   el[unbind](prefix + type, fn, capture || false);
   return fn;
 };
-},{}],461:[function(_dereq_,module,exports){
+},{}],438:[function(_dereq_,module,exports){
 /**
  * Module dependencies.
  */
 
 try {
-  var query = _dereq_(462);
+  var query = _dereq_(439);
 } catch (err) {
-  var query = _dereq_(462);
+  var query = _dereq_(439);
 }
 
 /**
@@ -57943,7 +50402,7 @@ function match(el, selector) {
   return false;
 }
 
-},{"462":462}],462:[function(_dereq_,module,exports){
+},{"439":439}],439:[function(_dereq_,module,exports){
 function one(selector, el) {
   return el.querySelector(selector);
 }
@@ -57966,7 +50425,7 @@ exports.engine = function(obj){
   return exports;
 };
 
-},{}],463:[function(_dereq_,module,exports){
+},{}],440:[function(_dereq_,module,exports){
 
 /**
  * Expose `parse`.
@@ -58080,11 +50539,11 @@ function parse(html, doc) {
   return fragment;
 }
 
-},{}],464:[function(_dereq_,module,exports){
-module.exports = _dereq_(466);
+},{}],441:[function(_dereq_,module,exports){
+module.exports = _dereq_(443);
 
-module.exports.Collection = _dereq_(465);
-},{"465":465,"466":466}],465:[function(_dereq_,module,exports){
+module.exports.Collection = _dereq_(442);
+},{"442":442,"443":443}],442:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -58181,10 +50640,10 @@ function isExtended(collection) {
 module.exports.extend = extend;
 
 module.exports.isExtended = isExtended;
-},{}],466:[function(_dereq_,module,exports){
+},{}],443:[function(_dereq_,module,exports){
 'use strict';
 
-var Collection = _dereq_(465);
+var Collection = _dereq_(442);
 
 function hasOwnProperty(e, property) {
   return Object.prototype.hasOwnProperty.call(e, property.name || property);
@@ -58373,6 +50832,5616 @@ module.exports = Refs;
  * @property {boolean} [collection=false]
  * @property {boolean} [enumerable=false]
  */
-},{"465":465}]},{},[1])(1)
+},{"442":442}],444:[function(_dereq_,module,exports){
+module.exports = _dereq_(445);
+},{"445":445}],445:[function(_dereq_,module,exports){
+'use strict';
+
+var assign = _dereq_(518);
+
+var VdmlModdle = _dereq_(446);
+
+var packages = {
+  vdml: _dereq_(541),
+  vdmldi: _dereq_(542),
+  dc: _dereq_(539),
+  di: _dereq_(540)
+};
+
+module.exports = function(additionalPackages, options) {
+  return new VdmlModdle(assign({}, packages, additionalPackages), options);
+};
+},{"446":446,"518":518,"539":539,"540":540,"541":541,"542":542}],446:[function(_dereq_,module,exports){
+'use strict';
+
+var isString = _dereq_(516),
+    isFunction = _dereq_(513),
+    assign = _dereq_(518);
+
+var Moddle = _dereq_(530),
+    XmlReader = _dereq_(526),
+    XmlWriter = _dereq_(527);
+
+/**
+ * A sub class of {@link Moddle} with support for import and export of CMMN 1.1 xml files.
+ *
+ * @class VdmlModdle
+ * @extends Moddle
+ *
+ * @param {Object|Array} packages to use for instantiating the model
+ * @param {Object} [options] additional options to pass over
+ */
+function VdmlModdle(packages, options) {
+  Moddle.call(this, packages, options);
+}
+
+VdmlModdle.prototype = Object.create(Moddle.prototype);
+
+module.exports = VdmlModdle;
+
+
+/**
+ * Instantiates a CMMN model tree from a given xml string.
+ *
+ * @param {String}   xmlStr
+ * @param {String}   [typeName='vdml:Definitions'] name of the root element
+ * @param {Object}   [options]  options to pass to the underlying reader
+ * @param {Function} done       callback that is invoked with (err, result, parseContext)
+ *                              once the import completes
+ */
+VdmlModdle.prototype.fromXML = function(xmlStr, typeName, options, done) {
+
+  if (!isString(typeName)) {
+    done = options;
+    options = typeName;
+    typeName = 'vdml:Definitions';
+  }
+
+  if (isFunction(options)) {
+    done = options;
+    options = {};
+  }
+
+  var reader = new XmlReader(assign({ model: this, lax: true }, options));
+  var rootHandler = reader.handler(typeName);
+
+  reader.fromXML(xmlStr, rootHandler, done);
+};
+
+
+/**
+ * Serializes a CMMN 1.1 object tree to XML.
+ *
+ * @param {String}   element    the root element, typically an instance of `vdml:Definitions`
+ * @param {Object}   [options]  to pass to the underlying writer
+ * @param {Function} done       callback invoked with (err, xmlStr) once the import completes
+ */
+VdmlModdle.prototype.toXML = function(element, options, done) {
+
+  if (isFunction(options)) {
+    done = options;
+    options = {};
+  }
+
+  var writer = new XmlWriter(options);
+  try {
+    var result = writer.toXML(element);
+    done(null, result);
+  } catch (e) {
+    done(e);
+  }
+};
+
+},{"513":513,"516":516,"518":518,"526":526,"527":527,"530":530}],447:[function(_dereq_,module,exports){
+arguments[4][273][0].apply(exports,arguments)
+},{"273":273}],448:[function(_dereq_,module,exports){
+arguments[4][281][0].apply(exports,arguments)
+},{"281":281,"456":456,"463":463,"467":467,"512":512}],449:[function(_dereq_,module,exports){
+arguments[4][282][0].apply(exports,arguments)
+},{"282":282,"466":466,"490":490}],450:[function(_dereq_,module,exports){
+arguments[4][283][0].apply(exports,arguments)
+},{"283":283,"455":455,"466":466,"491":491}],451:[function(_dereq_,module,exports){
+arguments[4][286][0].apply(exports,arguments)
+},{"286":286,"457":457,"463":463,"478":478,"512":512}],452:[function(_dereq_,module,exports){
+arguments[4][287][0].apply(exports,arguments)
+},{"287":287,"459":459,"466":466,"492":492}],453:[function(_dereq_,module,exports){
+var baseDelay = _dereq_(465),
+    restParam = _dereq_(454);
+
+/**
+ * Defers invoking the `func` until the current call stack has cleared. Any
+ * additional arguments are provided to `func` when it's invoked.
+ *
+ * @static
+ * @memberOf _
+ * @category Function
+ * @param {Function} func The function to defer.
+ * @param {...*} [args] The arguments to invoke the function with.
+ * @returns {number} Returns the timer id.
+ * @example
+ *
+ * _.defer(function(text) {
+ *   console.log(text);
+ * }, 'deferred');
+ * // logs 'deferred' after one or more milliseconds
+ */
+var defer = restParam(function(func, args) {
+  return baseDelay(func, 1, args);
 });
-//# sourceMappingURL=bpmn-modeler.js.map
+
+module.exports = defer;
+
+},{"454":454,"465":465}],454:[function(_dereq_,module,exports){
+arguments[4][295][0].apply(exports,arguments)
+},{"295":295}],455:[function(_dereq_,module,exports){
+arguments[4][300][0].apply(exports,arguments)
+},{"300":300}],456:[function(_dereq_,module,exports){
+arguments[4][302][0].apply(exports,arguments)
+},{"302":302}],457:[function(_dereq_,module,exports){
+arguments[4][303][0].apply(exports,arguments)
+},{"303":303}],458:[function(_dereq_,module,exports){
+arguments[4][304][0].apply(exports,arguments)
+},{"304":304}],459:[function(_dereq_,module,exports){
+arguments[4][305][0].apply(exports,arguments)
+},{"305":305}],460:[function(_dereq_,module,exports){
+arguments[4][306][0].apply(exports,arguments)
+},{"306":306}],461:[function(_dereq_,module,exports){
+arguments[4][307][0].apply(exports,arguments)
+},{"307":307,"519":519}],462:[function(_dereq_,module,exports){
+arguments[4][308][0].apply(exports,arguments)
+},{"308":308,"464":464,"519":519}],463:[function(_dereq_,module,exports){
+arguments[4][309][0].apply(exports,arguments)
+},{"309":309,"479":479,"480":480,"486":486,"523":523,"524":524}],464:[function(_dereq_,module,exports){
+arguments[4][312][0].apply(exports,arguments)
+},{"312":312}],465:[function(_dereq_,module,exports){
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT = 'Expected a function';
+
+/**
+ * The base implementation of `_.delay` and `_.defer` which accepts an index
+ * of where to slice the arguments to provide to `func`.
+ *
+ * @private
+ * @param {Function} func The function to delay.
+ * @param {number} wait The number of milliseconds to delay invocation.
+ * @param {Object} args The arguments provide to `func`.
+ * @returns {number} Returns the timer id.
+ */
+function baseDelay(func, wait, args) {
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  return setTimeout(function() { func.apply(undefined, args); }, wait);
+}
+
+module.exports = baseDelay;
+
+},{}],466:[function(_dereq_,module,exports){
+arguments[4][315][0].apply(exports,arguments)
+},{"315":315,"473":473,"488":488}],467:[function(_dereq_,module,exports){
+arguments[4][317][0].apply(exports,arguments)
+},{"317":317,"466":466}],468:[function(_dereq_,module,exports){
+arguments[4][318][0].apply(exports,arguments)
+},{"318":318}],469:[function(_dereq_,module,exports){
+arguments[4][319][0].apply(exports,arguments)
+},{"319":319}],470:[function(_dereq_,module,exports){
+arguments[4][320][0].apply(exports,arguments)
+},{"320":320,"458":458,"499":499,"504":504,"511":511,"512":512}],471:[function(_dereq_,module,exports){
+arguments[4][321][0].apply(exports,arguments)
+},{"321":321,"489":489}],472:[function(_dereq_,module,exports){
+arguments[4][322][0].apply(exports,arguments)
+},{"322":322,"471":471,"520":520}],473:[function(_dereq_,module,exports){
+arguments[4][323][0].apply(exports,arguments)
+},{"323":323,"471":471,"519":519}],474:[function(_dereq_,module,exports){
+arguments[4][324][0].apply(exports,arguments)
+},{"324":324,"509":509}],475:[function(_dereq_,module,exports){
+arguments[4][326][0].apply(exports,arguments)
+},{"326":326,"476":476,"504":504,"515":515}],476:[function(_dereq_,module,exports){
+arguments[4][327][0].apply(exports,arguments)
+},{"327":327,"493":493,"494":494,"495":495,"512":512,"517":517}],477:[function(_dereq_,module,exports){
+arguments[4][328][0].apply(exports,arguments)
+},{"328":328,"475":475,"509":509}],478:[function(_dereq_,module,exports){
+arguments[4][330][0].apply(exports,arguments)
+},{"330":330,"466":466,"499":499}],479:[function(_dereq_,module,exports){
+arguments[4][331][0].apply(exports,arguments)
+},{"331":331,"477":477,"497":497,"509":509}],480:[function(_dereq_,module,exports){
+arguments[4][332][0].apply(exports,arguments)
+},{"332":332,"447":447,"474":474,"475":475,"484":484,"502":502,"505":505,"509":509,"510":510,"512":512}],481:[function(_dereq_,module,exports){
+arguments[4][335][0].apply(exports,arguments)
+},{"335":335}],482:[function(_dereq_,module,exports){
+arguments[4][336][0].apply(exports,arguments)
+},{"336":336,"474":474,"510":510}],483:[function(_dereq_,module,exports){
+arguments[4][337][0].apply(exports,arguments)
+},{"337":337}],484:[function(_dereq_,module,exports){
+arguments[4][339][0].apply(exports,arguments)
+},{"339":339}],485:[function(_dereq_,module,exports){
+arguments[4][342][0].apply(exports,arguments)
+},{"342":342}],486:[function(_dereq_,module,exports){
+arguments[4][345][0].apply(exports,arguments)
+},{"345":345,"523":523}],487:[function(_dereq_,module,exports){
+arguments[4][353][0].apply(exports,arguments)
+},{"353":353,"454":454,"486":486,"501":501}],488:[function(_dereq_,module,exports){
+arguments[4][354][0].apply(exports,arguments)
+},{"354":354,"496":496,"503":503,"509":509}],489:[function(_dereq_,module,exports){
+arguments[4][355][0].apply(exports,arguments)
+},{"355":355,"509":509}],490:[function(_dereq_,module,exports){
+arguments[4][359][0].apply(exports,arguments)
+},{"359":359,"463":463,"468":468,"469":469,"512":512}],491:[function(_dereq_,module,exports){
+arguments[4][361][0].apply(exports,arguments)
+},{"361":361,"486":486,"512":512}],492:[function(_dereq_,module,exports){
+arguments[4][364][0].apply(exports,arguments)
+},{"364":364,"463":463,"483":483,"512":512}],493:[function(_dereq_,module,exports){
+arguments[4][366][0].apply(exports,arguments)
+},{"366":366,"460":460}],494:[function(_dereq_,module,exports){
+arguments[4][367][0].apply(exports,arguments)
+},{"367":367}],495:[function(_dereq_,module,exports){
+arguments[4][368][0].apply(exports,arguments)
+},{"368":368,"519":519}],496:[function(_dereq_,module,exports){
+arguments[4][371][0].apply(exports,arguments)
+},{"371":371,"481":481}],497:[function(_dereq_,module,exports){
+arguments[4][372][0].apply(exports,arguments)
+},{"372":372,"505":505,"521":521}],498:[function(_dereq_,module,exports){
+arguments[4][373][0].apply(exports,arguments)
+},{"373":373,"514":514}],499:[function(_dereq_,module,exports){
+arguments[4][378][0].apply(exports,arguments)
+},{"378":378,"496":496,"503":503}],500:[function(_dereq_,module,exports){
+arguments[4][379][0].apply(exports,arguments)
+},{"379":379}],501:[function(_dereq_,module,exports){
+arguments[4][380][0].apply(exports,arguments)
+},{"380":380,"499":499,"500":500,"515":515}],502:[function(_dereq_,module,exports){
+arguments[4][381][0].apply(exports,arguments)
+},{"381":381,"509":509,"512":512}],503:[function(_dereq_,module,exports){
+arguments[4][383][0].apply(exports,arguments)
+},{"383":383}],504:[function(_dereq_,module,exports){
+arguments[4][384][0].apply(exports,arguments)
+},{"384":384}],505:[function(_dereq_,module,exports){
+arguments[4][385][0].apply(exports,arguments)
+},{"385":385,"515":515}],506:[function(_dereq_,module,exports){
+arguments[4][388][0].apply(exports,arguments)
+},{"388":388,"509":509}],507:[function(_dereq_,module,exports){
+arguments[4][389][0].apply(exports,arguments)
+},{"389":389,"472":472}],508:[function(_dereq_,module,exports){
+arguments[4][394][0].apply(exports,arguments)
+},{"394":394,"500":500,"503":503,"511":511,"512":512,"520":520}],509:[function(_dereq_,module,exports){
+arguments[4][396][0].apply(exports,arguments)
+},{"396":396,"515":515}],510:[function(_dereq_,module,exports){
+arguments[4][397][0].apply(exports,arguments)
+},{"397":397,"485":485,"512":512}],511:[function(_dereq_,module,exports){
+arguments[4][400][0].apply(exports,arguments)
+},{"400":400,"499":499,"504":504}],512:[function(_dereq_,module,exports){
+arguments[4][401][0].apply(exports,arguments)
+},{"401":401,"498":498,"503":503,"504":504}],513:[function(_dereq_,module,exports){
+arguments[4][402][0].apply(exports,arguments)
+},{"402":402,"515":515}],514:[function(_dereq_,module,exports){
+arguments[4][403][0].apply(exports,arguments)
+},{"403":403,"504":504,"513":513}],515:[function(_dereq_,module,exports){
+arguments[4][405][0].apply(exports,arguments)
+},{"405":405}],516:[function(_dereq_,module,exports){
+arguments[4][407][0].apply(exports,arguments)
+},{"407":407,"504":504}],517:[function(_dereq_,module,exports){
+arguments[4][408][0].apply(exports,arguments)
+},{"408":408,"503":503,"504":504}],518:[function(_dereq_,module,exports){
+arguments[4][410][0].apply(exports,arguments)
+},{"410":410,"461":461,"462":462,"487":487}],519:[function(_dereq_,module,exports){
+arguments[4][412][0].apply(exports,arguments)
+},{"412":412,"498":498,"499":499,"508":508,"515":515}],520:[function(_dereq_,module,exports){
+arguments[4][413][0].apply(exports,arguments)
+},{"413":413,"500":500,"503":503,"511":511,"512":512,"515":515}],521:[function(_dereq_,module,exports){
+arguments[4][416][0].apply(exports,arguments)
+},{"416":416,"509":509,"519":519}],522:[function(_dereq_,module,exports){
+arguments[4][417][0].apply(exports,arguments)
+},{"417":417,"454":454,"470":470,"486":486,"506":506,"507":507}],523:[function(_dereq_,module,exports){
+arguments[4][420][0].apply(exports,arguments)
+},{"420":420}],524:[function(_dereq_,module,exports){
+arguments[4][422][0].apply(exports,arguments)
+},{"422":422,"481":481,"482":482,"502":502}],525:[function(_dereq_,module,exports){
+'use strict';
+
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function lower(string) {
+  return string.charAt(0).toLowerCase() + string.slice(1);
+}
+
+function hasLowerCaseAlias(pkg) {
+  return pkg.xml && pkg.xml.tagAlias === 'lowerCase';
+}
+
+
+module.exports.aliasToName = function(alias, pkg) {
+  if (hasLowerCaseAlias(pkg)) {
+    return capitalize(alias);
+  } else {
+    return alias;
+  }
+};
+
+module.exports.nameToAlias = function(name, pkg) {
+  if (hasLowerCaseAlias(pkg)) {
+    return lower(name);
+  } else {
+    return name;
+  }
+};
+
+module.exports.DEFAULT_NS_MAP = {
+  'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
+};
+
+var XSI_TYPE = module.exports.XSI_TYPE = 'xsi:type';
+
+function serializeFormat(element) {
+  return element.xml && element.xml.serialize;
+}
+
+module.exports.serializeAsType = function(element) {
+  return serializeFormat(element) === XSI_TYPE;
+};
+
+module.exports.serializeAsProperty = function(element) {
+  return serializeFormat(element) === 'property';
+};
+},{}],526:[function(_dereq_,module,exports){
+'use strict';
+
+var reduce = _dereq_(452),
+    forEach = _dereq_(450),
+    find = _dereq_(449),
+    assign = _dereq_(518),
+    defer = _dereq_(453);
+
+var Stack = _dereq_(529),
+    SaxParser = _dereq_(528).parser,
+    Moddle = _dereq_(530),
+    parseNameNs = _dereq_(535).parseName,
+    Types = _dereq_(538),
+    coerceType = Types.coerceType,
+    isSimpleType = Types.isSimple,
+    common = _dereq_(525),
+    XSI_TYPE = common.XSI_TYPE,
+    XSI_URI = common.DEFAULT_NS_MAP.xsi,
+    serializeAsType = common.serializeAsType,
+    aliasToName = common.aliasToName;
+
+function parseNodeAttributes(node) {
+  var nodeAttrs = node.attributes;
+
+  return reduce(nodeAttrs, function(result, v, k) {
+    var name, ns;
+
+    if (!v.local) {
+      name = v.prefix;
+    } else {
+      ns = parseNameNs(v.name, v.prefix);
+      name = ns.name;
+    }
+
+    result[name] = v.value;
+    return result;
+  }, {});
+}
+
+function normalizeType(node, attr, model) {
+  var nameNs = parseNameNs(attr.value);
+
+  var uri = node.ns[nameNs.prefix || ''],
+      localName = nameNs.localName,
+      pkg = uri && model.getPackage(uri),
+      typePrefix;
+
+  if (pkg) {
+    typePrefix = pkg.xml && pkg.xml.typePrefix;
+
+    if (typePrefix && localName.indexOf(typePrefix) === 0) {
+      localName = localName.slice(typePrefix.length);
+    }
+
+    attr.value = pkg.prefix + ':' + localName;
+  }
+}
+
+/**
+ * Normalizes namespaces for a node given an optional default namespace and a
+ * number of mappings from uris to default prefixes.
+ *
+ * @param  {XmlNode} node
+ * @param  {Model} model the model containing all registered namespaces
+ * @param  {Uri} defaultNsUri
+ */
+function normalizeNamespaces(node, model, defaultNsUri) {
+  var uri, prefix;
+
+  uri = node.uri || defaultNsUri;
+
+  if (uri) {
+    var pkg = model.getPackage(uri);
+
+    if (pkg) {
+      prefix = pkg.prefix;
+    } else {
+      prefix = node.prefix;
+    }
+
+    node.prefix = prefix;
+    node.uri = uri;
+  }
+
+  forEach(node.attributes, function(attr) {
+
+    // normalize xsi:type attributes because the
+    // assigned type may or may not be namespace prefixed
+    if (attr.uri === XSI_URI && attr.local === 'type') {
+      normalizeType(node, attr, model);
+    }
+
+    normalizeNamespaces(attr, model, null);
+  });
+}
+
+
+function error(message) {
+  return new Error(message);
+}
+
+/**
+ * Get the moddle descriptor for a given instance or type.
+ *
+ * @param  {ModdleElement|Function} element
+ *
+ * @return {Object} the moddle descriptor
+ */
+function getModdleDescriptor(element) {
+  return element.$descriptor;
+}
+
+/**
+ * A parse context.
+ *
+ * @class
+ *
+ * @param {Object} options
+ * @param {ElementHandler} options.rootHandler the root handler for parsing a document
+ * @param {boolean} [options.lax=false] whether or not to ignore invalid elements
+ */
+function Context(options) {
+
+  /**
+   * @property {ElementHandler} rootHandler
+   */
+
+  /**
+   * @property {Boolean} lax
+   */
+
+  assign(this, options);
+
+  this.elementsById = {};
+  this.references = [];
+  this.warnings = [];
+
+  /**
+   * Add an unresolved reference.
+   *
+   * @param {Object} reference
+   */
+  this.addReference = function(reference) {
+    this.references.push(reference);
+  };
+
+  /**
+   * Add a processed element.
+   *
+   * @param {ModdleElement} element
+   */
+  this.addElement = function(element) {
+
+    if (!element) {
+      throw error('expected element');
+    }
+
+    var elementsById = this.elementsById;
+
+    var descriptor = getModdleDescriptor(element);
+
+    var idProperty = descriptor.idProperty,
+        id;
+
+    if (idProperty) {
+      id = element.get(idProperty.name);
+
+      if (id) {
+
+        if (elementsById[id]) {
+          throw error('duplicate ID <' + id + '>');
+        }
+
+        elementsById[id] = element;
+      }
+    }
+  };
+
+  /**
+   * Add an import warning.
+   *
+   * @param {Object} warning
+   * @param {String} warning.message
+   * @param {Error} [warning.error]
+   */
+  this.addWarning = function(warning) {
+    this.warnings.push(warning);
+  };
+}
+
+function BaseHandler() {}
+
+BaseHandler.prototype.handleEnd = function() {};
+BaseHandler.prototype.handleText = function() {};
+BaseHandler.prototype.handleNode = function() {};
+
+
+/**
+ * A simple pass through handler that does nothing except for
+ * ignoring all input it receives.
+ *
+ * This is used to ignore unknown elements and
+ * attributes.
+ */
+function NoopHandler() { }
+
+NoopHandler.prototype = new BaseHandler();
+
+NoopHandler.prototype.handleNode = function() {
+  return this;
+};
+
+function BodyHandler() {}
+
+BodyHandler.prototype = new BaseHandler();
+
+BodyHandler.prototype.handleText = function(text) {
+  this.body = (this.body || '') + text;
+};
+
+function ReferenceHandler(property, context) {
+  this.property = property;
+  this.context = context;
+}
+
+ReferenceHandler.prototype = new BodyHandler();
+
+ReferenceHandler.prototype.handleNode = function(node) {
+
+  if (this.element) {
+    throw error('expected no sub nodes');
+  } else {
+    this.element = this.createReference(node);
+  }
+
+  return this;
+};
+
+ReferenceHandler.prototype.handleEnd = function() {
+  this.element.id = this.body;
+};
+
+ReferenceHandler.prototype.createReference = function(node) {
+  return {
+    property: this.property.ns.name,
+    id: ''
+  };
+};
+
+function ValueHandler(propertyDesc, element) {
+  this.element = element;
+  this.propertyDesc = propertyDesc;
+}
+
+ValueHandler.prototype = new BodyHandler();
+
+ValueHandler.prototype.handleEnd = function() {
+
+  var value = this.body,
+      element = this.element,
+      propertyDesc = this.propertyDesc;
+
+  value = coerceType(propertyDesc.type, value);
+
+  if (propertyDesc.isMany) {
+    element.get(propertyDesc.name).push(value);
+  } else {
+    element.set(propertyDesc.name, value);
+  }
+};
+
+
+function BaseElementHandler() {}
+
+BaseElementHandler.prototype = Object.create(BodyHandler.prototype);
+
+BaseElementHandler.prototype.handleNode = function(node) {
+  var parser = this,
+      element = this.element;
+
+  if (!element) {
+    element = this.element = this.createElement(node);
+
+    this.context.addElement(element);
+  } else {
+    parser = this.handleChild(node);
+  }
+
+  return parser;
+};
+
+/**
+ * @class XMLReader.ElementHandler
+ *
+ */
+function ElementHandler(model, type, context) {
+  this.model = model;
+  this.type = model.getType(type);
+  this.context = context;
+}
+
+ElementHandler.prototype = new BaseElementHandler();
+
+ElementHandler.prototype.addReference = function(reference) {
+  this.context.addReference(reference);
+};
+
+ElementHandler.prototype.handleEnd = function() {
+
+  var value = this.body,
+      element = this.element,
+      descriptor = getModdleDescriptor(element),
+      bodyProperty = descriptor.bodyProperty;
+
+  if (bodyProperty && value !== undefined) {
+    value = coerceType(bodyProperty.type, value);
+    element.set(bodyProperty.name, value);
+  }
+};
+
+/**
+ * Create an instance of the model from the given node.
+ *
+ * @param  {Element} node the xml node
+ */
+ElementHandler.prototype.createElement = function(node) {
+  var attributes = parseNodeAttributes(node),
+      Type = this.type,
+      descriptor = getModdleDescriptor(Type),
+      context = this.context,
+      instance = new Type({});
+
+  forEach(attributes, function(value, name) {
+
+    var prop = descriptor.propertiesByName[name],
+        values;
+
+    if (prop && prop.isReference) {
+
+      if (!prop.isMany) {
+        context.addReference({
+          element: instance,
+          property: prop.ns.name,
+          id: value
+        });
+      } else {
+        // IDREFS: parse references as whitespace-separated list
+        values = value.split(' ');
+
+        forEach(values, function(v) {
+          context.addReference({
+            element: instance,
+            property: prop.ns.name,
+            id: v
+          });
+        });
+      }
+
+    } else {
+      if (prop) {
+        value = coerceType(prop.type, value);
+      }
+
+      instance.set(name, value);
+    }
+  });
+
+  return instance;
+};
+
+ElementHandler.prototype.getPropertyForNode = function(node) {
+
+  var nameNs = parseNameNs(node.local, node.prefix);
+
+  var type = this.type,
+      model = this.model,
+      descriptor = getModdleDescriptor(type);
+
+  var propertyName = nameNs.name,
+      property = descriptor.propertiesByName[propertyName],
+      elementTypeName,
+      elementType,
+      typeAnnotation;
+
+  // search for properties by name first
+
+  if (property) {
+
+    if (serializeAsType(property)) {
+      typeAnnotation = node.attributes[XSI_TYPE];
+
+      // xsi type is optional, if it does not exists the
+      // default type is assumed
+      if (typeAnnotation) {
+
+        elementTypeName = typeAnnotation.value;
+
+        // TODO: extract real name from attribute
+        elementType = model.getType(elementTypeName);
+
+        return assign({}, property, { effectiveType: getModdleDescriptor(elementType).name });
+      }
+    }
+
+    // search for properties by name first
+    return property;
+  }
+
+
+  var pkg = model.getPackage(nameNs.prefix);
+
+  if (pkg) {
+    elementTypeName = nameNs.prefix + ':' + aliasToName(nameNs.localName, descriptor.$pkg);
+    elementType = model.getType(elementTypeName);
+
+    // search for collection members later
+    property = find(descriptor.properties, function(p) {
+      return !p.isVirtual && !p.isReference && !p.isAttribute && elementType.hasType(p.type);
+    });
+
+    if (property) {
+      return assign({}, property, { effectiveType: getModdleDescriptor(elementType).name });
+    }
+  } else {
+    // parse unknown element (maybe extension)
+    property = find(descriptor.properties, function(p) {
+      return !p.isReference && !p.isAttribute && p.type === 'Element';
+    });
+
+    if (property) {
+      return property;
+    }
+  }
+
+  throw error('unrecognized element <' + nameNs.name + '>');
+};
+
+ElementHandler.prototype.toString = function() {
+  return 'ElementDescriptor[' + getModdleDescriptor(this.type).name + ']';
+};
+
+ElementHandler.prototype.valueHandler = function(propertyDesc, element) {
+  return new ValueHandler(propertyDesc, element);
+};
+
+ElementHandler.prototype.referenceHandler = function(propertyDesc) {
+  return new ReferenceHandler(propertyDesc, this.context);
+};
+
+ElementHandler.prototype.handler = function(type) {
+  if (type === 'Element') {
+    return new GenericElementHandler(this.model, type, this.context);
+  } else {
+    return new ElementHandler(this.model, type, this.context);
+  }
+};
+
+/**
+ * Handle the child element parsing
+ *
+ * @param  {Element} node the xml node
+ */
+ElementHandler.prototype.handleChild = function(node) {
+  var propertyDesc, type, element, childHandler;
+
+  propertyDesc = this.getPropertyForNode(node);
+  element = this.element;
+
+  type = propertyDesc.effectiveType || propertyDesc.type;
+
+  if (isSimpleType(type)) {
+    return this.valueHandler(propertyDesc, element);
+  }
+
+  if (propertyDesc.isReference) {
+    childHandler = this.referenceHandler(propertyDesc).handleNode(node);
+  } else {
+    childHandler = this.handler(type).handleNode(node);
+  }
+
+  var newElement = childHandler.element;
+
+  // child handles may decide to skip elements
+  // by not returning anything
+  if (newElement !== undefined) {
+
+    if (propertyDesc.isMany) {
+      element.get(propertyDesc.name).push(newElement);
+    } else {
+      element.set(propertyDesc.name, newElement);
+    }
+
+    if (propertyDesc.isReference) {
+      assign(newElement, {
+        element: element
+      });
+
+      this.context.addReference(newElement);
+    } else {
+      // establish child -> parent relationship
+      newElement.$parent = element;
+    }
+  }
+
+  return childHandler;
+};
+
+
+function GenericElementHandler(model, type, context) {
+  this.model = model;
+  this.context = context;
+}
+
+GenericElementHandler.prototype = Object.create(BaseElementHandler.prototype);
+
+GenericElementHandler.prototype.createElement = function(node) {
+
+  var name = node.name,
+      prefix = node.prefix,
+      uri = node.ns[prefix],
+      attributes = node.attributes;
+
+  return this.model.createAny(name, uri, attributes);
+};
+
+GenericElementHandler.prototype.handleChild = function(node) {
+
+  var handler = new GenericElementHandler(this.model, 'Element', this.context).handleNode(node),
+      element = this.element;
+
+  var newElement = handler.element,
+      children;
+
+  if (newElement !== undefined) {
+    children = element.$children = element.$children || [];
+    children.push(newElement);
+
+    // establish child -> parent relationship
+    newElement.$parent = element;
+  }
+
+  return handler;
+};
+
+GenericElementHandler.prototype.handleText = function(text) {
+  this.body = this.body || '' + text;
+};
+
+GenericElementHandler.prototype.handleEnd = function() {
+  if (this.body) {
+    this.element.$body = this.body;
+  }
+};
+
+/**
+ * A reader for a meta-model
+ *
+ * @param {Object} options
+ * @param {Model} options.model used to read xml files
+ * @param {Boolean} options.lax whether to make parse errors warnings
+ */
+function XMLReader(options) {
+
+  if (options instanceof Moddle) {
+    options = {
+      model: options
+    };
+  }
+
+  assign(this, { lax: false }, options);
+}
+
+
+/**
+ * Parse the given XML into a moddle document tree.
+ *
+ * @param {String} xml
+ * @param {ElementHandler|Object} options or rootHandler
+ * @param  {Function} done
+ */
+XMLReader.prototype.fromXML = function(xml, options, done) {
+
+  var rootHandler = options.rootHandler;
+
+  if (options instanceof ElementHandler) {
+    // root handler passed via (xml, { rootHandler: ElementHandler }, ...)
+    rootHandler = options;
+    options = {};
+  } else {
+    if (typeof options === 'string') {
+      // rootHandler passed via (xml, 'someString', ...)
+      rootHandler = this.handler(options);
+      options = {};
+    } else if (typeof rootHandler === 'string') {
+      // rootHandler passed via (xml, { rootHandler: 'someString' }, ...)
+      rootHandler = this.handler(rootHandler);
+    }
+  }
+
+  var model = this.model,
+      lax = this.lax;
+
+  var context = new Context(assign({}, options, { rootHandler: rootHandler })),
+      parser = new SaxParser(true, { xmlns: true, trim: true }),
+      stack = new Stack();
+
+  rootHandler.context = context;
+
+  // push root handler
+  stack.push(rootHandler);
+
+
+  function resolveReferences() {
+
+    var elementsById = context.elementsById;
+    var references = context.references;
+
+    var i, r;
+
+    for (i = 0; !!(r = references[i]); i++) {
+      var element = r.element;
+      var reference = elementsById[r.id];
+      var property = getModdleDescriptor(element).propertiesByName[r.property];
+
+      if (!reference) {
+        context.addWarning({
+          message: 'unresolved reference <' + r.id + '>',
+          element: r.element,
+          property: r.property,
+          value: r.id
+        });
+      }
+
+      if (property.isMany) {
+        var collection = element.get(property.name),
+            idx = collection.indexOf(r);
+
+        // we replace an existing place holder (idx != -1) or
+        // append to the collection instead
+        if (idx === -1) {
+          idx = collection.length;
+        }
+
+        if (!reference) {
+          // remove unresolvable reference
+          collection.splice(idx, 1);
+        } else {
+          // add or update reference in collection
+          collection[idx] = reference;
+        }
+      } else {
+        element.set(property.name, reference);
+      }
+    }
+  }
+
+  function handleClose(tagName) {
+    stack.pop().handleEnd();
+  }
+
+  function handleOpen(node) {
+    var handler = stack.peek();
+
+    normalizeNamespaces(node, model);
+
+    try {
+      stack.push(handler.handleNode(node));
+    } catch (e) {
+
+      var line = this.line,
+          column = this.column;
+
+      var message =
+        'unparsable content <' + node.name + '> detected\n\t' +
+          'line: ' + line + '\n\t' +
+          'column: ' + column + '\n\t' +
+          'nested error: ' + e.message;
+
+      if (lax) {
+        context.addWarning({
+          message: message,
+          error: e
+        });
+
+        console.warn('could not parse node');
+        console.warn(e);
+
+        stack.push(new NoopHandler());
+      } else {
+        console.error('could not parse document');
+        console.error(e);
+
+        throw error(message);
+      }
+    }
+  }
+
+  function handleText(text) {
+    stack.peek().handleText(text);
+  }
+
+  parser.onopentag = handleOpen;
+  parser.oncdata = parser.ontext = handleText;
+  parser.onclosetag = handleClose;
+  parser.onend = resolveReferences;
+
+  // deferred parse XML to make loading really ascnchronous
+  // this ensures the execution environment (node or browser)
+  // is kept responsive and that certain optimization strategies
+  // can kick in
+  defer(function() {
+    var error;
+
+    try {
+      parser.write(xml).close();
+    } catch (e) {
+      error = e;
+    }
+
+    done(error, error ? undefined : rootHandler.element, context);
+  });
+};
+
+XMLReader.prototype.handler = function(name) {
+  return new ElementHandler(this.model, name);
+};
+
+module.exports = XMLReader;
+module.exports.ElementHandler = ElementHandler;
+},{"449":449,"450":450,"452":452,"453":453,"518":518,"525":525,"528":528,"529":529,"530":530,"535":535,"538":538}],527:[function(_dereq_,module,exports){
+'use strict';
+
+var map = _dereq_(451),
+    forEach = _dereq_(450),
+    isString = _dereq_(516),
+    filter = _dereq_(448),
+    assign = _dereq_(518);
+
+var Types = _dereq_(538),
+    parseNameNs = _dereq_(535).parseName,
+    common = _dereq_(525),
+    nameToAlias = common.nameToAlias,
+    serializeAsType = common.serializeAsType,
+    serializeAsProperty = common.serializeAsProperty;
+
+var XML_PREAMBLE = '<?xml version="1.0" encoding="UTF-8"?>\n',
+    ESCAPE_CHARS = /(<|>|'|"|&|\n\r|\n)/g,
+    DEFAULT_NS_MAP = common.DEFAULT_NS_MAP,
+    XSI_TYPE = common.XSI_TYPE;
+
+
+function nsName(ns) {
+  if (isString(ns)) {
+    return ns;
+  } else {
+    return (ns.prefix ? ns.prefix + ':' : '') + ns.localName;
+  }
+}
+
+function getNsAttrs(namespaces) {
+
+  function isUsed(ns) {
+    return namespaces.used[ns.uri];
+  }
+
+  function toAttr(ns) {
+    var name = 'xmlns' + (ns.prefix ? ':' + ns.prefix : '');
+    return { name: name, value: ns.uri };
+  }
+
+  var allNs = [].concat(namespaces.wellknown, namespaces.custom);
+
+  return map(filter(allNs, isUsed), toAttr);
+}
+
+function getElementNs(ns, descriptor) {
+  if (descriptor.isGeneric) {
+    return descriptor.name;
+  } else {
+    return assign({ localName: nameToAlias(descriptor.ns.localName, descriptor.$pkg) }, ns);
+  }
+}
+
+function getPropertyNs(ns, descriptor) {
+  return assign({ localName: descriptor.ns.localName }, ns);
+}
+
+function getSerializableProperties(element) {
+  var descriptor = element.$descriptor;
+
+  return filter(descriptor.properties, function(p) {
+    var name = p.name;
+
+    if (p.isVirtual) {
+      return false;
+    }
+
+    // do not serialize defaults
+    if (!element.hasOwnProperty(name)) {
+      return false;
+    }
+
+    var value = element[name];
+
+    // do not serialize default equals
+    if (value === p.default) {
+      return false;
+    }
+
+    // do not serialize null properties
+    if (value === null) {
+      return false;
+    }
+
+    return p.isMany ? value.length : true;
+  });
+}
+
+var ESCAPE_MAP = {
+  '\n': '10',
+  '\n\r': '10',
+  '"': '34',
+  '\'': '39',
+  '<': '60',
+  '>': '62',
+  '&': '38'
+};
+
+/**
+ * Escape a string attribute to not contain any bad values (line breaks, '"', ...)
+ *
+ * @param {String} str the string to escape
+ * @return {String} the escaped string
+ */
+function escapeAttr(str) {
+
+  // ensure we are handling strings here
+  str = isString(str) ? str : '' + str;
+
+  return str.replace(ESCAPE_CHARS, function(str) {
+    return '&#' + ESCAPE_MAP[str] + ';';
+  });
+}
+
+function filterAttributes(props) {
+  return filter(props, function(p) { return p.isAttr; });
+}
+
+function filterContained(props) {
+  return filter(props, function(p) { return !p.isAttr; });
+}
+
+
+function ReferenceSerializer(parent, ns) {
+  this.ns = ns;
+}
+
+ReferenceSerializer.prototype.build = function(element) {
+  this.element = element;
+  return this;
+};
+
+ReferenceSerializer.prototype.serializeTo = function(writer) {
+  writer
+    .appendIndent()
+    .append('<' + nsName(this.ns) + '>' + this.element.id + '</' + nsName(this.ns) + '>')
+    .appendNewLine();
+};
+
+function BodySerializer() {}
+
+BodySerializer.prototype.serializeValue = BodySerializer.prototype.serializeTo = function(writer) {
+  var escape = this.escape;
+
+  if (escape) {
+    writer.append('<![CDATA[');
+  }
+
+  writer.append(this.value);
+
+  if (escape) {
+    writer.append(']]>');
+  }
+};
+
+BodySerializer.prototype.build = function(prop, value) {
+  this.value = value;
+
+  if (prop.type === 'String' && value.search(ESCAPE_CHARS) !== -1) {
+    this.escape = true;
+  }
+
+  return this;
+};
+
+function ValueSerializer(ns) {
+  this.ns = ns;
+}
+
+ValueSerializer.prototype = new BodySerializer();
+
+ValueSerializer.prototype.serializeTo = function(writer) {
+
+  writer
+    .appendIndent()
+    .append('<' + nsName(this.ns) + '>');
+
+  this.serializeValue(writer);
+
+  writer
+    .append( '</' + nsName(this.ns) + '>')
+    .appendNewLine();
+};
+
+function ElementSerializer(parent, ns) {
+  this.body = [];
+  this.attrs = [];
+
+  this.parent = parent;
+  this.ns = ns;
+}
+
+ElementSerializer.prototype.build = function(element) {
+  this.element = element;
+
+  var otherAttrs = this.parseNsAttributes(element);
+
+  if (!this.ns) {
+    this.ns = this.nsTagName(element.$descriptor);
+  }
+
+  if (element.$descriptor.isGeneric) {
+    this.parseGeneric(element);
+  } else {
+    var properties = getSerializableProperties(element);
+
+    this.parseAttributes(filterAttributes(properties));
+    this.parseContainments(filterContained(properties));
+
+    this.parseGenericAttributes(element, otherAttrs);
+  }
+
+  return this;
+};
+
+ElementSerializer.prototype.nsTagName = function(descriptor) {
+  var effectiveNs = this.logNamespaceUsed(descriptor.ns);
+  return getElementNs(effectiveNs, descriptor);
+};
+
+ElementSerializer.prototype.nsPropertyTagName = function(descriptor) {
+  var effectiveNs = this.logNamespaceUsed(descriptor.ns);
+  return getPropertyNs(effectiveNs, descriptor);
+};
+
+ElementSerializer.prototype.isLocalNs = function(ns) {
+  return ns.uri === this.ns.uri;
+};
+
+/**
+ * Get the actual ns attribute name for the given element.
+ *
+ * @param {Object} element
+ * @param {Boolean} [inherited=false]
+ *
+ * @return {Object} nsName
+ */
+ElementSerializer.prototype.nsAttributeName = function(element) {
+
+  var ns;
+
+  if (isString(element)) {
+    ns = parseNameNs(element);
+  } else {
+    ns = element.ns;
+  }
+
+  // return just local name for inherited attributes
+  if (element.inherited) {
+    return { localName: ns.localName };
+  }
+
+  // parse + log effective ns
+  var effectiveNs = this.logNamespaceUsed(ns);
+
+  // strip prefix if same namespace like parent
+  if (this.isLocalNs(effectiveNs)) {
+    return { localName: ns.localName };
+  } else {
+    return assign({ localName: ns.localName }, effectiveNs);
+  }
+};
+
+ElementSerializer.prototype.parseGeneric = function(element) {
+
+  var self = this,
+      body = this.body,
+      attrs = this.attrs;
+
+  forEach(element, function(val, key) {
+
+    if (key === '$body') {
+      body.push(new BodySerializer().build({ type: 'String' }, val));
+    } else
+    if (key === '$children') {
+      forEach(val, function(child) {
+        body.push(new ElementSerializer(self).build(child));
+      });
+    } else
+    if (key.indexOf('$') !== 0) {
+      attrs.push({ name: key, value: escapeAttr(val) });
+    }
+  });
+};
+
+/**
+ * Parse namespaces and return a list of left over generic attributes
+ *
+ * @param  {Object} element
+ * @return {Array<Object>}
+ */
+ElementSerializer.prototype.parseNsAttributes = function(element) {
+  var self = this;
+
+  var genericAttrs = element.$attrs;
+
+  var model = element.$model;
+
+  var attributes = [];
+
+  // parse namespace attributes first
+  // and log them. push non namespace attributes to a list
+  // and process them later
+  forEach(genericAttrs, function(value, name) {
+    var nameNs = parseNameNs(name);
+
+    var ns;
+
+    // parse xmlns:foo="http://foo.bar"
+    if (nameNs.prefix === 'xmlns') {
+      ns = { prefix: nameNs.localName, uri: value };
+    }
+
+    // parse xmlns="http://foo.bar"
+    if (!nameNs.prefix && nameNs.localName === 'xmlns') {
+      ns = { uri: value };
+    }
+
+    if (ns) {
+      if (model.getPackage(value)) {
+        // register well known namespace
+        self.logNamespace(ns, true);
+      } else {
+        // log custom namespace directly as used
+        self.logNamespaceUsed(ns);
+      }
+    } else {
+      attributes.push({ name: name, value: value });
+    }
+  });
+
+  return attributes;
+};
+
+ElementSerializer.prototype.parseGenericAttributes = function(element, attributes) {
+
+  var self = this;
+
+  forEach(attributes, function(attr) {
+
+    // do not serialize xsi:type attribute
+    // it is set manually based on the actual implementation type
+    if (attr.name === XSI_TYPE) {
+      return;
+    }
+
+    try {
+      self.addAttribute(self.nsAttributeName(attr.name), attr.value);
+    } catch (e) {
+      console.warn(
+        'missing namespace information for ',
+        attr.name, '=', attr.value, 'on', element,
+        e);
+    }
+  });
+};
+
+ElementSerializer.prototype.parseContainments = function(properties) {
+
+  var self = this,
+      body = this.body,
+      element = this.element;
+
+  forEach(properties, function(p) {
+    var value = element.get(p.name),
+        isReference = p.isReference,
+        isMany = p.isMany;
+
+    var ns = self.nsPropertyTagName(p);
+
+    if (!isMany) {
+      value = [ value ];
+    }
+
+    if (p.isBody) {
+      body.push(new BodySerializer().build(p, value[0]));
+    } else
+    if (Types.isSimple(p.type)) {
+      forEach(value, function(v) {
+        body.push(new ValueSerializer(ns).build(p, v));
+      });
+    } else
+    if (isReference) {
+      forEach(value, function(v) {
+        body.push(new ReferenceSerializer(self, ns).build(v));
+      });
+    } else {
+      // allow serialization via type
+      // rather than element name
+      var asType = serializeAsType(p),
+          asProperty = serializeAsProperty(p);
+
+      forEach(value, function(v) {
+        var serializer;
+
+        if (asType) {
+          serializer = new TypeSerializer(self, ns);
+        } else
+        if (asProperty) {
+          serializer = new ElementSerializer(self, ns);
+        } else {
+          serializer = new ElementSerializer(self);
+        }
+
+        body.push(serializer.build(v));
+      });
+    }
+  });
+};
+
+ElementSerializer.prototype.getNamespaces = function() {
+
+  var namespaces = this.namespaces,
+      parent = this.parent;
+
+  if (!namespaces) {
+    namespaces = this.namespaces = parent ? parent.getNamespaces() : {
+      prefixMap: {},
+      uriMap: {},
+      used: {},
+      wellknown: [],
+      custom: []
+    };
+  }
+
+  return namespaces;
+};
+
+ElementSerializer.prototype.logNamespace = function(ns, wellknown) {
+  var namespaces = this.getNamespaces();
+
+  var nsUri = ns.uri;
+
+  var existing = namespaces.uriMap[nsUri];
+
+  if (!existing) {
+    namespaces.uriMap[nsUri] = ns;
+
+    if (wellknown) {
+      namespaces.wellknown.push(ns);
+    } else {
+      namespaces.custom.push(ns);
+    }
+  }
+
+  namespaces.prefixMap[ns.prefix] = nsUri;
+
+  return ns;
+};
+
+ElementSerializer.prototype.logNamespaceUsed = function(ns) {
+  var element = this.element,
+      model = element.$model,
+      namespaces = this.getNamespaces();
+
+  // ns may be
+  //
+  //   * prefix only
+  //   * prefix:uri
+
+  var prefix = ns.prefix;
+
+  var wellknownUri = DEFAULT_NS_MAP[prefix] || model && (model.getPackage(prefix) || {}).uri;
+
+  var uri = ns.uri || namespaces.prefixMap[prefix] || wellknownUri;
+
+  if (!uri) {
+    throw new Error('no namespace uri given for prefix <' + ns.prefix + '>');
+  }
+
+  ns = namespaces.uriMap[uri];
+
+  if (!ns) {
+    ns = this.logNamespace({ prefix: prefix, uri: uri }, wellknownUri);
+  }
+
+  if (!namespaces.used[ns.uri]) {
+    namespaces.used[ns.uri] = ns;
+  }
+
+  return ns;
+};
+
+ElementSerializer.prototype.parseAttributes = function(properties) {
+  var self = this,
+      element = this.element;
+
+  forEach(properties, function(p) {
+
+    var value = element.get(p.name);
+
+    if (p.isReference) {
+
+      if (!p.isMany) {
+        value = value.id;
+      }
+      else {
+        var values = [];
+        forEach(value, function(v) {
+          values.push(v.id);
+        });
+        // IDREFS is a whitespace-separated list of references.
+        value = values.join(' ');
+      }
+
+    }
+
+    self.addAttribute(self.nsAttributeName(p), value);
+  });
+};
+
+ElementSerializer.prototype.addAttribute = function(name, value) {
+  var attrs = this.attrs;
+
+  if (isString(value)) {
+    value = escapeAttr(value);
+  }
+
+  attrs.push({ name: name, value: value });
+};
+
+ElementSerializer.prototype.serializeAttributes = function(writer) {
+  var attrs = this.attrs,
+      root = !this.parent;
+
+  if (root) {
+    attrs = getNsAttrs(this.namespaces).concat(attrs);
+  }
+
+  forEach(attrs, function(a) {
+    writer
+      .append(' ')
+      .append(nsName(a.name)).append('="').append(a.value).append('"');
+  });
+};
+
+ElementSerializer.prototype.serializeTo = function(writer) {
+  var hasBody = this.body.length,
+      indent = !(this.body.length === 1 && this.body[0] instanceof BodySerializer);
+
+  writer
+    .appendIndent()
+    .append('<' + nsName(this.ns));
+
+  this.serializeAttributes(writer);
+
+  writer.append(hasBody ? '>' : ' />');
+
+  if (hasBody) {
+
+    if (indent) {
+      writer
+        .appendNewLine()
+        .indent();
+    }
+
+    forEach(this.body, function(b) {
+      b.serializeTo(writer);
+    });
+
+    if (indent) {
+      writer
+        .unindent()
+        .appendIndent();
+    }
+
+    writer.append('</' + nsName(this.ns) + '>');
+  }
+
+  writer.appendNewLine();
+};
+
+/**
+ * A serializer for types that handles serialization of data types
+ */
+function TypeSerializer(parent, ns) {
+  ElementSerializer.call(this, parent, ns);
+}
+
+TypeSerializer.prototype = new ElementSerializer();
+
+TypeSerializer.prototype.build = function(element) {
+  var descriptor = element.$descriptor;
+
+  this.element = element;
+
+  this.typeNs = this.nsTagName(descriptor);
+
+  // add xsi:type attribute to represent the elements
+  // actual type
+
+  var typeNs = this.typeNs,
+      pkg = element.$model.getPackage(typeNs.uri),
+      typePrefix = (pkg.xml && pkg.xml.typePrefix) || '';
+
+  this.addAttribute(this.nsAttributeName(XSI_TYPE),
+    (typeNs.prefix ? typeNs.prefix + ':' : '') +
+    typePrefix + descriptor.ns.localName);
+
+  // do the usual stuff
+  return ElementSerializer.prototype.build.call(this, element);
+};
+
+TypeSerializer.prototype.isLocalNs = function(ns) {
+  return ns.uri === this.typeNs.uri;
+};
+
+function SavingWriter() {
+  this.value = '';
+
+  this.write = function(str) {
+    this.value += str;
+  };
+}
+
+function FormatingWriter(out, format) {
+
+  var indent = [''];
+
+  this.append = function(str) {
+    out.write(str);
+
+    return this;
+  };
+
+  this.appendNewLine = function() {
+    if (format) {
+      out.write('\n');
+    }
+
+    return this;
+  };
+
+  this.appendIndent = function() {
+    if (format) {
+      out.write(indent.join('  '));
+    }
+
+    return this;
+  };
+
+  this.indent = function() {
+    indent.push('');
+    return this;
+  };
+
+  this.unindent = function() {
+    indent.pop();
+    return this;
+  };
+}
+
+/**
+ * A writer for meta-model backed document trees
+ *
+ * @param {Object} options output options to pass into the writer
+ */
+function XMLWriter(options) {
+
+  options = assign({ format: false, preamble: true }, options || {});
+
+  function toXML(tree, writer) {
+    var internalWriter = writer || new SavingWriter();
+    var formatingWriter = new FormatingWriter(internalWriter, options.format);
+
+    if (options.preamble) {
+      formatingWriter.append(XML_PREAMBLE);
+    }
+
+    new ElementSerializer().build(tree).serializeTo(formatingWriter);
+
+    if (!writer) {
+      return internalWriter.value;
+    }
+  }
+
+  return {
+    toXML: toXML
+  };
+}
+
+module.exports = XMLWriter;
+
+},{"448":448,"450":450,"451":451,"516":516,"518":518,"525":525,"535":535,"538":538}],528:[function(_dereq_,module,exports){
+(function (Buffer){
+// wrapper for non-node envs
+;(function (sax) {
+
+sax.parser = function (strict, opt) { return new SAXParser(strict, opt) }
+sax.SAXParser = SAXParser
+sax.SAXStream = SAXStream
+sax.createStream = createStream
+
+// When we pass the MAX_BUFFER_LENGTH position, start checking for buffer overruns.
+// When we check, schedule the next check for MAX_BUFFER_LENGTH - (max(buffer lengths)),
+// since that's the earliest that a buffer overrun could occur.  This way, checks are
+// as rare as required, but as often as necessary to ensure never crossing this bound.
+// Furthermore, buffers are only tested at most once per write(), so passing a very
+// large string into write() might have undesirable effects, but this is manageable by
+// the caller, so it is assumed to be safe.  Thus, a call to write() may, in the extreme
+// edge case, result in creating at most one complete copy of the string passed in.
+// Set to Infinity to have unlimited buffers.
+sax.MAX_BUFFER_LENGTH = 64 * 1024
+
+var buffers = [
+  "comment", "sgmlDecl", "textNode", "tagName", "doctype",
+  "procInstName", "procInstBody", "entity", "attribName",
+  "attribValue", "cdata", "script"
+]
+
+sax.EVENTS = // for discoverability.
+  [ "text"
+  , "processinginstruction"
+  , "sgmldeclaration"
+  , "doctype"
+  , "comment"
+  , "attribute"
+  , "opentag"
+  , "closetag"
+  , "opencdata"
+  , "cdata"
+  , "closecdata"
+  , "error"
+  , "end"
+  , "ready"
+  , "script"
+  , "opennamespace"
+  , "closenamespace"
+  ]
+
+function SAXParser (strict, opt) {
+  if (!(this instanceof SAXParser)) return new SAXParser(strict, opt)
+
+  var parser = this
+  clearBuffers(parser)
+  parser.q = parser.c = ""
+  parser.bufferCheckPosition = sax.MAX_BUFFER_LENGTH
+  parser.opt = opt || {}
+  parser.opt.lowercase = parser.opt.lowercase || parser.opt.lowercasetags
+  parser.looseCase = parser.opt.lowercase ? "toLowerCase" : "toUpperCase"
+  parser.tags = []
+  parser.closed = parser.closedRoot = parser.sawRoot = false
+  parser.tag = parser.error = null
+  parser.strict = !!strict
+  parser.noscript = !!(strict || parser.opt.noscript)
+  parser.state = S.BEGIN
+  parser.ENTITIES = Object.create(sax.ENTITIES)
+  parser.attribList = []
+
+  // namespaces form a prototype chain.
+  // it always points at the current tag,
+  // which protos to its parent tag.
+  if (parser.opt.xmlns) parser.ns = Object.create(rootNS)
+
+  // mostly just for error reporting
+  parser.trackPosition = parser.opt.position !== false
+  if (parser.trackPosition) {
+    parser.position = parser.line = parser.column = 0
+  }
+  emit(parser, "onready")
+}
+
+if (!Object.create) Object.create = function (o) {
+  function f () { this.__proto__ = o }
+  f.prototype = o
+  return new f
+}
+
+if (!Object.getPrototypeOf) Object.getPrototypeOf = function (o) {
+  return o.__proto__
+}
+
+if (!Object.keys) Object.keys = function (o) {
+  var a = []
+  for (var i in o) if (o.hasOwnProperty(i)) a.push(i)
+  return a
+}
+
+function checkBufferLength (parser) {
+  var maxAllowed = Math.max(sax.MAX_BUFFER_LENGTH, 10)
+    , maxActual = 0
+  for (var i = 0, l = buffers.length; i < l; i ++) {
+    var len = parser[buffers[i]].length
+    if (len > maxAllowed) {
+      // Text/cdata nodes can get big, and since they're buffered,
+      // we can get here under normal conditions.
+      // Avoid issues by emitting the text node now,
+      // so at least it won't get any bigger.
+      switch (buffers[i]) {
+        case "textNode":
+          closeText(parser)
+        break
+
+        case "cdata":
+          emitNode(parser, "oncdata", parser.cdata)
+          parser.cdata = ""
+        break
+
+        case "script":
+          emitNode(parser, "onscript", parser.script)
+          parser.script = ""
+        break
+
+        default:
+          error(parser, "Max buffer length exceeded: "+buffers[i])
+      }
+    }
+    maxActual = Math.max(maxActual, len)
+  }
+  // schedule the next check for the earliest possible buffer overrun.
+  parser.bufferCheckPosition = (sax.MAX_BUFFER_LENGTH - maxActual)
+                             + parser.position
+}
+
+function clearBuffers (parser) {
+  for (var i = 0, l = buffers.length; i < l; i ++) {
+    parser[buffers[i]] = ""
+  }
+}
+
+function flushBuffers (parser) {
+  closeText(parser)
+  if (parser.cdata !== "") {
+    emitNode(parser, "oncdata", parser.cdata)
+    parser.cdata = ""
+  }
+  if (parser.script !== "") {
+    emitNode(parser, "onscript", parser.script)
+    parser.script = ""
+  }
+}
+
+SAXParser.prototype =
+  { end: function () { end(this) }
+  , write: write
+  , resume: function () { this.error = null; return this }
+  , close: function () { return this.write(null) }
+  , flush: function () { flushBuffers(this) }
+  }
+
+try {
+  var Stream = _dereq_("stream").Stream
+} catch (ex) {
+  var Stream = function () {}
+}
+
+
+var streamWraps = sax.EVENTS.filter(function (ev) {
+  return ev !== "error" && ev !== "end"
+})
+
+function createStream (strict, opt) {
+  return new SAXStream(strict, opt)
+}
+
+function SAXStream (strict, opt) {
+  if (!(this instanceof SAXStream)) return new SAXStream(strict, opt)
+
+  Stream.apply(this)
+
+  this._parser = new SAXParser(strict, opt)
+  this.writable = true
+  this.readable = true
+
+
+  var me = this
+
+  this._parser.onend = function () {
+    me.emit("end")
+  }
+
+  this._parser.onerror = function (er) {
+    me.emit("error", er)
+
+    // if didn't throw, then means error was handled.
+    // go ahead and clear error, so we can write again.
+    me._parser.error = null
+  }
+
+  this._decoder = null;
+
+  streamWraps.forEach(function (ev) {
+    Object.defineProperty(me, "on" + ev, {
+      get: function () { return me._parser["on" + ev] },
+      set: function (h) {
+        if (!h) {
+          me.removeAllListeners(ev)
+          return me._parser["on"+ev] = h
+        }
+        me.on(ev, h)
+      },
+      enumerable: true,
+      configurable: false
+    })
+  })
+}
+
+SAXStream.prototype = Object.create(Stream.prototype,
+  { constructor: { value: SAXStream } })
+
+SAXStream.prototype.write = function (data) {
+  if (typeof Buffer === 'function' &&
+      typeof Buffer.isBuffer === 'function' &&
+      Buffer.isBuffer(data)) {
+    if (!this._decoder) {
+      var SD = _dereq_('string_decoder').StringDecoder
+      this._decoder = new SD('utf8')
+    }
+    data = this._decoder.write(data);
+  }
+
+  this._parser.write(data.toString())
+  this.emit("data", data)
+  return true
+}
+
+SAXStream.prototype.end = function (chunk) {
+  if (chunk && chunk.length) this.write(chunk)
+  this._parser.end()
+  return true
+}
+
+SAXStream.prototype.on = function (ev, handler) {
+  var me = this
+  if (!me._parser["on"+ev] && streamWraps.indexOf(ev) !== -1) {
+    me._parser["on"+ev] = function () {
+      var args = arguments.length === 1 ? [arguments[0]]
+               : Array.apply(null, arguments)
+      args.splice(0, 0, ev)
+      me.emit.apply(me, args)
+    }
+  }
+
+  return Stream.prototype.on.call(me, ev, handler)
+}
+
+
+
+// character classes and tokens
+var whitespace = "\r\n\t "
+  // this really needs to be replaced with character classes.
+  // XML allows all manner of ridiculous numbers and digits.
+  , number = "0124356789"
+  , letter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  // (Letter | "_" | ":")
+  , quote = "'\""
+  , entity = number+letter+"#"
+  , attribEnd = whitespace + ">"
+  , CDATA = "[CDATA["
+  , DOCTYPE = "DOCTYPE"
+  , XML_NAMESPACE = "http://www.w3.org/XML/1998/namespace"
+  , XMLNS_NAMESPACE = "http://www.w3.org/2000/xmlns/"
+  , rootNS = { xml: XML_NAMESPACE, xmlns: XMLNS_NAMESPACE }
+
+// turn all the string character sets into character class objects.
+whitespace = charClass(whitespace)
+number = charClass(number)
+letter = charClass(letter)
+
+// http://www.w3.org/TR/REC-xml/#NT-NameStartChar
+// This implementation works on strings, a single character at a time
+// as such, it cannot ever support astral-plane characters (10000-EFFFF)
+// without a significant breaking change to either this  parser, or the
+// JavaScript language.  Implementation of an emoji-capable xml parser
+// is left as an exercise for the reader.
+var nameStart = /[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/
+
+var nameBody = /[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u00B7\u0300-\u036F\u203F-\u2040\.\d-]/
+
+quote = charClass(quote)
+entity = charClass(entity)
+attribEnd = charClass(attribEnd)
+
+function charClass (str) {
+  return str.split("").reduce(function (s, c) {
+    s[c] = true
+    return s
+  }, {})
+}
+
+function isRegExp (c) {
+  return Object.prototype.toString.call(c) === '[object RegExp]'
+}
+
+function is (charclass, c) {
+  return isRegExp(charclass) ? !!c.match(charclass) : charclass[c]
+}
+
+function not (charclass, c) {
+  return !is(charclass, c)
+}
+
+var S = 0
+sax.STATE =
+{ BEGIN                     : S++
+, TEXT                      : S++ // general stuff
+, TEXT_ENTITY               : S++ // &amp and such.
+, OPEN_WAKA                 : S++ // <
+, SGML_DECL                 : S++ // <!BLARG
+, SGML_DECL_QUOTED          : S++ // <!BLARG foo "bar
+, DOCTYPE                   : S++ // <!DOCTYPE
+, DOCTYPE_QUOTED            : S++ // <!DOCTYPE "//blah
+, DOCTYPE_DTD               : S++ // <!DOCTYPE "//blah" [ ...
+, DOCTYPE_DTD_QUOTED        : S++ // <!DOCTYPE "//blah" [ "foo
+, COMMENT_STARTING          : S++ // <!-
+, COMMENT                   : S++ // <!--
+, COMMENT_ENDING            : S++ // <!-- blah -
+, COMMENT_ENDED             : S++ // <!-- blah --
+, CDATA                     : S++ // <![CDATA[ something
+, CDATA_ENDING              : S++ // ]
+, CDATA_ENDING_2            : S++ // ]]
+, PROC_INST                 : S++ // <?hi
+, PROC_INST_BODY            : S++ // <?hi there
+, PROC_INST_ENDING          : S++ // <?hi "there" ?
+, OPEN_TAG                  : S++ // <strong
+, OPEN_TAG_SLASH            : S++ // <strong /
+, ATTRIB                    : S++ // <a
+, ATTRIB_NAME               : S++ // <a foo
+, ATTRIB_NAME_SAW_WHITE     : S++ // <a foo _
+, ATTRIB_VALUE              : S++ // <a foo=
+, ATTRIB_VALUE_QUOTED       : S++ // <a foo="bar
+, ATTRIB_VALUE_CLOSED       : S++ // <a foo="bar"
+, ATTRIB_VALUE_UNQUOTED     : S++ // <a foo=bar
+, ATTRIB_VALUE_ENTITY_Q     : S++ // <foo bar="&quot;"
+, ATTRIB_VALUE_ENTITY_U     : S++ // <foo bar=&quot;
+, CLOSE_TAG                 : S++ // </a
+, CLOSE_TAG_SAW_WHITE       : S++ // </a   >
+, SCRIPT                    : S++ // <script> ...
+, SCRIPT_ENDING             : S++ // <script> ... <
+}
+
+sax.ENTITIES =
+{ "amp" : "&"
+, "gt" : ">"
+, "lt" : "<"
+, "quot" : "\""
+, "apos" : "'"
+, "AElig" : 198
+, "Aacute" : 193
+, "Acirc" : 194
+, "Agrave" : 192
+, "Aring" : 197
+, "Atilde" : 195
+, "Auml" : 196
+, "Ccedil" : 199
+, "ETH" : 208
+, "Eacute" : 201
+, "Ecirc" : 202
+, "Egrave" : 200
+, "Euml" : 203
+, "Iacute" : 205
+, "Icirc" : 206
+, "Igrave" : 204
+, "Iuml" : 207
+, "Ntilde" : 209
+, "Oacute" : 211
+, "Ocirc" : 212
+, "Ograve" : 210
+, "Oslash" : 216
+, "Otilde" : 213
+, "Ouml" : 214
+, "THORN" : 222
+, "Uacute" : 218
+, "Ucirc" : 219
+, "Ugrave" : 217
+, "Uuml" : 220
+, "Yacute" : 221
+, "aacute" : 225
+, "acirc" : 226
+, "aelig" : 230
+, "agrave" : 224
+, "aring" : 229
+, "atilde" : 227
+, "auml" : 228
+, "ccedil" : 231
+, "eacute" : 233
+, "ecirc" : 234
+, "egrave" : 232
+, "eth" : 240
+, "euml" : 235
+, "iacute" : 237
+, "icirc" : 238
+, "igrave" : 236
+, "iuml" : 239
+, "ntilde" : 241
+, "oacute" : 243
+, "ocirc" : 244
+, "ograve" : 242
+, "oslash" : 248
+, "otilde" : 245
+, "ouml" : 246
+, "szlig" : 223
+, "thorn" : 254
+, "uacute" : 250
+, "ucirc" : 251
+, "ugrave" : 249
+, "uuml" : 252
+, "yacute" : 253
+, "yuml" : 255
+, "copy" : 169
+, "reg" : 174
+, "nbsp" : 160
+, "iexcl" : 161
+, "cent" : 162
+, "pound" : 163
+, "curren" : 164
+, "yen" : 165
+, "brvbar" : 166
+, "sect" : 167
+, "uml" : 168
+, "ordf" : 170
+, "laquo" : 171
+, "not" : 172
+, "shy" : 173
+, "macr" : 175
+, "deg" : 176
+, "plusmn" : 177
+, "sup1" : 185
+, "sup2" : 178
+, "sup3" : 179
+, "acute" : 180
+, "micro" : 181
+, "para" : 182
+, "middot" : 183
+, "cedil" : 184
+, "ordm" : 186
+, "raquo" : 187
+, "frac14" : 188
+, "frac12" : 189
+, "frac34" : 190
+, "iquest" : 191
+, "times" : 215
+, "divide" : 247
+, "OElig" : 338
+, "oelig" : 339
+, "Scaron" : 352
+, "scaron" : 353
+, "Yuml" : 376
+, "fnof" : 402
+, "circ" : 710
+, "tilde" : 732
+, "Alpha" : 913
+, "Beta" : 914
+, "Gamma" : 915
+, "Delta" : 916
+, "Epsilon" : 917
+, "Zeta" : 918
+, "Eta" : 919
+, "Theta" : 920
+, "Iota" : 921
+, "Kappa" : 922
+, "Lambda" : 923
+, "Mu" : 924
+, "Nu" : 925
+, "Xi" : 926
+, "Omicron" : 927
+, "Pi" : 928
+, "Rho" : 929
+, "Sigma" : 931
+, "Tau" : 932
+, "Upsilon" : 933
+, "Phi" : 934
+, "Chi" : 935
+, "Psi" : 936
+, "Omega" : 937
+, "alpha" : 945
+, "beta" : 946
+, "gamma" : 947
+, "delta" : 948
+, "epsilon" : 949
+, "zeta" : 950
+, "eta" : 951
+, "theta" : 952
+, "iota" : 953
+, "kappa" : 954
+, "lambda" : 955
+, "mu" : 956
+, "nu" : 957
+, "xi" : 958
+, "omicron" : 959
+, "pi" : 960
+, "rho" : 961
+, "sigmaf" : 962
+, "sigma" : 963
+, "tau" : 964
+, "upsilon" : 965
+, "phi" : 966
+, "chi" : 967
+, "psi" : 968
+, "omega" : 969
+, "thetasym" : 977
+, "upsih" : 978
+, "piv" : 982
+, "ensp" : 8194
+, "emsp" : 8195
+, "thinsp" : 8201
+, "zwnj" : 8204
+, "zwj" : 8205
+, "lrm" : 8206
+, "rlm" : 8207
+, "ndash" : 8211
+, "mdash" : 8212
+, "lsquo" : 8216
+, "rsquo" : 8217
+, "sbquo" : 8218
+, "ldquo" : 8220
+, "rdquo" : 8221
+, "bdquo" : 8222
+, "dagger" : 8224
+, "Dagger" : 8225
+, "bull" : 8226
+, "hellip" : 8230
+, "permil" : 8240
+, "prime" : 8242
+, "Prime" : 8243
+, "lsaquo" : 8249
+, "rsaquo" : 8250
+, "oline" : 8254
+, "frasl" : 8260
+, "euro" : 8364
+, "image" : 8465
+, "weierp" : 8472
+, "real" : 8476
+, "trade" : 8482
+, "alefsym" : 8501
+, "larr" : 8592
+, "uarr" : 8593
+, "rarr" : 8594
+, "darr" : 8595
+, "harr" : 8596
+, "crarr" : 8629
+, "lArr" : 8656
+, "uArr" : 8657
+, "rArr" : 8658
+, "dArr" : 8659
+, "hArr" : 8660
+, "forall" : 8704
+, "part" : 8706
+, "exist" : 8707
+, "empty" : 8709
+, "nabla" : 8711
+, "isin" : 8712
+, "notin" : 8713
+, "ni" : 8715
+, "prod" : 8719
+, "sum" : 8721
+, "minus" : 8722
+, "lowast" : 8727
+, "radic" : 8730
+, "prop" : 8733
+, "infin" : 8734
+, "ang" : 8736
+, "and" : 8743
+, "or" : 8744
+, "cap" : 8745
+, "cup" : 8746
+, "int" : 8747
+, "there4" : 8756
+, "sim" : 8764
+, "cong" : 8773
+, "asymp" : 8776
+, "ne" : 8800
+, "equiv" : 8801
+, "le" : 8804
+, "ge" : 8805
+, "sub" : 8834
+, "sup" : 8835
+, "nsub" : 8836
+, "sube" : 8838
+, "supe" : 8839
+, "oplus" : 8853
+, "otimes" : 8855
+, "perp" : 8869
+, "sdot" : 8901
+, "lceil" : 8968
+, "rceil" : 8969
+, "lfloor" : 8970
+, "rfloor" : 8971
+, "lang" : 9001
+, "rang" : 9002
+, "loz" : 9674
+, "spades" : 9824
+, "clubs" : 9827
+, "hearts" : 9829
+, "diams" : 9830
+}
+
+Object.keys(sax.ENTITIES).forEach(function (key) {
+    var e = sax.ENTITIES[key]
+    var s = typeof e === 'number' ? String.fromCharCode(e) : e
+    sax.ENTITIES[key] = s
+})
+
+for (var S in sax.STATE) sax.STATE[sax.STATE[S]] = S
+
+// shorthand
+S = sax.STATE
+
+function emit (parser, event, data) {
+  parser[event] && parser[event](data)
+}
+
+function emitNode (parser, nodeType, data) {
+  if (parser.textNode) closeText(parser)
+  emit(parser, nodeType, data)
+}
+
+function closeText (parser) {
+  parser.textNode = textopts(parser.opt, parser.textNode)
+  if (parser.textNode) emit(parser, "ontext", parser.textNode)
+  parser.textNode = ""
+}
+
+function textopts (opt, text) {
+  if (opt.trim) text = text.trim()
+  if (opt.normalize) text = text.replace(/\s+/g, " ")
+  return text
+}
+
+function error (parser, er) {
+  closeText(parser)
+  if (parser.trackPosition) {
+    er += "\nLine: "+parser.line+
+          "\nColumn: "+parser.column+
+          "\nChar: "+parser.c
+  }
+  er = new Error(er)
+  parser.error = er
+  emit(parser, "onerror", er)
+  return parser
+}
+
+function end (parser) {
+  if (!parser.closedRoot) strictFail(parser, "Unclosed root tag")
+  if ((parser.state !== S.BEGIN) && (parser.state !== S.TEXT)) error(parser, "Unexpected end")
+  closeText(parser)
+  parser.c = ""
+  parser.closed = true
+  emit(parser, "onend")
+  SAXParser.call(parser, parser.strict, parser.opt)
+  return parser
+}
+
+function strictFail (parser, message) {
+  if (typeof parser !== 'object' || !(parser instanceof SAXParser))
+    throw new Error('bad call to strictFail');
+  if (parser.strict) error(parser, message)
+}
+
+function newTag (parser) {
+  if (!parser.strict) parser.tagName = parser.tagName[parser.looseCase]()
+  var parent = parser.tags[parser.tags.length - 1] || parser
+    , tag = parser.tag = { name : parser.tagName, attributes : {} }
+
+  // will be overridden if tag contails an xmlns="foo" or xmlns:foo="bar"
+  if (parser.opt.xmlns) tag.ns = parent.ns
+  parser.attribList.length = 0
+}
+
+function qname (name, attribute) {
+  var i = name.indexOf(":")
+    , qualName = i < 0 ? [ "", name ] : name.split(":")
+    , prefix = qualName[0]
+    , local = qualName[1]
+
+  // <x "xmlns"="http://foo">
+  if (attribute && name === "xmlns") {
+    prefix = "xmlns"
+    local = ""
+  }
+
+  return { prefix: prefix, local: local }
+}
+
+function attrib (parser) {
+  if (!parser.strict) parser.attribName = parser.attribName[parser.looseCase]()
+
+  if (parser.attribList.indexOf(parser.attribName) !== -1 ||
+      parser.tag.attributes.hasOwnProperty(parser.attribName)) {
+    return parser.attribName = parser.attribValue = ""
+  }
+
+  if (parser.opt.xmlns) {
+    var qn = qname(parser.attribName, true)
+      , prefix = qn.prefix
+      , local = qn.local
+
+    if (prefix === "xmlns") {
+      // namespace binding attribute; push the binding into scope
+      if (local === "xml" && parser.attribValue !== XML_NAMESPACE) {
+        strictFail( parser
+                  , "xml: prefix must be bound to " + XML_NAMESPACE + "\n"
+                  + "Actual: " + parser.attribValue )
+      } else if (local === "xmlns" && parser.attribValue !== XMLNS_NAMESPACE) {
+        strictFail( parser
+                  , "xmlns: prefix must be bound to " + XMLNS_NAMESPACE + "\n"
+                  + "Actual: " + parser.attribValue )
+      } else {
+        var tag = parser.tag
+          , parent = parser.tags[parser.tags.length - 1] || parser
+        if (tag.ns === parent.ns) {
+          tag.ns = Object.create(parent.ns)
+        }
+        tag.ns[local] = parser.attribValue
+      }
+    }
+
+    // defer onattribute events until all attributes have been seen
+    // so any new bindings can take effect; preserve attribute order
+    // so deferred events can be emitted in document order
+    parser.attribList.push([parser.attribName, parser.attribValue])
+  } else {
+    // in non-xmlns mode, we can emit the event right away
+    parser.tag.attributes[parser.attribName] = parser.attribValue
+    emitNode( parser
+            , "onattribute"
+            , { name: parser.attribName
+              , value: parser.attribValue } )
+  }
+
+  parser.attribName = parser.attribValue = ""
+}
+
+function openTag (parser, selfClosing) {
+  if (parser.opt.xmlns) {
+    // emit namespace binding events
+    var tag = parser.tag
+
+    // add namespace info to tag
+    var qn = qname(parser.tagName)
+    tag.prefix = qn.prefix
+    tag.local = qn.local
+    tag.uri = tag.ns[qn.prefix] || ""
+
+    if (tag.prefix && !tag.uri) {
+      strictFail(parser, "Unbound namespace prefix: "
+                       + JSON.stringify(parser.tagName))
+      tag.uri = qn.prefix
+    }
+
+    var parent = parser.tags[parser.tags.length - 1] || parser
+    if (tag.ns && parent.ns !== tag.ns) {
+      Object.keys(tag.ns).forEach(function (p) {
+        emitNode( parser
+                , "onopennamespace"
+                , { prefix: p , uri: tag.ns[p] } )
+      })
+    }
+
+    // handle deferred onattribute events
+    // Note: do not apply default ns to attributes:
+    //   http://www.w3.org/TR/REC-xml-names/#defaulting
+    for (var i = 0, l = parser.attribList.length; i < l; i ++) {
+      var nv = parser.attribList[i]
+      var name = nv[0]
+        , value = nv[1]
+        , qualName = qname(name, true)
+        , prefix = qualName.prefix
+        , local = qualName.local
+        , uri = prefix == "" ? "" : (tag.ns[prefix] || "")
+        , a = { name: name
+              , value: value
+              , prefix: prefix
+              , local: local
+              , uri: uri
+              }
+
+      // if there's any attributes with an undefined namespace,
+      // then fail on them now.
+      if (prefix && prefix != "xmlns" && !uri) {
+        strictFail(parser, "Unbound namespace prefix: "
+                         + JSON.stringify(prefix))
+        a.uri = prefix
+      }
+      parser.tag.attributes[name] = a
+      emitNode(parser, "onattribute", a)
+    }
+    parser.attribList.length = 0
+  }
+
+  parser.tag.isSelfClosing = !!selfClosing
+
+  // process the tag
+  parser.sawRoot = true
+  parser.tags.push(parser.tag)
+  emitNode(parser, "onopentag", parser.tag)
+  if (!selfClosing) {
+    // special case for <script> in non-strict mode.
+    if (!parser.noscript && parser.tagName.toLowerCase() === "script") {
+      parser.state = S.SCRIPT
+    } else {
+      parser.state = S.TEXT
+    }
+    parser.tag = null
+    parser.tagName = ""
+  }
+  parser.attribName = parser.attribValue = ""
+  parser.attribList.length = 0
+}
+
+function closeTag (parser) {
+  if (!parser.tagName) {
+    strictFail(parser, "Weird empty close tag.")
+    parser.textNode += "</>"
+    parser.state = S.TEXT
+    return
+  }
+
+  if (parser.script) {
+    if (parser.tagName !== "script") {
+      parser.script += "</" + parser.tagName + ">"
+      parser.tagName = ""
+      parser.state = S.SCRIPT
+      return
+    }
+    emitNode(parser, "onscript", parser.script)
+    parser.script = ""
+  }
+
+  // first make sure that the closing tag actually exists.
+  // <a><b></c></b></a> will close everything, otherwise.
+  var t = parser.tags.length
+  var tagName = parser.tagName
+  if (!parser.strict) tagName = tagName[parser.looseCase]()
+  var closeTo = tagName
+  while (t --) {
+    var close = parser.tags[t]
+    if (close.name !== closeTo) {
+      // fail the first time in strict mode
+      strictFail(parser, "Unexpected close tag")
+    } else break
+  }
+
+  // didn't find it.  we already failed for strict, so just abort.
+  if (t < 0) {
+    strictFail(parser, "Unmatched closing tag: "+parser.tagName)
+    parser.textNode += "</" + parser.tagName + ">"
+    parser.state = S.TEXT
+    return
+  }
+  parser.tagName = tagName
+  var s = parser.tags.length
+  while (s --> t) {
+    var tag = parser.tag = parser.tags.pop()
+    parser.tagName = parser.tag.name
+    emitNode(parser, "onclosetag", parser.tagName)
+
+    var x = {}
+    for (var i in tag.ns) x[i] = tag.ns[i]
+
+    var parent = parser.tags[parser.tags.length - 1] || parser
+    if (parser.opt.xmlns && tag.ns !== parent.ns) {
+      // remove namespace bindings introduced by tag
+      Object.keys(tag.ns).forEach(function (p) {
+        var n = tag.ns[p]
+        emitNode(parser, "onclosenamespace", { prefix: p, uri: n })
+      })
+    }
+  }
+  if (t === 0) parser.closedRoot = true
+  parser.tagName = parser.attribValue = parser.attribName = ""
+  parser.attribList.length = 0
+  parser.state = S.TEXT
+}
+
+function parseEntity (parser) {
+  var entity = parser.entity
+    , entityLC = entity.toLowerCase()
+    , num
+    , numStr = ""
+  if (parser.ENTITIES[entity])
+    return parser.ENTITIES[entity]
+  if (parser.ENTITIES[entityLC])
+    return parser.ENTITIES[entityLC]
+  entity = entityLC
+  if (entity.charAt(0) === "#") {
+    if (entity.charAt(1) === "x") {
+      entity = entity.slice(2)
+      num = parseInt(entity, 16)
+      numStr = num.toString(16)
+    } else {
+      entity = entity.slice(1)
+      num = parseInt(entity, 10)
+      numStr = num.toString(10)
+    }
+  }
+  entity = entity.replace(/^0+/, "")
+  if (numStr.toLowerCase() !== entity) {
+    strictFail(parser, "Invalid character entity")
+    return "&"+parser.entity + ";"
+  }
+
+  return String.fromCodePoint(num)
+}
+
+function write (chunk) {
+  var parser = this
+  if (this.error) throw this.error
+  if (parser.closed) return error(parser,
+    "Cannot write after close. Assign an onready handler.")
+  if (chunk === null) return end(parser)
+  var i = 0, c = ""
+  while (parser.c = c = chunk.charAt(i++)) {
+    if (parser.trackPosition) {
+      parser.position ++
+      if (c === "\n") {
+        parser.line ++
+        parser.column = 0
+      } else parser.column ++
+    }
+    switch (parser.state) {
+
+      case S.BEGIN:
+        if (c === "<") {
+          parser.state = S.OPEN_WAKA
+          parser.startTagPosition = parser.position
+        } else if (not(whitespace,c)) {
+          // have to process this as a text node.
+          // weird, but happens.
+          strictFail(parser, "Non-whitespace before first tag.")
+          parser.textNode = c
+          parser.state = S.TEXT
+        }
+      continue
+
+      case S.TEXT:
+        if (parser.sawRoot && !parser.closedRoot) {
+          var starti = i-1
+          while (c && c!=="<" && c!=="&") {
+            c = chunk.charAt(i++)
+            if (c && parser.trackPosition) {
+              parser.position ++
+              if (c === "\n") {
+                parser.line ++
+                parser.column = 0
+              } else parser.column ++
+            }
+          }
+          parser.textNode += chunk.substring(starti, i-1)
+        }
+        if (c === "<") {
+          parser.state = S.OPEN_WAKA
+          parser.startTagPosition = parser.position
+        } else {
+          if (not(whitespace, c) && (!parser.sawRoot || parser.closedRoot))
+            strictFail(parser, "Text data outside of root node.")
+          if (c === "&") parser.state = S.TEXT_ENTITY
+          else parser.textNode += c
+        }
+      continue
+
+      case S.SCRIPT:
+        // only non-strict
+        if (c === "<") {
+          parser.state = S.SCRIPT_ENDING
+        } else parser.script += c
+      continue
+
+      case S.SCRIPT_ENDING:
+        if (c === "/") {
+          parser.state = S.CLOSE_TAG
+        } else {
+          parser.script += "<" + c
+          parser.state = S.SCRIPT
+        }
+      continue
+
+      case S.OPEN_WAKA:
+        // either a /, ?, !, or text is coming next.
+        if (c === "!") {
+          parser.state = S.SGML_DECL
+          parser.sgmlDecl = ""
+        } else if (is(whitespace, c)) {
+          // wait for it...
+        } else if (is(nameStart,c)) {
+          parser.state = S.OPEN_TAG
+          parser.tagName = c
+        } else if (c === "/") {
+          parser.state = S.CLOSE_TAG
+          parser.tagName = ""
+        } else if (c === "?") {
+          parser.state = S.PROC_INST
+          parser.procInstName = parser.procInstBody = ""
+        } else {
+          strictFail(parser, "Unencoded <")
+          // if there was some whitespace, then add that in.
+          if (parser.startTagPosition + 1 < parser.position) {
+            var pad = parser.position - parser.startTagPosition
+            c = new Array(pad).join(" ") + c
+          }
+          parser.textNode += "<" + c
+          parser.state = S.TEXT
+        }
+      continue
+
+      case S.SGML_DECL:
+        if ((parser.sgmlDecl+c).toUpperCase() === CDATA) {
+          emitNode(parser, "onopencdata")
+          parser.state = S.CDATA
+          parser.sgmlDecl = ""
+          parser.cdata = ""
+        } else if (parser.sgmlDecl+c === "--") {
+          parser.state = S.COMMENT
+          parser.comment = ""
+          parser.sgmlDecl = ""
+        } else if ((parser.sgmlDecl+c).toUpperCase() === DOCTYPE) {
+          parser.state = S.DOCTYPE
+          if (parser.doctype || parser.sawRoot) strictFail(parser,
+            "Inappropriately located doctype declaration")
+          parser.doctype = ""
+          parser.sgmlDecl = ""
+        } else if (c === ">") {
+          emitNode(parser, "onsgmldeclaration", parser.sgmlDecl)
+          parser.sgmlDecl = ""
+          parser.state = S.TEXT
+        } else if (is(quote, c)) {
+          parser.state = S.SGML_DECL_QUOTED
+          parser.sgmlDecl += c
+        } else parser.sgmlDecl += c
+      continue
+
+      case S.SGML_DECL_QUOTED:
+        if (c === parser.q) {
+          parser.state = S.SGML_DECL
+          parser.q = ""
+        }
+        parser.sgmlDecl += c
+      continue
+
+      case S.DOCTYPE:
+        if (c === ">") {
+          parser.state = S.TEXT
+          emitNode(parser, "ondoctype", parser.doctype)
+          parser.doctype = true // just remember that we saw it.
+        } else {
+          parser.doctype += c
+          if (c === "[") parser.state = S.DOCTYPE_DTD
+          else if (is(quote, c)) {
+            parser.state = S.DOCTYPE_QUOTED
+            parser.q = c
+          }
+        }
+      continue
+
+      case S.DOCTYPE_QUOTED:
+        parser.doctype += c
+        if (c === parser.q) {
+          parser.q = ""
+          parser.state = S.DOCTYPE
+        }
+      continue
+
+      case S.DOCTYPE_DTD:
+        parser.doctype += c
+        if (c === "]") parser.state = S.DOCTYPE
+        else if (is(quote,c)) {
+          parser.state = S.DOCTYPE_DTD_QUOTED
+          parser.q = c
+        }
+      continue
+
+      case S.DOCTYPE_DTD_QUOTED:
+        parser.doctype += c
+        if (c === parser.q) {
+          parser.state = S.DOCTYPE_DTD
+          parser.q = ""
+        }
+      continue
+
+      case S.COMMENT:
+        if (c === "-") parser.state = S.COMMENT_ENDING
+        else parser.comment += c
+      continue
+
+      case S.COMMENT_ENDING:
+        if (c === "-") {
+          parser.state = S.COMMENT_ENDED
+          parser.comment = textopts(parser.opt, parser.comment)
+          if (parser.comment) emitNode(parser, "oncomment", parser.comment)
+          parser.comment = ""
+        } else {
+          parser.comment += "-" + c
+          parser.state = S.COMMENT
+        }
+      continue
+
+      case S.COMMENT_ENDED:
+        if (c !== ">") {
+          strictFail(parser, "Malformed comment")
+          // allow <!-- blah -- bloo --> in non-strict mode,
+          // which is a comment of " blah -- bloo "
+          parser.comment += "--" + c
+          parser.state = S.COMMENT
+        } else parser.state = S.TEXT
+      continue
+
+      case S.CDATA:
+        if (c === "]") parser.state = S.CDATA_ENDING
+        else parser.cdata += c
+      continue
+
+      case S.CDATA_ENDING:
+        if (c === "]") parser.state = S.CDATA_ENDING_2
+        else {
+          parser.cdata += "]" + c
+          parser.state = S.CDATA
+        }
+      continue
+
+      case S.CDATA_ENDING_2:
+        if (c === ">") {
+          if (parser.cdata) emitNode(parser, "oncdata", parser.cdata)
+          emitNode(parser, "onclosecdata")
+          parser.cdata = ""
+          parser.state = S.TEXT
+        } else if (c === "]") {
+          parser.cdata += "]"
+        } else {
+          parser.cdata += "]]" + c
+          parser.state = S.CDATA
+        }
+      continue
+
+      case S.PROC_INST:
+        if (c === "?") parser.state = S.PROC_INST_ENDING
+        else if (is(whitespace, c)) parser.state = S.PROC_INST_BODY
+        else parser.procInstName += c
+      continue
+
+      case S.PROC_INST_BODY:
+        if (!parser.procInstBody && is(whitespace, c)) continue
+        else if (c === "?") parser.state = S.PROC_INST_ENDING
+        else parser.procInstBody += c
+      continue
+
+      case S.PROC_INST_ENDING:
+        if (c === ">") {
+          emitNode(parser, "onprocessinginstruction", {
+            name : parser.procInstName,
+            body : parser.procInstBody
+          })
+          parser.procInstName = parser.procInstBody = ""
+          parser.state = S.TEXT
+        } else {
+          parser.procInstBody += "?" + c
+          parser.state = S.PROC_INST_BODY
+        }
+      continue
+
+      case S.OPEN_TAG:
+        if (is(nameBody, c)) parser.tagName += c
+        else {
+          newTag(parser)
+          if (c === ">") openTag(parser)
+          else if (c === "/") parser.state = S.OPEN_TAG_SLASH
+          else {
+            if (not(whitespace, c)) strictFail(
+              parser, "Invalid character in tag name")
+            parser.state = S.ATTRIB
+          }
+        }
+      continue
+
+      case S.OPEN_TAG_SLASH:
+        if (c === ">") {
+          openTag(parser, true)
+          closeTag(parser)
+        } else {
+          strictFail(parser, "Forward-slash in opening tag not followed by >")
+          parser.state = S.ATTRIB
+        }
+      continue
+
+      case S.ATTRIB:
+        // haven't read the attribute name yet.
+        if (is(whitespace, c)) continue
+        else if (c === ">") openTag(parser)
+        else if (c === "/") parser.state = S.OPEN_TAG_SLASH
+        else if (is(nameStart, c)) {
+          parser.attribName = c
+          parser.attribValue = ""
+          parser.state = S.ATTRIB_NAME
+        } else strictFail(parser, "Invalid attribute name")
+      continue
+
+      case S.ATTRIB_NAME:
+        if (c === "=") parser.state = S.ATTRIB_VALUE
+        else if (c === ">") {
+          strictFail(parser, "Attribute without value")
+          parser.attribValue = parser.attribName
+          attrib(parser)
+          openTag(parser)
+        }
+        else if (is(whitespace, c)) parser.state = S.ATTRIB_NAME_SAW_WHITE
+        else if (is(nameBody, c)) parser.attribName += c
+        else strictFail(parser, "Invalid attribute name")
+      continue
+
+      case S.ATTRIB_NAME_SAW_WHITE:
+        if (c === "=") parser.state = S.ATTRIB_VALUE
+        else if (is(whitespace, c)) continue
+        else {
+          strictFail(parser, "Attribute without value")
+          parser.tag.attributes[parser.attribName] = ""
+          parser.attribValue = ""
+          emitNode(parser, "onattribute",
+                   { name : parser.attribName, value : "" })
+          parser.attribName = ""
+          if (c === ">") openTag(parser)
+          else if (is(nameStart, c)) {
+            parser.attribName = c
+            parser.state = S.ATTRIB_NAME
+          } else {
+            strictFail(parser, "Invalid attribute name")
+            parser.state = S.ATTRIB
+          }
+        }
+      continue
+
+      case S.ATTRIB_VALUE:
+        if (is(whitespace, c)) continue
+        else if (is(quote, c)) {
+          parser.q = c
+          parser.state = S.ATTRIB_VALUE_QUOTED
+        } else {
+          strictFail(parser, "Unquoted attribute value")
+          parser.state = S.ATTRIB_VALUE_UNQUOTED
+          parser.attribValue = c
+        }
+      continue
+
+      case S.ATTRIB_VALUE_QUOTED:
+        if (c !== parser.q) {
+          if (c === "&") parser.state = S.ATTRIB_VALUE_ENTITY_Q
+          else parser.attribValue += c
+          continue
+        }
+        attrib(parser)
+        parser.q = ""
+        parser.state = S.ATTRIB_VALUE_CLOSED
+      continue
+
+      case S.ATTRIB_VALUE_CLOSED:
+        if (is(whitespace, c)) {
+          parser.state = S.ATTRIB
+        } else if (c === ">") openTag(parser)
+        else if (c === "/") parser.state = S.OPEN_TAG_SLASH
+        else if (is(nameStart, c)) {
+          strictFail(parser, "No whitespace between attributes")
+          parser.attribName = c
+          parser.attribValue = ""
+          parser.state = S.ATTRIB_NAME
+        } else strictFail(parser, "Invalid attribute name")
+      continue
+
+      case S.ATTRIB_VALUE_UNQUOTED:
+        if (not(attribEnd,c)) {
+          if (c === "&") parser.state = S.ATTRIB_VALUE_ENTITY_U
+          else parser.attribValue += c
+          continue
+        }
+        attrib(parser)
+        if (c === ">") openTag(parser)
+        else parser.state = S.ATTRIB
+      continue
+
+      case S.CLOSE_TAG:
+        if (!parser.tagName) {
+          if (is(whitespace, c)) continue
+          else if (not(nameStart, c)) {
+            if (parser.script) {
+              parser.script += "</" + c
+              parser.state = S.SCRIPT
+            } else {
+              strictFail(parser, "Invalid tagname in closing tag.")
+            }
+          } else parser.tagName = c
+        }
+        else if (c === ">") closeTag(parser)
+        else if (is(nameBody, c)) parser.tagName += c
+        else if (parser.script) {
+          parser.script += "</" + parser.tagName
+          parser.tagName = ""
+          parser.state = S.SCRIPT
+        } else {
+          if (not(whitespace, c)) strictFail(parser,
+            "Invalid tagname in closing tag")
+          parser.state = S.CLOSE_TAG_SAW_WHITE
+        }
+      continue
+
+      case S.CLOSE_TAG_SAW_WHITE:
+        if (is(whitespace, c)) continue
+        if (c === ">") closeTag(parser)
+        else strictFail(parser, "Invalid characters in closing tag")
+      continue
+
+      case S.TEXT_ENTITY:
+      case S.ATTRIB_VALUE_ENTITY_Q:
+      case S.ATTRIB_VALUE_ENTITY_U:
+        switch(parser.state) {
+          case S.TEXT_ENTITY:
+            var returnState = S.TEXT, buffer = "textNode"
+          break
+
+          case S.ATTRIB_VALUE_ENTITY_Q:
+            var returnState = S.ATTRIB_VALUE_QUOTED, buffer = "attribValue"
+          break
+
+          case S.ATTRIB_VALUE_ENTITY_U:
+            var returnState = S.ATTRIB_VALUE_UNQUOTED, buffer = "attribValue"
+          break
+        }
+        if (c === ";") {
+          parser[buffer] += parseEntity(parser)
+          parser.entity = ""
+          parser.state = returnState
+        }
+        else if (is(entity, c)) parser.entity += c
+        else {
+          strictFail(parser, "Invalid character entity")
+          parser[buffer] += "&" + parser.entity + c
+          parser.entity = ""
+          parser.state = returnState
+        }
+      continue
+
+      default:
+        throw new Error(parser, "Unknown state: " + parser.state)
+    }
+  } // while
+  // cdata blocks can get very big under normal conditions. emit and move on.
+  // if (parser.state === S.CDATA && parser.cdata) {
+  //   emitNode(parser, "oncdata", parser.cdata)
+  //   parser.cdata = ""
+  // }
+  if (parser.position >= parser.bufferCheckPosition) checkBufferLength(parser)
+  return parser
+}
+
+/*! http://mths.be/fromcodepoint v0.1.0 by @mathias */
+if (!String.fromCodePoint) {
+        (function() {
+                var stringFromCharCode = String.fromCharCode;
+                var floor = Math.floor;
+                var fromCodePoint = function() {
+                        var MAX_SIZE = 0x4000;
+                        var codeUnits = [];
+                        var highSurrogate;
+                        var lowSurrogate;
+                        var index = -1;
+                        var length = arguments.length;
+                        if (!length) {
+                                return '';
+                        }
+                        var result = '';
+                        while (++index < length) {
+                                var codePoint = Number(arguments[index]);
+                                if (
+                                        !isFinite(codePoint) || // `NaN`, `+Infinity`, or `-Infinity`
+                                        codePoint < 0 || // not a valid Unicode code point
+                                        codePoint > 0x10FFFF || // not a valid Unicode code point
+                                        floor(codePoint) != codePoint // not an integer
+                                ) {
+                                        throw RangeError('Invalid code point: ' + codePoint);
+                                }
+                                if (codePoint <= 0xFFFF) { // BMP code point
+                                        codeUnits.push(codePoint);
+                                } else { // Astral code point; split in surrogate halves
+                                        // http://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
+                                        codePoint -= 0x10000;
+                                        highSurrogate = (codePoint >> 10) + 0xD800;
+                                        lowSurrogate = (codePoint % 0x400) + 0xDC00;
+                                        codeUnits.push(highSurrogate, lowSurrogate);
+                                }
+                                if (index + 1 == length || codeUnits.length > MAX_SIZE) {
+                                        result += stringFromCharCode.apply(null, codeUnits);
+                                        codeUnits.length = 0;
+                                }
+                        }
+                        return result;
+                };
+                if (Object.defineProperty) {
+                        Object.defineProperty(String, 'fromCodePoint', {
+                                'value': fromCodePoint,
+                                'configurable': true,
+                                'writable': true
+                        });
+                } else {
+                        String.fromCodePoint = fromCodePoint;
+                }
+        }());
+}
+
+})(typeof exports === "undefined" ? sax = {} : exports);
+
+}).call(this,undefined)
+
+},{"undefined":undefined}],529:[function(_dereq_,module,exports){
+/**
+ * Tiny stack for browser or server
+ *
+ * @author Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @copyright 2014 Jason Mulligan
+ * @license BSD-3 <https://raw.github.com/avoidwork/tiny-stack/master/LICENSE>
+ * @link http://avoidwork.github.io/tiny-stack
+ * @module tiny-stack
+ * @version 0.1.0
+ */
+
+( function ( global ) {
+
+"use strict";
+
+/**
+ * TinyStack
+ *
+ * @constructor
+ */
+function TinyStack () {
+	this.data = [null];
+	this.top  = 0;
+}
+
+/**
+ * Clears the stack
+ *
+ * @method clear
+ * @memberOf TinyStack
+ * @return {Object} {@link TinyStack}
+ */
+TinyStack.prototype.clear = function clear () {
+	this.data = [null];
+	this.top  = 0;
+
+	return this;
+};
+
+/**
+ * Gets the size of the stack
+ *
+ * @method length
+ * @memberOf TinyStack
+ * @return {Number} Size of stack
+ */
+TinyStack.prototype.length = function length () {
+	return this.top;
+};
+
+/**
+ * Gets the item at the top of the stack
+ *
+ * @method peek
+ * @memberOf TinyStack
+ * @return {Mixed} Item at the top of the stack
+ */
+TinyStack.prototype.peek = function peek () {
+	return this.data[this.top];
+};
+
+/**
+ * Gets & removes the item at the top of the stack
+ *
+ * @method pop
+ * @memberOf TinyStack
+ * @return {Mixed} Item at the top of the stack
+ */
+TinyStack.prototype.pop = function pop () {
+	if ( this.top > 0 ) {
+		this.top--;
+
+		return this.data.pop();
+	}
+	else {
+		return undefined;
+	}
+};
+
+/**
+ * Pushes an item onto the stack
+ *
+ * @method push
+ * @memberOf TinyStack
+ * @return {Object} {@link TinyStack}
+ */
+TinyStack.prototype.push = function push ( arg ) {
+	this.data[++this.top] = arg;
+
+	return this;
+};
+
+/**
+ * TinyStack factory
+ *
+ * @method factory
+ * @return {Object} {@link TinyStack}
+ */
+function factory () {
+	return new TinyStack();
+}
+
+// Node, AMD & window supported
+if ( typeof exports != "undefined" ) {
+	module.exports = factory;
+}
+else if ( typeof define == "function" ) {
+	define( function () {
+		return factory;
+	} );
+}
+else {
+	global.stack = factory;
+}
+} )( this );
+
+},{}],530:[function(_dereq_,module,exports){
+module.exports = _dereq_(534);
+},{"534":534}],531:[function(_dereq_,module,exports){
+'use strict';
+
+function Base() { }
+
+Base.prototype.get = function(name) {
+  return this.$model.properties.get(this, name);
+};
+
+Base.prototype.set = function(name, value) {
+  this.$model.properties.set(this, name, value);
+};
+
+
+module.exports = Base;
+},{}],532:[function(_dereq_,module,exports){
+'use strict';
+
+var pick = _dereq_(522),
+    assign = _dereq_(518),
+    forEach = _dereq_(450);
+
+var parseNameNs = _dereq_(535).parseName;
+
+
+function DescriptorBuilder(nameNs) {
+  this.ns = nameNs;
+  this.name = nameNs.name;
+  this.allTypes = [];
+  this.properties = [];
+  this.propertiesByName = {};
+}
+
+module.exports = DescriptorBuilder;
+
+
+DescriptorBuilder.prototype.build = function() {
+  return pick(this, [
+    'ns',
+    'name',
+    'allTypes',
+    'properties',
+    'propertiesByName',
+    'bodyProperty',
+    'idProperty'
+  ]);
+};
+
+/**
+ * Add property at given index.
+ *
+ * @param {Object} p
+ * @param {Number} [idx]
+ * @param {Boolean} [validate=true]
+ */
+DescriptorBuilder.prototype.addProperty = function(p, idx, validate) {
+
+  if (typeof idx === 'boolean') {
+    validate = idx;
+    idx = undefined;
+  }
+
+  this.addNamedProperty(p, validate !== false);
+
+  var properties = this.properties;
+
+  if (idx !== undefined) {
+    properties.splice(idx, 0, p);
+  } else {
+    properties.push(p);
+  }
+};
+
+
+DescriptorBuilder.prototype.replaceProperty = function(oldProperty, newProperty, replace) {
+  var oldNameNs = oldProperty.ns;
+
+  var props = this.properties,
+      propertiesByName = this.propertiesByName,
+      rename = oldProperty.name !== newProperty.name;
+
+  if (oldProperty.isId) {
+    if (!newProperty.isId) {
+      throw new Error(
+        'property <' + newProperty.ns.name + '> must be id property ' +
+        'to refine <' + oldProperty.ns.name + '>');
+    }
+
+    this.setIdProperty(newProperty, false);
+  }
+
+  if (oldProperty.isBody) {
+
+    if (!newProperty.isBody) {
+      throw new Error(
+        'property <' + newProperty.ns.name + '> must be body property ' +
+        'to refine <' + oldProperty.ns.name + '>');
+    }
+
+    // TODO: Check compatibility
+    this.setBodyProperty(newProperty, false);
+  }
+
+  // validate existence and get location of old property
+  var idx = props.indexOf(oldProperty);
+  if (idx === -1) {
+    throw new Error('property <' + oldNameNs.name + '> not found in property list');
+  }
+
+  // remove old property
+  props.splice(idx, 1);
+
+  // replacing the named property is intentional
+  //
+  //  * validate only if this is a "rename" operation
+  //  * add at specific index unless we "replace"
+  //
+  this.addProperty(newProperty, replace ? undefined : idx, rename);
+
+  // make new property available under old name
+  propertiesByName[oldNameNs.name] = propertiesByName[oldNameNs.localName] = newProperty;
+};
+
+
+DescriptorBuilder.prototype.redefineProperty = function(p, targetPropertyName, replace) {
+
+  var nsPrefix = p.ns.prefix;
+  var parts = targetPropertyName.split('#');
+
+  var name = parseNameNs(parts[0], nsPrefix);
+  var attrName = parseNameNs(parts[1], name.prefix).name;
+
+  var redefinedProperty = this.propertiesByName[attrName];
+  if (!redefinedProperty) {
+    throw new Error('refined property <' + attrName + '> not found');
+  } else {
+    this.replaceProperty(redefinedProperty, p, replace);
+  }
+
+  delete p.redefines;
+};
+
+DescriptorBuilder.prototype.addNamedProperty = function(p, validate) {
+  var ns = p.ns,
+      propsByName = this.propertiesByName;
+
+  if (validate) {
+    this.assertNotDefined(p, ns.name);
+    this.assertNotDefined(p, ns.localName);
+  }
+
+  propsByName[ns.name] = propsByName[ns.localName] = p;
+};
+
+DescriptorBuilder.prototype.removeNamedProperty = function(p) {
+  var ns = p.ns,
+      propsByName = this.propertiesByName;
+
+  delete propsByName[ns.name];
+  delete propsByName[ns.localName];
+};
+
+DescriptorBuilder.prototype.setBodyProperty = function(p, validate) {
+
+  if (validate && this.bodyProperty) {
+    throw new Error(
+      'body property defined multiple times ' +
+      '(<' + this.bodyProperty.ns.name + '>, <' + p.ns.name + '>)');
+  }
+
+  this.bodyProperty = p;
+};
+
+DescriptorBuilder.prototype.setIdProperty = function(p, validate) {
+
+  if (validate && this.idProperty) {
+    throw new Error(
+      'id property defined multiple times ' +
+      '(<' + this.idProperty.ns.name + '>, <' + p.ns.name + '>)');
+  }
+
+  this.idProperty = p;
+};
+
+DescriptorBuilder.prototype.assertNotDefined = function(p, name) {
+  var propertyName = p.name,
+      definedProperty = this.propertiesByName[propertyName];
+
+  if (definedProperty) {
+    throw new Error(
+      'property <' + propertyName + '> already defined; ' +
+      'override of <' + definedProperty.definedBy.ns.name + '#' + definedProperty.ns.name + '> by ' +
+      '<' + p.definedBy.ns.name + '#' + p.ns.name + '> not allowed without redefines');
+  }
+};
+
+DescriptorBuilder.prototype.hasProperty = function(name) {
+  return this.propertiesByName[name];
+};
+
+DescriptorBuilder.prototype.addTrait = function(t, inherited) {
+
+  var allTypes = this.allTypes;
+
+  if (allTypes.indexOf(t) !== -1) {
+    return;
+  }
+
+  forEach(t.properties, function(p) {
+
+    // clone property to allow extensions
+    p = assign({}, p, {
+      name: p.ns.localName,
+      inherited: inherited
+    });
+
+    Object.defineProperty(p, 'definedBy', {
+      value: t
+    });
+
+    var replaces = p.replaces,
+        redefines = p.redefines;
+
+    // add replace/redefine support
+    if (replaces || redefines) {
+      this.redefineProperty(p, replaces || redefines, replaces);
+    } else {
+      if (p.isBody) {
+        this.setBodyProperty(p);
+      }
+      if (p.isId) {
+        this.setIdProperty(p);
+      }
+      this.addProperty(p);
+    }
+  }, this);
+
+  allTypes.push(t);
+};
+
+},{"450":450,"518":518,"522":522,"535":535}],533:[function(_dereq_,module,exports){
+'use strict';
+
+var forEach = _dereq_(450);
+
+var Base = _dereq_(531);
+
+
+function Factory(model, properties) {
+  this.model = model;
+  this.properties = properties;
+}
+
+module.exports = Factory;
+
+
+Factory.prototype.createType = function(descriptor) {
+
+  var model = this.model;
+
+  var props = this.properties,
+      prototype = Object.create(Base.prototype);
+
+  // initialize default values
+  forEach(descriptor.properties, function(p) {
+    if (!p.isMany && p.default !== undefined) {
+      prototype[p.name] = p.default;
+    }
+  });
+
+  props.defineModel(prototype, model);
+  props.defineDescriptor(prototype, descriptor);
+
+  var name = descriptor.ns.name;
+
+  /**
+   * The new type constructor
+   */
+  function ModdleElement(attrs) {
+    props.define(this, '$type', { value: name, enumerable: true });
+    props.define(this, '$attrs', { value: {} });
+    props.define(this, '$parent', { writable: true });
+
+    forEach(attrs, function(val, key) {
+      this.set(key, val);
+    }, this);
+  }
+
+  ModdleElement.prototype = prototype;
+
+  ModdleElement.hasType = prototype.$instanceOf = this.model.hasType;
+
+  // static links
+  props.defineModel(ModdleElement, model);
+  props.defineDescriptor(ModdleElement, descriptor);
+
+  return ModdleElement;
+};
+},{"450":450,"531":531}],534:[function(_dereq_,module,exports){
+'use strict';
+
+var isString = _dereq_(516),
+    isObject = _dereq_(515),
+    forEach = _dereq_(450),
+    find = _dereq_(449);
+
+
+var Factory = _dereq_(533),
+    Registry = _dereq_(537),
+    Properties = _dereq_(536);
+
+var parseNameNs = _dereq_(535).parseName;
+
+
+//// Moddle implementation /////////////////////////////////////////////////
+
+/**
+ * @class Moddle
+ *
+ * A model that can be used to create elements of a specific type.
+ *
+ * @example
+ *
+ * var Moddle = require('moddle');
+ *
+ * var pkg = {
+ *   name: 'mypackage',
+ *   prefix: 'my',
+ *   types: [
+ *     { name: 'Root' }
+ *   ]
+ * };
+ *
+ * var moddle = new Moddle([pkg]);
+ *
+ * @param {Array<Package>} packages the packages to contain
+ */
+function Moddle(packages) {
+
+  this.properties = new Properties(this);
+
+  this.factory = new Factory(this, this.properties);
+  this.registry = new Registry(packages, this.properties);
+
+  this.typeCache = {};
+}
+
+module.exports = Moddle;
+
+
+/**
+ * Create an instance of the specified type.
+ *
+ * @method Moddle#create
+ *
+ * @example
+ *
+ * var foo = moddle.create('my:Foo');
+ * var bar = moddle.create('my:Bar', { id: 'BAR_1' });
+ *
+ * @param  {String|Object} descriptor the type descriptor or name know to the model
+ * @param  {Object} attrs   a number of attributes to initialize the model instance with
+ * @return {Object}         model instance
+ */
+Moddle.prototype.create = function(descriptor, attrs) {
+  var Type = this.getType(descriptor);
+
+  if (!Type) {
+    throw new Error('unknown type <' + descriptor + '>');
+  }
+
+  return new Type(attrs);
+};
+
+
+/**
+ * Returns the type representing a given descriptor
+ *
+ * @method Moddle#getType
+ *
+ * @example
+ *
+ * var Foo = moddle.getType('my:Foo');
+ * var foo = new Foo({ 'id' : 'FOO_1' });
+ *
+ * @param  {String|Object} descriptor the type descriptor or name know to the model
+ * @return {Object}         the type representing the descriptor
+ */
+Moddle.prototype.getType = function(descriptor) {
+
+  var cache = this.typeCache;
+
+  var name = isString(descriptor) ? descriptor : descriptor.ns.name;
+
+  var type = cache[name];
+
+  if (!type) {
+    descriptor = this.registry.getEffectiveDescriptor(name);
+    type = cache[name] = this.factory.createType(descriptor);
+  }
+
+  return type;
+};
+
+
+/**
+ * Creates an any-element type to be used within model instances.
+ *
+ * This can be used to create custom elements that lie outside the meta-model.
+ * The created element contains all the meta-data required to serialize it
+ * as part of meta-model elements.
+ *
+ * @method Moddle#createAny
+ *
+ * @example
+ *
+ * var foo = moddle.createAny('vendor:Foo', 'http://vendor', {
+ *   value: 'bar'
+ * });
+ *
+ * var container = moddle.create('my:Container', 'http://my', {
+ *   any: [ foo ]
+ * });
+ *
+ * // go ahead and serialize the stuff
+ *
+ *
+ * @param  {String} name  the name of the element
+ * @param  {String} nsUri the namespace uri of the element
+ * @param  {Object} [properties] a map of properties to initialize the instance with
+ * @return {Object} the any type instance
+ */
+Moddle.prototype.createAny = function(name, nsUri, properties) {
+
+  var nameNs = parseNameNs(name);
+
+  var element = {
+    $type: name
+  };
+
+  var descriptor = {
+    name: name,
+    isGeneric: true,
+    ns: {
+      prefix: nameNs.prefix,
+      localName: nameNs.localName,
+      uri: nsUri
+    }
+  };
+
+  this.properties.defineDescriptor(element, descriptor);
+  this.properties.defineModel(element, this);
+  this.properties.define(element, '$parent', { enumerable: false, writable: true });
+
+  forEach(properties, function(a, key) {
+    if (isObject(a) && a.value !== undefined) {
+      element[a.name] = a.value;
+    } else {
+      element[key] = a;
+    }
+  });
+
+  return element;
+};
+
+/**
+ * Returns a registered package by uri or prefix
+ *
+ * @return {Object} the package
+ */
+Moddle.prototype.getPackage = function(uriOrPrefix) {
+  return this.registry.getPackage(uriOrPrefix);
+};
+
+/**
+ * Returns a snapshot of all known packages
+ *
+ * @return {Object} the package
+ */
+Moddle.prototype.getPackages = function() {
+  return this.registry.getPackages();
+};
+
+/**
+ * Returns the descriptor for an element
+ */
+Moddle.prototype.getElementDescriptor = function(element) {
+  return element.$descriptor;
+};
+
+/**
+ * Returns true if the given descriptor or instance
+ * represents the given type.
+ *
+ * May be applied to this, if element is omitted.
+ */
+Moddle.prototype.hasType = function(element, type) {
+  if (type === undefined) {
+    type = element;
+    element = this;
+  }
+
+  var descriptor = element.$model.getElementDescriptor(element);
+
+  return !!find(descriptor.allTypes, function(t) {
+    return t.name === type;
+  });
+};
+
+
+/**
+ * Returns the descriptor of an elements named property
+ */
+Moddle.prototype.getPropertyDescriptor = function(element, property) {
+  return this.getElementDescriptor(element).propertiesByName[property];
+};
+
+},{"449":449,"450":450,"515":515,"516":516,"533":533,"535":535,"536":536,"537":537}],535:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * Parses a namespaced attribute name of the form (ns:)localName to an object,
+ * given a default prefix to assume in case no explicit namespace is given.
+ *
+ * @param {String} name
+ * @param {String} [defaultPrefix] the default prefix to take, if none is present.
+ *
+ * @return {Object} the parsed name
+ */
+module.exports.parseName = function(name, defaultPrefix) {
+  var parts = name.split(/:/),
+      localName, prefix;
+
+  // no prefix (i.e. only local name)
+  if (parts.length === 1) {
+    localName = name;
+    prefix = defaultPrefix;
+  } else
+  // prefix + local name
+  if (parts.length === 2) {
+    localName = parts[1];
+    prefix = parts[0];
+  } else {
+    throw new Error('expected <prefix:localName> or <localName>, got ' + name);
+  }
+
+  name = (prefix ? prefix + ':' : '') + localName;
+
+  return {
+    name: name,
+    prefix: prefix,
+    localName: localName
+  };
+};
+},{}],536:[function(_dereq_,module,exports){
+'use strict';
+
+
+/**
+ * A utility that gets and sets properties of model elements.
+ *
+ * @param {Model} model
+ */
+function Properties(model) {
+  this.model = model;
+}
+
+module.exports = Properties;
+
+
+/**
+ * Sets a named property on the target element.
+ * If the value is undefined, the property gets deleted.
+ *
+ * @param {Object} target
+ * @param {String} name
+ * @param {Object} value
+ */
+Properties.prototype.set = function(target, name, value) {
+
+  var property = this.model.getPropertyDescriptor(target, name);
+
+  var propertyName = property && property.name;
+
+  if (isUndefined(value)) {
+    // unset the property, if the specified value is undefined;
+    // delete from $attrs (for extensions) or the target itself
+    if (property) {
+      delete target[propertyName];
+    } else {
+      delete target.$attrs[name];
+    }
+  } else {
+    // set the property, defining well defined properties on the fly
+    // or simply updating them in target.$attrs (for extensions)
+    if (property) {
+      if (propertyName in target) {
+        target[propertyName] = value;
+      } else {
+        defineProperty(target, property, value);
+      }
+    } else {
+      target.$attrs[name] = value;
+    }
+  }
+};
+
+/**
+ * Returns the named property of the given element
+ *
+ * @param  {Object} target
+ * @param  {String} name
+ *
+ * @return {Object}
+ */
+Properties.prototype.get = function(target, name) {
+
+  var property = this.model.getPropertyDescriptor(target, name);
+
+  if (!property) {
+    return target.$attrs[name];
+  }
+
+  var propertyName = property.name;
+
+  // check if access to collection property and lazily initialize it
+  if (!target[propertyName] && property.isMany) {
+    defineProperty(target, property, []);
+  }
+
+  return target[propertyName];
+};
+
+
+/**
+ * Define a property on the target element
+ *
+ * @param  {Object} target
+ * @param  {String} name
+ * @param  {Object} options
+ */
+Properties.prototype.define = function(target, name, options) {
+  Object.defineProperty(target, name, options);
+};
+
+
+/**
+ * Define the descriptor for an element
+ */
+Properties.prototype.defineDescriptor = function(target, descriptor) {
+  this.define(target, '$descriptor', { value: descriptor });
+};
+
+/**
+ * Define the model for an element
+ */
+Properties.prototype.defineModel = function(target, model) {
+  this.define(target, '$model', { value: model });
+};
+
+
+function isUndefined(val) {
+  return typeof val === 'undefined';
+}
+
+function defineProperty(target, property, value) {
+  Object.defineProperty(target, property.name, {
+    enumerable: !property.isReference,
+    writable: true,
+    value: value,
+    configurable: true
+  });
+}
+},{}],537:[function(_dereq_,module,exports){
+'use strict';
+
+var assign = _dereq_(518),
+    forEach = _dereq_(450);
+
+var Types = _dereq_(538),
+    DescriptorBuilder = _dereq_(532);
+
+var parseNameNs = _dereq_(535).parseName,
+    isBuiltInType = Types.isBuiltIn;
+
+
+function Registry(packages, properties) {
+  this.packageMap = {};
+  this.typeMap = {};
+
+  this.packages = [];
+
+  this.properties = properties;
+
+  forEach(packages, this.registerPackage, this);
+}
+
+module.exports = Registry;
+
+
+Registry.prototype.getPackage = function(uriOrPrefix) {
+  return this.packageMap[uriOrPrefix];
+};
+
+Registry.prototype.getPackages = function() {
+  return this.packages;
+};
+
+
+Registry.prototype.registerPackage = function(pkg) {
+
+  // copy package
+  pkg = assign({}, pkg);
+
+  // register types
+  forEach(pkg.types, function(descriptor) {
+    this.registerType(descriptor, pkg);
+  }, this);
+
+  this.packageMap[pkg.uri] = this.packageMap[pkg.prefix] = pkg;
+  this.packages.push(pkg);
+};
+
+
+/**
+ * Register a type from a specific package with us
+ */
+Registry.prototype.registerType = function(type, pkg) {
+
+  type = assign({}, type, {
+    superClass: (type.superClass || []).slice(),
+    extends: (type.extends || []).slice(),
+    properties: (type.properties || []).slice()
+  });
+
+  var ns = parseNameNs(type.name, pkg.prefix),
+      name = ns.name,
+      propertiesByName = {};
+
+  // parse properties
+  forEach(type.properties, function(p) {
+
+    // namespace property names
+    var propertyNs = parseNameNs(p.name, ns.prefix),
+        propertyName = propertyNs.name;
+
+    // namespace property types
+    if (!isBuiltInType(p.type)) {
+      p.type = parseNameNs(p.type, propertyNs.prefix).name;
+    }
+
+    assign(p, {
+      ns: propertyNs,
+      name: propertyName
+    });
+
+    propertiesByName[propertyName] = p;
+  });
+
+  // update ns + name
+  assign(type, {
+    ns: ns,
+    name: name,
+    propertiesByName: propertiesByName
+  });
+
+  forEach(type.extends, function(extendsName) {
+    var extended = this.typeMap[extendsName];
+
+    extended.traits = extended.traits || [];
+    extended.traits.push(name);
+  }, this);
+
+  // link to package
+  this.definePackage(type, pkg);
+
+  // register
+  this.typeMap[name] = type;
+};
+
+
+/**
+ * Traverse the type hierarchy from bottom to top,
+ * calling iterator with (type, inherited) for all elements in
+ * the inheritance chain.
+ *
+ * @param {Object} nsName
+ * @param {Function} iterator
+ * @param {Boolean} [trait=false]
+ */
+Registry.prototype.mapTypes = function(nsName, iterator, trait) {
+
+  var type = isBuiltInType(nsName.name) ? { name: nsName.name } : this.typeMap[nsName.name];
+
+  var self = this;
+
+  /**
+   * Traverse the selected trait.
+   *
+   * @param {String} cls
+   */
+  function traverseTrait(cls) {
+    return traverseSuper(cls, true);
+  }
+
+  /**
+   * Traverse the selected super type or trait
+   *
+   * @param {String} cls
+   * @param {Boolean} [trait=false]
+   */
+  function traverseSuper(cls, trait) {
+    var parentNs = parseNameNs(cls, isBuiltInType(cls) ? '' : nsName.prefix);
+    self.mapTypes(parentNs, iterator, trait);
+  }
+
+  if (!type) {
+    throw new Error('unknown type <' + nsName.name + '>');
+  }
+
+  forEach(type.superClass, trait ? traverseTrait : traverseSuper);
+
+  // call iterator with (type, inherited=!trait)
+  iterator(type, !trait);
+
+  forEach(type.traits, traverseTrait);
+};
+
+
+/**
+ * Returns the effective descriptor for a type.
+ *
+ * @param  {String} type the namespaced name (ns:localName) of the type
+ *
+ * @return {Descriptor} the resulting effective descriptor
+ */
+Registry.prototype.getEffectiveDescriptor = function(name) {
+
+  var nsName = parseNameNs(name);
+
+  var builder = new DescriptorBuilder(nsName);
+
+  this.mapTypes(nsName, function(type, inherited) {
+    builder.addTrait(type, inherited);
+  });
+
+  var descriptor = builder.build();
+
+  // define package link
+  this.definePackage(descriptor, descriptor.allTypes[descriptor.allTypes.length - 1].$pkg);
+
+  return descriptor;
+};
+
+
+Registry.prototype.definePackage = function(target, pkg) {
+  this.properties.define(target, '$pkg', { value: pkg });
+};
+},{"450":450,"518":518,"532":532,"535":535,"538":538}],538:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * Built-in moddle types
+ */
+var BUILTINS = {
+  String: true,
+  Boolean: true,
+  Integer: true,
+  Real: true,
+  Element: true
+};
+
+/**
+ * Converters for built in types from string representations
+ */
+var TYPE_CONVERTERS = {
+  String: function(s) { return s; },
+  Boolean: function(s) { return s === 'true'; },
+  Integer: function(s) { return parseInt(s, 10); },
+  Real: function(s) { return parseFloat(s, 10); }
+};
+
+/**
+ * Convert a type to its real representation
+ */
+module.exports.coerceType = function(type, value) {
+
+  var converter = TYPE_CONVERTERS[type];
+
+  if (converter) {
+    return converter(value);
+  } else {
+    return value;
+  }
+};
+
+/**
+ * Return whether the given type is built-in
+ */
+module.exports.isBuiltIn = function(type) {
+  return !!BUILTINS[type];
+};
+
+/**
+ * Return whether the given type is simple
+ */
+module.exports.isSimple = function(type) {
+  return !!TYPE_CONVERTERS[type];
+};
+},{}],539:[function(_dereq_,module,exports){
+module.exports={
+  "name": "DC",
+  "uri": "http://www.omg.org/spec/DD/20100524/DC",
+  "types": [
+    {
+      "name": "Boolean"
+    },
+    {
+      "name": "Integer"
+    },
+    {
+      "name": "Real"
+    },
+    {
+      "name": "String"
+    },
+    {
+      "name": "Font",
+      "properties": [
+        {
+          "name": "name",
+          "type": "String",
+          "isAttr": true
+        },
+        {
+          "name": "size",
+          "type": "Real",
+          "isAttr": true
+        },
+        {
+          "name": "isBold",
+          "type": "Boolean",
+          "isAttr": true
+        },
+        {
+          "name": "isItalic",
+          "type": "Boolean",
+          "isAttr": true
+        },
+        {
+          "name": "isUnderline",
+          "type": "Boolean",
+          "isAttr": true
+        },
+        {
+          "name": "isStrikeThrough",
+          "type": "Boolean",
+          "isAttr": true
+        }
+      ]
+    },
+    {
+      "name": "Point",
+      "properties": [
+        {
+          "name": "x",
+          "type": "Real",
+          "default": "0",
+          "isAttr": true
+        },
+        {
+          "name": "y",
+          "type": "Real",
+          "default": "0",
+          "isAttr": true
+        }
+      ]
+    },
+    {
+      "name": "Bounds",
+      "properties": [
+        {
+          "name": "x",
+          "type": "Real",
+          "default": "0",
+          "isAttr": true
+        },
+        {
+          "name": "y",
+          "type": "Real",
+          "default": "0",
+          "isAttr": true
+        },
+        {
+          "name": "width",
+          "type": "Real",
+          "isAttr": true
+        },
+        {
+          "name": "height",
+          "type": "Real",
+          "isAttr": true
+        }
+      ]
+    }
+  ],
+  "prefix": "dc",
+  "associations": []
+}
+},{}],540:[function(_dereq_,module,exports){
+module.exports={
+  "name": "DI",
+  "uri": "http://www.omg.org/spec/DD/20100524/DI",
+  "types": [
+    {
+      "name": "DiagramElement",
+      "isAbstract": true,
+      "properties": [
+        {
+          "name": "id",
+          "type": "String",
+          "isAttr": true,
+          "isId": true
+        },
+        {
+          "name": "extension",
+          "type": "Extension"
+        },
+        {
+          "name": "owningDiagram",
+          "type": "Diagram",
+          "isReadOnly": true,
+          "isVirtual": true,
+          "isReference": true
+        },
+        {
+          "name": "owningElement",
+          "type": "DiagramElement",
+          "isReadOnly": true,
+          "isVirtual": true,
+          "isReference": true
+        },
+        {
+          "name": "modelElement",
+          "isReadOnly": true,
+          "isVirtual": true,
+          "isReference": true,
+          "type": "Element"
+        },
+        {
+          "name": "style",
+          "type": "Style",
+          "isReadOnly": true,
+          "isVirtual": true,
+          "isReference": true
+        },
+        {
+          "name": "ownedElement",
+          "type": "DiagramElement",
+          "isReadOnly": true,
+          "isVirtual": true,
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "Node",
+      "isAbstract": true,
+      "superClass": [
+        "DiagramElement"
+      ]
+    },
+    {
+      "name": "Edge",
+      "isAbstract": true,
+      "superClass": [
+        "DiagramElement"
+      ],
+      "properties": [
+        {
+          "name": "source",
+          "type": "DiagramElement",
+          "isReadOnly": true,
+          "isVirtual": true,
+          "isReference": true
+        },
+        {
+          "name": "target",
+          "type": "DiagramElement",
+          "isReadOnly": true,
+          "isVirtual": true,
+          "isReference": true
+        },
+        {
+          "name": "waypoint",
+          "isUnique": false,
+          "isMany": true,
+          "type": "dc:Point",
+          "xml": {
+            "serialize": "xsi:type"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Diagram",
+      "isAbstract": true,
+      "properties": [
+        {
+          "name": "id",
+          "type": "String",
+          "isAttr": true,
+          "isId": true
+        },
+        {
+          "name": "rootElement",
+          "type": "DiagramElement",
+          "isReadOnly": true,
+          "isVirtual": true
+        },
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "documentation",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "resolution",
+          "isAttr": true,
+          "type": "Real"
+        },
+        {
+          "name": "ownedStyle",
+          "type": "Style",
+          "isReadOnly": true,
+          "isVirtual": true,
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "Shape",
+      "isAbstract": true,
+      "superClass": [
+        "Node"
+      ],
+      "properties": [
+        {
+          "name": "bounds",
+          "type": "dc:Bounds"
+        }
+      ]
+    },
+    {
+      "name": "Plane",
+      "isAbstract": true,
+      "superClass": [
+        "Node"
+      ],
+      "properties": [
+        {
+          "name": "planeElement",
+          "type": "DiagramElement",
+          "subsettedProperty": "DiagramElement-ownedElement",
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "LabeledEdge",
+      "isAbstract": true,
+      "superClass": [
+        "Edge"
+      ],
+      "properties": [
+        {
+          "name": "ownedLabel",
+          "type": "Label",
+          "isReadOnly": true,
+          "subsettedProperty": "DiagramElement-ownedElement",
+          "isVirtual": true,
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "LabeledShape",
+      "isAbstract": true,
+      "superClass": [
+        "Shape"
+      ],
+      "properties": [
+        {
+          "name": "ownedLabel",
+          "type": "Label",
+          "isReadOnly": true,
+          "subsettedProperty": "DiagramElement-ownedElement",
+          "isVirtual": true,
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "Label",
+      "isAbstract": true,
+      "superClass": [
+        "Node"
+      ],
+      "properties": [
+        {
+          "name": "bounds",
+          "type": "dc:Bounds"
+        }
+      ]
+    },
+    {
+      "name": "Style",
+      "isAbstract": true,
+      "properties": [
+        {
+          "name": "id",
+          "type": "String",
+          "isAttr": true,
+          "isId": true
+        }
+      ]
+    },
+    {
+      "name": "Extension",
+      "properties": [
+        {
+          "name": "values",
+          "type": "Element",
+          "isMany": true
+        }
+      ]
+    }
+  ],
+  "associations": [],
+  "prefix": "di",
+  "xml": {
+    "tagAlias": "lowerCase"
+  }
+}
+},{}],541:[function(_dereq_,module,exports){
+module.exports={
+  "name": "VDML",
+  "uri": "http://www.omg.org/spec/VDML/20100524/MODEL",
+  "associations": [],
+  "types": [
+    {
+      "name": "EcoMap",
+      "superClass": [
+        "FlowElementsContainer"
+      ],
+      "properties": [
+        {
+          "name": "ecoType",
+          "type": "EcoType",
+          "isAttr": true
+        },
+        {
+          "name": "properties",
+          "type": "Property",
+          "isMany": true
+        },
+        {
+          "name": "flowElements",
+          "type": "FlowElement",
+          "isMany": true,
+          "replaces": "FlowElementsContainer#flowElements"
+        },
+        {
+          "name": "artifacts",
+          "type": "Artifact",
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "Relationship",
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "type",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "direction",
+          "type": "RelationshipDirection",
+          "isAttr": true
+        },
+        {
+          "name": "source",
+          "isMany": true,
+          "isReference": true,
+          "type": "Element"
+        },
+        {
+          "name": "target",
+          "isMany": true,
+          "isReference": true,
+          "type": "Element"
+        }
+      ]
+    },
+    {
+      "name": "RelationshipDirection",
+      "literalValues": [
+        {
+          "name": "None"
+        },
+        {
+          "name": "Forward"
+        },
+        {
+          "name": "Backward"
+        },
+        {
+          "name": "Both"
+        }
+      ]
+    },
+    {
+      "name": "BaseElement",
+      "isAbstract": true,
+      "properties": [
+        {
+          "name": "id",
+          "isAttr": true,
+          "type": "String",
+          "isId": true
+        },
+        {
+          "name": "documentation",
+          "type": "Documentation",
+          "isMany": true
+        },
+        {
+          "name": "extensionDefinitions",
+          "type": "ExtensionDefinition",
+          "isMany": true,
+          "isReference": true
+        },
+        {
+          "name": "extensionElements",
+          "type": "ExtensionElements"
+        }
+      ]
+    },
+    {
+      "name": "Extension",
+      "properties": [
+        {
+          "name": "mustUnderstand",
+          "default": false,
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "definition",
+          "type": "ExtensionDefinition"
+        }
+      ]
+    },
+    {
+      "name": "ExtensionDefinition",
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "extensionAttributeDefinitions",
+          "type": "ExtensionAttributeDefinition",
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "ExtensionAttributeDefinition",
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "type",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "isReference",
+          "default": false,
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "extensionDefinition",
+          "type": "ExtensionDefinition",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "ExtensionElements",
+      "properties": [
+        {
+          "name": "valueRef",
+          "isAttr": true,
+          "isReference": true,
+          "type": "Element"
+        },
+        {
+          "name": "values",
+          "type": "Element",
+          "isMany": true
+        },
+        {
+          "name": "extensionAttributeDefinition",
+          "type": "ExtensionAttributeDefinition",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "Documentation",
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "text",
+          "type": "String",
+          "isBody": true
+        },
+        {
+          "name": "textFormat",
+          "default": "text/plain",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "Property",
+      "superClass": [
+        "ItemAwareElement"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "DataObject",
+      "superClass": [
+        "FlowElement",
+        "ItemAwareElement"
+      ],
+      "properties": [
+        {
+          "name": "isCollection",
+          "default": false,
+          "isAttr": true,
+          "type": "Boolean"
+        }
+      ]
+    },
+    {
+      "name": "DataObjectReference",
+      "superClass": [
+        "ItemAwareElement",
+        "FlowElement"
+      ],
+      "properties": [
+        {
+          "name": "dataObjectRef",
+          "type": "DataObject",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "Error",
+      "superClass": [
+        "RootElement"
+      ],
+      "properties": [
+        {
+          "name": "structureRef",
+          "type": "ItemDefinition",
+          "isAttr": true,
+          "isReference": true
+        },
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "errorCode",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "Message",
+      "superClass": [
+        "RootElement"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "itemRef",
+          "type": "ItemDefinition",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "ItemDefinition",
+      "superClass": [
+        "RootElement"
+      ],
+      "properties": [
+        {
+          "name": "itemKind",
+          "type": "ItemKind",
+          "isAttr": true
+        },
+        {
+          "name": "structureRef",
+          "type": "String",
+          "isAttr": true
+        },
+        {
+          "name": "isCollection",
+          "default": false,
+          "isAttr": true,
+          "type": "Boolean"
+        }
+      ]
+    },
+    {
+      "name": "FlowElement",
+      "isAbstract": true,
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "categoryValueRef",
+          "type": "CategoryValue",
+          "isMany": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "SequenceFlow",
+      "superClass": [
+        "FlowElement"
+      ],
+      "properties": [
+        {
+          "name": "isImmediate",
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "sourceRef",
+          "type": "FlowNode",
+          "isAttr": true,
+          "isReference": true
+        },
+        {
+          "name": "targetRef",
+          "type": "FlowNode",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "FlowElementsContainer",
+      "isAbstract": true,
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "flowElements",
+          "type": "FlowElement",
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "FlowNode",
+      "isAbstract": true,
+      "superClass": [
+        "FlowElement"
+      ],
+      "properties": [
+        {
+          "name": "incoming",
+          "type": "SequenceFlow",
+          "isMany": true,
+          "isReference": true
+        },
+        {
+          "name": "outgoing",
+          "type": "SequenceFlow",
+          "isMany": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "Resource",
+      "superClass": [
+        "RootElement"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "resourceParameters",
+          "type": "ResourceParameter",
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "ResourceParameter",
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "isRequired",
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "type",
+          "type": "ItemDefinition",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "CorrelationSubscription",
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "correlationKeyRef",
+          "type": "CorrelationKey",
+          "isAttr": true,
+          "isReference": true
+        },
+        {
+          "name": "correlationPropertyBinding",
+          "type": "CorrelationPropertyBinding",
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "MessageFlow",
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "sourceRef",
+          "type": "InteractionNode",
+          "isAttr": true,
+          "isReference": true
+        },
+        {
+          "name": "targetRef",
+          "type": "InteractionNode",
+          "isAttr": true,
+          "isReference": true
+        },
+        {
+          "name": "messageRef",
+          "type": "Message",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "MessageFlowAssociation",
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "innerMessageFlowRef",
+          "type": "MessageFlow",
+          "isAttr": true,
+          "isReference": true
+        },
+        {
+          "name": "outerMessageFlowRef",
+          "type": "MessageFlow",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "InteractionNode",
+      "isAbstract": true,
+      "properties": [
+        {
+          "name": "incomingConversationLinks",
+          "type": "ConversationLink",
+          "isVirtual": true,
+          "isMany": true,
+          "isReference": true
+        },
+        {
+          "name": "outgoingConversationLinks",
+          "type": "ConversationLink",
+          "isVirtual": true,
+          "isMany": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "Participant",
+      "superClass": [
+        "InteractionNode",
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "participantMultiplicity",
+          "type": "ParticipantMultiplicity"
+        },
+        {
+          "name": "processRef",
+          "type": "Process",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "ParticipantAssociation",
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "innerParticipantRef",
+          "type": "Participant",
+          "isAttr": true,
+          "isReference": true
+        },
+        {
+          "name": "outerParticipantRef",
+          "type": "Participant",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "ParticipantMultiplicity",
+      "properties": [
+        {
+          "name": "minimum",
+          "default": 0,
+          "isAttr": true,
+          "type": "Integer"
+        },
+        {
+          "name": "maximum",
+          "default": 1,
+          "isAttr": true,
+          "type": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "Collaboration",
+      "superClass": [
+        "RootElement"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "isClosed",
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "participants",
+          "type": "Participant",
+          "isMany": true
+        },
+        {
+          "name": "messageFlows",
+          "type": "MessageFlow",
+          "isMany": true
+        },
+        {
+          "name": "artifacts",
+          "type": "Artifact",
+          "isMany": true
+        },
+        {
+          "name": "conversations",
+          "type": "ConversationNode",
+          "isMany": true
+        },
+        {
+          "name": "conversationAssociations",
+          "type": "ConversationAssociation"
+        },
+        {
+          "name": "participantAssociations",
+          "type": "ParticipantAssociation",
+          "isMany": true
+        },
+        {
+          "name": "messageFlowAssociations",
+          "type": "MessageFlowAssociation",
+          "isMany": true
+        },
+        {
+          "name": "correlationKeys",
+          "type": "CorrelationKey",
+          "isMany": true
+        },
+        {
+          "name": "choreographyRef",
+          "type": "Choreography",
+          "isMany": true,
+          "isReference": true
+        },
+        {
+          "name": "conversationLinks",
+          "type": "ConversationLink",
+          "isMany": true
+        }
+      ]
+    },
+    {
+      "name": "TextAnnotation",
+      "superClass": [
+        "Artifact"
+      ],
+      "properties": [
+        {
+          "name": "text",
+          "type": "String"
+        },
+        {
+          "name": "textFormat",
+          "default": "text/plain",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "Group",
+      "superClass": [
+        "Artifact"
+      ],
+      "properties": [
+        {
+          "name": "categoryValueRef",
+          "type": "CategoryValue",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "Association",
+      "superClass": [
+        "Artifact"
+      ],
+      "properties": [
+        {
+          "name": "associationDirection",
+          "type": "AssociationDirection",
+          "isAttr": true
+        },
+        {
+          "name": "sourceRef",
+          "type": "BaseElement",
+          "isAttr": true,
+          "isReference": true
+        },
+        {
+          "name": "targetRef",
+          "type": "BaseElement",
+          "isAttr": true,
+          "isReference": true
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "superClass": [
+        "RootElement"
+      ],
+      "properties": [
+        {
+          "name": "categoryValue",
+          "type": "CategoryValue",
+          "isMany": true
+        },
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "Artifact",
+      "isAbstract": true,
+      "superClass": [
+        "BaseElement"
+      ]
+    },
+    {
+      "name": "CategoryValue",
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "categorizedFlowElements",
+          "type": "FlowElement",
+          "isVirtual": true,
+          "isMany": true,
+          "isReference": true
+        },
+        {
+          "name": "value",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "Participant",
+      "isAbstract": true,
+      "superClass": [
+        "FlowNode"
+      ],
+      "properties": [
+       
+      ]
+    },
+    {
+      "name": "Role",
+      "superClass": [
+        "Participant",
+        "InteractionNode"
+      ]
+    },
+    {
+      "name": "Collaboration",
+      "superClass": [
+        "Participant",
+        "InteractionNode"
+      ]
+    }, 
+    {
+      "name": "Actor",
+      "superClass": [
+        "Participant",
+        "InteractionNode"
+      ]
+    },    
+    {
+      "name": "Definitions",
+      "superClass": [
+        "BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "targetNamespace",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "expressionLanguage",
+          "default": "http://www.w3.org/1999/XPath",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "typeLanguage",
+          "default": "http://www.w3.org/2001/XMLSchema",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "rootElements",
+          "type": "RootElement",
+          "isMany": true
+        },
+        {
+          "name": "diagrams",
+          "isMany": true,
+          "type": "vdmldi:VDMLDiagram"
+        },
+        {
+          "name": "exporter",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "relationships",
+          "type": "Relationship",
+          "isMany": true
+        },
+        {
+          "name": "exporterVersion",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ],
+  "emumerations": [
+    {
+      "name": "EcoType",
+      "literalValues": [
+        {
+          "name": "Business"
+        },
+        {
+          "name": "Role"
+        },
+        {
+          "name": "BusinessModel"
+        }
+      ]
+    }
+  ],
+  "prefix": "vdml",
+  "xml": {
+    "tagAlias": "lowerCase",
+    "typePrefix": "t"
+  }
+}
+},{}],542:[function(_dereq_,module,exports){
+module.exports={
+  "name": "VDMLDI",
+  "uri": "http://www.omg.org/spec/VDML/20100524/DI",
+  "types": [
+    {
+      "name": "VDMLDiagram",
+      "properties": [
+        {
+          "name": "plane",
+          "type": "VDMLPlane",
+          "redefines": "di:Diagram#rootElement"
+        },
+        {
+          "name": "labelStyle",
+          "type": "VDMLLabelStyle",
+          "isMany": true
+        }
+      ],
+      "superClass": [
+        "di:Diagram"
+      ]
+    },
+    {
+      "name": "VDMLPlane",
+      "properties": [
+        {
+          "name": "vdmlElement",
+          "isAttr": true,
+          "isReference": true,
+          "type": "vdml:BaseElement",
+          "redefines": "di:DiagramElement#modelElement"
+        }
+      ],
+      "superClass": [
+        "di:Plane"
+      ]
+    },
+    {
+      "name": "VDMLShape",
+      "properties": [
+        {
+          "name": "vdmlElement",
+          "isAttr": true,
+          "isReference": true,
+          "type": "vdml:BaseElement",
+          "redefines": "di:DiagramElement#modelElement"
+        },
+        {
+          "name": "isHorizontal",
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "isExpanded",
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "isMarkerVisible",
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "label",
+          "type": "VDMLLabel"
+        },
+        {
+          "name": "isMessageVisible",
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "participantBandKind",
+          "type": "ParticipantBandKind",
+          "isAttr": true
+        },
+        {
+          "name": "choreographyActivityShape",
+          "type": "VDMLShape",
+          "isAttr": true,
+          "isReference": true
+        }
+      ],
+      "superClass": [
+        "di:LabeledShape"
+      ]
+    },
+    {
+      "name": "VDMLEdge",
+      "properties": [
+        {
+          "name": "label",
+          "type": "VDMLLabel"
+        },
+        {
+          "name": "vdmlElement",
+          "isAttr": true,
+          "isReference": true,
+          "type": "vdml:BaseElement",
+          "redefines": "di:DiagramElement#modelElement"
+        },
+        {
+          "name": "sourceElement",
+          "isAttr": true,
+          "isReference": true,
+          "type": "di:DiagramElement",
+          "redefines": "di:Edge#source"
+        },
+        {
+          "name": "targetElement",
+          "isAttr": true,
+          "isReference": true,
+          "type": "di:DiagramElement",
+          "redefines": "di:Edge#target"
+        },
+        {
+          "name": "messageVisibleKind",
+          "type": "MessageVisibleKind",
+          "isAttr": true,
+          "default": "initiating"
+        }
+      ],
+      "superClass": [
+        "di:LabeledEdge"
+      ]
+    },
+    {
+      "name": "VDMLLabel",
+      "properties": [
+        {
+          "name": "labelStyle",
+          "type": "VDMLLabelStyle",
+          "isAttr": true,
+          "isReference": true,
+          "redefines": "di:DiagramElement#style"
+        }
+      ],
+      "superClass": [
+        "di:Label"
+      ]
+    },
+    {
+      "name": "VDMLLabelStyle",
+      "properties": [
+        {
+          "name": "font",
+          "type": "dc:Font"
+        }
+      ],
+      "superClass": [
+        "di:Style"
+      ]
+    }
+  ],
+  "emumerations": [
+    {
+      "name": "ParticipantBandKind",
+      "literalValues": [
+        {
+          "name": "top_initiating"
+        },
+        {
+          "name": "middle_initiating"
+        },
+        {
+          "name": "bottom_initiating"
+        },
+        {
+          "name": "top_non_initiating"
+        },
+        {
+          "name": "middle_non_initiating"
+        },
+        {
+          "name": "bottom_non_initiating"
+        }
+      ]
+    },
+    {
+      "name": "MessageVisibleKind",
+      "literalValues": [
+        {
+          "name": "initiating"
+        },
+        {
+          "name": "non_initiating"
+        }
+      ]
+    }
+  ],
+  "associations": [],
+  "prefix": "vdmldi"
+}
+},{}]},{},[1])(1)
+});
+//# sourceMappingURL=vdml-modeler.js.map

@@ -2,7 +2,7 @@
  * The code in the <project-logo></project-logo> area
  * must not be changed.
  *
- * @see http://bpmn.io/license for more information.
+ * @see http://vdml.io/license for more information.
  */
 'use strict';
 
@@ -16,7 +16,7 @@ var domify = require('min-dom/lib/domify'),
     domRemove = require('min-dom/lib/remove');
 
 var Diagram = require('diagram-js'),
-    BpmnModdle = require('bpmn-moddle');
+    VdmlModdle = require('vdml-moddle');
 
 
 var inherits = require('inherits');
@@ -26,7 +26,7 @@ var Importer = require('./import/Importer');
 
 function checkValidationError(err) {
 
-  // check if we can help the user by indicating wrong BPMN 2.0 xml
+  // check if we can help the user by indicating wrong VDML 2.0 xml
   // (in case he or the exporting tool did not get that right)
 
   var pattern = /unparsable content <([^>]+)> detected([\s\S]*)$/;
@@ -35,7 +35,7 @@ function checkValidationError(err) {
   if (match) {
     err.message =
       'unparsable content <' + match[1] + '> detected; ' +
-      'this may indicate an invalid BPMN 2.0 diagram file' + match[2];
+      'this may indicate an invalid VDML 2.0 diagram file' + match[2];
   }
 
   return err;
@@ -57,7 +57,7 @@ function ensureUnit(val) {
 }
 
 /**
- * A viewer for BPMN 2.0 diagrams.
+ * A viewer for VDML 2.0 diagrams.
  *
  * Have a look at {@link NavigatedViewer} or {@link Modeler} for bundles that include
  * additional features.
@@ -91,8 +91,8 @@ function ensureUnit(val) {
  * };
  *
  * // extend the viewer
- * var bpmnViewer = new Viewer({ additionalModules: [ extensionModule ] });
- * bpmnViewer.importXML(...);
+ * var vdmlViewer = new Viewer({ additionalModules: [ extensionModule ] });
+ * vdmlViewer.importXML(...);
  * ```
  *
  * @param {Object} [options] configuration options to pass to the viewer
@@ -126,7 +126,7 @@ module.exports = Viewer;
 
 
 /**
- * Parse and render a BPMN 2.0 diagram.
+ * Parse and render a VDML 2.0 diagram.
  *
  * Once finished the viewer reports back the result to the
  * provided callback function with (err, warnings).
@@ -143,7 +143,7 @@ module.exports = Viewer;
  *
  * You can use these events to hook into the life-cycle.
  *
- * @param {String} xml the BPMN 2.0 xml
+ * @param {String} xml the VDML 2.0 xml
  * @param {Function} [done] invoked with (err, warnings=[])
  */
 Viewer.prototype.importXML = function(xml, done) {
@@ -157,7 +157,7 @@ Viewer.prototype.importXML = function(xml, done) {
   // allow xml manipulation
   xml = this._emit('import.parse.start', { xml: xml }) || xml;
 
-  this.moddle.fromXML(xml, 'bpmn:Definitions', function(err, definitions, context) {
+  this.moddle.fromXML(xml, 'vdml:Definitions', function(err, definitions, context) {
 
     // hook in post parse listeners +
     // allow definitions manipulation
@@ -188,8 +188,8 @@ Viewer.prototype.importXML = function(xml, done) {
 };
 
 /**
- * Export the currently displayed BPMN 2.0 diagram as
- * a BPMN 2.0 XML document.
+ * Export the currently displayed VDML 2.0 diagram as
+ * a VDML 2.0 XML document.
  *
  * @param {Object} [options] export options
  * @param {Boolean} [options.format=false] output formated XML
@@ -214,7 +214,7 @@ Viewer.prototype.saveXML = function(options, done) {
 };
 
 /**
- * Export the currently displayed BPMN 2.0 diagram as
+ * Export the currently displayed VDML 2.0 diagram as
  * an SVG image.
  *
  * @param {Object} [options]
@@ -239,7 +239,7 @@ Viewer.prototype.saveSVG = function(options, done) {
 
   var svg =
     '<?xml version="1.0" encoding="utf-8"?>\n' +
-    '<!-- created with bpmn-js / http://bpmn.io -->\n' +
+    '<!-- created with vdml-js / http://vdml.io -->\n' +
     '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n' +
     '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ' +
          'width="' + bbox.width + '" height="' + bbox.height + '" ' +
@@ -305,7 +305,7 @@ Viewer.prototype.importDefinitions = function(definitions, done) {
     this.definitions = definitions;
 
     // perform graphical import
-    Importer.importBpmnDiagram(this, definitions, done);
+    Importer.importVdmlDiagram(this, definitions, done);
   } catch (e) {
 
     // handle synchronous errors
@@ -361,7 +361,7 @@ Viewer.prototype._init = function(container, moddle, options) {
       additionalModules = options.additionalModules || [],
       staticModules = [
         {
-          bpmnjs: [ 'value', this ],
+          vdmljs: [ 'value', this ],
           moddle: [ 'value', moddle ]
         }
       ];
@@ -421,7 +421,7 @@ Viewer.prototype._createContainer = function(options) {
 Viewer.prototype._createModdle = function(options) {
   var moddleOptions = assign({}, this._moddleExtensions, options.moddleExtensions);
 
-  return new BpmnModdle(moddleOptions);
+  return new VdmlModdle(moddleOptions);
 };
 
 
@@ -443,20 +443,20 @@ var PoweredBy = require('./util/PoweredByUtil'),
 
 /**
  * Adds the project logo to the diagram container as
- * required by the bpmn.io license.
+ * required by the vdml.io license.
  *
- * @see http://bpmn.io/license
+ * @see http://vdml.io/license
  *
  * @param {Element} container
  */
 function addProjectLogo(container) {
-  var logoData = PoweredBy.BPMNIO_LOGO;
+  var logoData = PoweredBy.VDMLIO_LOGO;
 
   var linkMarkup =
-    '<a href="http://bpmn.io" ' +
+    '<a href="http://vdml.io" ' +
        'target="_blank" ' +
        'class="bjs-powered-by" ' +
-       'title="Powered by bpmn.io" ' +
+       'title="Powered by vdml.io" ' +
        'style="position: absolute; bottom: 15px; right: 15px; z-index: 100">' +
         '<img src="data:image/png;base64,' + logoData + '">' +
     '</a>';

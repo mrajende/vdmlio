@@ -36,14 +36,14 @@ function notYetDrawn(translate, semantic, refSemantic, property) {
 }
 
 /**
- * An importer that adds bpmn elements to the canvas
+ * An importer that adds vdml elements to the canvas
  *
  * @param {EventBus} eventBus
  * @param {Canvas} canvas
  * @param {ElementFactory} elementFactory
  * @param {ElementRegistry} elementRegistry
  */
-function BpmnImporter(eventBus, canvas, elementFactory, elementRegistry, translate) {
+function VdmlImporter(eventBus, canvas, elementFactory, elementRegistry, translate) {
   this._eventBus = eventBus;
   this._canvas = canvas;
 
@@ -52,16 +52,16 @@ function BpmnImporter(eventBus, canvas, elementFactory, elementRegistry, transla
   this._translate = translate;
 }
 
-BpmnImporter.$inject = [ 'eventBus', 'canvas', 'elementFactory', 'elementRegistry', 'translate' ];
+VdmlImporter.$inject = [ 'eventBus', 'canvas', 'elementFactory', 'elementRegistry', 'translate' ];
 
-module.exports = BpmnImporter;
+module.exports = VdmlImporter;
 
 
 /**
- * Add bpmn element (semantic) to the canvas onto the
+ * Add vdml element (semantic) to the canvas onto the
  * specified parent shape.
  */
-BpmnImporter.prototype.add = function(semantic, parentElement) {
+VdmlImporter.prototype.add = function(semantic, parentElement) {
 
   var di = semantic.di,
       element,
@@ -71,7 +71,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
   // ROOT ELEMENT
   // handle the special case that we deal with a
   // invisible root element (process or collaboration)
-  if (is(di, 'bpmndi:BPMNPlane')) {
+  if (is(di, 'vdmldi:VDMLPlane')) {
 
     // add a virtual element (not being drawn)
     element = this._elementFactory.createRoot(elementData(semantic));
@@ -80,7 +80,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
   }
 
   // SHAPE
-  else if (is(di, 'bpmndi:BPMNShape')) {
+  else if (is(di, 'vdmldi:VDMLShape')) {
 
     var collapsed = !isExpanded(semantic);
     hidden = parentElement && (parentElement.hidden || parentElement.collapsed);
@@ -96,7 +96,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
       height: Math.round(bounds.height)
     }));
 
-    if (is(semantic, 'bpmn:BoundaryEvent')) {
+    if (is(semantic, 'vdml:BoundaryEvent')) {
       this._attachBoundary(semantic, element);
     }
 
@@ -104,7 +104,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
   }
 
   // CONNECTION
-  else if (is(di, 'bpmndi:BPMNEdge')) {
+  else if (is(di, 'vdmldi:VDMLEdge')) {
 
     var source = this._getSource(semantic),
         target = this._getTarget(semantic);
@@ -118,7 +118,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
       waypoints: collectWaypoints(semantic.di.waypoint)
     }));
 
-    if (is(semantic, 'bpmn:DataInputAssociation') || is(semantic, 'bpmn:DataOutputAssociation')) {
+    if (is(semantic, 'vdml:DataInputAssociation') || is(semantic, 'vdml:DataOutputAssociation')) {
       // implicit root element
       parentElement = null;
     }
@@ -136,7 +136,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
   }
 
 
-  this._eventBus.fire('bpmnElement.added', { element: element });
+  this._eventBus.fire('vdmlElement.added', { element: element });
 
   return element;
 };
@@ -148,7 +148,7 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
  * @param {ModdleElement} boundarySemantic
  * @param {djs.model.Base} boundaryElement
  */
-BpmnImporter.prototype._attachBoundary = function(boundarySemantic, boundaryElement) {
+VdmlImporter.prototype._attachBoundary = function(boundarySemantic, boundaryElement) {
   var translate = this._translate;
   var hostSemantic = boundarySemantic.attachedToRef;
 
@@ -181,7 +181,7 @@ BpmnImporter.prototype._attachBoundary = function(boundarySemantic, boundaryElem
 /**
  * add label for an element
  */
-BpmnImporter.prototype.addLabel = function(semantic, element) {
+VdmlImporter.prototype.addLabel = function(semantic, element) {
   var bounds = getExternalLabelBounds(semantic, element);
 
   var label = this._elementFactory.createLabel(elementData(semantic, {
@@ -203,7 +203,7 @@ BpmnImporter.prototype.addLabel = function(semantic, element) {
  *
  * @throws {Error} if the end is not yet drawn
  */
-BpmnImporter.prototype._getEnd = function(semantic, side) {
+VdmlImporter.prototype._getEnd = function(semantic, side) {
 
   var element,
       refSemantic,
@@ -213,13 +213,13 @@ BpmnImporter.prototype._getEnd = function(semantic, side) {
   refSemantic = semantic[side + 'Ref'];
 
   // handle mysterious isMany DataAssociation#sourceRef
-  if (side === 'source' && type === 'bpmn:DataInputAssociation') {
+  if (side === 'source' && type === 'vdml:DataInputAssociation') {
     refSemantic = refSemantic && refSemantic[0];
   }
 
   // fix source / target for DataInputAssociation / DataOutputAssociation
-  if (side === 'source' && type === 'bpmn:DataOutputAssociation' ||
-      side === 'target' && type === 'bpmn:DataInputAssociation') {
+  if (side === 'source' && type === 'vdml:DataOutputAssociation' ||
+      side === 'target' && type === 'vdml:DataInputAssociation') {
 
     refSemantic = semantic.$parent;
   }
@@ -240,15 +240,15 @@ BpmnImporter.prototype._getEnd = function(semantic, side) {
   }
 };
 
-BpmnImporter.prototype._getSource = function(semantic) {
+VdmlImporter.prototype._getSource = function(semantic) {
   return this._getEnd(semantic, 'source');
 };
 
-BpmnImporter.prototype._getTarget = function(semantic) {
+VdmlImporter.prototype._getTarget = function(semantic) {
   return this._getEnd(semantic, 'target');
 };
 
 
-BpmnImporter.prototype._getElement = function(semantic) {
+VdmlImporter.prototype._getElement = function(semantic) {
   return this._elementRegistry.get(semantic.id);
 };

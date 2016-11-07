@@ -29,7 +29,7 @@ var LABEL_STYLE = {
 };
 
 
-function BpmnRenderer(eventBus, styles, pathMap, priority) {
+function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
   BaseRenderer.call(this, eventBus, priority);
 
@@ -243,54 +243,54 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
     var event = getSemantic(element);
     var isThrowing = isThrowEvent(event);
 
-    if (isTypedEvent(event, 'bpmn:MessageEventDefinition')) {
-      return renderer('bpmn:MessageEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:MessageEventDefinition')) {
+      return renderer('vdml:MessageEventDefinition')(p, element, isThrowing);
     }
 
-    if (isTypedEvent(event, 'bpmn:TimerEventDefinition')) {
-      return renderer('bpmn:TimerEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:TimerEventDefinition')) {
+      return renderer('vdml:TimerEventDefinition')(p, element, isThrowing);
     }
 
-    if (isTypedEvent(event, 'bpmn:ConditionalEventDefinition')) {
-      return renderer('bpmn:ConditionalEventDefinition')(p, element);
+    if (isTypedEvent(event, 'vdml:ConditionalEventDefinition')) {
+      return renderer('vdml:ConditionalEventDefinition')(p, element);
     }
 
-    if (isTypedEvent(event, 'bpmn:SignalEventDefinition')) {
-      return renderer('bpmn:SignalEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:SignalEventDefinition')) {
+      return renderer('vdml:SignalEventDefinition')(p, element, isThrowing);
     }
 
-    if (isTypedEvent(event, 'bpmn:CancelEventDefinition') &&
-      isTypedEvent(event, 'bpmn:TerminateEventDefinition', { parallelMultiple: false })) {
-      return renderer('bpmn:MultipleEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:CancelEventDefinition') &&
+      isTypedEvent(event, 'vdml:TerminateEventDefinition', { parallelMultiple: false })) {
+      return renderer('vdml:MultipleEventDefinition')(p, element, isThrowing);
     }
 
-    if (isTypedEvent(event, 'bpmn:CancelEventDefinition') &&
-      isTypedEvent(event, 'bpmn:TerminateEventDefinition', { parallelMultiple: true })) {
-      return renderer('bpmn:ParallelMultipleEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:CancelEventDefinition') &&
+      isTypedEvent(event, 'vdml:TerminateEventDefinition', { parallelMultiple: true })) {
+      return renderer('vdml:ParallelMultipleEventDefinition')(p, element, isThrowing);
     }
 
-    if (isTypedEvent(event, 'bpmn:EscalationEventDefinition')) {
-      return renderer('bpmn:EscalationEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:EscalationEventDefinition')) {
+      return renderer('vdml:EscalationEventDefinition')(p, element, isThrowing);
     }
 
-    if (isTypedEvent(event, 'bpmn:LinkEventDefinition')) {
-      return renderer('bpmn:LinkEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:LinkEventDefinition')) {
+      return renderer('vdml:LinkEventDefinition')(p, element, isThrowing);
     }
 
-    if (isTypedEvent(event, 'bpmn:ErrorEventDefinition')) {
-      return renderer('bpmn:ErrorEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:ErrorEventDefinition')) {
+      return renderer('vdml:ErrorEventDefinition')(p, element, isThrowing);
     }
 
-    if (isTypedEvent(event, 'bpmn:CancelEventDefinition')) {
-      return renderer('bpmn:CancelEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:CancelEventDefinition')) {
+      return renderer('vdml:CancelEventDefinition')(p, element, isThrowing);
     }
 
-    if (isTypedEvent(event, 'bpmn:CompensateEventDefinition')) {
-      return renderer('bpmn:CompensateEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:CompensateEventDefinition')) {
+      return renderer('vdml:CompensateEventDefinition')(p, element, isThrowing);
     }
 
-    if (isTypedEvent(event, 'bpmn:TerminateEventDefinition')) {
-      return renderer('bpmn:TerminateEventDefinition')(p, element, isThrowing);
+    if (isTypedEvent(event, 'vdml:TerminateEventDefinition')) {
+      return renderer('vdml:TerminateEventDefinition')(p, element, isThrowing);
     }
 
     return null;
@@ -341,10 +341,10 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
   }
 
   var handlers = this.handlers = {
-    'bpmn:Event': function(p, element, attrs) {
+    'vdml:Event': function(p, element, attrs) {
       return drawCircle(p, element.width, element.height,  attrs);
     },
-    'bpmn:StartEvent': function(p, element) {
+    'vdml:StartEvent': function(p, element) {
       var attrs = {};
       var semantic = getSemantic(element);
 
@@ -355,13 +355,13 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         };
       }
 
-      var circle = renderer('bpmn:Event')(p, element, attrs);
+      var circle = renderer('vdml:Event')(p, element, attrs);
 
       renderEventContent(element, p);
 
       return circle;
     },
-    'bpmn:MessageEventDefinition': function(p, element, isThrowing) {
+    'vdml:MessageEventDefinition': function(p, element, isThrowing) {
       var pathData = pathMap.getScaledPath('EVENT_MESSAGE', {
         xScaleFactor: 0.9,
         yScaleFactor: 0.9,
@@ -384,7 +384,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return messagePath;
     },
-    'bpmn:TimerEventDefinition': function(p, element) {
+    'vdml:TimerEventDefinition': function(p, element) {
 
       var circle = drawCircle(p, element.width, element.height, 0.2 * element.height, {
         strokeWidth: 2
@@ -431,7 +431,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return circle;
     },
-    'bpmn:EscalationEventDefinition': function(p, event, isThrowing) {
+    'vdml:EscalationEventDefinition': function(p, event, isThrowing) {
       var pathData = pathMap.getScaledPath('EVENT_ESCALATION', {
         xScaleFactor: 1,
         yScaleFactor: 1,
@@ -450,7 +450,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         fill: fill
       });
     },
-    'bpmn:ConditionalEventDefinition': function(p, event) {
+    'vdml:ConditionalEventDefinition': function(p, event) {
       var pathData = pathMap.getScaledPath('EVENT_CONDITIONAL', {
         xScaleFactor: 1,
         yScaleFactor: 1,
@@ -466,7 +466,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         strokeWidth: 1
       });
     },
-    'bpmn:LinkEventDefinition': function(p, event, isThrowing) {
+    'vdml:LinkEventDefinition': function(p, event, isThrowing) {
       var pathData = pathMap.getScaledPath('EVENT_LINK', {
         xScaleFactor: 1,
         yScaleFactor: 1,
@@ -485,7 +485,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         fill: fill
       });
     },
-    'bpmn:ErrorEventDefinition': function(p, event, isThrowing) {
+    'vdml:ErrorEventDefinition': function(p, event, isThrowing) {
       var pathData = pathMap.getScaledPath('EVENT_ERROR', {
         xScaleFactor: 1.1,
         yScaleFactor: 1.1,
@@ -504,7 +504,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         fill: fill
       });
     },
-    'bpmn:CancelEventDefinition': function(p, event, isThrowing) {
+    'vdml:CancelEventDefinition': function(p, event, isThrowing) {
       var pathData = pathMap.getScaledPath('EVENT_CANCEL_45', {
         xScaleFactor: 1.0,
         yScaleFactor: 1.0,
@@ -523,7 +523,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         fill: fill
       }).transform('rotate(45)');
     },
-    'bpmn:CompensateEventDefinition': function(p, event, isThrowing) {
+    'vdml:CompensateEventDefinition': function(p, event, isThrowing) {
       var pathData = pathMap.getScaledPath('EVENT_COMPENSATION', {
         xScaleFactor: 1,
         yScaleFactor: 1,
@@ -542,7 +542,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         fill: fill
       });
     },
-    'bpmn:SignalEventDefinition': function(p, event, isThrowing) {
+    'vdml:SignalEventDefinition': function(p, event, isThrowing) {
       var pathData = pathMap.getScaledPath('EVENT_SIGNAL', {
         xScaleFactor: 0.9,
         yScaleFactor: 0.9,
@@ -561,7 +561,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         fill: fill
       });
     },
-    'bpmn:MultipleEventDefinition': function(p, event, isThrowing) {
+    'vdml:MultipleEventDefinition': function(p, event, isThrowing) {
       var pathData = pathMap.getScaledPath('EVENT_MULTIPLE', {
         xScaleFactor: 1.1,
         yScaleFactor: 1.1,
@@ -580,7 +580,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         fill: fill
       });
     },
-    'bpmn:ParallelMultipleEventDefinition': function(p, event) {
+    'vdml:ParallelMultipleEventDefinition': function(p, event) {
       var pathData = pathMap.getScaledPath('EVENT_PARALLEL_MULTIPLE', {
         xScaleFactor: 1.2,
         yScaleFactor: 1.2,
@@ -596,8 +596,8 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         strokeWidth: 1
       });
     },
-    'bpmn:EndEvent': function(p, element) {
-      var circle = renderer('bpmn:Event')(p, element, {
+    'vdml:EndEvent': function(p, element) {
+      var circle = renderer('vdml:Event')(p, element, {
         strokeWidth: 4
       });
 
@@ -605,7 +605,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return circle;
     },
-    'bpmn:TerminateEventDefinition': function(p, element) {
+    'vdml:TerminateEventDefinition': function(p, element) {
       var circle = drawCircle(p, element.width, element.height, 8, {
         strokeWidth: 4,
         fill: 'black'
@@ -613,29 +613,29 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return circle;
     },
-    'bpmn:IntermediateEvent': function(p, element) {
-      var outer = renderer('bpmn:Event')(p, element, { strokeWidth: 1 });
+    'vdml:IntermediateEvent': function(p, element) {
+      var outer = renderer('vdml:Event')(p, element, { strokeWidth: 1 });
       /* inner */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, { strokeWidth: 1, fill: 'none' });
 
       renderEventContent(element, p);
 
       return outer;
     },
-    'bpmn:IntermediateCatchEvent': as('bpmn:IntermediateEvent'),
-    'bpmn:IntermediateThrowEvent': as('bpmn:IntermediateEvent'),
+    'vdml:IntermediateCatchEvent': as('vdml:IntermediateEvent'),
+    'vdml:IntermediateThrowEvent': as('vdml:IntermediateEvent'),
 
-    'bpmn:Activity': function(p, element, attrs) {
+    'vdml:Activity': function(p, element, attrs) {
       return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, attrs);
     },
 
-    'bpmn:Task': function(p, element, attrs) {
-      var rect = renderer('bpmn:Activity')(p, element, attrs);
+    'vdml:Task': function(p, element, attrs) {
+      var rect = renderer('vdml:Activity')(p, element, attrs);
       renderEmbeddedLabel(p, element, 'center-middle');
       attachTaskMarkers(p, element);
       return rect;
     },
-    'bpmn:ServiceTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
+    'vdml:ServiceTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
 
       var pathDataBG = pathMap.getScaledPath('TASK_TYPE_SERVICE', {
         abspos: {
@@ -676,8 +676,8 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return task;
     },
-    'bpmn:UserTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
+    'vdml:UserTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
 
       var x = 15;
       var y = 12;
@@ -720,8 +720,8 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return task;
     },
-    'bpmn:ManualTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
+    'vdml:ManualTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
 
       var pathData = pathMap.getScaledPath('TASK_TYPE_MANUAL', {
         abspos: {
@@ -738,8 +738,8 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return task;
     },
-    'bpmn:SendTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
+    'vdml:SendTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
 
       var pathData = pathMap.getScaledPath('TASK_TYPE_SEND', {
         xScaleFactor: 1,
@@ -760,10 +760,10 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return task;
     },
-    'bpmn:ReceiveTask' : function(p, element) {
+    'vdml:ReceiveTask' : function(p, element) {
       var semantic = getSemantic(element);
 
-      var task = renderer('bpmn:Task')(p, element);
+      var task = renderer('vdml:Task')(p, element);
       var pathData;
 
       if (semantic.instantiate) {
@@ -795,8 +795,8 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return task;
     },
-    'bpmn:ScriptTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
+    'vdml:ScriptTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
 
       var pathData = pathMap.getScaledPath('TASK_TYPE_SCRIPT', {
         abspos: {
@@ -811,8 +811,8 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return task;
     },
-    'bpmn:BusinessRuleTask': function(p, element) {
-      var task = renderer('bpmn:Task')(p, element);
+    'vdml:BusinessRuleTask': function(p, element) {
+      var task = renderer('vdml:Task')(p, element);
 
       var headerPathData = pathMap.getScaledPath('TASK_TYPE_BUSINESS_RULE_HEADER', {
         abspos: {
@@ -841,11 +841,11 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return task;
     },
-    'bpmn:SubProcess': function(p, element, attrs) {
+    'vdml:SubProcess': function(p, element, attrs) {
 
       attrs = assign({ fillOpacity: 0.95 }, attrs);
 
-      var rect = renderer('bpmn:Activity')(p, element, attrs);
+      var rect = renderer('vdml:Activity')(p, element, attrs);
 
       var expanded = DiUtil.isExpanded(element);
 
@@ -867,11 +867,11 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return rect;
     },
-    'bpmn:AdHocSubProcess': function(p, element) {
-      return renderer('bpmn:SubProcess')(p, element);
+    'vdml:AdHocSubProcess': function(p, element) {
+      return renderer('vdml:SubProcess')(p, element);
     },
-    'bpmn:Transaction': function(p, element) {
-      var outer = renderer('bpmn:SubProcess')(p, element);
+    'vdml:Transaction': function(p, element) {
+      var outer = renderer('vdml:SubProcess')(p, element);
 
       var innerAttrs = styles.style([ 'no-fill', 'no-events' ]);
 
@@ -879,14 +879,14 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return outer;
     },
-    'bpmn:CallActivity': function(p, element) {
-      return renderer('bpmn:SubProcess')(p, element, {
+    'vdml:CallActivity': function(p, element) {
+      return renderer('vdml:SubProcess')(p, element, {
         strokeWidth: 5
       });
     },
-    'bpmn:Participant': function(p, element) {
+    'vdml:Participant': function(p, element) {
 
-      var lane = renderer('bpmn:Lane')(p, element, {
+      var lane = renderer('vdml:Lane')(p, element, {
         fillOpacity: 0.95,
         fill: 'White'
       });
@@ -914,21 +914,21 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return lane;
     },
-    'bpmn:Lane': function(p, element, attrs) {
+    'vdml:Lane': function(p, element, attrs) {
       var rect = drawRect(p, element.width, element.height, 0, attrs || {
         fill: 'none'
       });
 
       var semantic = getSemantic(element);
 
-      if (semantic.$type === 'bpmn:Lane') {
+      if (semantic.$type === 'vdml:Lane') {
         var text = semantic.name;
         renderLaneLabel(p, text, element);
       }
 
       return rect;
     },
-    'bpmn:InclusiveGateway': function(p, element) {
+    'vdml:InclusiveGateway': function(p, element) {
       var diamond = drawDiamond(p, element.width, element.height);
 
       /* circle path */
@@ -939,7 +939,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return diamond;
     },
-    'bpmn:ExclusiveGateway': function(p, element) {
+    'vdml:ExclusiveGateway': function(p, element) {
       var diamond = drawDiamond(p, element.width, element.height);
 
       var pathData = pathMap.getScaledPath('GATEWAY_EXCLUSIVE', {
@@ -962,7 +962,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return diamond;
     },
-    'bpmn:ComplexGateway': function(p, element) {
+    'vdml:ComplexGateway': function(p, element) {
       var diamond = drawDiamond(p, element.width, element.height);
 
       var pathData = pathMap.getScaledPath('GATEWAY_COMPLEX', {
@@ -983,7 +983,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return diamond;
     },
-    'bpmn:ParallelGateway': function(p, element) {
+    'vdml:ParallelGateway': function(p, element) {
       var diamond = drawDiamond(p, element.width, element.height);
 
       var pathData = pathMap.getScaledPath('GATEWAY_PARALLEL', {
@@ -1004,7 +1004,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return diamond;
     },
-    'bpmn:EventBasedGateway': function(p, element) {
+    'vdml:EventBasedGateway': function(p, element) {
 
       var semantic = getSemantic(element);
 
@@ -1071,10 +1071,10 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return diamond;
     },
-    'bpmn:Gateway': function(p, element) {
+    'vdml:Gateway': function(p, element) {
       return drawDiamond(p, element.width, element.height);
     },
-    'bpmn:SequenceFlow': function(p, element) {
+    'vdml:SequenceFlow': function(p, element) {
       var pathData = createPathFromConnection(element);
       var path = drawPath(p, pathData, {
         strokeLinejoin: 'round',
@@ -1085,14 +1085,14 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
       var source = element.source.businessObject;
 
       // conditional flow marker
-      if (sequenceFlow.conditionExpression && source.$instanceOf('bpmn:Activity')) {
+      if (sequenceFlow.conditionExpression && source.$instanceOf('vdml:Activity')) {
         path.attr({
           markerStart: marker('conditional-flow-marker')
         });
       }
 
       // default marker
-      if (source.default && (source.$instanceOf('bpmn:Gateway') || source.$instanceOf('bpmn:Activity')) &&
+      if (source.default && (source.$instanceOf('vdml:Gateway') || source.$instanceOf('vdml:Activity')) &&
           source.default === sequenceFlow) {
         path.attr({
           markerStart: marker('conditional-default-flow-marker')
@@ -1101,7 +1101,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return path;
     },
-    'bpmn:Association': function(p, element, attrs) {
+    'vdml:Association': function(p, element, attrs) {
 
       var semantic = getSemantic(element);
 
@@ -1122,17 +1122,17 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return drawLine(p, element.waypoints, attrs);
     },
-    'bpmn:DataInputAssociation': function(p, element) {
-      return renderer('bpmn:Association')(p, element, {
+    'vdml:DataInputAssociation': function(p, element) {
+      return renderer('vdml:Association')(p, element, {
         markerEnd: marker('association-end')
       });
     },
-    'bpmn:DataOutputAssociation': function(p, element) {
-      return renderer('bpmn:Association')(p, element, {
+    'vdml:DataOutputAssociation': function(p, element) {
+      return renderer('vdml:Association')(p, element, {
         markerEnd: marker('association-end')
       });
     },
-    'bpmn:MessageFlow': function(p, element) {
+    'vdml:MessageFlow': function(p, element) {
 
       var semantic = getSemantic(element),
           di = getDi(element);
@@ -1172,7 +1172,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return path;
     },
-    'bpmn:DataObject': function(p, element) {
+    'vdml:DataObject': function(p, element) {
       var pathData = pathMap.getScaledPath('DATA_OBJECT_PATH', {
         xScaleFactor: 1,
         yScaleFactor: 1,
@@ -1194,23 +1194,23 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return elementObject;
     },
-    'bpmn:DataObjectReference': as('bpmn:DataObject'),
-    'bpmn:DataInput': function(p, element) {
+    'vdml:DataObjectReference': as('vdml:DataObject'),
+    'vdml:DataInput': function(p, element) {
 
       var arrowPathData = pathMap.getRawPath('DATA_ARROW');
 
       // page
-      var elementObject = renderer('bpmn:DataObject')(p, element);
+      var elementObject = renderer('vdml:DataObject')(p, element);
 
       /* input arrow path */ drawPath(p, arrowPathData, { strokeWidth: 1 });
 
       return elementObject;
     },
-    'bpmn:DataOutput': function(p, element) {
+    'vdml:DataOutput': function(p, element) {
       var arrowPathData = pathMap.getRawPath('DATA_ARROW');
 
       // page
-      var elementObject = renderer('bpmn:DataObject')(p, element);
+      var elementObject = renderer('vdml:DataObject')(p, element);
 
       /* output arrow path */ drawPath(p, arrowPathData, {
         strokeWidth: 1,
@@ -1219,7 +1219,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return elementObject;
     },
-    'bpmn:DataStoreReference': function(p, element) {
+    'vdml:DataStoreReference': function(p, element) {
       var DATA_STORE_PATH = pathMap.getScaledPath('DATA_STORE', {
         xScaleFactor: 1,
         yScaleFactor: 1,
@@ -1238,7 +1238,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return elementStore;
     },
-    'bpmn:BoundaryEvent': function(p, element) {
+    'vdml:BoundaryEvent': function(p, element) {
 
       var semantic = getSemantic(element),
           cancel = semantic.cancelActivity;
@@ -1252,14 +1252,14 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
         attrs.strokeLinecap = 'round';
       }
 
-      var outer = renderer('bpmn:Event')(p, element, attrs);
+      var outer = renderer('vdml:Event')(p, element, attrs);
       /* inner path */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, assign(attrs, { fill: 'none' }));
 
       renderEventContent(element, p);
 
       return outer;
     },
-    'bpmn:Group': function(p, element) {
+    'vdml:Group': function(p, element) {
       return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, {
         strokeWidth: 1,
         strokeDasharray: '8,3,1,3',
@@ -1290,7 +1290,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 
       return textElement;
     },
-    'bpmn:TextAnnotation': function(p, element) {
+    'vdml:TextAnnotation': function(p, element) {
       var style = {
         'fill': 'none',
         'stroke': 'none'
@@ -1461,7 +1461,7 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
       renderer('CompensationMarker')(p, element, position);
     }
 
-    if (obj.$type === 'bpmn:AdHocSubProcess') {
+    if (obj.$type === 'vdml:AdHocSubProcess') {
       renderer('AdhocMarker')(p, element, position);
     }
 
@@ -1512,18 +1512,18 @@ function BpmnRenderer(eventBus, styles, pathMap, priority) {
 }
 
 
-inherits(BpmnRenderer, BaseRenderer);
+inherits(VdmlRenderer, BaseRenderer);
 
-BpmnRenderer.$inject = [ 'eventBus', 'styles', 'pathMap' ];
+VdmlRenderer.$inject = [ 'eventBus', 'styles', 'pathMap' ];
 
-module.exports = BpmnRenderer;
+module.exports = VdmlRenderer;
 
 
-BpmnRenderer.prototype.canRender = function(element) {
-  return is(element, 'bpmn:BaseElement');
+VdmlRenderer.prototype.canRender = function(element) {
+  return is(element, 'vdml:BaseElement');
 };
 
-BpmnRenderer.prototype.drawShape = function(visuals, element) {
+VdmlRenderer.prototype.drawShape = function(visuals, element) {
   var type = element.type;
   var h = this.handlers[type];
 
@@ -1531,7 +1531,7 @@ BpmnRenderer.prototype.drawShape = function(visuals, element) {
   return h(visuals, element);
 };
 
-BpmnRenderer.prototype.drawConnection = function(visuals, element) {
+VdmlRenderer.prototype.drawConnection = function(visuals, element) {
   var type = element.type;
   var h = this.handlers[type];
 
@@ -1539,17 +1539,17 @@ BpmnRenderer.prototype.drawConnection = function(visuals, element) {
   return h(visuals, element);
 };
 
-BpmnRenderer.prototype.getShapePath = function(element) {
+VdmlRenderer.prototype.getShapePath = function(element) {
 
-  if (is(element, 'bpmn:Event')) {
+  if (is(element, 'vdml:Event')) {
     return getCirclePath(element);
   }
 
-  if (is(element, 'bpmn:Activity')) {
+  if (is(element, 'vdml:Activity')) {
     return getRoundRectPath(element, TASK_BORDER_RADIUS);
   }
 
-  if (is(element, 'bpmn:Gateway')) {
+  if (is(element, 'vdml:Gateway')) {
     return getDiamondPath(element);
   }
 
@@ -1582,7 +1582,7 @@ function isTypedEvent(event, eventDefinitionType, filter) {
 }
 
 function isThrowEvent(event) {
-  return (event.$type === 'bpmn:IntermediateThrowEvent') || (event.$type === 'bpmn:EndEvent');
+  return (event.$type === 'vdml:IntermediateThrowEvent') || (event.$type === 'vdml:EndEvent');
 }
 
 function isCollection(element) {

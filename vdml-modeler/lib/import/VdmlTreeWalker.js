@@ -8,7 +8,7 @@ var Refs = require('object-refs');
 
 var elementToString = require('./Util').elementToString;
 
-var diRefs = new Refs({ name: 'bpmnElement', enumerable: true }, { name: 'di' });
+var diRefs = new Refs({ name: 'vdmlElement', enumerable: true }, { name: 'di' });
 
 /**
  * Returns true if an element has the given meta-model type
@@ -29,12 +29,12 @@ function is(element, type) {
  */
 function findDisplayCandidate(definitions) {
   return find(definitions.rootElements, function(e) {
-    return is(e, 'bpmn:Process') || is(e, 'bpmn:Collaboration');
+    return is(e, 'vdml:Process') || is(e, 'vdml:Collaboration');
   });
 }
 
 
-function BpmnTreeWalker(handler, translate) {
+function VdmlTreeWalker(handler, translate) {
 
   // list of containers already walked
   var handledElements = {};
@@ -101,23 +101,23 @@ function BpmnTreeWalker(handler, translate) {
   ////// DI handling ////////////////////////////
 
   function registerDi(di) {
-    var bpmnElement = di.bpmnElement;
+    var vdmlElement = di.vdmlElement;
 
-    if (bpmnElement) {
-      if (bpmnElement.di) {
+    if (vdmlElement) {
+      if (vdmlElement.di) {
         logError(
           translate('multiple DI elements defined for {element}', {
-            element: elementToString(bpmnElement)
+            element: elementToString(vdmlElement)
           }),
-          { element: bpmnElement  }
+          { element: vdmlElement  }
         );
       } else {
-        diRefs.bind(bpmnElement, 'di');
-        bpmnElement.di = di;
+        diRefs.bind(vdmlElement, 'di');
+        vdmlElement.di = di;
       }
     } else {
       logError(
-        translate('no bpmnElement referenced in {element}', {
+        translate('no vdmlElement referenced in {element}', {
           element: elementToString(di)
         }),
         { element: di }
@@ -151,12 +151,12 @@ function BpmnTreeWalker(handler, translate) {
    * @throws {Error} if no diagram to display could be found
    */
   function handleDefinitions(definitions, diagram) {
-    // make sure we walk the correct bpmnElement
+    // make sure we walk the correct vdmlElement
 
     var diagrams = definitions.diagrams;
 
     if (diagram && diagrams.indexOf(diagram) === -1) {
-      throw new Error(translate('diagram not part of bpmn:Definitions'));
+      throw new Error(translate('diagram not part of vdml:Definitions'));
     }
 
     if (!diagram && diagrams && diagrams.length) {
@@ -181,7 +181,7 @@ function BpmnTreeWalker(handler, translate) {
       ));
     }
 
-    var rootElement = plane.bpmnElement;
+    var rootElement = plane.vdmlElement;
 
     // ensure we default to a suitable display candidate (process or collaboration),
     // even if non is specified in DI
@@ -193,14 +193,14 @@ function BpmnTreeWalker(handler, translate) {
       } else {
 
         logError(
-          translate('correcting missing bpmnElement on {plane} to {rootElement}', {
+          translate('correcting missing vdmlElement on {plane} to {rootElement}', {
             plane: elementToString(plane),
             rootElement: elementToString(rootElement)
           })
         );
 
         // correct DI on the fly
-        plane.bpmnElement = rootElement;
+        plane.vdmlElement = rootElement;
         registerDi(plane);
       }
     }
@@ -208,16 +208,16 @@ function BpmnTreeWalker(handler, translate) {
 
     var ctx = visitRoot(rootElement, plane);
 
-    if (is(rootElement, 'bpmn:Process')) {
+    if (is(rootElement, 'vdml:Process')) {
       handleProcess(rootElement, ctx);
-    } else if (is(rootElement, 'bpmn:Collaboration')) {
+    } else if (is(rootElement, 'vdml:Collaboration')) {
       handleCollaboration(rootElement, ctx);
 
       // force drawing of everything not yet drawn that is part of the target DI
       handleUnhandledProcesses(definitions.rootElements, ctx);
     } else {
       throw new Error(
-        translate('unsupported bpmnElement for {plane}: {rootElement}', {
+        translate('unsupported vdmlElement for {plane}: {rootElement}', {
           plane: elementToString(plane),
           rootElement: elementToString(rootElement)
         })
@@ -248,7 +248,7 @@ function BpmnTreeWalker(handler, translate) {
     // if they contain lanes with DI information.
     // we do this to pass the free-floating lane test cases in the MIWG test suite
     var processes = filter(rootElements, function(e) {
-      return !isHandled(e) && is(e, 'bpmn:Process') && e.laneSets;
+      return !isHandled(e) && is(e, 'vdml:Process') && e.laneSets;
     });
 
     processes.forEach(contextual(handleProcess));
@@ -276,9 +276,9 @@ function BpmnTreeWalker(handler, translate) {
 
   function handleArtifact(artifact, context) {
 
-    // bpmn:TextAnnotation
-    // bpmn:Group
-    // bpmn:Association
+    // vdml:TextAnnotation
+    // vdml:Group
+    // vdml:Association
 
     visitIfDi(artifact, context);
   }
@@ -286,7 +286,7 @@ function BpmnTreeWalker(handler, translate) {
   function handleArtifacts(artifacts, context) {
 
     forEach(artifacts, function(e) {
-      if (is(e, 'bpmn:Association')) {
+      if (is(e, 'vdml:Association')) {
         deferred.push(function() {
           handleArtifact(e, context);
         });
@@ -314,20 +314,20 @@ function BpmnTreeWalker(handler, translate) {
   function handleFlowNode(flowNode, context) {
     var childCtx = visitIfDi(flowNode, context);
 
-    if (is(flowNode, 'bpmn:SubProcess')) {
+    if (is(flowNode, 'vdml:SubProcess')) {
       handleSubProcess(flowNode, childCtx || context);
     }
 
-    if (is(flowNode, 'bpmn:Activity')) {
+    if (is(flowNode, 'vdml:Activity')) {
       handleIoSpecification(flowNode.ioSpecification, context);
     }
 
     // defer handling of associations
     // affected types:
     //
-    //   * bpmn:Activity
-    //   * bpmn:ThrowEvent
-    //   * bpmn:CatchEvent
+    //   * vdml:Activity
+    //   * vdml:ThrowEvent
+    //   * vdml:CatchEvent
     //
     deferred.push(function() {
       forEach(flowNode.dataInputAssociations, contextual(handleDataAssociation, context));
@@ -375,21 +375,21 @@ function BpmnTreeWalker(handler, translate) {
 
   function handleFlowElements(flowElements, context) {
     forEach(flowElements, function(e) {
-      if (is(e, 'bpmn:SequenceFlow')) {
+      if (is(e, 'vdml:SequenceFlow')) {
         deferred.push(function() {
           handleSequenceFlow(e, context);
         });
-      } else if (is(e, 'bpmn:BoundaryEvent')) {
+      } else if (is(e, 'vdml:BoundaryEvent')) {
         deferred.unshift(function() {
           handleBoundaryEvent(e, context);
         });
-      } else if (is(e, 'bpmn:FlowNode')) {
+      } else if (is(e, 'vdml:FlowNode')) {
         handleFlowNode(e, context);
-      } else if (is(e, 'bpmn:DataObject')) {
+      } else if (is(e, 'vdml:DataObject')) {
         // SKIP (assume correct referencing via DataObjectReference)
-      } else if (is(e, 'bpmn:DataStoreReference')) {
+      } else if (is(e, 'vdml:DataStoreReference')) {
         handleDataElement(e, context);
-      } else if (is(e, 'bpmn:DataObjectReference')) {
+      } else if (is(e, 'vdml:DataObjectReference')) {
         handleDataElement(e, context);
       } else {
         logError(
@@ -443,4 +443,4 @@ function BpmnTreeWalker(handler, translate) {
   };
 }
 
-module.exports = BpmnTreeWalker;
+module.exports = VdmlTreeWalker;
