@@ -41,7 +41,7 @@ AddLaneHandler.prototype.preExecute = function(context) {
 
   // (0) add a lane if we currently got none and are adding to root
   if (!existingChildLanes.length) {
-    modeling.createShape({ type: 'bpmn:Lane' }, {
+    modeling.createShape({ type: 'vdml:Lane' }, {
       x: shape.x + LANE_INDENTATION,
       y: shape.y,
       width: shape.width - LANE_INDENTATION,
@@ -74,7 +74,7 @@ AddLaneHandler.prototype.preExecute = function(context) {
   spaceTool.makeSpace(adjustments.movingShapes, adjustments.resizingShapes, { x: 0, y: offset }, direction);
 
   // (2) create new lane at open space
-  context.newLane = modeling.createShape({ type: 'bpmn:Lane' }, {
+  context.newLane = modeling.createShape({ type: 'vdml:Lane' }, {
     x: shape.x + (isRoot ? LANE_INDENTATION : 0),
     y: lanePosition - (location === 'top' ? 120 : 0),
     width: shape.width - (isRoot ? LANE_INDENTATION : 0),

@@ -8,9 +8,9 @@ var is = require('../../../util/ModelUtil').is;
 
 
 /**
- * BPMN specific create boundary event behavior
+ * VDML specific create boundary event behavior
  */
-function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, bpmnFactory) {
+function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, vdmlFactory) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -29,13 +29,13 @@ function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, bpmnFac
       cancelActivity: true
     };
 
-    if (host && is(shape, 'bpmn:IntermediateThrowEvent')) {
+    if (host && is(shape, 'vdml:IntermediateThrowEvent')) {
       attrs.attachedToRef = host.businessObject;
 
-      businessObject = bpmnFactory.create('bpmn:BoundaryEvent', attrs);
+      businessObject = vdmlFactory.create('vdml:BoundaryEvent', attrs);
 
       boundaryEvent = {
-        type: 'bpmn:BoundaryEvent',
+        type: 'vdml:BoundaryEvent',
         businessObject: businessObject
       };
 
@@ -44,7 +44,7 @@ function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, bpmnFac
   }, true);
 }
 
-CreateBoundaryEventBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory' ];
+CreateBoundaryEventBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'vdmlFactory' ];
 
 inherits(CreateBoundaryEventBehavior, CommandInterceptor);
 

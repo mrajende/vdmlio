@@ -90,7 +90,7 @@ UpdateFlowNodeRefsHandler.prototype.computeUpdates = function(flowNodeShapes, la
     }
 
     var children = root.children.filter(function(c) {
-      return is(c, 'bpmn:FlowNode');
+      return is(c, 'vdml:FlowNode');
     });
 
     children.forEach(addFlowNodeShape);
@@ -105,9 +105,12 @@ UpdateFlowNodeRefsHandler.prototype.computeUpdates = function(flowNodeShapes, la
 
     var flowNode = flowNodeShape.businessObject;
 
-    var lanes = flowNode.get(LANES_ATTR),
-        remove = lanes.slice(),
-        add = getNewLanes(flowNodeShape);
+    var lanes = flowNode.get(LANES_ATTR);
+    if (!lanes) {
+        return;
+    }
+    var remove = lanes.slice();
+    var add = getNewLanes(flowNodeShape);
 
     updates.push({ flowNode: flowNode, remove: remove, add: add });
   });

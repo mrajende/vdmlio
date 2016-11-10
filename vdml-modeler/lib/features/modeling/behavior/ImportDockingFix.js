@@ -59,7 +59,7 @@ function ImportDockingFix(eventBus) {
     );
   }
 
-  eventBus.on('bpmnElement.added', function(e) {
+  eventBus.on('vdmlElement.added', function(e) {
 
     var element = e.element;
 

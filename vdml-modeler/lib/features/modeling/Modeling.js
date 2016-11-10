@@ -1,5 +1,4 @@
 'use strict';
-
 var inherits = require('inherits');
 
 var BaseModeling = require('diagram-js/lib/features/modeling/Modeling');
@@ -14,22 +13,22 @@ var UpdatePropertiesHandler = require('./cmd/UpdatePropertiesHandler'),
 
 
 /**
- * BPMN 2.0 modeling features activator
+ * VDML 2.0 modeling features activator
  *
  * @param {EventBus} eventBus
  * @param {ElementFactory} elementFactory
  * @param {CommandStack} commandStack
- * @param {BpmnRules} bpmnRules
+ * @param {VdmlRules} vdmlRules
  */
-function Modeling(eventBus, elementFactory, commandStack, bpmnRules) {
+function Modeling(eventBus, elementFactory, commandStack, vdmlRules) {
   BaseModeling.call(this, eventBus, elementFactory, commandStack);
 
-  this._bpmnRules = bpmnRules;
+  this._vdmlRules = vdmlRules;
 }
 
 inherits(Modeling, BaseModeling);
 
-Modeling.$inject = [ 'eventBus', 'elementFactory', 'commandStack', 'bpmnRules' ];
+Modeling.$inject = [ 'eventBus', 'elementFactory', 'commandStack', 'vdmlRules' ];
 
 module.exports = Modeling;
 
@@ -59,10 +58,10 @@ Modeling.prototype.updateLabel = function(element, newLabel) {
 
 Modeling.prototype.connect = function(source, target, attrs, hints) {
 
-  var bpmnRules = this._bpmnRules;
+  var vdmlRules = this._vdmlRules;
 
   if (!attrs) {
-    attrs = bpmnRules.canConnect(source, target) || { type: 'bpmn:Association' };
+    attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
   }
 
   return this.createConnection(source, target, attrs, source.parent, hints);
@@ -110,7 +109,7 @@ Modeling.prototype.splitLane = function(targetLane, count) {
 Modeling.prototype.makeCollaboration = function() {
 
   var collaborationElement = this._create('root', {
-    type: 'bpmn:Collaboration'
+    type: 'vdml:Collaboration'
   });
 
   var context = {
@@ -138,7 +137,7 @@ Modeling.prototype.updateLaneRefs = function(flowNodeShapes, laneShapes) {
 Modeling.prototype.makeProcess = function() {
 
   var processElement = this._create('root', {
-    type: 'bpmn:Process'
+    type: 'vdml:Process'
   });
 
   var context = {

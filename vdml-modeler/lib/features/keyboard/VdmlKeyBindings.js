@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * BPMN 2.0 specific key bindings.
+ * VDML 2.0 specific key bindings.
  *
  * @param {Keyboard} keyboard
  * @param {EditorActions} editorActions
  */
-function BpmnKeyBindings(keyboard, editorActions) {
+function VdmlKeyBindings(keyboard, editorActions) {
 
   keyboard.addListener(function(key, modifiers) {
 
@@ -65,9 +65,9 @@ function BpmnKeyBindings(keyboard, editorActions) {
   });
 }
 
-BpmnKeyBindings.$inject = [
+VdmlKeyBindings.$inject = [
   'keyboard',
   'editorActions'
 ];
 
-module.exports = BpmnKeyBindings;
+module.exports = VdmlKeyBindings;

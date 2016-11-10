@@ -628,7 +628,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, attrs);
     },
 
-    'vdml:Task': function(p, element, attrs) {
+    'vdml:Collaboration': function(p, element, attrs) {
       var rect = renderer('vdml:Activity')(p, element, attrs);
       renderEmbeddedLabel(p, element, 'center-middle');
       attachTaskMarkers(p, element);

@@ -7,7 +7,7 @@ var CommandInterceptor = require('diagram-js/lib/command/CommandInterceptor');
 var lineIntersect = require('./util/LineIntersect');
 
 
-function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
+function RemoveElementBehavior(eventBus, vdmlRules, modeling) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -26,7 +26,7 @@ function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
           outConnection = shape.outgoing[0];
 
 
-      if (bpmnRules.canConnect(inConnection.source, outConnection.target, inConnection)) {
+      if (vdmlRules.canConnect(inConnection.source, outConnection.target, inConnection)) {
 
         // compute new, combined waypoints
         var newWaypoints = getNewWaypoints(inConnection.waypoints, outConnection.waypoints);
@@ -40,7 +40,7 @@ function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
 
 inherits(RemoveElementBehavior, CommandInterceptor);
 
-RemoveElementBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
+RemoveElementBehavior.$inject = [ 'eventBus', 'vdmlRules', 'modeling' ];
 
 module.exports = RemoveElementBehavior;
 

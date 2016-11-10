@@ -4,7 +4,7 @@ var LabelUtil = require('../LabelUtil');
 
 
 /**
- * A handler that updates the text of a BPMN element.
+ * A handler that updates the text of a VDML element.
  */
 function UpdateLabelHandler() {
 

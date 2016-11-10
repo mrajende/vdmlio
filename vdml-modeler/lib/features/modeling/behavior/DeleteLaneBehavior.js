@@ -15,7 +15,7 @@ var LOW_PRIORITY = 500;
 
 
 /**
- * BPMN specific delete lane behavior
+ * VDML specific delete lane behavior
  */
 function DeleteLaneBehavior(eventBus, modeling, spaceTool) {
 
@@ -88,7 +88,7 @@ function DeleteLaneBehavior(eventBus, modeling, spaceTool) {
         oldParent = context.oldParent;
 
     // only compensate lane deletes
-    if (!is(shape, 'bpmn:Lane')) {
+    if (!is(shape, 'vdml:Lane')) {
       return;
     }
 

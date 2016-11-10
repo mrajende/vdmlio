@@ -13,14 +13,14 @@ var getBusinessObject = require('../../util/ModelUtil').getBusinessObject,
 var CommandInterceptor = require('diagram-js/lib/command/CommandInterceptor');
 
 /**
- * A handler responsible for updating the underlying BPMN 2.0 XML + DI
+ * A handler responsible for updating the underlying VDML 2.0 XML + DI
  * once changes on the diagram happen
  */
-function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
+function VdmlUpdater(eventBus, vdmlFactory, connectionDocking, translate) {
 
   CommandInterceptor.call(this, eventBus);
 
-  this._bpmnFactory = bpmnFactory;
+  this._vdmlFactory = vdmlFactory;
   this._translate = translate;
 
   var self = this;
@@ -54,7 +54,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
 
 
 
-  ////// BPMN + DI update /////////////////////////
+  ////// VDML + DI update /////////////////////////
 
 
   // update parent
@@ -79,14 +79,14 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
                   'shape.delete',
                   'connection.create',
                   'connection.move',
-                  'connection.delete' ], ifBpmn(updateParent));
+                  'connection.delete' ], ifVdml(updateParent));
 
   this.reverted([ 'shape.move',
                   'shape.create',
                   'shape.delete',
                   'connection.create',
                   'connection.move',
-                  'connection.delete' ], ifBpmn(reverseUpdateParent));
+                  'connection.delete' ], ifVdml(reverseUpdateParent));
 
   /*
    * ## Updating Parent
@@ -102,7 +102,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
         children = oldRoot.children;
 
     forEach(children, function(child) {
-      if (is(child, 'bpmn:BaseElement')) {
+      if (is(child, 'vdml:BaseElement')) {
         self.updateParent(child);
       }
     });
@@ -116,14 +116,14 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
   function updateBounds(e) {
     var shape = e.context.shape;
 
-    if (!is(shape, 'bpmn:BaseElement')) {
+    if (!is(shape, 'vdml:BaseElement')) {
       return;
     }
 
     self.updateBounds(shape);
   }
 
-  this.executed([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(function(event) {
+  this.executed([ 'shape.move', 'shape.create', 'shape.resize' ], ifVdml(function(event) {
 
     // exclude labels because they're handled separately during shape.changed
     if (event.context.shape.type === 'label') {
@@ -133,7 +133,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     updateBounds(event);
   }));
 
-  this.reverted([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(function(event) {
+  this.reverted([ 'shape.move', 'shape.create', 'shape.resize' ], ifVdml(function(event) {
 
     // exclude labels because they're handled separately during shape.changed
     if (event.context.shape.type === 'label') {
@@ -162,7 +162,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     'connection.delete',
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(updateConnection));
+  ], ifVdml(updateConnection));
 
   this.reverted([
     'connection.create',
@@ -170,7 +170,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     'connection.delete',
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(updateConnection));
+  ], ifVdml(updateConnection));
 
 
   // update waypoints
@@ -184,7 +184,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     'connection.updateWaypoints',
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(updateConnectionWaypoints));
+  ], ifVdml(updateConnectionWaypoints));
 
   this.reverted([
     'connection.layout',
@@ -192,14 +192,14 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     'connection.updateWaypoints',
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(updateConnectionWaypoints));
+  ], ifVdml(updateConnectionWaypoints));
 
 
   // update Default & Conditional flows
   this.executed([
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(function(e) {
+  ], ifVdml(function(e) {
     var context = e.context,
         connection = context.connection,
         businessObject = getBusinessObject(connection),
@@ -220,28 +220,28 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
 
     // on reconnectEnd -> default flow
     if ((businessObject.sourceRef && businessObject.sourceRef.default) &&
-        !(is(newTarget, 'bpmn:Activity') ||
-          is(newTarget, 'bpmn:EndEvent') ||
-          is(newTarget, 'bpmn:Gateway') ||
-          is(newTarget, 'bpmn:IntermediateThrowEvent')) ) {
+        !(is(newTarget, 'vdml:Activity') ||
+          is(newTarget, 'vdml:EndEvent') ||
+          is(newTarget, 'vdml:Gateway') ||
+          is(newTarget, 'vdml:IntermediateThrowEvent')) ) {
       context.default = businessObject.sourceRef.default;
       businessObject.sourceRef.default = undefined;
     }
 
     // on reconnectStart -> conditional flow
     if (oldSource && (businessObject.conditionExpression) &&
-      !(is(newSource, 'bpmn:Activity') ||
-        is(newSource, 'bpmn:Gateway')) ) {
+      !(is(newSource, 'vdml:Activity') ||
+        is(newSource, 'vdml:Gateway')) ) {
       context.conditionExpression = businessObject.conditionExpression;
       businessObject.conditionExpression = undefined;
     }
 
     // on reconnectEnd -> conditional flow
     if (oldTarget && (businessObject.conditionExpression) &&
-        !(is(newTarget, 'bpmn:Activity') ||
-          is(newTarget, 'bpmn:EndEvent') ||
-          is(newTarget, 'bpmn:Gateway') ||
-          is(newTarget, 'bpmn:IntermediateThrowEvent')) ) {
+        !(is(newTarget, 'vdml:Activity') ||
+          is(newTarget, 'vdml:EndEvent') ||
+          is(newTarget, 'vdml:Gateway') ||
+          is(newTarget, 'vdml:IntermediateThrowEvent')) ) {
       context.conditionExpression = businessObject.conditionExpression;
       businessObject.conditionExpression = undefined;
     }
@@ -250,7 +250,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
   this.reverted([
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(function(e) {
+  ], ifVdml(function(e) {
     var context = e.context,
         connection = context.connection,
         businessObject = getBusinessObject(connection),
@@ -258,14 +258,14 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
 
     // default flow
     if (context.default) {
-      if (is(newSource, 'bpmn:ExclusiveGateway') || is(newSource, 'bpmn:InclusiveGateway') ||
-          is(newSource, 'bpmn:Activity')) {
+      if (is(newSource, 'vdml:ExclusiveGateway') || is(newSource, 'vdml:InclusiveGateway') ||
+          is(newSource, 'vdml:Activity')) {
         newSource.default = context.default;
       }
     }
 
     // conditional flow
-    if (context.conditionExpression && is(newSource, 'bpmn:Activity')) {
+    if (context.conditionExpression && is(newSource, 'vdml:Activity')) {
       businessObject.conditionExpression = context.conditionExpression;
     }
   }));
@@ -275,20 +275,20 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     self.updateAttachment(e.context);
   }
 
-  this.executed([ 'element.updateAttachment' ], ifBpmn(updateAttachment));
-  this.reverted([ 'element.updateAttachment' ], ifBpmn(updateAttachment));
+  this.executed([ 'element.updateAttachment' ], ifVdml(updateAttachment));
+  this.reverted([ 'element.updateAttachment' ], ifVdml(updateAttachment));
 }
 
-inherits(BpmnUpdater, CommandInterceptor);
+inherits(VdmlUpdater, CommandInterceptor);
 
-module.exports = BpmnUpdater;
+module.exports = VdmlUpdater;
 
-BpmnUpdater.$inject = [ 'eventBus', 'bpmnFactory', 'connectionDocking', 'translate' ];
+VdmlUpdater.$inject = [ 'eventBus', 'vdmlFactory', 'connectionDocking', 'translate' ];
 
 
 /////// implementation //////////////////////////////////
 
-BpmnUpdater.prototype.updateAttachment = function(context) {
+VdmlUpdater.prototype.updateAttachment = function(context) {
 
   var shape = context.shape,
       businessObject = shape.businessObject,
@@ -297,8 +297,8 @@ BpmnUpdater.prototype.updateAttachment = function(context) {
   businessObject.attachedToRef = host && host.businessObject;
 };
 
-BpmnUpdater.prototype.updateParent = function(element, oldParent) {
-  // do not update BPMN 2.0 label parent
+VdmlUpdater.prototype.updateParent = function(element, oldParent) {
+  // do not update VDML 2.0 label parent
   if (element instanceof Model.Label) {
     return;
   }
@@ -309,11 +309,11 @@ BpmnUpdater.prototype.updateParent = function(element, oldParent) {
       parentBusinessObject = parentShape && parentShape.businessObject,
       parentDi = parentBusinessObject && parentBusinessObject.di;
 
-  if (is(element, 'bpmn:FlowNode')) {
+  if (is(element, 'vdml:FlowNode')) {
     this.updateFlowNodeRefs(businessObject, parentBusinessObject, oldParent && oldParent.businessObject);
   }
 
-  if (is(element, 'bpmn:DataOutputAssociation')) {
+  if (is(element, 'vdml:DataOutputAssociation')) {
     if (element.source) {
       parentBusinessObject = element.source.businessObject;
     } else {
@@ -321,7 +321,7 @@ BpmnUpdater.prototype.updateParent = function(element, oldParent) {
     }
   }
 
-  if (is(element, 'bpmn:DataInputAssociation')) {
+  if (is(element, 'vdml:DataInputAssociation')) {
     if (element.target) {
       parentBusinessObject = element.target.businessObject;
     } else {
@@ -331,7 +331,7 @@ BpmnUpdater.prototype.updateParent = function(element, oldParent) {
 
   this.updateSemanticParent(businessObject, parentBusinessObject);
 
-  if (is(element, 'bpmn:DataObjectReference') && businessObject.dataObjectRef) {
+  if (is(element, 'vdml:DataObjectReference') && businessObject.dataObjectRef) {
     this.updateSemanticParent(businessObject.dataObjectRef, parentBusinessObject);
   }
 
@@ -339,7 +339,7 @@ BpmnUpdater.prototype.updateParent = function(element, oldParent) {
 };
 
 
-BpmnUpdater.prototype.updateBounds = function(shape) {
+VdmlUpdater.prototype.updateBounds = function(shape) {
 
   var di = shape.businessObject.di;
 
@@ -353,7 +353,7 @@ BpmnUpdater.prototype.updateBounds = function(shape) {
   });
 };
 
-BpmnUpdater.prototype.updateFlowNodeRefs = function(businessObject, newContainment, oldContainment) {
+VdmlUpdater.prototype.updateFlowNodeRefs = function(businessObject, newContainment, oldContainment) {
 
   if (oldContainment === newContainment) {
     return;
@@ -361,20 +361,20 @@ BpmnUpdater.prototype.updateFlowNodeRefs = function(businessObject, newContainme
 
   var oldRefs, newRefs;
 
-  if (is (oldContainment, 'bpmn:Lane')) {
+  if (is (oldContainment, 'vdml:Lane')) {
     oldRefs = oldContainment.get('flowNodeRef');
     Collections.remove(oldRefs, businessObject);
   }
 
-  if (is(newContainment, 'bpmn:Lane')) {
+  if (is(newContainment, 'vdml:Lane')) {
     newRefs = newContainment.get('flowNodeRef');
     Collections.add(newRefs, businessObject);
   }
 };
 
-BpmnUpdater.prototype.updateDiParent = function(di, parentDi) {
+VdmlUpdater.prototype.updateDiParent = function(di, parentDi) {
 
-  if (parentDi && !is(parentDi, 'bpmndi:BPMNPlane')) {
+  if (parentDi && !is(parentDi, 'vdmldi:VDMLPlane')) {
     parentDi = parentDi.$parent;
   }
 
@@ -394,23 +394,23 @@ BpmnUpdater.prototype.updateDiParent = function(di, parentDi) {
 };
 
 function getDefinitions(element) {
-  while (element && !is(element, 'bpmn:Definitions')) {
+  while (element && !is(element, 'vdml:Definitions')) {
     element = element.$parent;
   }
 
   return element;
 }
 
-BpmnUpdater.prototype.getLaneSet = function(container) {
+VdmlUpdater.prototype.getLaneSet = function(container) {
 
   var laneSet, laneSets;
 
-  // bpmn:Lane
-  if (is(container, 'bpmn:Lane')) {
+  // vdml:Lane
+  if (is(container, 'vdml:Lane')) {
     laneSet = container.childLaneSet;
 
     if (!laneSet) {
-      laneSet = this._bpmnFactory.create('bpmn:LaneSet');
+      laneSet = this._vdmlFactory.create('vdml:LaneSet');
       container.childLaneSet = laneSet;
       laneSet.$parent = container;
     }
@@ -418,17 +418,17 @@ BpmnUpdater.prototype.getLaneSet = function(container) {
     return laneSet;
   }
 
-  // bpmn:Participant
-  if (is(container, 'bpmn:Participant')) {
+  // vdml:Participant
+  if (is(container, 'vdml:Participant')) {
     container = container.processRef;
   }
 
-  // bpmn:FlowElementsContainer
+  // vdml:FlowElementsContainer
   laneSets = container.get('laneSets');
   laneSet = laneSets[0];
 
   if (!laneSet) {
-    laneSet = this._bpmnFactory.create('bpmn:LaneSet');
+    laneSet = this._vdmlFactory.create('vdml:LaneSet');
     laneSet.$parent = container;
     laneSets.push(laneSet);
   }
@@ -436,7 +436,7 @@ BpmnUpdater.prototype.getLaneSet = function(container) {
   return laneSet;
 };
 
-BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent, visualParent) {
+VdmlUpdater.prototype.updateSemanticParent = function(businessObject, newParent, visualParent) {
 
   var containment,
       translate = this._translate;
@@ -445,7 +445,7 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
     return;
   }
 
-  if (is(businessObject, 'bpmn:Lane')) {
+  if (is(businessObject, 'vdml:Lane')) {
 
     if (newParent) {
       newParent = this.getLaneSet(newParent);
@@ -454,19 +454,19 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
     containment = 'lanes';
   } else
 
-  if (is(businessObject, 'bpmn:FlowElement')) {
+  if (is(businessObject, 'vdml:FlowElement')) {
 
     if (newParent) {
 
-      if (is(newParent, 'bpmn:Participant')) {
+      if (is(newParent, 'vdml:Participant')) {
         newParent = newParent.processRef;
       } else
 
-      if (is(newParent, 'bpmn:Lane')) {
+      if (is(newParent, 'vdml:Lane')) {
         do {
           // unwrap Lane -> LaneSet -> (Lane | FlowElementsContainer)
           newParent = newParent.$parent.$parent;
-        } while (is(newParent, 'bpmn:Lane'));
+        } while (is(newParent, 'vdml:Lane'));
 
       }
     }
@@ -475,14 +475,14 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
 
   } else
 
-  if (is(businessObject, 'bpmn:Artifact')) {
+  if (is(businessObject, 'vdml:Artifact')) {
 
     while (newParent &&
-           !is(newParent, 'bpmn:Process') &&
-           !is(newParent, 'bpmn:SubProcess') &&
-           !is(newParent, 'bpmn:Collaboration')) {
+           !is(newParent, 'vdml:Process') &&
+           !is(newParent, 'vdml:SubProcess') &&
+           !is(newParent, 'vdml:Collaboration')) {
 
-      if (is(newParent, 'bpmn:Participant')) {
+      if (is(newParent, 'vdml:Participant')) {
         newParent = newParent.processRef;
         break;
       } else {
@@ -493,12 +493,12 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
     containment = 'artifacts';
   } else
 
-  if (is(businessObject, 'bpmn:MessageFlow')) {
+  if (is(businessObject, 'vdml:MessageFlow')) {
     containment = 'messageFlows';
 
   } else
 
-  if (is(businessObject, 'bpmn:Participant')) {
+  if (is(businessObject, 'vdml:Participant')) {
     containment = 'participants';
 
     // make sure the participants process is properly attached / detached
@@ -522,11 +522,11 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
     }
   } else
 
-  if (is(businessObject, 'bpmn:DataOutputAssociation')) {
+  if (is(businessObject, 'vdml:DataOutputAssociation')) {
     containment = 'dataOutputAssociations';
   } else
 
-  if (is(businessObject, 'bpmn:DataInputAssociation')) {
+  if (is(businessObject, 'vdml:DataInputAssociation')) {
     containment = 'dataInputAssociations';
   }
 
@@ -575,12 +575,12 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
 };
 
 
-BpmnUpdater.prototype.updateConnectionWaypoints = function(connection) {
-  connection.businessObject.di.set('waypoint', this._bpmnFactory.createDiWaypoints(connection.waypoints));
+VdmlUpdater.prototype.updateConnectionWaypoints = function(connection) {
+  connection.businessObject.di.set('waypoint', this._vdmlFactory.createDiWaypoints(connection.waypoints));
 };
 
 
-BpmnUpdater.prototype.updateConnection = function(context) {
+VdmlUpdater.prototype.updateConnection = function(context) {
 
   var connection = context.connection,
       businessObject = getBusinessObject(connection),
@@ -588,9 +588,9 @@ BpmnUpdater.prototype.updateConnection = function(context) {
       newTarget = getBusinessObject(connection.target),
       visualParent;
 
-  if (!is(businessObject, 'bpmn:DataAssociation')) {
+  if (!is(businessObject, 'vdml:DataAssociation')) {
 
-    var inverseSet = is(businessObject, 'bpmn:SequenceFlow');
+    var inverseSet = is(businessObject, 'vdml:SequenceFlow');
 
     if (businessObject.sourceRef !== newSource) {
       if (inverseSet) {
@@ -617,7 +617,7 @@ BpmnUpdater.prototype.updateConnection = function(context) {
     }
   } else
 
-  if (is(businessObject, 'bpmn:DataInputAssociation')) {
+  if (is(businessObject, 'vdml:DataInputAssociation')) {
     // handle obnoxious isMany sourceRef
     businessObject.get('sourceRef')[0] = newSource;
 
@@ -626,7 +626,7 @@ BpmnUpdater.prototype.updateConnection = function(context) {
     this.updateSemanticParent(businessObject, newTarget, parent.businessObject);
   } else
 
-  if (is(businessObject, 'bpmn:DataOutputAssociation')) {
+  if (is(businessObject, 'vdml:DataOutputAssociation')) {
     visualParent = context.parent || context.newParent || newSource;
 
     this.updateSemanticParent(businessObject, newSource, visualParent);
@@ -641,9 +641,9 @@ BpmnUpdater.prototype.updateConnection = function(context) {
 
 /////// helpers /////////////////////////////////////////
 
-BpmnUpdater.prototype._getLabel = function(di) {
+VdmlUpdater.prototype._getLabel = function(di) {
   if (!di.label) {
-    di.label = this._bpmnFactory.createDiLabel();
+    di.label = this._vdmlFactory.createDiLabel();
   }
 
   return di.label;
@@ -652,19 +652,19 @@ BpmnUpdater.prototype._getLabel = function(di) {
 
 /**
  * Make sure the event listener is only called
- * if the touched element is a BPMN element.
+ * if the touched element is a VDML element.
  *
  * @param  {Function} fn
  * @return {Function} guarded function
  */
-function ifBpmn(fn) {
+function ifVdml(fn) {
 
   return function(event) {
 
     var context = event.context,
         element = context.shape || context.connection;
 
-    if (is(element, 'bpmn:BaseElement')) {
+    if (is(element, 'vdml:BaseElement')) {
       fn(event);
     }
   };

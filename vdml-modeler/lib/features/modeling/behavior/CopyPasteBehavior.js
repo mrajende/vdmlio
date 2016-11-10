@@ -21,12 +21,12 @@ function CopyPasteBehavior(eventBus, modeling, canvas) {
       context.topParent = canvas.getRootElement();
     }
 
-    if (is(topParent, 'bpmn:Lane')) {
+    if (is(topParent, 'vdml:Lane')) {
       do {
         // unwrap Lane -> LaneSet -> (Lane | FlowElementsContainer)
         topParent = context.topParent = topParent.parent;
 
-      } while (is(topParent, 'bpmn:Lane') || !is(topParent, 'bpmn:Participant'));
+      } while (is(topParent, 'vdml:Lane') || !is(topParent, 'vdml:Participant'));
     }
   }, true);
 
@@ -41,8 +41,8 @@ function CopyPasteBehavior(eventBus, modeling, canvas) {
           descriptor = data.descriptor,
           defaultFlow;
 
-      if ((is(businessObject, 'bpmn:ExclusiveGateway') || is(businessObject, 'bpmn:InclusiveGateway') ||
-           is(businessObject, 'bpmn:Activity')) && descriptor.default) {
+      if ((is(businessObject, 'vdml:ExclusiveGateway') || is(businessObject, 'vdml:InclusiveGateway') ||
+           is(businessObject, 'vdml:Activity')) && descriptor.default) {
 
         defaultFlow = createdElements[descriptor.default];
 

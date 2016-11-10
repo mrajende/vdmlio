@@ -13,10 +13,10 @@ var DEFAULT_FLOW = 'default',
 
 
 /**
- * A handler that implements a BPMN 2.0 property update.
+ * A handler that implements a VDML 2.0 property update.
  *
  * This should be used to set simple properties on elements with
- * an underlying BPMN business object.
+ * an underlying VDML business object.
  *
  * Use respective diagram-js provided handlers if you would
  * like to perform automated modeling.
@@ -35,12 +35,12 @@ module.exports = UpdatePropertiesHandler;
 ////// api /////////////////////////////////////////////
 
 /**
- * Updates a BPMN element with a list of new properties
+ * Updates a VDML element with a list of new properties
  *
  * @param {Object} context
  * @param {djs.model.Base} context.element the element to update
  * @param {Object} context.properties a list of properties to set on the element's
- *                                    businessObject (the BPMN model element)
+ *                                    businessObject (the VDML model element)
  *
  * @return {Array<djs.model.Base>} the updated element
  */
@@ -100,7 +100,7 @@ UpdatePropertiesHandler.prototype.execute = function(context) {
 };
 
 /**
- * Reverts the update on a BPMN elements properties.
+ * Reverts the update on a VDML elements properties.
  *
  * @param  {Object} context
  *

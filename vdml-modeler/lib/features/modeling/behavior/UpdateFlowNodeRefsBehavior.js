@@ -12,7 +12,7 @@ var LOW_PRIORITY = 500,
 
 
 /**
- * BPMN specific delete lane behavior
+ * VDML specific delete lane behavior
  */
 function UpdateFlowNodeRefsBehavior(eventBus, modeling, translate) {
 
@@ -112,11 +112,11 @@ function UpdateFlowNodeRefsBehavior(eventBus, modeling, translate) {
       return;
     }
 
-    if (is(shape, 'bpmn:Lane')) {
+    if (is(shape, 'vdml:Lane')) {
       updateContext.addLane(shape);
     }
 
-    if (is(shape, 'bpmn:FlowNode')) {
+    if (is(shape, 'vdml:FlowNode')) {
       updateContext.addFlowNode(shape);
     }
   });

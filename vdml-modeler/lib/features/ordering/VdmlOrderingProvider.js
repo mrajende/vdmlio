@@ -17,39 +17,39 @@ var find = require('lodash/collection/find');
  * (1) elements are ordered by a {level} property
  * (2) elements with {alwaysOnTop} are always added to the root
  */
-function BpmnOrderingProvider(eventBus, translate) {
+function VdmlOrderingProvider(eventBus, translate) {
 
   OrderingProvider.call(this, eventBus);
 
   var orders = [
-    { type: 'bpmn:SubProcess', order: { level: 6 } },
+    { type: 'vdml:SubProcess', order: { level: 6 } },
     {
-      type: 'bpmn:SequenceFlow',
+      type: 'vdml:SequenceFlow',
       order: {
         level: 5,
         containers: [
-          'bpmn:Participant',
-          'bpmn:FlowElementsContainer'
+          'vdml:Participant',
+          'vdml:FlowElementsContainer'
         ]
       }
     },
-    { type: 'bpmn:DataInputAssociation', order: { level: 9, containers: [ 'bpmn:Collaboration', 'bpmn:Process' ] } },
-    { type: 'bpmn:DataOutputAssociation', order: { level: 9, containers: [ 'bpmn:Collaboration', 'bpmn:Process' ] } },
-    { type: 'bpmn:MessageFlow', order: { level: 9, containers: [ 'bpmn:Collaboration' ] } },
+    { type: 'vdml:DataInputAssociation', order: { level: 9, containers: [ 'vdml:Collaboration', 'vdml:Process' ] } },
+    { type: 'vdml:DataOutputAssociation', order: { level: 9, containers: [ 'vdml:Collaboration', 'vdml:Process' ] } },
+    { type: 'vdml:MessageFlow', order: { level: 9, containers: [ 'vdml:Collaboration' ] } },
     {
-      type: 'bpmn:Association',
+      type: 'vdml:Association',
       order: {
         level: 6,
         containers: [
-          'bpmn:Participant',
-          'bpmn:FlowElementsContainer',
-          'bpmn:Collaboration'
+          'vdml:Participant',
+          'vdml:FlowElementsContainer',
+          'vdml:Collaboration'
         ]
       }
     },
-    { type: 'bpmn:BoundaryEvent', order: { level: 8 } },
-    { type: 'bpmn:Participant', order: { level: -2 } },
-    { type: 'bpmn:Lane', order: { level: -1 } }
+    { type: 'vdml:BoundaryEvent', order: { level: 8 } },
+    { type: 'vdml:Participant', order: { level: -2 } },
+    { type: 'vdml:Lane', order: { level: -1 } }
   ];
 
   function computeOrder(element) {
@@ -140,8 +140,8 @@ function BpmnOrderingProvider(eventBus, translate) {
   };
 }
 
-BpmnOrderingProvider.$inject = [ 'eventBus', 'translate' ];
+VdmlOrderingProvider.$inject = [ 'eventBus', 'translate' ];
 
-inherits(BpmnOrderingProvider, OrderingProvider);
+inherits(VdmlOrderingProvider, OrderingProvider);
 
-module.exports = BpmnOrderingProvider;
+module.exports = VdmlOrderingProvider;

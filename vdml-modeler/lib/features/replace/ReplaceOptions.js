@@ -6,7 +6,7 @@ module.exports.START_EVENT = [
     actionName: 'replace-with-none-start',
     className: 'bpmn-icon-start-event-none',
     target: {
-      type: 'bpmn:StartEvent'
+      type: 'vdml:StartEvent'
     }
   },
   {
@@ -14,7 +14,7 @@ module.exports.START_EVENT = [
     actionName: 'replace-with-none-intermediate-throwing',
     className: 'bpmn-icon-intermediate-event-none',
     target: {
-      type: 'bpmn:IntermediateThrowEvent'
+      type: 'vdml:IntermediateThrowEvent'
     }
   },
   {
@@ -22,7 +22,7 @@ module.exports.START_EVENT = [
     actionName: 'replace-with-none-end',
     className: 'bpmn-icon-end-event-none',
     target: {
-      type: 'bpmn:EndEvent'
+      type: 'vdml:EndEvent'
     }
   },
   {
@@ -30,8 +30,8 @@ module.exports.START_EVENT = [
     actionName: 'replace-with-message-start',
     className: 'bpmn-icon-start-event-message',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
     }
   },
   {
@@ -39,8 +39,8 @@ module.exports.START_EVENT = [
     actionName: 'replace-with-timer-start',
     className: 'bpmn-icon-start-event-timer',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition'
     }
   },
   {
@@ -48,8 +48,8 @@ module.exports.START_EVENT = [
     actionName: 'replace-with-conditional-start',
     className: 'bpmn-icon-start-event-condition',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition'
     }
   },
   {
@@ -57,8 +57,8 @@ module.exports.START_EVENT = [
     actionName: 'replace-with-signal-start',
     className: 'bpmn-icon-start-event-signal',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
     }
   }
 ];
@@ -69,7 +69,7 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-none-start',
     className: 'bpmn-icon-start-event-none',
     target: {
-      type: 'bpmn:StartEvent'
+      type: 'vdml:StartEvent'
     }
   },
   {
@@ -77,7 +77,7 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-none-intermediate-throw',
     className: 'bpmn-icon-intermediate-event-none',
     target: {
-      type: 'bpmn:IntermediateThrowEvent'
+      type: 'vdml:IntermediateThrowEvent'
     }
   },
   {
@@ -85,7 +85,7 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-none-end',
     className: 'bpmn-icon-end-event-none',
     target: {
-      type: 'bpmn:EndEvent'
+      type: 'vdml:EndEvent'
     }
   },
   {
@@ -93,8 +93,8 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-message-intermediate-catch',
     className: 'bpmn-icon-intermediate-event-catch-message',
     target: {
-      type: 'bpmn:IntermediateCatchEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
+      type: 'vdml:IntermediateCatchEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
     }
   },
   {
@@ -102,8 +102,8 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-message-intermediate-throw',
     className: 'bpmn-icon-intermediate-event-throw-message',
     target: {
-      type: 'bpmn:IntermediateThrowEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
+      type: 'vdml:IntermediateThrowEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
     }
   },
   {
@@ -111,8 +111,8 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-timer-intermediate-catch',
     className: 'bpmn-icon-intermediate-event-catch-timer',
     target: {
-      type: 'bpmn:IntermediateCatchEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition'
+      type: 'vdml:IntermediateCatchEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition'
     }
   },
   {
@@ -120,8 +120,8 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-escalation-intermediate-throw',
     className: 'bpmn-icon-intermediate-event-throw-escalation',
     target: {
-      type: 'bpmn:IntermediateThrowEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition'
+      type: 'vdml:IntermediateThrowEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition'
     }
   },
   {
@@ -129,8 +129,8 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-conditional-intermediate-catch',
     className: 'bpmn-icon-intermediate-event-catch-condition',
     target: {
-      type: 'bpmn:IntermediateCatchEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
+      type: 'vdml:IntermediateCatchEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition'
     }
   },
   {
@@ -138,8 +138,8 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-link-intermediate-catch',
     className: 'bpmn-icon-intermediate-event-catch-link',
     target: {
-      type: 'bpmn:IntermediateCatchEvent',
-      eventDefinitionType: 'bpmn:LinkEventDefinition'
+      type: 'vdml:IntermediateCatchEvent',
+      eventDefinitionType: 'vdml:LinkEventDefinition'
     }
   },
   {
@@ -147,8 +147,8 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-link-intermediate-throw',
     className: 'bpmn-icon-intermediate-event-throw-link',
     target: {
-      type: 'bpmn:IntermediateThrowEvent',
-      eventDefinitionType: 'bpmn:LinkEventDefinition'
+      type: 'vdml:IntermediateThrowEvent',
+      eventDefinitionType: 'vdml:LinkEventDefinition'
     }
   },
   {
@@ -156,8 +156,8 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-compensation-intermediate-throw',
     className: 'bpmn-icon-intermediate-event-throw-compensation',
     target: {
-      type: 'bpmn:IntermediateThrowEvent',
-      eventDefinitionType: 'bpmn:CompensateEventDefinition'
+      type: 'vdml:IntermediateThrowEvent',
+      eventDefinitionType: 'vdml:CompensateEventDefinition'
     }
   },
   {
@@ -165,8 +165,8 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-signal-intermediate-catch',
     className: 'bpmn-icon-intermediate-event-catch-signal',
     target: {
-      type: 'bpmn:IntermediateCatchEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
+      type: 'vdml:IntermediateCatchEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
     }
   },
   {
@@ -174,8 +174,8 @@ module.exports.INTERMEDIATE_EVENT = [
     actionName: 'replace-with-signal-intermediate-throw',
     className: 'bpmn-icon-intermediate-event-throw-signal',
     target: {
-      type: 'bpmn:IntermediateThrowEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
+      type: 'vdml:IntermediateThrowEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
     }
   }
 ];
@@ -186,7 +186,7 @@ module.exports.END_EVENT = [
     actionName: 'replace-with-none-start',
     className: 'bpmn-icon-start-event-none',
     target: {
-      type: 'bpmn:StartEvent'
+      type: 'vdml:StartEvent'
     }
   },
   {
@@ -194,7 +194,7 @@ module.exports.END_EVENT = [
     actionName: 'replace-with-none-intermediate-throw',
     className: 'bpmn-icon-intermediate-event-none',
     target: {
-      type: 'bpmn:IntermediateThrowEvent'
+      type: 'vdml:IntermediateThrowEvent'
     }
   },
   {
@@ -202,7 +202,7 @@ module.exports.END_EVENT = [
     actionName: 'replace-with-none-end',
     className: 'bpmn-icon-end-event-none',
     target: {
-      type: 'bpmn:EndEvent'
+      type: 'vdml:EndEvent'
     }
   },
   {
@@ -210,8 +210,8 @@ module.exports.END_EVENT = [
     actionName: 'replace-with-message-end',
     className: 'bpmn-icon-end-event-message',
     target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
     }
   },
   {
@@ -219,8 +219,8 @@ module.exports.END_EVENT = [
     actionName: 'replace-with-escalation-end',
     className: 'bpmn-icon-end-event-escalation',
     target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition'
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition'
     }
   },
   {
@@ -228,8 +228,8 @@ module.exports.END_EVENT = [
     actionName: 'replace-with-error-end',
     className: 'bpmn-icon-end-event-error',
     target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:ErrorEventDefinition'
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:ErrorEventDefinition'
     }
   },
   {
@@ -237,8 +237,8 @@ module.exports.END_EVENT = [
     actionName: 'replace-with-cancel-end',
     className: 'bpmn-icon-end-event-cancel',
     target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:CancelEventDefinition'
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:CancelEventDefinition'
     }
   },
   {
@@ -246,8 +246,8 @@ module.exports.END_EVENT = [
     actionName: 'replace-with-compensation-end',
     className: 'bpmn-icon-end-event-compensation',
     target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:CompensateEventDefinition'
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:CompensateEventDefinition'
     }
   },
   {
@@ -255,8 +255,8 @@ module.exports.END_EVENT = [
     actionName: 'replace-with-signal-end',
     className: 'bpmn-icon-end-event-signal',
     target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
     }
   },
   {
@@ -264,8 +264,8 @@ module.exports.END_EVENT = [
     actionName: 'replace-with-terminate-end',
     className: 'bpmn-icon-end-event-terminate',
     target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:TerminateEventDefinition'
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:TerminateEventDefinition'
     }
   }
 ];
@@ -276,7 +276,7 @@ module.exports.GATEWAY = [
     actionName: 'replace-with-exclusive-gateway',
     className: 'bpmn-icon-gateway-xor',
     target: {
-      type: 'bpmn:ExclusiveGateway'
+      type: 'vdml:ExclusiveGateway'
     }
   },
   {
@@ -284,7 +284,7 @@ module.exports.GATEWAY = [
     actionName: 'replace-with-parallel-gateway',
     className: 'bpmn-icon-gateway-parallel',
     target: {
-      type: 'bpmn:ParallelGateway'
+      type: 'vdml:ParallelGateway'
     }
   },
   {
@@ -292,7 +292,7 @@ module.exports.GATEWAY = [
     actionName: 'replace-with-inclusive-gateway',
     className: 'bpmn-icon-gateway-or',
     target: {
-      type: 'bpmn:InclusiveGateway'
+      type: 'vdml:InclusiveGateway'
     }
   },
   {
@@ -300,7 +300,7 @@ module.exports.GATEWAY = [
     actionName: 'replace-with-complex-gateway',
     className: 'bpmn-icon-gateway-complex',
     target: {
-      type: 'bpmn:ComplexGateway'
+      type: 'vdml:ComplexGateway'
     }
   },
   {
@@ -308,18 +308,18 @@ module.exports.GATEWAY = [
     actionName: 'replace-with-event-based-gateway',
     className: 'bpmn-icon-gateway-eventbased',
     target: {
-      type: 'bpmn:EventBasedGateway',
+      type: 'vdml:EventBasedGateway',
       instantiate: false,
       eventGatewayType: 'Exclusive'
     }
   }
-  // Gateways deactivated until https://github.com/bpmn-io/bpmn-js/issues/194
+  // Gateways deactivated until https://github.com/vdml-io/vdml-js/issues/194
   // {
   //   label: 'Event based instantiating Gateway',
   //   actionName: 'replace-with-exclusive-event-based-gateway',
   //   className: 'bpmn-icon-exclusive-event-based',
   //   target: {
-  //     type: 'bpmn:EventBasedGateway'
+  //     type: 'vdml:EventBasedGateway'
   //   },
   //   options: {
   //     businessObject: { instantiate: true, eventGatewayType: 'Exclusive' }
@@ -330,7 +330,7 @@ module.exports.GATEWAY = [
   //   actionName: 'replace-with-parallel-event-based-instantiate-gateway',
   //   className: 'bpmn-icon-parallel-event-based-instantiate-gateway',
   //   target: {
-  //     type: 'bpmn:EventBasedGateway'
+  //     type: 'vdml:EventBasedGateway'
   //   },
   //   options: {
   //     businessObject: { instantiate: true, eventGatewayType: 'Parallel' }
@@ -344,7 +344,7 @@ module.exports.SUBPROCESS_EXPANDED = [
     actionName: 'replace-with-transaction',
     className: 'bpmn-icon-transaction',
     target: {
-      type: 'bpmn:Transaction',
+      type: 'vdml:Transaction',
       isExpanded: true
     }
   },
@@ -353,7 +353,7 @@ module.exports.SUBPROCESS_EXPANDED = [
     actionName: 'replace-with-event-subprocess',
     className: 'bpmn-icon-event-subprocess-expanded',
     target: {
-      type: 'bpmn:SubProcess',
+      type: 'vdml:SubProcess',
       triggeredByEvent: true,
       isExpanded: true
     }
@@ -363,7 +363,7 @@ module.exports.SUBPROCESS_EXPANDED = [
     actionName: 'replace-with-collapsed-subprocess',
     className: 'bpmn-icon-subprocess-collapsed',
     target: {
-      type: 'bpmn:SubProcess',
+      type: 'vdml:SubProcess',
       isExpanded: false
     }
   }
@@ -375,7 +375,7 @@ module.exports.TRANSACTION = [
     actionName: 'replace-with-subprocess',
     className: 'bpmn-icon-subprocess-expanded',
     target: {
-      type: 'bpmn:SubProcess',
+      type: 'vdml:SubProcess',
       isExpanded: true
     }
   },
@@ -384,7 +384,7 @@ module.exports.TRANSACTION = [
     actionName: 'replace-with-event-subprocess',
     className: 'bpmn-icon-event-subprocess-expanded',
     target: {
-      type: 'bpmn:SubProcess',
+      type: 'vdml:SubProcess',
       triggeredByEvent: true,
       isExpanded: true
     }
@@ -397,7 +397,7 @@ module.exports.EVENT_SUB_PROCESS = [
     actionName: 'replace-with-subprocess',
     className: 'bpmn-icon-subprocess-expanded',
     target: {
-      type: 'bpmn:SubProcess',
+      type: 'vdml:SubProcess',
       isExpanded: true
     }
   },
@@ -406,7 +406,7 @@ module.exports.EVENT_SUB_PROCESS = [
     actionName: 'replace-with-transaction',
     className: 'bpmn-icon-transaction',
     target: {
-      type: 'bpmn:Transaction',
+      type: 'vdml:Transaction',
       isExpanded: true
     }
   }
@@ -418,7 +418,7 @@ module.exports.TASK = [
     actionName: 'replace-with-task',
     className: 'bpmn-icon-task',
     target: {
-      type: 'bpmn:Task'
+      type: 'vdml:Task'
     }
   },
   {
@@ -426,7 +426,7 @@ module.exports.TASK = [
     actionName: 'replace-with-send-task',
     className: 'bpmn-icon-send',
     target: {
-      type: 'bpmn:SendTask'
+      type: 'vdml:SendTask'
     }
   },
   {
@@ -434,7 +434,7 @@ module.exports.TASK = [
     actionName: 'replace-with-receive-task',
     className: 'bpmn-icon-receive',
     target: {
-      type: 'bpmn:ReceiveTask'
+      type: 'vdml:ReceiveTask'
     }
   },
   {
@@ -442,7 +442,7 @@ module.exports.TASK = [
     actionName: 'replace-with-user-task',
     className: 'bpmn-icon-user',
     target: {
-      type: 'bpmn:UserTask'
+      type: 'vdml:UserTask'
     }
   },
   {
@@ -450,7 +450,7 @@ module.exports.TASK = [
     actionName: 'replace-with-manual-task',
     className: 'bpmn-icon-manual',
     target: {
-      type: 'bpmn:ManualTask'
+      type: 'vdml:ManualTask'
     }
   },
   {
@@ -458,7 +458,7 @@ module.exports.TASK = [
     actionName: 'replace-with-rule-task',
     className: 'bpmn-icon-business-rule',
     target: {
-      type: 'bpmn:BusinessRuleTask'
+      type: 'vdml:BusinessRuleTask'
     }
   },
   {
@@ -466,7 +466,7 @@ module.exports.TASK = [
     actionName: 'replace-with-service-task',
     className: 'bpmn-icon-service',
     target: {
-      type: 'bpmn:ServiceTask'
+      type: 'vdml:ServiceTask'
     }
   },
   {
@@ -474,7 +474,7 @@ module.exports.TASK = [
     actionName: 'replace-with-script-task',
     className: 'bpmn-icon-script',
     target: {
-      type: 'bpmn:ScriptTask'
+      type: 'vdml:ScriptTask'
     }
   },
   {
@@ -482,7 +482,7 @@ module.exports.TASK = [
     actionName: 'replace-with-call-activity',
     className: 'bpmn-icon-call-activity',
     target: {
-      type: 'bpmn:CallActivity'
+      type: 'vdml:CallActivity'
     }
   },
   {
@@ -490,7 +490,7 @@ module.exports.TASK = [
     actionName: 'replace-with-collapsed-subprocess',
     className: 'bpmn-icon-subprocess-collapsed',
     target: {
-      type: 'bpmn:SubProcess',
+      type: 'vdml:SubProcess',
       isExpanded: false
     }
   },
@@ -499,7 +499,7 @@ module.exports.TASK = [
     actionName: 'replace-with-expanded-subprocess',
     className: 'bpmn-icon-subprocess-expanded',
     target: {
-      type: 'bpmn:SubProcess',
+      type: 'vdml:SubProcess',
       isExpanded: true
     }
   }
@@ -511,8 +511,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-message-boundary',
     className: 'bpmn-icon-intermediate-event-catch-message',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
     }
   },
   {
@@ -520,8 +520,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-timer-boundary',
     className: 'bpmn-icon-intermediate-event-catch-timer',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition'
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition'
     }
   },
   {
@@ -529,8 +529,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-escalation-boundary',
     className: 'bpmn-icon-intermediate-event-catch-escalation',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition'
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition'
     }
   },
   {
@@ -538,8 +538,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-conditional-boundary',
     className: 'bpmn-icon-intermediate-event-catch-condition',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition'
     }
   },
   {
@@ -547,8 +547,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-error-boundary',
     className: 'bpmn-icon-intermediate-event-catch-error',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:ErrorEventDefinition'
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:ErrorEventDefinition'
     }
   },
   {
@@ -556,8 +556,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-cancel-boundary',
     className: 'bpmn-icon-intermediate-event-catch-cancel',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:CancelEventDefinition'
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:CancelEventDefinition'
     }
   },
   {
@@ -565,8 +565,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-signal-boundary',
     className: 'bpmn-icon-intermediate-event-catch-signal',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
     }
   },
   {
@@ -574,8 +574,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-compensation-boundary',
     className: 'bpmn-icon-intermediate-event-catch-compensation',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:CompensateEventDefinition'
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:CompensateEventDefinition'
     }
   },
   {
@@ -583,8 +583,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-non-interrupting-message-boundary',
     className: 'bpmn-icon-intermediate-event-catch-non-interrupting-message',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition',
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition',
       cancelActivity: false
     }
   },
@@ -593,8 +593,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-non-interrupting-timer-boundary',
     className: 'bpmn-icon-intermediate-event-catch-non-interrupting-timer',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition',
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition',
       cancelActivity: false
     }
   },
@@ -603,8 +603,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-non-interrupting-escalation-boundary',
     className: 'bpmn-icon-intermediate-event-catch-non-interrupting-escalation',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition',
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition',
       cancelActivity: false
     }
   },
@@ -613,8 +613,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-non-interrupting-conditional-boundary',
     className: 'bpmn-icon-intermediate-event-catch-non-interrupting-condition',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition',
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition',
       cancelActivity: false
     }
   },
@@ -623,8 +623,8 @@ module.exports.BOUNDARY_EVENT = [
     actionName: 'replace-with-non-interrupting-signal-boundary',
     className: 'bpmn-icon-intermediate-event-catch-non-interrupting-signal',
     target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition',
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition',
       cancelActivity: false
     }
   }
@@ -636,8 +636,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-message-start',
     className: 'bpmn-icon-start-event-message',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
     }
   },
   {
@@ -645,8 +645,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-timer-start',
     className: 'bpmn-icon-start-event-timer',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition'
     }
   },
   {
@@ -654,8 +654,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-conditional-start',
     className: 'bpmn-icon-start-event-condition',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition'
     }
   },
   {
@@ -663,8 +663,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-signal-start',
     className: 'bpmn-icon-start-event-signal',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
     }
   },
   {
@@ -672,8 +672,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-error-start',
     className: 'bpmn-icon-start-event-error',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:ErrorEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:ErrorEventDefinition'
     }
   },
   {
@@ -681,8 +681,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-escalation-start',
     className: 'bpmn-icon-start-event-escalation',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition'
     }
   },
   {
@@ -690,8 +690,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-compensation-start',
     className: 'bpmn-icon-start-event-compensation',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:CompensateEventDefinition'
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:CompensateEventDefinition'
     }
   },
   {
@@ -699,8 +699,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-non-interrupting-message-start',
     className: 'bpmn-icon-start-event-non-interrupting-message',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition',
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition',
       isInterrupting: false
     }
   },
@@ -709,8 +709,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-non-interrupting-timer-start',
     className: 'bpmn-icon-start-event-non-interrupting-timer',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition',
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition',
       isInterrupting: false
     }
   },
@@ -719,8 +719,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-non-interrupting-conditional-start',
     className: 'bpmn-icon-start-event-non-interrupting-condition',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition',
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition',
       isInterrupting: false
     }
   },
@@ -729,8 +729,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-non-interrupting-signal-start',
     className: 'bpmn-icon-start-event-non-interrupting-signal',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition',
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition',
       isInterrupting: false
     }
   },
@@ -739,8 +739,8 @@ module.exports.EVENT_SUB_PROCESS_START_EVENT = [
     actionName: 'replace-with-non-interrupting-escalation-start',
     className: 'bpmn-icon-start-event-non-interrupting-escalation',
     target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition',
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition',
       isInterrupting: false
     }
   }
@@ -770,7 +770,7 @@ module.exports.PARTICIPANT = [
     actionName: 'replace-with-expanded-pool',
     className: 'bpmn-icon-participant',
     target: {
-      type: 'bpmn:Participant',
+      type: 'vdml:Participant',
       isExpanded: true
     }
   },
@@ -780,7 +780,7 @@ module.exports.PARTICIPANT = [
     // TODO(@janstuemmel): maybe design new icon
     className: 'bpmn-icon-lane',
     target: {
-      type: 'bpmn:Participant',
+      type: 'vdml:Participant',
       isExpanded: false
     }
   }

@@ -16,26 +16,26 @@ var replaceOptions = require ('../replace/ReplaceOptions');
 /**
  * This module is an element agnostic replace menu provider for the popup menu.
  */
-function ReplaceMenuProvider(popupMenu, modeling, moddle, bpmnReplace, rules, translate) {
+function ReplaceMenuProvider(popupMenu, modeling, moddle, vdmlReplace, rules, translate) {
 
   this._popupMenu = popupMenu;
   this._modeling = modeling;
   this._moddle = moddle;
-  this._bpmnReplace = bpmnReplace;
+  this._vdmlReplace = vdmlReplace;
   this._rules = rules;
   this._translate = translate;
 
   this.register();
 }
 
-ReplaceMenuProvider.$inject = [ 'popupMenu', 'modeling', 'moddle', 'bpmnReplace', 'rules', 'translate' ];
+ReplaceMenuProvider.$inject = [ 'popupMenu', 'modeling', 'moddle', 'vdmlReplace', 'rules', 'translate' ];
 
 
 /**
  * Register replace menu provider in the popup menu
  */
 ReplaceMenuProvider.prototype.register = function() {
-  this._popupMenu.registerProvider('bpmn-replace', this);
+  this._popupMenu.registerProvider('vdml-replace', this);
 };
 
 
@@ -62,7 +62,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   var differentType = isDifferentType(element);
 
   // start events outside event sub processes
-  if (is(businessObject, 'bpmn:StartEvent') && !isEventSubProcess(businessObject.$parent)) {
+  if (is(businessObject, 'vdml:StartEvent') && !isEventSubProcess(businessObject.$parent)) {
 
     entries = filter(replaceOptions.START_EVENT, differentType);
 
@@ -70,7 +70,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // expanded/collapsed pools
-  if (is(businessObject, 'bpmn:Participant')) {
+  if (is(businessObject, 'vdml:Participant')) {
 
     entries = filter(replaceOptions.PARTICIPANT, function(entry) {
       return isExpanded(businessObject) !== entry.target.isExpanded;
@@ -80,7 +80,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // start events inside event sub processes
-  if (is(businessObject, 'bpmn:StartEvent') && isEventSubProcess(businessObject.$parent)) {
+  if (is(businessObject, 'vdml:StartEvent') && isEventSubProcess(businessObject.$parent)) {
 
     entries = filter(replaceOptions.EVENT_SUB_PROCESS_START_EVENT, function(entry) {
 
@@ -99,13 +99,13 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // end events
-  if (is(businessObject, 'bpmn:EndEvent')) {
+  if (is(businessObject, 'vdml:EndEvent')) {
 
     entries = filter(replaceOptions.END_EVENT, function(entry) {
       var target = entry.target;
 
       // hide cancel end events outside transactions
-      if (target.eventDefinitionType == 'bpmn:CancelEventDefinition' && !is(businessObject.$parent, 'bpmn:Transaction')) {
+      if (target.eventDefinitionType == 'vdml:CancelEventDefinition' && !is(businessObject.$parent, 'vdml:Transaction')) {
         return false;
       }
 
@@ -116,14 +116,14 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // boundary events
-  if (is(businessObject, 'bpmn:BoundaryEvent')) {
+  if (is(businessObject, 'vdml:BoundaryEvent')) {
 
     entries = filter(replaceOptions.BOUNDARY_EVENT, function(entry) {
 
       var target = entry.target;
 
-      if (target.eventDefinition == 'bpmn:CancelEventDefinition' &&
-         !is(businessObject.attachedToRef, 'bpmn:Transaction')) {
+      if (target.eventDefinition == 'vdml:CancelEventDefinition' &&
+         !is(businessObject.attachedToRef, 'vdml:Transaction')) {
         return false;
       }
       var cancelActivity = target.cancelActivity !== false;
@@ -137,8 +137,8 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // intermediate events
-  if (is(businessObject, 'bpmn:IntermediateCatchEvent') ||
-      is(businessObject, 'bpmn:IntermediateThrowEvent')) {
+  if (is(businessObject, 'vdml:IntermediateCatchEvent') ||
+      is(businessObject, 'vdml:IntermediateThrowEvent')) {
 
     entries = filter(replaceOptions.INTERMEDIATE_EVENT, differentType);
 
@@ -146,7 +146,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // gateways
-  if (is(businessObject, 'bpmn:Gateway')) {
+  if (is(businessObject, 'vdml:Gateway')) {
 
     entries = filter(replaceOptions.GATEWAY, differentType);
 
@@ -154,7 +154,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // transactions
-  if (is(businessObject, 'bpmn:Transaction')) {
+  if (is(businessObject, 'vdml:Transaction')) {
 
     entries = filter(replaceOptions.TRANSACTION, differentType);
 
@@ -170,7 +170,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // expanded sub processes
-  if (is(businessObject, 'bpmn:SubProcess') && isExpanded(businessObject)) {
+  if (is(businessObject, 'vdml:SubProcess') && isExpanded(businessObject)) {
 
     entries = filter(replaceOptions.SUBPROCESS_EXPANDED, differentType);
 
@@ -178,13 +178,13 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // collapsed ad hoc sub processes
-  if (is(businessObject, 'bpmn:AdHocSubProcess') && !isExpanded(businessObject)) {
+  if (is(businessObject, 'vdml:AdHocSubProcess') && !isExpanded(businessObject)) {
 
     entries = filter(replaceOptions.TASK, function(entry) {
 
       var target = entry.target;
 
-      var isTargetSubProcess = target.type === 'bpmn:SubProcess';
+      var isTargetSubProcess = target.type === 'vdml:SubProcess';
 
       var isTargetExpanded = target.isExpanded === true;
 
@@ -195,16 +195,16 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // sequence flows
-  if (is(businessObject, 'bpmn:SequenceFlow')) {
+  if (is(businessObject, 'vdml:SequenceFlow')) {
     return this._createSequenceFlowEntries(element, replaceOptions.SEQUENCE_FLOW);
   }
 
   // flow nodes
-  if (is(businessObject, 'bpmn:FlowNode')) {
+  if (is(businessObject, 'vdml:FlowNode')) {
     entries = filter(replaceOptions.TASK, differentType);
 
     // collapsed SubProcess can not be replaced with itself
-    if (is(businessObject, 'bpmn:SubProcess') && !isExpanded(businessObject)) {
+    if (is(businessObject, 'vdml:SubProcess') && !isExpanded(businessObject)) {
       entries = reject(entries, function(entry) {
         return entry.label === 'Sub Process (collapsed)';
       });
@@ -229,12 +229,12 @@ ReplaceMenuProvider.prototype.getHeaderEntries = function(element) {
 
   var headerEntries = [];
 
-  if (is(element, 'bpmn:Activity') && !isEventSubProcess(element)) {
+  if (is(element, 'vdml:Activity') && !isEventSubProcess(element)) {
     headerEntries = headerEntries.concat(this._getLoopEntries(element));
   }
 
-  if (is(element, 'bpmn:SubProcess') &&
-      !is(element, 'bpmn:Transaction') &&
+  if (is(element, 'vdml:SubProcess') &&
+      !is(element, 'vdml:Transaction') &&
       !isEventSubProcess(element)) {
     headerEntries.push(this._getAdHocEntry(element));
   }
@@ -290,10 +290,10 @@ ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, rep
     switch (entry.actionName) {
     case 'replace-with-default-flow':
       if (businessObject.sourceRef.default !== businessObject &&
-            (is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
-             is(businessObject.sourceRef, 'bpmn:InclusiveGateway') ||
-             is(businessObject.sourceRef, 'bpmn:ComplexGateway') ||
-             is(businessObject.sourceRef, 'bpmn:Activity'))) {
+            (is(businessObject.sourceRef, 'vdml:ExclusiveGateway') ||
+             is(businessObject.sourceRef, 'vdml:InclusiveGateway') ||
+             is(businessObject.sourceRef, 'vdml:ComplexGateway') ||
+             is(businessObject.sourceRef, 'vdml:Activity'))) {
 
         menuEntries.push(self._createMenuEntry(entry, element, function() {
           modeling.updateProperties(element.source, { default: businessObject });
@@ -301,10 +301,10 @@ ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, rep
       }
       break;
     case 'replace-with-conditional-flow':
-      if (!businessObject.conditionExpression && is(businessObject.sourceRef, 'bpmn:Activity')) {
+      if (!businessObject.conditionExpression && is(businessObject.sourceRef, 'vdml:Activity')) {
 
         menuEntries.push(self._createMenuEntry(entry, element, function() {
-          var conditionExpression = moddle.create('bpmn:FormalExpression', { body: '' });
+          var conditionExpression = moddle.create('vdml:FormalExpression', { body: '' });
 
           modeling.updateProperties(element, { conditionExpression: conditionExpression });
         }));
@@ -312,16 +312,16 @@ ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, rep
       break;
     default:
         // default flows
-      if (is(businessObject.sourceRef, 'bpmn:Activity') && businessObject.conditionExpression) {
+      if (is(businessObject.sourceRef, 'vdml:Activity') && businessObject.conditionExpression) {
         return menuEntries.push(self._createMenuEntry(entry, element, function() {
           modeling.updateProperties(element, { conditionExpression: undefined });
         }));
       }
         // conditional flows
-      if ((is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
-           is(businessObject.sourceRef, 'bpmn:InclusiveGateway') ||
-           is(businessObject.sourceRef, 'bpmn:ComplexGateway') ||
-           is(businessObject.sourceRef, 'bpmn:Activity')) &&
+      if ((is(businessObject.sourceRef, 'vdml:ExclusiveGateway') ||
+           is(businessObject.sourceRef, 'vdml:InclusiveGateway') ||
+           is(businessObject.sourceRef, 'vdml:ComplexGateway') ||
+           is(businessObject.sourceRef, 'vdml:Activity')) &&
            businessObject.sourceRef.default === businessObject) {
 
         return menuEntries.push(self._createMenuEntry(entry, element, function() {
@@ -347,7 +347,7 @@ ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, rep
  */
 ReplaceMenuProvider.prototype._createMenuEntry = function(definition, element, action) {
   var translate = this._translate;
-  var replaceElement = this._bpmnReplace.replaceElement;
+  var replaceElement = this._vdmlReplace.replaceElement;
 
   var replaceAction = function() {
     return replaceElement(element, definition.target);
@@ -414,7 +414,7 @@ ReplaceMenuProvider.prototype._getLoopEntries = function(element) {
       active: isParallel,
       action: toggleLoopEntry,
       options: {
-        loopCharacteristics: 'bpmn:MultiInstanceLoopCharacteristics',
+        loopCharacteristics: 'vdml:MultiInstanceLoopCharacteristics',
         isSequential: false
       }
     },
@@ -425,7 +425,7 @@ ReplaceMenuProvider.prototype._getLoopEntries = function(element) {
       active: isSequential,
       action: toggleLoopEntry,
       options: {
-        loopCharacteristics: 'bpmn:MultiInstanceLoopCharacteristics',
+        loopCharacteristics: 'vdml:MultiInstanceLoopCharacteristics',
         isSequential: true
       }
     },
@@ -436,7 +436,7 @@ ReplaceMenuProvider.prototype._getLoopEntries = function(element) {
       active: isLoop,
       action: toggleLoopEntry,
       options: {
-        loopCharacteristics: 'bpmn:StandardLoopCharacteristics'
+        loopCharacteristics: 'vdml:StandardLoopCharacteristics'
       }
     }
   ];
@@ -455,9 +455,9 @@ ReplaceMenuProvider.prototype._getAdHocEntry = function(element) {
   var translate = this._translate;
   var businessObject = getBusinessObject(element);
 
-  var isAdHoc = is(businessObject, 'bpmn:AdHocSubProcess');
+  var isAdHoc = is(businessObject, 'vdml:AdHocSubProcess');
 
-  var replaceElement = this._bpmnReplace.replaceElement;
+  var replaceElement = this._vdmlReplace.replaceElement;
 
   var adHocEntry = {
     id: 'toggle-adhoc',
@@ -466,9 +466,9 @@ ReplaceMenuProvider.prototype._getAdHocEntry = function(element) {
     active: isAdHoc,
     action: function(event, entry) {
       if (isAdHoc) {
-        return replaceElement(element, { type: 'bpmn:SubProcess' });
+        return replaceElement(element, { type: 'vdml:SubProcess' });
       } else {
-        return replaceElement(element, { type: 'bpmn:AdHocSubProcess' });
+        return replaceElement(element, { type: 'vdml:AdHocSubProcess' });
       }
     }
   };

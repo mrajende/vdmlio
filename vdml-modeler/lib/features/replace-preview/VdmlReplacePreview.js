@@ -9,7 +9,7 @@ var assign = require('lodash/object/assign'),
 
 var LOW_PRIORITY = 250;
 
-function BpmnReplacePreview(eventBus, elementRegistry, elementFactory, canvas, previewSupport) {
+function VdmlReplacePreview(eventBus, elementRegistry, elementFactory, canvas, previewSupport) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -102,8 +102,8 @@ function BpmnReplacePreview(eventBus, elementRegistry, elementFactory, canvas, p
   });
 }
 
-BpmnReplacePreview.$inject = [ 'eventBus', 'elementRegistry', 'elementFactory', 'canvas', 'previewSupport' ];
+VdmlReplacePreview.$inject = [ 'eventBus', 'elementRegistry', 'elementFactory', 'canvas', 'previewSupport' ];
 
-inherits(BpmnReplacePreview, CommandInterceptor);
+inherits(VdmlReplacePreview, CommandInterceptor);
 
-module.exports = BpmnReplacePreview;
+module.exports = VdmlReplacePreview;

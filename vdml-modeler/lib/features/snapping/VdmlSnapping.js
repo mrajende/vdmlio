@@ -27,15 +27,15 @@ var mid = SnapUtil.mid,
     isSnapped = SnapUtil.isSnapped,
     setSnapped = SnapUtil.setSnapped;
 
-var getBoundaryAttachment = require('./BpmnSnappingUtil').getBoundaryAttachment,
-    getParticipantSizeConstraints = require('./BpmnSnappingUtil').getParticipantSizeConstraints,
+var getBoundaryAttachment = require('./VdmlSnappingUtil').getBoundaryAttachment,
+    getParticipantSizeConstraints = require('./VdmlSnappingUtil').getParticipantSizeConstraints,
     getLanesRoot = require('../modeling/util/LaneUtil').getLanesRoot;
 
 var HIGH_PRIORITY = 1500;
 
 
 /**
- * BPMN specific snapping functionality
+ * VDML specific snapping functionality
  *
  *  * snap on process elements if a pool is created inside a
  *    process diagram
@@ -43,7 +43,7 @@ var HIGH_PRIORITY = 1500;
  * @param {EventBus} eventBus
  * @param {Canvas} canvas
  */
-function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
+function VdmlSnapping(eventBus, canvas, vdmlRules, elementRegistry) {
 
   // instantiate super
   Snapping.call(this, eventBus, canvas);
@@ -59,7 +59,7 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
         rootElement = canvas.getRootElement();
 
     // snap participant around existing elements (if any)
-    if (is(shape, 'bpmn:Participant') && is(rootElement, 'bpmn:Process')) {
+    if (is(shape, 'vdml:Participant') && is(rootElement, 'vdml:Process')) {
       initParticipantSnapping(context, shape, rootElement.children);
     }
   });
@@ -82,18 +82,18 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
         rootElement = canvas.getRootElement();
 
     // snap participant around existing elements (if any)
-    if (is(shape, 'bpmn:Participant') && is(rootElement, 'bpmn:Process')) {
+    if (is(shape, 'vdml:Participant') && is(rootElement, 'vdml:Process')) {
       initParticipantSnapping(context, shape, rootElement.children);
     }
   });
 
 
   function canAttach(shape, target, position) {
-    return bpmnRules.canAttach([ shape ], target, null, position) === 'attach';
+    return vdmlRules.canAttach([ shape ], target, null, position) === 'attach';
   }
 
   function canConnect(source, target) {
-    return bpmnRules.canConnect(source, target);
+    return vdmlRules.canConnect(source, target);
   }
 
   /**
@@ -131,7 +131,7 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
         shape = context.shape,
         hover = event.hover;
 
-    if (is(hover, 'bpmn:Lane') && !isAny(shape, [ 'bpmn:Lane', 'bpmn:Participant' ])) {
+    if (is(hover, 'vdml:Lane') && !isAny(shape, [ 'vdml:Lane', 'vdml:Participant' ])) {
       event.hover = getLanesRoot(hover);
       event.hoverGfx = elementRegistry.getGraphics(event.hover);
     }
@@ -155,7 +155,7 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
       context.initialSourcePosition = context.sourcePosition;
     }
 
-    if (target && connection.type === 'bpmn:SequenceFlow') {
+    if (target && connection.type === 'vdml:SequenceFlow') {
 
       // snap source
       context.sourcePosition = mid(source);
@@ -182,11 +182,11 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
 
     var threshold = 30;
 
-    if (is(shape, 'bpmn:Lane')) {
-      if (isAny(target, [ 'bpmn:Lane', 'bpmn:Participant' ])) {
+    if (is(shape, 'vdml:Lane')) {
+      if (isAny(target, [ 'vdml:Lane', 'vdml:Participant' ])) {
 
         var childLanes = filter(target.children, function(c) {
-          return is(c, 'bpmn:Lane');
+          return is(c, 'vdml:Lane');
         });
 
         var y = event.y,
@@ -258,33 +258,33 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
     var context = event.context,
         shape = context.shape;
 
-    if (is(shape, 'bpmn:SubProcess') && isExpanded(shape)) {
+    if (is(shape, 'vdml:SubProcess') && isExpanded(shape)) {
       context.minDimensions = { width: 140, height: 120 };
     }
 
-    if (is(shape, 'bpmn:Participant')) {
+    if (is(shape, 'vdml:Participant')) {
       context.minDimensions = { width: 300, height: 150 };
     }
 
-    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
+    if (is(shape, 'vdml:Lane') || is(shape, 'vdml:Participant')) {
       context.resizeConstraints = getParticipantSizeConstraints(shape, context.direction, context.balanced);
     }
 
-    if (is(shape, 'bpmn:TextAnnotation')) {
+    if (is(shape, 'vdml:TextAnnotation')) {
       context.minDimensions = { width: 50, height: 30 };
     }
   });
 
 }
 
-inherits(BpmnSnapping, Snapping);
+inherits(VdmlSnapping, Snapping);
 
-BpmnSnapping.$inject = [ 'eventBus', 'canvas', 'bpmnRules', 'elementRegistry' ];
+VdmlSnapping.$inject = [ 'eventBus', 'canvas', 'vdmlRules', 'elementRegistry' ];
 
-module.exports = BpmnSnapping;
+module.exports = VdmlSnapping;
 
 
-BpmnSnapping.prototype.initSnap = function(event) {
+VdmlSnapping.prototype.initSnap = function(event) {
 
   var context = event.context,
       shape = event.shape,
@@ -297,7 +297,7 @@ BpmnSnapping.prototype.initSnap = function(event) {
 
   snapContext = Snapping.prototype.initSnap.call(this, event);
 
-  if (is(shape, 'bpmn:Participant')) {
+  if (is(shape, 'vdml:Participant')) {
     // assign higher priority for outer snaps on participants
     snapContext.setSnapLocations([ 'top-left', 'bottom-right', 'mid' ]);
   }
@@ -359,15 +359,15 @@ BpmnSnapping.prototype.initSnap = function(event) {
 };
 
 
-BpmnSnapping.prototype.addTargetSnaps = function(snapPoints, shape, target) {
+VdmlSnapping.prototype.addTargetSnaps = function(snapPoints, shape, target) {
 
   // use target parent as snap target
-  if (is(shape, 'bpmn:BoundaryEvent') && shape.type !== 'label') {
+  if (is(shape, 'vdml:BoundaryEvent') && shape.type !== 'label') {
     target = target.parent;
   }
 
   // add sequence flow parents as snap targets
-  if (is(target, 'bpmn:SequenceFlow')) {
+  if (is(target, 'vdml:SequenceFlow')) {
     this.addTargetSnaps(snapPoints, shape, target.parent);
   }
 
@@ -376,13 +376,13 @@ BpmnSnapping.prototype.addTargetSnaps = function(snapPoints, shape, target) {
   forEach(siblings, function(s) {
 
     // do not snap to lanes
-    if (is(s, 'bpmn:Lane')) {
+    if (is(s, 'vdml:Lane')) {
       return;
     }
 
     snapPoints.add('mid', mid(s));
 
-    if (is(s, 'bpmn:Participant')) {
+    if (is(s, 'vdml:Participant')) {
       snapPoints.add('top-left', topLeft(s));
       snapPoints.add('bottom-right', bottomRight(s));
     }

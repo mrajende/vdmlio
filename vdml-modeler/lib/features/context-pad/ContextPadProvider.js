@@ -12,7 +12,7 @@ var assign = require('lodash/object/assign'),
     hasPrimaryModifier = require('diagram-js/lib/util/Mouse').hasPrimaryModifier;
 
 /**
- * A provider for BPMN 2.0 elements context pad
+ * A provider for VDML 2.0 elements context pad
  */
 function ContextPadProvider(eventBus, contextPad, modeling, elementFactory,
                             connect, create, popupMenu,
@@ -130,7 +130,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
 
     if (typeof title !== 'string') {
       options = title;
-      title = translate('Append {type}', { type: type.replace(/^bpmn\:/, '') });
+      title = translate('Append {type}', { type: type.replace(/^vdml\:/, '') });
     }
 
     function appendListener(event, element) {
@@ -163,7 +163,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   }
 
 
-  if (isAny(businessObject, [ 'bpmn:Lane', 'bpmn:Participant' ]) && isExpanded(businessObject)) {
+  if (isAny(businessObject, [ 'vdml:Lane', 'vdml:Participant' ]) && isExpanded(businessObject)) {
 
     var childLanes = getChildLanes(element);
 
@@ -224,47 +224,47 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
 
   }
 
-  if (is(businessObject, 'bpmn:FlowNode')) {
+  if (is(businessObject, 'vdml:FlowNode')) {
 
-    if (is(businessObject, 'bpmn:EventBasedGateway')) {
+    if (is(businessObject, 'vdml:EventBasedGateway')) {
 
       assign(actions, {
-        'append.receive-task': appendAction('bpmn:ReceiveTask', 'bpmn-icon-receive-task'),
-        'append.message-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+        'append.receive-task': appendAction('vdml:ReceiveTask', 'bpmn-icon-receive-task'),
+        'append.message-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
                                                   'bpmn-icon-intermediate-event-catch-message',
-                                                  { eventDefinitionType: 'bpmn:MessageEventDefinition' }),
-        'append.timer-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+                                                  { eventDefinitionType: 'vdml:MessageEventDefinition' }),
+        'append.timer-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
                                                   'bpmn-icon-intermediate-event-catch-timer',
-                                                  { eventDefinitionType: 'bpmn:TimerEventDefinition' }),
-        'append.condtion-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+                                                  { eventDefinitionType: 'vdml:TimerEventDefinition' }),
+        'append.condtion-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
                                                   'bpmn-icon-intermediate-event-catch-condition',
-                                                  { eventDefinitionType: 'bpmn:ConditionalEventDefinition' }),
-        'append.signal-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+                                                  { eventDefinitionType: 'vdml:ConditionalEventDefinition' }),
+        'append.signal-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
                                                   'bpmn-icon-intermediate-event-catch-signal',
-                                                  { eventDefinitionType: 'bpmn:SignalEventDefinition' })
+                                                  { eventDefinitionType: 'vdml:SignalEventDefinition' })
       });
     } else
 
-    if (isEventType(businessObject, 'bpmn:BoundaryEvent', 'bpmn:CompensateEventDefinition')) {
+    if (isEventType(businessObject, 'vdml:BoundaryEvent', 'vdml:CompensateEventDefinition')) {
 
       assign(actions, {
         'append.compensation-activity':
-            appendAction('bpmn:Task', 'bpmn-icon-task', translate('Append compensation activity'), {
+            appendAction('vdml:Task', 'bpmn-icon-task', translate('Append compensation activity'), {
               isForCompensation: true
             })
       });
     } else
 
-    if (!is(businessObject, 'bpmn:EndEvent') &&
+    if (!is(businessObject, 'vdml:EndEvent') &&
         !businessObject.isForCompensation &&
-        !isEventType(businessObject, 'bpmn:IntermediateThrowEvent', 'bpmn:LinkEventDefinition') &&
+        !isEventType(businessObject, 'vdml:IntermediateThrowEvent', 'vdml:LinkEventDefinition') &&
         !isEventSubProcess(businessObject)) {
 
       assign(actions, {
-        'append.end-event': appendAction('bpmn:EndEvent', 'bpmn-icon-end-event-none'),
-        'append.gateway': appendAction('bpmn:ExclusiveGateway', 'bpmn-icon-gateway-xor'),
-        'append.append-task': appendAction('bpmn:Task', 'bpmn-icon-task'),
-        'append.intermediate-event': appendAction('bpmn:IntermediateThrowEvent',
+        'append.end-event': appendAction('vdml:EndEvent', 'bpmn-icon-end-event-none'),
+        'append.gateway': appendAction('vdml:ExclusiveGateway', 'bpmn-icon-gateway-xor'),
+        'append.append-task': appendAction('vdml:Task', 'bpmn-icon-task'),
+        'append.intermediate-event': appendAction('vdml:IntermediateThrowEvent',
                                                   'bpmn-icon-intermediate-event-none')
       });
     }
@@ -272,8 +272,8 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
 
   var replaceMenu;
 
-  if (popupMenu._providers['bpmn-replace']) {
-    replaceMenu = popupMenu.create('bpmn-replace', element);
+  if (popupMenu._providers['vdml-replace']) {
+    replaceMenu = popupMenu.create('vdml-replace', element);
   }
 
   if (replaceMenu && !replaceMenu.isEmpty()) {
@@ -296,14 +296,14 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   }
 
   if (isAny(businessObject, [
-    'bpmn:FlowNode',
-    'bpmn:InteractionNode',
-    'bpmn:DataObjectReference',
-    'bpmn:DataStoreReference'
+    'vdml:FlowNode',
+    'vdml:InteractionNode',
+    'vdml:DataObjectReference',
+    'vdml:DataStoreReference'
   ]) ) {
 
     assign(actions, {
-      'append.text-annotation': appendAction('bpmn:TextAnnotation', 'bpmn-icon-text-annotation'),
+      'append.text-annotation': appendAction('vdml:TextAnnotation', 'bpmn-icon-text-annotation'),
 
       'connect': {
         group: 'connect',
@@ -319,7 +319,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
     });
   }
 
-  if (isAny(businessObject, [ 'bpmn:DataObjectReference', 'bpmn:DataStoreReference' ])) {
+  if (isAny(businessObject, [ 'vdml:DataObjectReference', 'vdml:DataStoreReference' ])) {
     assign(actions, {
       'connect': {
         group: 'connect',

@@ -15,17 +15,17 @@ var TARGET_REF_PLACEHOLDER_NAME = '__targetRef_placeholder';
 
 /**
  * This behavior makes sure we always set a fake
- * DataInputAssociation#targetRef as demanded by the BPMN 2.0
+ * DataInputAssociation#targetRef as demanded by the VDML 2.0
  * XSD schema.
  *
- * The reference is set to a bpmn:Property{ name: '__targetRef_placeholder' }
+ * The reference is set to a vdml:Property{ name: '__targetRef_placeholder' }
  * which is created on the fly and cleaned up afterwards if not needed
  * anymore.
  *
  * @param {EventBus} eventBus
- * @param {BpmnFactory} bpmnFactory
+ * @param {VdmlFactory} vdmlFactory
  */
-function DataInputAssociationBehavior(eventBus, bpmnFactory) {
+function DataInputAssociationBehavior(eventBus, vdmlFactory) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -64,7 +64,7 @@ function DataInputAssociationBehavior(eventBus, bpmnFactory) {
     });
 
     if (!targetRefProp && create) {
-      targetRefProp = bpmnFactory.create('bpmn:Property', {
+      targetRefProp = vdmlFactory.create('vdml:Property', {
         name: TARGET_REF_PLACEHOLDER_NAME
       });
 
@@ -125,7 +125,7 @@ function DataInputAssociationBehavior(eventBus, bpmnFactory) {
   }
 }
 
-DataInputAssociationBehavior.$inject = [ 'eventBus', 'bpmnFactory' ];
+DataInputAssociationBehavior.$inject = [ 'eventBus', 'vdmlFactory' ];
 
 inherits(DataInputAssociationBehavior, CommandInterceptor);
 
@@ -134,7 +134,7 @@ module.exports = DataInputAssociationBehavior;
 
 /**
  * Only call the given function when the event
- * touches a bpmn:DataInputAssociation.
+ * touches a vdml:DataInputAssociation.
  *
  * @param {Function} fn
  * @return {Function}
@@ -145,7 +145,7 @@ function ifDataInputAssociation(fn) {
     var context = event.context,
         connection = context.connection;
 
-    if (is(connection, 'bpmn:DataInputAssociation')) {
+    if (is(connection, 'vdml:DataInputAssociation')) {
       return fn(event);
     }
   };

@@ -51,8 +51,8 @@ function LabelEditingProvider(eventBus, canvas, directEditing, commandStack) {
         return;
       }
 
-      if (is(element, 'bpmn:Task') || is(element, 'bpmn:TextAnnotation') ||
-          (is(element, 'bpmn:SubProcess') && !isExpanded(element))) {
+      if (is(element, 'vdml:Task') || is(element, 'vdml:TextAnnotation') ||
+          (is(element, 'vdml:SubProcess') && !isExpanded(element))) {
 
         directEditing.activate(element);
       }
@@ -114,7 +114,7 @@ LabelEditingProvider.prototype.getEditingBBox = function(element) {
       zoom;
 
   // adjust for expanded pools AND lanes
-  if ((is(element, 'bpmn:Participant') && isExpanded(element)) || is(element, 'bpmn:Lane')) {
+  if ((is(element, 'vdml:Participant') && isExpanded(element)) || is(element, 'vdml:Lane')) {
 
     bounds.width = 150;
     bounds.minHeight = LINE_HEIGHT + PADDING;
@@ -126,10 +126,10 @@ LabelEditingProvider.prototype.getEditingBBox = function(element) {
 
   // internal labels for tasks and collapsed call activities, sub processes and participants
   if (
-    is(element, 'bpmn:Task') ||
-    (is(element, 'bpmn:CallActivity') && !isExpanded(element)) ||
-    (is(element, 'bpmn:SubProcess') && !isExpanded(element)) ||
-    (is(element, 'bpmn:Participant') && !isExpanded(element))
+    is(element, 'vdml:Task') ||
+    (is(element, 'vdml:CallActivity') && !isExpanded(element)) ||
+    (is(element, 'vdml:SubProcess') && !isExpanded(element)) ||
+    (is(element, 'vdml:Participant') && !isExpanded(element))
   ) {
 
     zoom = canvas.zoom();
@@ -156,7 +156,7 @@ LabelEditingProvider.prototype.getEditingBBox = function(element) {
 
 
   // internal labels for expanded sub processes
-  if (is(element, 'bpmn:SubProcess') && isExpanded(element)) {
+  if (is(element, 'vdml:SubProcess') && isExpanded(element)) {
 
     bounds.width = element.width;
     bounds.maxHeight = 3 * LINE_HEIGHT + PADDING; // maximum 3 lines
@@ -174,7 +174,7 @@ LabelEditingProvider.prototype.getEditingBBox = function(element) {
 
 
   // text annotations
-  if (is(element, 'bpmn:TextAnnotation')) {
+  if (is(element, 'vdml:TextAnnotation')) {
     bounds.minWidth = 100;
     bounds.height = element.height;
 

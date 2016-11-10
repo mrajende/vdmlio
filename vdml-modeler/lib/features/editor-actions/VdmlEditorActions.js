@@ -10,7 +10,7 @@ var is = require('../../util/ModelUtil').is;
 
 var getBBox = require('diagram-js/lib/util/Elements').getBBox;
 
-function BpmnEditorActions(
+function VdmlEditorActions(
     injector,
     canvas, elementRegistry, selection,
     spaceTool,
@@ -66,7 +66,7 @@ function BpmnEditorActions(
 
       if (currentSelection.length) {
         aligneableElements = filter(currentSelection, function(element) {
-          return !is(element, 'bpmn:Lane');
+          return !is(element, 'vdml:Lane');
         });
 
         alignElements.trigger(aligneableElements, type);
@@ -87,9 +87,9 @@ function BpmnEditorActions(
           boundingBox,
           elements;
 
-      if (is(rootElement, 'bpmn:Collaboration')) {
+      if (is(rootElement, 'vdml:Collaboration')) {
         elements = elementRegistry.filter(function(element) {
-          return is(element.parent, 'bpmn:Collaboration');
+          return is(element.parent, 'vdml:Collaboration');
         });
       } else {
         elements = elementRegistry.filter(function(element) {
@@ -104,9 +104,9 @@ function BpmnEditorActions(
   });
 }
 
-inherits(BpmnEditorActions, EditorActions);
+inherits(VdmlEditorActions, EditorActions);
 
-BpmnEditorActions.$inject = [
+VdmlEditorActions.$inject = [
   'injector',
   'canvas', 'elementRegistry', 'selection',
   'spaceTool',
@@ -120,4 +120,4 @@ BpmnEditorActions.$inject = [
   'modeling'
 ];
 
-module.exports = BpmnEditorActions;
+module.exports = VdmlEditorActions;

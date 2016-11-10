@@ -17,9 +17,9 @@ function getTRBLResize(oldBounds, newBounds) {
 
 
 var LANE_PARENTS = [
-  'bpmn:Participant',
-  'bpmn:Process',
-  'bpmn:SubProcess'
+  'vdml:Participant',
+  'vdml:Process',
+  'vdml:SubProcess'
 ];
 
 var LANE_INDENTATION = 30;
@@ -40,7 +40,7 @@ function collectLanes(shape, collectedShapes) {
   collectedShapes = collectedShapes || [];
 
   shape.children.filter(function(s) {
-    if (is(s, 'bpmn:Lane')) {
+    if (is(s, 'vdml:Lane')) {
       collectLanes(s, collectedShapes);
 
       collectedShapes.push(s);
@@ -61,7 +61,7 @@ module.exports.collectLanes = collectLanes;
  */
 function getChildLanes(shape) {
   return shape.children.filter(function(c) {
-    return is(c, 'bpmn:Lane');
+    return is(c, 'vdml:Lane');
   });
 }
 
@@ -95,7 +95,7 @@ function computeLanesResize(shape, newBounds) {
 
   var rootElement = getLanesRoot(shape);
 
-  var initialShapes = is(rootElement, 'bpmn:Process') ? [] : [ rootElement ];
+  var initialShapes = is(rootElement, 'vdml:Process') ? [] : [ rootElement ];
 
   var allLanes = collectLanes(rootElement, initialShapes),
       shapeTrbl = asTRBL(shape),

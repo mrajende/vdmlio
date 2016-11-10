@@ -3,16 +3,16 @@
 var isAny = require('../modeling/util/ModelingUtil').isAny;
 
 /**
- * Extention of GlobalConnect tool that implements BPMN specific rules about
+ * Extention of GlobalConnect tool that implements VDML specific rules about
  * connection start elements.
  */
-function BpmnGlobalConnect(globalConnect) {
+function VdmlGlobalConnect(globalConnect) {
   globalConnect.registerProvider(this);
 }
 
-BpmnGlobalConnect.$inject = [ 'globalConnect' ];
+VdmlGlobalConnect.$inject = [ 'globalConnect' ];
 
-module.exports = BpmnGlobalConnect;
+module.exports = VdmlGlobalConnect;
 
 
 /**
@@ -21,7 +21,7 @@ module.exports = BpmnGlobalConnect;
  * @param  {Element} source
  * @return {Boolean}
  */
-BpmnGlobalConnect.prototype.canStartConnect = function(source) {
+VdmlGlobalConnect.prototype.canStartConnect = function(source) {
 
   if (nonExistantOrLabel(source)) {
     return null;
@@ -30,10 +30,10 @@ BpmnGlobalConnect.prototype.canStartConnect = function(source) {
   var businessObject = source.businessObject;
 
   return isAny(businessObject, [
-    'bpmn:FlowNode',
-    'bpmn:InteractionNode',
-    'bpmn:DataObjectReference',
-    'bpmn:DataStoreReference'
+    'vdml:FlowNode',
+    'vdml:InteractionNode',
+    'vdml:DataObjectReference',
+    'vdml:DataStoreReference'
   ]);
 };
 

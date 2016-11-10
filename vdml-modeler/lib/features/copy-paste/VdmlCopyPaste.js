@@ -24,7 +24,7 @@ function removeProperties(element, properties) {
   });
 }
 
-function BpmnCopyPaste(bpmnFactory, eventBus, copyPaste, clipboard, moddle, canvas, bpmnRules) {
+function VdmlCopyPaste(vdmlFactory, eventBus, copyPaste, clipboard, moddle, canvas, vdmlRules) {
 
   copyPaste.registerDescriptor(function(element, descriptor) {
     var businessObject = getBusinessObject(element),
@@ -62,7 +62,7 @@ function BpmnCopyPaste(bpmnFactory, eventBus, copyPaste, clipboard, moddle, canv
 
     setProperties(descriptor, businessObject.di, [ 'isExpanded' ]);
 
-    if (is(businessObject, 'bpmn:SequenceFlow')) {
+    if (is(businessObject, 'vdml:SequenceFlow')) {
       conditionExpression = businessObject.get('conditionExpression');
 
       if (conditionExpression) {
@@ -101,17 +101,17 @@ function BpmnCopyPaste(bpmnFactory, eventBus, copyPaste, clipboard, moddle, canv
       return;
     }
 
-    if (is(parent, 'bpmn:Process')) {
-      descriptor.parent = is(rootElement, 'bpmn:Collaboration') ? rootElement : parent;
+    if (is(parent, 'vdml:Process')) {
+      descriptor.parent = is(rootElement, 'vdml:Collaboration') ? rootElement : parent;
     }
 
-    if (descriptor.type === 'bpmn:DataOutputAssociation' ||
-        descriptor.type === 'bpmn:DataInputAssociation' ||
-        descriptor.type === 'bpmn:MessageFlow') {
+    if (descriptor.type === 'vdml:DataOutputAssociation' ||
+        descriptor.type === 'vdml:DataInputAssociation' ||
+        descriptor.type === 'vdml:MessageFlow') {
       descriptor.parent = rootElement;
     }
 
-    if (is(parent, 'bpmn:Lane')) {
+    if (is(parent, 'vdml:Lane')) {
       descriptor.parent = parent.parent;
     }
 
@@ -125,17 +125,17 @@ function BpmnCopyPaste(bpmnFactory, eventBus, copyPaste, clipboard, moddle, canv
         target = target.element;
       }
 
-      canConnect = bpmnRules.canConnect(source, target);
+      canConnect = vdmlRules.canConnect(source, target);
 
       if (canConnect) {
         descriptor.type = canConnect.type;
       }
     }
 
-    descriptor.businessObject = businessObject = bpmnFactory.create(descriptor.type);
+    descriptor.businessObject = businessObject = vdmlFactory.create(descriptor.type);
 
-    if (descriptor.type === 'bpmn:Participant' && descriptor.processRef) {
-      descriptor.processRef = businessObject.processRef = bpmnFactory.create('bpmn:Process');
+    if (descriptor.type === 'vdml:Participant' && descriptor.processRef) {
+      descriptor.processRef = businessObject.processRef = vdmlFactory.create('vdml:Process');
     }
 
     setProperties(businessObject, descriptor, [
@@ -191,14 +191,14 @@ function BpmnCopyPaste(bpmnFactory, eventBus, copyPaste, clipboard, moddle, canv
 }
 
 
-BpmnCopyPaste.$inject = [
-  'bpmnFactory',
+VdmlCopyPaste.$inject = [
+  'vdmlFactory',
   'eventBus',
   'copyPaste',
   'clipboard',
   'moddle',
   'canvas',
-  'bpmnRules'
+  'vdmlRules'
 ];
 
-module.exports = BpmnCopyPaste;
+module.exports = VdmlCopyPaste;

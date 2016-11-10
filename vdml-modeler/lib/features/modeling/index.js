@@ -1,5 +1,5 @@
 module.exports = {
-  __init__: [ 'modeling', 'bpmnUpdater' ],
+  __init__: [ 'modeling', 'vdmlUpdater' ],
   __depends__: [
     require('./behavior'),
     require('../label-editing'),
@@ -14,10 +14,10 @@ module.exports = {
     require('diagram-js/lib/features/change-support'),
     require('diagram-js/lib/features/space-tool')
   ],
-  bpmnFactory: [ 'type', require('./BpmnFactory') ],
-  bpmnUpdater: [ 'type', require('./BpmnUpdater') ],
+  vdmlFactory: [ 'type', require('./VdmlFactory') ],
+  vdmlUpdater: [ 'type', require('./VdmlUpdater') ],
   elementFactory: [ 'type', require('./ElementFactory') ],
   modeling: [ 'type', require('./Modeling') ],
-  layouter: [ 'type', require('./BpmnLayouter') ],
+  layouter: [ 'type', require('./VdmlLayouter') ],
   connectionDocking: [ 'type', require('diagram-js/lib/layout/CroppingConnectionDocking') ]
 };

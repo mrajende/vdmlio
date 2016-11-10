@@ -42,9 +42,9 @@ function toggeling(element, target) {
 
 
 /**
- * This module takes care of replacing BPMN elements
+ * This module takes care of replacing VDML elements
  */
-function BpmnReplace(bpmnFactory, replace, selection, modeling) {
+function VdmlReplace(vdmlFactory, replace, selection, modeling) {
 
   /**
    * Prepares a new business object for the replacement element
@@ -65,8 +65,8 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
 
 
 
-    if (is(oldBusinessObject, 'bpmn:SubProcess')) {
-      if (type === 'bpmn:SubProcess') {
+    if (is(oldBusinessObject, 'vdml:SubProcess')) {
+      if (type === 'vdml:SubProcess') {
         if (toggeling(element, target)) {
           // expanding or collapsing process
           modeling.toggleCollapse(element);
@@ -77,14 +77,14 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
     }
 
 
-    var newBusinessObject = bpmnFactory.create(type);
+    var newBusinessObject = vdmlFactory.create(type);
 
     var newElement = {
       type: type,
       businessObject: newBusinessObject
     };
 
-    // initialize custom BPMN extensions
+    // initialize custom VDML extensions
     if (target.eventDefinitionType) {
       newElement.eventDefinitionType = target.eventDefinitionType;
     }
@@ -93,9 +93,9 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
     assign(newBusinessObject, pick(target, CUSTOM_PROPERTIES));
 
 
-    if (is(oldBusinessObject, 'bpmn:Activity')) {
+    if (is(oldBusinessObject, 'vdml:Activity')) {
 
-      if (is(oldBusinessObject, 'bpmn:SubProcess')) {
+      if (is(oldBusinessObject, 'vdml:SubProcess')) {
         // no toggeling, so keep old state
         newElement.isExpanded = isExpanded(oldBusinessObject);
       }
@@ -106,8 +106,8 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
 
       // TODO: need also to respect min/max Size
       // copy size, from an expanded subprocess to an expanded alternative subprocess
-      // except bpmn:Task, because Task is always expanded
-      if ((isExpanded(oldBusinessObject) && !is(oldBusinessObject, 'bpmn:Task')) && target.isExpanded) {
+      // except vdml:Task, because Task is always expanded
+      if ((isExpanded(oldBusinessObject) && !is(oldBusinessObject, 'vdml:Task')) && target.isExpanded) {
         newElement.width = element.width;
         newElement.height = element.height;
       }
@@ -115,11 +115,11 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
     }
 
     // transform collapsed/expanded pools
-    if (is(oldBusinessObject, 'bpmn:Participant')) {
+    if (is(oldBusinessObject, 'vdml:Participant')) {
 
         // create expanded pool
       if (target.isExpanded === true) {
-        newBusinessObject.processRef = bpmnFactory.create('bpmn:Process');
+        newBusinessObject.processRef = vdmlFactory.create('vdml:Process');
       } else {
           // remove children when transforming to collapsed pool
         hints.moveChildren = false;
@@ -138,10 +138,10 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
     }
 
     // retain default flow's reference between inclusive <-> exclusive gateways and activities
-    if ((is(oldBusinessObject, 'bpmn:ExclusiveGateway') || is(oldBusinessObject, 'bpmn:InclusiveGateway') ||
-         is(oldBusinessObject, 'bpmn:Activity')) &&
-        (is(newBusinessObject, 'bpmn:ExclusiveGateway') || is(newBusinessObject, 'bpmn:InclusiveGateway') ||
-         is(newBusinessObject, 'bpmn:Activity')))
+    if ((is(oldBusinessObject, 'vdml:ExclusiveGateway') || is(oldBusinessObject, 'vdml:InclusiveGateway') ||
+         is(oldBusinessObject, 'vdml:Activity')) &&
+        (is(newBusinessObject, 'vdml:ExclusiveGateway') || is(newBusinessObject, 'vdml:InclusiveGateway') ||
+         is(newBusinessObject, 'vdml:Activity')))
     {
       newBusinessObject.default = oldBusinessObject.default;
     }
@@ -162,6 +162,6 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
   this.replaceElement = replaceElement;
 }
 
-BpmnReplace.$inject = [ 'bpmnFactory', 'replace', 'selection', 'modeling' ];
+VdmlReplace.$inject = [ 'vdmlFactory', 'replace', 'selection', 'modeling' ];
 
-module.exports = BpmnReplace;
+module.exports = VdmlReplace;

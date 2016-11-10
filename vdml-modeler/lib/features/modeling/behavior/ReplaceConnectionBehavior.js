@@ -8,7 +8,7 @@ var CommandInterceptor = require('diagram-js/lib/command/CommandInterceptor');
 
 var is = require('../../../util/ModelUtil').is;
 
-function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
+function ReplaceConnectionBehavior(eventBus, modeling, vdmlRules) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -36,30 +36,30 @@ function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
      * This holds true for SequenceFlow <> MessageFlow.
      */
 
-    if (is(connection, 'bpmn:SequenceFlow')) {
-      if (!bpmnRules.canConnectSequenceFlow(source, target)) {
+    if (is(connection, 'vdml:SequenceFlow')) {
+      if (!vdmlRules.canConnectSequenceFlow(source, target)) {
         remove = true;
       }
 
-      if (bpmnRules.canConnectMessageFlow(source, target)) {
-        replacementType = 'bpmn:MessageFlow';
+      if (vdmlRules.canConnectMessageFlow(source, target)) {
+        replacementType = 'vdml:MessageFlow';
       }
     }
 
     // transform message flows into sequence flows, if possible
 
-    if (is(connection, 'bpmn:MessageFlow')) {
+    if (is(connection, 'vdml:MessageFlow')) {
 
-      if (!bpmnRules.canConnectMessageFlow(source, target)) {
+      if (!vdmlRules.canConnectMessageFlow(source, target)) {
         remove = true;
       }
 
-      if (bpmnRules.canConnectSequenceFlow(source, target)) {
-        replacementType = 'bpmn:SequenceFlow';
+      if (vdmlRules.canConnectSequenceFlow(source, target)) {
+        replacementType = 'vdml:SequenceFlow';
       }
     }
 
-    if (is(connection, 'bpmn:Association') && !bpmnRules.canConnectAssociation(source, target)) {
+    if (is(connection, 'vdml:Association') && !vdmlRules.canConnectAssociation(source, target)) {
       remove = true;
     }
 
@@ -123,6 +123,6 @@ function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
 
 inherits(ReplaceConnectionBehavior, CommandInterceptor);
 
-ReplaceConnectionBehavior.$inject = [ 'eventBus', 'modeling', 'bpmnRules' ];
+ReplaceConnectionBehavior.$inject = [ 'eventBus', 'modeling', 'vdmlRules' ];
 
 module.exports = ReplaceConnectionBehavior;

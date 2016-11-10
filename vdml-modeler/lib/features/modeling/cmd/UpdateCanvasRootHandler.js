@@ -21,23 +21,23 @@ UpdateCanvasRootHandler.prototype.execute = function(context) {
       newRootBusinessObject = newRoot.businessObject,
       oldRoot = canvas.getRootElement(),
       oldRootBusinessObject = oldRoot.businessObject,
-      bpmnDefinitions = oldRootBusinessObject.$parent,
+      vdmlDefinitions = oldRootBusinessObject.$parent,
       diPlane = oldRootBusinessObject.di;
 
   // (1) replace process old <> new root
   canvas.setRootElement(newRoot, true);
 
   // (2) update root elements
-  Collections.add(bpmnDefinitions.rootElements, newRootBusinessObject);
-  newRootBusinessObject.$parent = bpmnDefinitions;
+  Collections.add(vdmlDefinitions.rootElements, newRootBusinessObject);
+  newRootBusinessObject.$parent = vdmlDefinitions;
 
-  Collections.remove(bpmnDefinitions.rootElements, oldRootBusinessObject);
+  Collections.remove(vdmlDefinitions.rootElements, oldRootBusinessObject);
   oldRootBusinessObject.$parent = null;
 
   // (3) wire di
   oldRootBusinessObject.di = null;
 
-  diPlane.bpmnElement = newRootBusinessObject;
+  diPlane.vdmlElement = newRootBusinessObject;
   newRootBusinessObject.di = diPlane;
 
   context.oldRoot = oldRoot;
@@ -55,23 +55,23 @@ UpdateCanvasRootHandler.prototype.revert = function(context) {
       newRootBusinessObject = newRoot.businessObject,
       oldRoot = context.oldRoot,
       oldRootBusinessObject = oldRoot.businessObject,
-      bpmnDefinitions = newRootBusinessObject.$parent,
+      vdmlDefinitions = newRootBusinessObject.$parent,
       diPlane = newRootBusinessObject.di;
 
   // (1) replace process old <> new root
   canvas.setRootElement(oldRoot, true);
 
   // (2) update root elements
-  Collections.remove(bpmnDefinitions.rootElements, newRootBusinessObject);
+  Collections.remove(vdmlDefinitions.rootElements, newRootBusinessObject);
   newRootBusinessObject.$parent = null;
 
-  Collections.add(bpmnDefinitions.rootElements, oldRootBusinessObject);
-  oldRootBusinessObject.$parent = bpmnDefinitions;
+  Collections.add(vdmlDefinitions.rootElements, oldRootBusinessObject);
+  oldRootBusinessObject.$parent = vdmlDefinitions;
 
   // (3) wire di
   newRootBusinessObject.di = null;
 
-  diPlane.bpmnElement = oldRootBusinessObject;
+  diPlane.vdmlElement = oldRootBusinessObject;
   oldRootBusinessObject.di = diPlane;
 
   // TODO(nikku): return changed elements?

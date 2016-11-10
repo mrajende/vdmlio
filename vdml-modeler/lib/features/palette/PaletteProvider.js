@@ -3,7 +3,7 @@
 var assign = require('lodash/object/assign');
 
 /**
- * A palette provider for BPMN 2.0 elements.
+ * A palette provider for VDML 2.0 elements.
  */
 function PaletteProvider(palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate) {
 
@@ -45,8 +45,10 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       translate = this._translate;
 
   function createAction(type, group, className, title, options) {
+      debugger;
 
-    function createListener(event) {
+      function createListener(event) {
+          debugger;
       var shape = elementFactory.createShape(assign({ type: type }, options));
 
       if (options) {
@@ -56,7 +58,7 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       create.start(event, shape);
     }
 
-    var shortType = type.replace(/^bpmn\:/, '');
+    var shortType = type.replace(/^vdml\:/, '');
 
     return {
       group: group,
@@ -119,28 +121,28 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       separator: true
     },
     /*'create.start-event': createAction(
-      'bpmn:StartEvent', 'event', 'bpmn-icon-start-event-none'
+      'vdml:StartEvent', 'event', 'bpmn-icon-start-event-none'
     ),
-    'create.intermediate-event': createAction('bpmn:IntermediateThrowEvent', 'event',
+    'create.intermediate-event': createAction('vdml:IntermediateThrowEvent', 'event',
       'bpmn-icon-intermediate-event-none', translate('Create IntermediateThrowEvent/BoundaryEvent')
     ),
     'create.end-event': createAction(
-      'bpmn:EndEvent', 'event', 'bpmn-icon-end-event-none'
+      'vdml:EndEvent', 'event', 'bpmn-icon-end-event-none'
     ),
     'create.exclusive-gateway': createAction(
-      'bpmn:ExclusiveGateway', 'gateway', 'bpmn-icon-gateway-xor'
+      'vdml:ExclusiveGateway', 'gateway', 'bpmn-icon-gateway-xor'
     ),*/
     'create.task': createAction(
-      'bpmn:Task', 'activity', 'bpmn-icon-task'
+      'vdml:Collaboration', 'collaboration', 'bpmn-icon-task'
     ),
     /*'create.data-object': createAction(
-      'bpmn:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
+      'vdml:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
     ),
     'create.data-store': createAction(
-      'bpmn:DataStoreReference', 'data-store', 'bpmn-icon-data-store'
+      'vdml:DataStoreReference', 'data-store', 'bpmn-icon-data-store'
     ),
     'create.subprocess-expanded': createAction(
-      'bpmn:SubProcess', 'activity', 'bpmn-icon-subprocess-expanded', translate('Create expanded SubProcess'),
+      'vdml:SubProcess', 'activity', 'bpmn-icon-subprocess-expanded', translate('Create expanded SubProcess'),
       { isExpanded: true }
     ),
     'create.participant-expanded': {

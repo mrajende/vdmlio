@@ -12,5 +12,5 @@ module.exports = {
     require('../search'),
     require('../modeling')
   ],
-  editorActions: [ 'type', require('./BpmnEditorActions') ]
+  editorActions: [ 'type', require('./VdmlEditorActions') ]
 };

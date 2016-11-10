@@ -23,9 +23,9 @@ var CommandInterceptor = require('diagram-js/lib/command/CommandInterceptor');
  *
  * @param {EventBus} eventBus
  * @param {Modeling} modeling
- * @param {BpmnFactory} bpmnFactory
+ * @param {VdmlFactory} vdmlFactory
  */
-function LabelSupport(eventBus, modeling, bpmnFactory) {
+function LabelSupport(eventBus, modeling, vdmlFactory) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -65,8 +65,8 @@ function LabelSupport(eventBus, modeling, bpmnFactory) {
       return;
     }
 
-    // we want to trigger on BPMN elements only
-    if (!is(element.labelTarget || element, 'bpmn:BaseElement')) {
+    // we want to trigger on VDML elements only
+    if (!is(element.labelTarget || element, 'vdml:BaseElement')) {
       return;
     }
 
@@ -75,8 +75,8 @@ function LabelSupport(eventBus, modeling, bpmnFactory) {
 
 
     if (!di.label) {
-      di.label = bpmnFactory.create('bpmndi:BPMNLabel', {
-        bounds: bpmnFactory.create('dc:Bounds')
+      di.label = vdmlFactory.create('vdmldi:VDMLLabel', {
+        bounds: vdmlFactory.create('dc:Bounds')
       });
     }
 
@@ -170,6 +170,6 @@ function LabelSupport(eventBus, modeling, bpmnFactory) {
 
 inherits(LabelSupport, CommandInterceptor);
 
-LabelSupport.$inject = [ 'eventBus', 'modeling', 'bpmnFactory' ];
+LabelSupport.$inject = [ 'eventBus', 'modeling', 'vdmlFactory' ];
 
 module.exports = LabelSupport;

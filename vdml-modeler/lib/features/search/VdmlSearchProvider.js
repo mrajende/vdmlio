@@ -8,9 +8,9 @@ var labelUtil = require('../label-editing/LabelUtil');
 
 
 /**
- * Provides ability to search through BPMN elements
+ * Provides ability to search through VDML elements
  */
-function BpmnSearchProvider(elementRegistry, searchPad, canvas) {
+function VdmlSearchProvider(elementRegistry, searchPad, canvas) {
 
   this._elementRegistry = elementRegistry;
   this._canvas = canvas;
@@ -18,9 +18,9 @@ function BpmnSearchProvider(elementRegistry, searchPad, canvas) {
   searchPad.registerProvider(this);
 }
 
-module.exports = BpmnSearchProvider;
+module.exports = VdmlSearchProvider;
 
-BpmnSearchProvider.$inject = [
+VdmlSearchProvider.$inject = [
   'elementRegistry',
   'searchPad',
   'canvas'
@@ -45,7 +45,7 @@ BpmnSearchProvider.$inject = [
  * @param  {String} pattern
  * @return {Array<Result>}
  */
-BpmnSearchProvider.prototype.find = function(pattern) {
+VdmlSearchProvider.prototype.find = function(pattern) {
   var rootElement = this._canvas.getRootElement();
 
   var elements = this._elementRegistry.filter(function(element) {

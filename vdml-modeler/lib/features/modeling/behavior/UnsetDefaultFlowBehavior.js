@@ -44,7 +44,7 @@ module.exports = DeleteSequenceFlowBehavior;
 
 function isDefaultFlow(connection, source) {
 
-  if (!is(connection, 'bpmn:SequenceFlow')) {
+  if (!is(connection, 'vdml:SequenceFlow')) {
     return false;
   }
 

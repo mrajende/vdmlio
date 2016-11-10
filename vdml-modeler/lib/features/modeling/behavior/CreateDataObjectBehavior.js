@@ -7,9 +7,9 @@ var CommandInterceptor = require('diagram-js/lib/command/CommandInterceptor');
 var is = require('../../../util/ModelUtil').is;
 
 /**
- * BPMN specific create data object behavior
+ * VDML specific create data object behavior
  */
-function CreateDataObjectBehavior(eventBus, bpmnFactory, moddle) {
+function CreateDataObjectBehavior(eventBus, vdmlFactory, moddle) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -18,10 +18,10 @@ function CreateDataObjectBehavior(eventBus, bpmnFactory, moddle) {
     var context = event.context,
         shape = context.shape;
 
-    if (is(shape, 'bpmn:DataObjectReference') && shape.type !== 'label') {
+    if (is(shape, 'vdml:DataObjectReference') && shape.type !== 'label') {
 
       // create a DataObject every time a DataObjectReference is created
-      var dataObject = bpmnFactory.create('bpmn:DataObject');
+      var dataObject = vdmlFactory.create('vdml:DataObject');
 
       // set the reference to the DataObject
       shape.businessObject.dataObjectRef = dataObject;
@@ -30,7 +30,7 @@ function CreateDataObjectBehavior(eventBus, bpmnFactory, moddle) {
 
 }
 
-CreateDataObjectBehavior.$inject = [ 'eventBus', 'bpmnFactory', 'moddle' ];
+CreateDataObjectBehavior.$inject = [ 'eventBus', 'vdmlFactory', 'moddle' ];
 
 inherits(CreateDataObjectBehavior, CommandInterceptor);
 

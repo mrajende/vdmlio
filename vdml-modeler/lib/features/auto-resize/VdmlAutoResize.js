@@ -5,18 +5,18 @@ var inherits = require('inherits');
 var is = require('../../util/ModelUtil').is;
 
 /**
- * Sub class of the AutoResize module which implements a BPMN
+ * Sub class of the AutoResize module which implements a VDML
  * specific resize function.
  */
-function BpmnAutoResize(eventBus, elementRegistry, modeling, rules) {
+function VdmlAutoResize(eventBus, elementRegistry, modeling, rules) {
   AutoResize.call(this, eventBus, elementRegistry, modeling, rules);
 }
 
-BpmnAutoResize.$inject = [ 'eventBus', 'elementRegistry', 'modeling', 'rules' ];
+VdmlAutoResize.$inject = [ 'eventBus', 'elementRegistry', 'modeling', 'rules' ];
 
-inherits(BpmnAutoResize, AutoResize);
+inherits(VdmlAutoResize, AutoResize);
 
-module.exports = BpmnAutoResize;
+module.exports = VdmlAutoResize;
 
 
 /**
@@ -25,9 +25,9 @@ module.exports = BpmnAutoResize;
  * @param  {djs.model.Shape} target
  * @param  {Object} newBounds
  */
-BpmnAutoResize.prototype.resize = function(target, newBounds) {
+VdmlAutoResize.prototype.resize = function(target, newBounds) {
 
-  if (is(target, 'bpmn:Participant')) {
+  if (is(target, 'vdml:Participant')) {
     this._modeling.resizeLane(target, newBounds);
   } else {
     this._modeling.resizeShape(target, newBounds);

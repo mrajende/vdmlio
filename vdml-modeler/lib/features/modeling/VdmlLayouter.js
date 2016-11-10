@@ -17,14 +17,14 @@ var getMid = LayoutUtil.getMid,
 var is = require('../../util/ModelUtil').is;
 
 
-function BpmnLayouter() {}
+function VdmlLayouter() {}
 
-inherits(BpmnLayouter, BaseLayouter);
+inherits(VdmlLayouter, BaseLayouter);
 
-module.exports = BpmnLayouter;
+module.exports = VdmlLayouter;
 
 
-BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
+VdmlLayouter.prototype.layoutConnection = function(connection, hints) {
 
   hints = hints || {};
 
@@ -48,8 +48,8 @@ BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
   // TODO(nikku): support vertical modeling
   // and invert preferredLayouts accordingly
 
-  if (is(connection, 'bpmn:Association') ||
-      is(connection, 'bpmn:DataAssociation')) {
+  if (is(connection, 'vdml:Association') ||
+      is(connection, 'vdml:DataAssociation')) {
 
     if (waypoints && !isCompensationAssociation(connection)) {
       return [].concat([ start ], waypoints.slice(1, -1), [ end ]);
@@ -57,12 +57,12 @@ BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
   }
 
   // manhattan layout sequence / message flows
-  if (is(connection, 'bpmn:MessageFlow')) {
+  if (is(connection, 'vdml:MessageFlow')) {
     manhattanOptions = {
       preferredLayouts: [ 'v:v' ]
     };
 
-    if (is(target, 'bpmn:Participant')) {
+    if (is(target, 'vdml:Participant')) {
       manhattanOptions = {
         preferredLayouts: [ 'straight', 'v:v' ]
       };
@@ -74,21 +74,21 @@ BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
       };
     }
 
-    if (isExpandedSubProcess(source) && is(target, 'bpmn:FlowNode')) {
+    if (isExpandedSubProcess(source) && is(target, 'vdml:FlowNode')) {
       manhattanOptions = {
         preferredLayouts: [ 'straight', 'v:v' ],
         preserveDocking: isExpandedSubProcess(target) ? 'source' : 'target'
       };
     }
 
-    if (is(source, 'bpmn:Participant') && is(target, 'bpmn:FlowNode')) {
+    if (is(source, 'vdml:Participant') && is(target, 'vdml:FlowNode')) {
       manhattanOptions = {
         preferredLayouts: [ 'straight', 'v:v' ],
         preserveDocking: 'target'
       };
     }
 
-    if (is(target, 'bpmn:Event')) {
+    if (is(target, 'vdml:Event')) {
       manhattanOptions = {
         preferredLayouts: [ 'v:v' ]
       };
@@ -103,12 +103,12 @@ BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
   // (1) outgoing of BoundaryEvents -> layout h:v or v:h based on attach orientation
   // (2) incoming / outgoing of Gateway -> v:h (outgoing), h:v (incoming)
   //
-  if (is(connection, 'bpmn:SequenceFlow') ||
+  if (is(connection, 'vdml:SequenceFlow') ||
       isCompensationAssociation(connection)) {
 
     // make sure boundary event connections do
     // not look ugly =:>
-    if (is(source, 'bpmn:BoundaryEvent')) {
+    if (is(source, 'vdml:BoundaryEvent')) {
 
       var orientation = getAttachOrientation(source);
 
@@ -125,14 +125,14 @@ BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
       }
     } else
 
-    if (is(source, 'bpmn:Gateway')) {
+    if (is(source, 'vdml:Gateway')) {
 
       manhattanOptions = {
         preferredLayouts: [ 'v:h' ]
       };
     } else
 
-    if (is(target, 'bpmn:Gateway')) {
+    if (is(target, 'vdml:Gateway')) {
 
       manhattanOptions = {
         preferredLayouts: [ 'h:v' ]
@@ -181,12 +181,12 @@ function isCompensationAssociation(connection) {
   var source = connection.source,
       target = connection.target;
 
-  return is(target, 'bpmn:Activity') &&
-         is(source, 'bpmn:BoundaryEvent') &&
+  return is(target, 'vdml:Activity') &&
+         is(source, 'vdml:BoundaryEvent') &&
          target.businessObject.isForCompensation;
 }
 
 
 function isExpandedSubProcess(element) {
-  return is(element, 'bpmn:SubProcess') && isExpanded(element);
+  return is(element, 'vdml:SubProcess') && isExpanded(element);
 }

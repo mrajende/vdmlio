@@ -11,12 +11,12 @@ var is = require('../../../util/ModelUtil').is;
 
 /**
  * Defines the behaviour of what happens to the elements inside a container
- * that morphs into another BPMN element
+ * that morphs into another VDML element
  */
-function ReplaceElementBehaviour(eventBus, bpmnReplace, bpmnRules, elementRegistry, selection, modeling) {
+function ReplaceElementBehaviour(eventBus, vdmlReplace, vdmlRules, elementRegistry, selection, modeling) {
   CommandInterceptor.call(this, eventBus);
 
-  this._bpmnReplace = bpmnReplace;
+  this._vdmlReplace = vdmlReplace;
   this._elementRegistry = elementRegistry;
   this._selection = selection;
   this._modeling = modeling;
@@ -36,12 +36,12 @@ function ReplaceElementBehaviour(eventBus, bpmnReplace, bpmnRules, elementRegist
       }
     });
 
-    // Change target to host when the moving element is a `bpmn:BoundaryEvent`
+    // Change target to host when the moving element is a `vdml:BoundaryEvent`
     if (elements.length === 1 && newHost) {
       target = newHost;
     }
 
-    var canReplace = bpmnRules.canReplace(elements, target);
+    var canReplace = vdmlRules.canReplace(elements, target);
 
     if (canReplace) {
       this.replaceElements(elements, canReplace.replacements, newHost);
@@ -58,7 +58,7 @@ function ReplaceElementBehaviour(eventBus, bpmnReplace, bpmnRules, elementRegist
         canReplace;
 
     if (attachers && attachers.length) {
-      canReplace = bpmnRules.canReplace(attachers, newShape);
+      canReplace = vdmlRules.canReplace(attachers, newShape);
 
       this.replaceElements(attachers, canReplace.replacements);
     }
@@ -80,7 +80,7 @@ inherits(ReplaceElementBehaviour, CommandInterceptor);
 
 ReplaceElementBehaviour.prototype.replaceElements = function(elements, newElements, newHost) {
   var elementRegistry = this._elementRegistry,
-      bpmnReplace = this._bpmnReplace,
+      vdmlReplace = this._vdmlReplace,
       selection = this._selection,
       modeling = this._modeling;
 
@@ -92,15 +92,15 @@ ReplaceElementBehaviour.prototype.replaceElements = function(elements, newElemen
 
     var oldElement = elementRegistry.get(replacement.oldElementId);
 
-    if (newHost && is(oldElement, 'bpmn:BoundaryEvent')) {
+    if (newHost && is(oldElement, 'vdml:BoundaryEvent')) {
       modeling.updateAttachment(oldElement, null);
     }
 
     var idx = elements.indexOf(oldElement);
 
-    elements[idx] = bpmnReplace.replaceElement(oldElement, newElement, { select: false });
+    elements[idx] = vdmlReplace.replaceElement(oldElement, newElement, { select: false });
 
-    if (newHost && is(elements[idx], 'bpmn:BoundaryEvent')) {
+    if (newHost && is(elements[idx], 'vdml:BoundaryEvent')) {
       modeling.updateAttachment(elements[idx], newHost);
     }
   });
@@ -110,7 +110,7 @@ ReplaceElementBehaviour.prototype.replaceElements = function(elements, newElemen
   }
 };
 
-ReplaceElementBehaviour.$inject = [ 'eventBus', 'bpmnReplace', 'bpmnRules', 'elementRegistry',
+ReplaceElementBehaviour.$inject = [ 'eventBus', 'vdmlReplace', 'vdmlRules', 'elementRegistry',
  'selection', 'modeling' ];
 
 module.exports = ReplaceElementBehaviour;

@@ -7,7 +7,7 @@ var is = require('../../../util/ModelUtil').is;
 var CommandInterceptor = require('diagram-js/lib/command/CommandInterceptor');
 
 
-function AppendBehavior(eventBus, elementFactory, bpmnRules) {
+function AppendBehavior(eventBus, elementFactory, vdmlRules) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -20,7 +20,7 @@ function AppendBehavior(eventBus, elementFactory, bpmnRules) {
 
     if (!context.position) {
 
-      if (is(shape, 'bpmn:TextAnnotation')) {
+      if (is(shape, 'vdml:TextAnnotation')) {
         context.position = {
           x: source.x + source.width / 2 + 75,
           y: source.y - (50) - shape.height / 2
@@ -36,7 +36,7 @@ function AppendBehavior(eventBus, elementFactory, bpmnRules) {
 }
 
 
-AppendBehavior.$inject = [ 'eventBus', 'elementFactory', 'bpmnRules' ];
+AppendBehavior.$inject = [ 'eventBus', 'elementFactory', 'vdmlRules' ];
 
 inherits(AppendBehavior, CommandInterceptor);
 

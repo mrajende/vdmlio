@@ -29,7 +29,7 @@ function is(element, type) {
  */
 function findDisplayCandidate(definitions) {
   return find(definitions.rootElements, function(e) {
-    return is(e, 'vdml:Process') || is(e, 'vdml:Collaboration');
+    return is(e, 'vdml:EcoMap');
   });
 }
 
@@ -208,7 +208,7 @@ function VdmlTreeWalker(handler, translate) {
 
     var ctx = visitRoot(rootElement, plane);
 
-    if (is(rootElement, 'vdml:Process')) {
+    if (is(rootElement, 'vdml:EcoMap')) {
       handleProcess(rootElement, ctx);
     } else if (is(rootElement, 'vdml:Collaboration')) {
       handleCollaboration(rootElement, ctx);
@@ -233,10 +233,11 @@ function VdmlTreeWalker(handler, translate) {
   }
 
   function handleProcess(process, context) {
-    handleFlowElementsContainer(process, context);
+      //TODO
+    /*handleFlowElementsContainer(process, context);
     handleIoSpecification(process.ioSpecification, context);
 
-    handleArtifacts(process.artifacts, context);
+    handleArtifacts(process.artifacts, context);*/
 
     // log process handled
     handled(process);

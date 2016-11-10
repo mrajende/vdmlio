@@ -84,7 +84,7 @@ ResizeLaneHandler.prototype.resizeSpace = function(shape, newBounds) {
   eachElement(lanesRoot, function(element) {
     allAffected.push(element);
 
-    if (is(element, 'bpmn:Lane') || is(element, 'bpmn:Participant')) {
+    if (is(element, 'vdml:Lane') || is(element, 'vdml:Participant')) {
       allLanes.push(element);
     }
 

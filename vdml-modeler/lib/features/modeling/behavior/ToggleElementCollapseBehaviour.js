@@ -66,7 +66,7 @@ function ToggleElementCollapseBehaviour(eventBus, elementFactory, modeling, resi
     var context = e.context,
         shape = context.shape;
 
-    if (!is(shape, 'bpmn:SubProcess')) {
+    if (!is(shape, 'vdml:SubProcess')) {
       return;
     }
 

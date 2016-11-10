@@ -13,7 +13,7 @@ function copy(obj) {
   return assign({}, obj);
 }
 
-function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
+function CreateOnFlowBehavior(eventBus, vdmlRules, modeling) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -27,7 +27,7 @@ function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
     var parent = context.parent,
         shape = context.shape;
 
-    if (bpmnRules.canInsert(shape, parent)) {
+    if (vdmlRules.canInsert(shape, parent)) {
       context.targetFlow = parent;
       context.parent = parent.parent;
     }
@@ -68,14 +68,14 @@ function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
       source = targetFlow.source;
       target = targetFlow.target;
 
-      if (bpmnRules.canConnect(source, shape, targetFlow)) {
+      if (vdmlRules.canConnect(source, shape, targetFlow)) {
         // reconnect source -> inserted shape
         modeling.reconnectEnd(targetFlow, shape, waypointsBefore || copy(position));
 
         reconnected = true;
       }
 
-      if (bpmnRules.canConnect(shape, target, targetFlow)) {
+      if (vdmlRules.canConnect(shape, target, targetFlow)) {
 
         if (!reconnected) {
           // reconnect inserted shape -> end
@@ -90,6 +90,6 @@ function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
 
 inherits(CreateOnFlowBehavior, CommandInterceptor);
 
-CreateOnFlowBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
+CreateOnFlowBehavior.$inject = [ 'eventBus', 'vdmlRules', 'modeling' ];
 
 module.exports = CreateOnFlowBehavior;

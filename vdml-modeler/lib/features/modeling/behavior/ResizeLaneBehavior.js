@@ -20,7 +20,7 @@ function ResizeLaneBehavior(eventBus, modeling) {
     var context = event.context,
         shape = context.shape;
 
-    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
+    if (is(shape, 'vdml:Lane') || is(shape, 'vdml:Participant')) {
 
       // should we resize the opposite lane(s) in
       // order to compensate for the resize operation?
@@ -37,7 +37,7 @@ function ResizeLaneBehavior(eventBus, modeling) {
         canExecute = context.canExecute,
         newBounds = context.newBounds;
 
-    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
+    if (is(shape, 'vdml:Lane') || is(shape, 'vdml:Participant')) {
 
       if (canExecute) {
         // ensure we have actual pixel values for new bounds

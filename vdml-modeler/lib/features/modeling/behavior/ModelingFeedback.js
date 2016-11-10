@@ -24,7 +24,7 @@ function ModelingFeedback(eventBus, tooltips, translate) {
         shape = context.shape,
         target = context.target;
 
-    if (is(target, 'bpmn:Collaboration') && is(shape, 'bpmn:FlowNode')) {
+    if (is(target, 'vdml:Collaboration') && is(shape, 'vdml:FlowNode')) {
       showError(event, translate(COLLAB_ERR_MSG));
     }
   });
@@ -34,11 +34,11 @@ function ModelingFeedback(eventBus, tooltips, translate) {
         position = context.position,
         target = context.target;
 
-    if (is(target, 'bpmn:Collaboration')) {
+    if (is(target, 'vdml:Collaboration')) {
       showError(position, translate(COLLAB_ERR_MSG));
     }
 
-    if (is(target, 'bpmn:Process')) {
+    if (is(target, 'vdml:Process')) {
       showError(position, translate(PROCESS_ERR_MSG), 3000);
     }
   });

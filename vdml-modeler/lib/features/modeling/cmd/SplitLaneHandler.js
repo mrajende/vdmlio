@@ -73,7 +73,7 @@ SplitLaneHandler.prototype.preExecute = function(context) {
     } else {
       // create a new lane at position
       newLaneAttrs = {
-        type: 'bpmn:Lane'
+        type: 'vdml:Lane'
       };
 
       modeling.createShape(newLaneAttrs, laneBounds, shape);

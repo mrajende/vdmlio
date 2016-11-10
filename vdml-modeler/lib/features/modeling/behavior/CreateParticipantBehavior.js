@@ -7,9 +7,9 @@ var CommandInterceptor = require('diagram-js/lib/command/CommandInterceptor');
 var is = require('../../../util/ModelUtil').is;
 
 /**
- * BPMN specific create participant behavior
+ * VDML specific create participant behavior
  */
-function CreateParticipantBehavior(eventBus, modeling, elementFactory, bpmnFactory, canvas) {
+function CreateParticipantBehavior(eventBus, modeling, elementFactory, vdmlFactory, canvas) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -26,7 +26,7 @@ function CreateParticipantBehavior(eventBus, modeling, elementFactory, bpmnFacto
 
     var rootElement = canvas.getRootElement();
 
-    if (is(parent, 'bpmn:Process') && is(shape, 'bpmn:Participant') && !is(rootElement, 'bpmn:Collaboration')) {
+    if (is(parent, 'vdml:Process') && is(shape, 'vdml:Participant') && !is(rootElement, 'vdml:Collaboration')) {
 
       // this is going to detach the process root
       // and set the returned collaboration element
@@ -84,7 +84,7 @@ function CreateParticipantBehavior(eventBus, modeling, elementFactory, bpmnFacto
 
 }
 
-CreateParticipantBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory', 'canvas' ];
+CreateParticipantBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'vdmlFactory', 'canvas' ];
 
 inherits(CreateParticipantBehavior, CommandInterceptor);
 

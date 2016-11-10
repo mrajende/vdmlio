@@ -125,7 +125,7 @@ function getParticipantSizeConstraints(laneShape, resizeDirection, balanced) {
   ///// max top/bottom/left/right size based on flow nodes
 
   var flowElements = lanesRoot.children.filter(function(s) {
-    return !s.hidden && !s.waypoints && (is(s, 'bpmn:FlowElement') || is(s, 'bpmn:Artifact'));
+    return !s.hidden && !s.waypoints && (is(s, 'vdml:FlowElement') || is(s, 'vdml:Artifact'));
   });
 
   flowElements.forEach(function(flowElement) {

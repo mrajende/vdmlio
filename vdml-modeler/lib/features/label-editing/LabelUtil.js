@@ -3,16 +3,16 @@
 var is = require('../../util/ModelUtil').is;
 
 function getLabelAttr(semantic) {
-  if (is(semantic, 'bpmn:FlowElement') ||
-      is(semantic, 'bpmn:Participant') ||
-      is(semantic, 'bpmn:Lane') ||
-      is(semantic, 'bpmn:SequenceFlow') ||
-      is(semantic, 'bpmn:MessageFlow')) {
+  if (is(semantic, 'vdml:FlowElement') ||
+      is(semantic, 'vdml:Participant') ||
+      is(semantic, 'vdml:Lane') ||
+      is(semantic, 'vdml:SequenceFlow') ||
+      is(semantic, 'vdml:MessageFlow')) {
 
     return 'name';
   }
 
-  if (is(semantic, 'bpmn:TextAnnotation')) {
+  if (is(semantic, 'vdml:TextAnnotation')) {
     return 'text';
   }
 }

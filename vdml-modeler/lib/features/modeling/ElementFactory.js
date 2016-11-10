@@ -11,12 +11,12 @@ var BaseElementFactory = require('diagram-js/lib/core/ElementFactory'),
     LabelUtil = require('../../util/LabelUtil');
 
 /**
- * A bpmn-aware factory for diagram-js shapes
+ * A vdml-aware factory for diagram-js shapes
  */
-function ElementFactory(bpmnFactory, moddle, translate) {
+function ElementFactory(vdmlFactory, moddle, translate) {
   BaseElementFactory.call(this);
 
-  this._bpmnFactory = bpmnFactory;
+  this._vdmlFactory = vdmlFactory;
   this._moddle = moddle;
   this._translate = translate;
 }
@@ -24,7 +24,7 @@ function ElementFactory(bpmnFactory, moddle, translate) {
 inherits(ElementFactory, BaseElementFactory);
 
 
-ElementFactory.$inject = [ 'bpmnFactory', 'moddle', 'translate' ];
+ElementFactory.$inject = [ 'vdmlFactory', 'moddle', 'translate' ];
 
 module.exports = ElementFactory;
 
@@ -38,10 +38,10 @@ ElementFactory.prototype.create = function(elementType, attrs) {
     return this.baseCreate(elementType, assign({ type: 'label' }, LabelUtil.DEFAULT_LABEL_SIZE, attrs));
   }
 
-  return this.createBpmnElement(elementType, attrs);
+  return this.createVdmlElement(elementType, attrs);
 };
 
-ElementFactory.prototype.createBpmnElement = function(elementType, attrs) {
+ElementFactory.prototype.createVdmlElement = function(elementType, attrs) {
   var size,
       translate = this._translate;
 
@@ -54,21 +54,21 @@ ElementFactory.prototype.createBpmnElement = function(elementType, attrs) {
       throw new Error(translate('no shape type specified'));
     }
 
-    businessObject = this._bpmnFactory.create(attrs.type);
+    businessObject = this._vdmlFactory.create(attrs.type);
   }
 
   if (!businessObject.di) {
     if (elementType === 'root') {
-      businessObject.di = this._bpmnFactory.createDiPlane(businessObject, [], {
+      businessObject.di = this._vdmlFactory.createDiPlane(businessObject, [], {
         id: businessObject.id + '_di'
       });
     } else
     if (elementType === 'connection') {
-      businessObject.di = this._bpmnFactory.createDiEdge(businessObject, [], {
+      businessObject.di = this._vdmlFactory.createDiEdge(businessObject, [], {
         id: businessObject.id + '_di'
       });
     } else {
-      businessObject.di = this._bpmnFactory.createDiShape(businessObject, {}, {
+      businessObject.di = this._vdmlFactory.createDiShape(businessObject, {}, {
         id: businessObject.id + '_di'
       });
     }
@@ -82,7 +82,7 @@ ElementFactory.prototype.createBpmnElement = function(elementType, attrs) {
     businessObject.di.isExpanded = attrs.isExpanded;
   }
 
-  if (is(businessObject, 'bpmn:ExclusiveGateway')) {
+  if (is(businessObject, 'vdml:ExclusiveGateway')) {
     businessObject.di.isMarkerVisible = true;
   }
 
@@ -124,7 +124,7 @@ ElementFactory.prototype.createBpmnElement = function(elementType, attrs) {
 
 ElementFactory.prototype._getDefaultSize = function(semantic) {
 
-  if (is(semantic, 'bpmn:SubProcess')) {
+  if (is(semantic, 'vdml:SubProcess')) {
 
     if (isExpanded(semantic)) {
       return { width: 350, height: 200 };
@@ -133,19 +133,19 @@ ElementFactory.prototype._getDefaultSize = function(semantic) {
     }
   }
 
-  if (is(semantic, 'bpmn:Task')) {
+  if (is(semantic, 'vdml:Collaboration')) {
     return { width: 100, height: 80 };
   }
 
-  if (is(semantic, 'bpmn:Gateway')) {
+  if (is(semantic, 'vdml:Gateway')) {
     return { width: 50, height: 50 };
   }
 
-  if (is(semantic, 'bpmn:Event')) {
+  if (is(semantic, 'vdml:Event')) {
     return { width: 36, height: 36 };
   }
 
-  if (is(semantic, 'bpmn:Participant')) {
+  if (is(semantic, 'vdml:Participant')) {
     if (!isExpanded(semantic)) {
       return { width: 400, height: 100 };
     } else {
@@ -153,19 +153,19 @@ ElementFactory.prototype._getDefaultSize = function(semantic) {
     }
   }
 
-  if (is(semantic, 'bpmn:Lane')) {
+  if (is(semantic, 'vdml:Lane')) {
     return { width: 400, height: 100 };
   }
 
-  if (is(semantic, 'bpmn:DataObjectReference')) {
+  if (is(semantic, 'vdml:DataObjectReference')) {
     return { width: 36, height: 50 };
   }
 
-  if (is(semantic, 'bpmn:DataStoreReference')) {
+  if (is(semantic, 'vdml:DataStoreReference')) {
     return { width: 50, height: 50 };
   }
 
-  if (is(semantic, 'bpmn:TextAnnotation')) {
+  if (is(semantic, 'vdml:TextAnnotation')) {
     return { width: 100, height: 30 };
   }
 
@@ -175,10 +175,10 @@ ElementFactory.prototype._getDefaultSize = function(semantic) {
 
 ElementFactory.prototype.createParticipantShape = function(collapsed) {
 
-  var attrs = { type: 'bpmn:Participant' };
+  var attrs = { type: 'vdml:Participant' };
 
   if (!collapsed) {
-    attrs.processRef = this._bpmnFactory.create('bpmn:Process');
+    attrs.processRef = this._vdmlFactory.create('vdml:Process');
   }
 
   return this.createShape(attrs);

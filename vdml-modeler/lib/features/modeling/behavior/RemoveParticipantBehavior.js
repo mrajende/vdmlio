@@ -8,7 +8,7 @@ var is = require('../../../util/ModelUtil').is;
 
 
 /**
- * BPMN specific remove behavior
+ * VDML specific remove behavior
  */
 function RemoveParticipantBehavior(eventBus, modeling) {
 
@@ -27,7 +27,7 @@ function RemoveParticipantBehavior(eventBus, modeling) {
 
     // activate the behavior if the shape to be removed
     // is a participant
-    if (is(shape, 'bpmn:Participant')) {
+    if (is(shape, 'vdml:Participant')) {
       context.collaborationRoot = parent;
     }
   }, true);

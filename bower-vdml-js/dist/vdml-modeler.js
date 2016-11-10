@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-11-07
+ * Date: 2016-11-10
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -1817,7 +1817,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, attrs);
     },
 
-    'vdml:Task': function(p, element, attrs) {
+    'vdml:Collaboration': function(p, element, attrs) {
       var rect = renderer('vdml:Activity')(p, element, attrs);
       renderEmbeddedLabel(p, element, 'center-middle');
       attachTaskMarkers(p, element);
@@ -2883,18 +2883,18 @@ var inherits = _dereq_(270);
 var is = _dereq_(93).is;
 
 /**
- * Sub class of the AutoResize module which implements a BPMN
+ * Sub class of the AutoResize module which implements a VDML
  * specific resize function.
  */
-function BpmnAutoResize(eventBus, elementRegistry, modeling, rules) {
+function VdmlAutoResize(eventBus, elementRegistry, modeling, rules) {
   AutoResize.call(this, eventBus, elementRegistry, modeling, rules);
 }
 
-BpmnAutoResize.$inject = [ 'eventBus', 'elementRegistry', 'modeling', 'rules' ];
+VdmlAutoResize.$inject = [ 'eventBus', 'elementRegistry', 'modeling', 'rules' ];
 
-inherits(BpmnAutoResize, AutoResize);
+inherits(VdmlAutoResize, AutoResize);
 
-module.exports = BpmnAutoResize;
+module.exports = VdmlAutoResize;
 
 
 /**
@@ -2903,9 +2903,9 @@ module.exports = BpmnAutoResize;
  * @param  {djs.model.Shape} target
  * @param  {Object} newBounds
  */
-BpmnAutoResize.prototype.resize = function(target, newBounds) {
+VdmlAutoResize.prototype.resize = function(target, newBounds) {
 
-  if (is(target, 'bpmn:Participant')) {
+  if (is(target, 'vdml:Participant')) {
     this._modeling.resizeLane(target, newBounds);
   } else {
     this._modeling.resizeShape(target, newBounds);
@@ -2923,19 +2923,19 @@ var forEach = _dereq_(283);
 var AutoResizeProvider = _dereq_(118);
 
 /**
- * This module is a provider for automatically resizing parent BPMN elements
+ * This module is a provider for automatically resizing parent VDML elements
  */
-function BpmnAutoResizeProvider(eventBus, modeling) {
+function VdmlAutoResizeProvider(eventBus, modeling) {
   AutoResizeProvider.call(this, eventBus);
 
   this._modeling = modeling;
 }
 
-inherits(BpmnAutoResizeProvider, AutoResizeProvider);
+inherits(VdmlAutoResizeProvider, AutoResizeProvider);
 
-BpmnAutoResizeProvider.$inject = [ 'eventBus', 'modeling' ];
+VdmlAutoResizeProvider.$inject = [ 'eventBus', 'modeling' ];
 
-module.exports = BpmnAutoResizeProvider;
+module.exports = VdmlAutoResizeProvider;
 
 
 /**
@@ -2945,9 +2945,9 @@ module.exports = BpmnAutoResizeProvider;
  *
  * @return {boolean}
  */
-BpmnAutoResizeProvider.prototype.canResize = function(elements, target) {
+VdmlAutoResizeProvider.prototype.canResize = function(elements, target) {
 
-  if (!is(target, 'bpmn:Participant') && !is(target, 'bpmn:Lane') && !(is(target, 'bpmn:SubProcess'))) {
+  if (!is(target, 'vdml:Participant') && !is(target, 'vdml:Lane') && !(is(target, 'vdml:SubProcess'))) {
     return false;
   }
 
@@ -2955,7 +2955,7 @@ BpmnAutoResizeProvider.prototype.canResize = function(elements, target) {
 
   forEach(elements, function(element) {
 
-    if (is(element, 'bpmn:Lane') || element.labelTarget) {
+    if (is(element, 'vdml:Lane') || element.labelTarget) {
       canResize = false;
       return;
     }
@@ -2966,9 +2966,9 @@ BpmnAutoResizeProvider.prototype.canResize = function(elements, target) {
 
 },{"118":118,"270":270,"283":283,"93":93}],10:[function(_dereq_,module,exports){
 module.exports = {
-  __init__: [ 'bpmnAutoResize', 'bpmnAutoResizeProvider' ],
-  bpmnAutoResize: [ 'type', _dereq_(8) ],
-  bpmnAutoResizeProvider: [ 'type', _dereq_(9) ]
+  __init__: [ 'vdmlAutoResize', 'vdmlAutoResizeProvider' ],
+  vdmlAutoResize: [ 'type', _dereq_(8) ],
+  vdmlAutoResizeProvider: [ 'type', _dereq_(9) ]
 };
 
 },{"8":8,"9":9}],11:[function(_dereq_,module,exports){
@@ -2986,7 +2986,7 @@ var assign = _dereq_(410),
     hasPrimaryModifier = _dereq_(254).hasPrimaryModifier;
 
 /**
- * A provider for BPMN 2.0 elements context pad
+ * A provider for VDML 2.0 elements context pad
  */
 function ContextPadProvider(eventBus, contextPad, modeling, elementFactory,
                             connect, create, popupMenu,
@@ -3104,7 +3104,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
 
     if (typeof title !== 'string') {
       options = title;
-      title = translate('Append {type}', { type: type.replace(/^bpmn\:/, '') });
+      title = translate('Append {type}', { type: type.replace(/^vdml\:/, '') });
     }
 
     function appendListener(event, element) {
@@ -3137,7 +3137,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   }
 
 
-  if (isAny(businessObject, [ 'bpmn:Lane', 'bpmn:Participant' ]) && isExpanded(businessObject)) {
+  if (isAny(businessObject, [ 'vdml:Lane', 'vdml:Participant' ]) && isExpanded(businessObject)) {
 
     var childLanes = getChildLanes(element);
 
@@ -3198,47 +3198,47 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
 
   }
 
-  if (is(businessObject, 'bpmn:FlowNode')) {
+  if (is(businessObject, 'vdml:FlowNode')) {
 
-    if (is(businessObject, 'bpmn:EventBasedGateway')) {
+    if (is(businessObject, 'vdml:EventBasedGateway')) {
 
       assign(actions, {
-        'append.receive-task': appendAction('bpmn:ReceiveTask', 'bpmn-icon-receive-task'),
-        'append.message-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+        'append.receive-task': appendAction('vdml:ReceiveTask', 'bpmn-icon-receive-task'),
+        'append.message-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
                                                   'bpmn-icon-intermediate-event-catch-message',
-                                                  { eventDefinitionType: 'bpmn:MessageEventDefinition' }),
-        'append.timer-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+                                                  { eventDefinitionType: 'vdml:MessageEventDefinition' }),
+        'append.timer-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
                                                   'bpmn-icon-intermediate-event-catch-timer',
-                                                  { eventDefinitionType: 'bpmn:TimerEventDefinition' }),
-        'append.condtion-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+                                                  { eventDefinitionType: 'vdml:TimerEventDefinition' }),
+        'append.condtion-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
                                                   'bpmn-icon-intermediate-event-catch-condition',
-                                                  { eventDefinitionType: 'bpmn:ConditionalEventDefinition' }),
-        'append.signal-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+                                                  { eventDefinitionType: 'vdml:ConditionalEventDefinition' }),
+        'append.signal-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
                                                   'bpmn-icon-intermediate-event-catch-signal',
-                                                  { eventDefinitionType: 'bpmn:SignalEventDefinition' })
+                                                  { eventDefinitionType: 'vdml:SignalEventDefinition' })
       });
     } else
 
-    if (isEventType(businessObject, 'bpmn:BoundaryEvent', 'bpmn:CompensateEventDefinition')) {
+    if (isEventType(businessObject, 'vdml:BoundaryEvent', 'vdml:CompensateEventDefinition')) {
 
       assign(actions, {
         'append.compensation-activity':
-            appendAction('bpmn:Task', 'bpmn-icon-task', translate('Append compensation activity'), {
+            appendAction('vdml:Task', 'bpmn-icon-task', translate('Append compensation activity'), {
               isForCompensation: true
             })
       });
     } else
 
-    if (!is(businessObject, 'bpmn:EndEvent') &&
+    if (!is(businessObject, 'vdml:EndEvent') &&
         !businessObject.isForCompensation &&
-        !isEventType(businessObject, 'bpmn:IntermediateThrowEvent', 'bpmn:LinkEventDefinition') &&
+        !isEventType(businessObject, 'vdml:IntermediateThrowEvent', 'vdml:LinkEventDefinition') &&
         !isEventSubProcess(businessObject)) {
 
       assign(actions, {
-        'append.end-event': appendAction('bpmn:EndEvent', 'bpmn-icon-end-event-none'),
-        'append.gateway': appendAction('bpmn:ExclusiveGateway', 'bpmn-icon-gateway-xor'),
-        'append.append-task': appendAction('bpmn:Task', 'bpmn-icon-task'),
-        'append.intermediate-event': appendAction('bpmn:IntermediateThrowEvent',
+        'append.end-event': appendAction('vdml:EndEvent', 'bpmn-icon-end-event-none'),
+        'append.gateway': appendAction('vdml:ExclusiveGateway', 'bpmn-icon-gateway-xor'),
+        'append.append-task': appendAction('vdml:Task', 'bpmn-icon-task'),
+        'append.intermediate-event': appendAction('vdml:IntermediateThrowEvent',
                                                   'bpmn-icon-intermediate-event-none')
       });
     }
@@ -3246,8 +3246,8 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
 
   var replaceMenu;
 
-  if (popupMenu._providers['bpmn-replace']) {
-    replaceMenu = popupMenu.create('bpmn-replace', element);
+  if (popupMenu._providers['vdml-replace']) {
+    replaceMenu = popupMenu.create('vdml-replace', element);
   }
 
   if (replaceMenu && !replaceMenu.isEmpty()) {
@@ -3270,14 +3270,14 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   }
 
   if (isAny(businessObject, [
-    'bpmn:FlowNode',
-    'bpmn:InteractionNode',
-    'bpmn:DataObjectReference',
-    'bpmn:DataStoreReference'
+    'vdml:FlowNode',
+    'vdml:InteractionNode',
+    'vdml:DataObjectReference',
+    'vdml:DataStoreReference'
   ]) ) {
 
     assign(actions, {
-      'append.text-annotation': appendAction('bpmn:TextAnnotation', 'bpmn-icon-text-annotation'),
+      'append.text-annotation': appendAction('vdml:TextAnnotation', 'bpmn-icon-text-annotation'),
 
       'connect': {
         group: 'connect',
@@ -3293,7 +3293,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
     });
   }
 
-  if (isAny(businessObject, [ 'bpmn:DataObjectReference', 'bpmn:DataStoreReference' ])) {
+  if (isAny(businessObject, [ 'vdml:DataObjectReference', 'vdml:DataStoreReference' ])) {
     assign(actions, {
       'connect': {
         group: 'connect',
@@ -3387,7 +3387,7 @@ function removeProperties(element, properties) {
   });
 }
 
-function BpmnCopyPaste(bpmnFactory, eventBus, copyPaste, clipboard, moddle, canvas, bpmnRules) {
+function VdmlCopyPaste(vdmlFactory, eventBus, copyPaste, clipboard, moddle, canvas, vdmlRules) {
 
   copyPaste.registerDescriptor(function(element, descriptor) {
     var businessObject = getBusinessObject(element),
@@ -3425,7 +3425,7 @@ function BpmnCopyPaste(bpmnFactory, eventBus, copyPaste, clipboard, moddle, canv
 
     setProperties(descriptor, businessObject.di, [ 'isExpanded' ]);
 
-    if (is(businessObject, 'bpmn:SequenceFlow')) {
+    if (is(businessObject, 'vdml:SequenceFlow')) {
       conditionExpression = businessObject.get('conditionExpression');
 
       if (conditionExpression) {
@@ -3464,17 +3464,17 @@ function BpmnCopyPaste(bpmnFactory, eventBus, copyPaste, clipboard, moddle, canv
       return;
     }
 
-    if (is(parent, 'bpmn:Process')) {
-      descriptor.parent = is(rootElement, 'bpmn:Collaboration') ? rootElement : parent;
+    if (is(parent, 'vdml:Process')) {
+      descriptor.parent = is(rootElement, 'vdml:Collaboration') ? rootElement : parent;
     }
 
-    if (descriptor.type === 'bpmn:DataOutputAssociation' ||
-        descriptor.type === 'bpmn:DataInputAssociation' ||
-        descriptor.type === 'bpmn:MessageFlow') {
+    if (descriptor.type === 'vdml:DataOutputAssociation' ||
+        descriptor.type === 'vdml:DataInputAssociation' ||
+        descriptor.type === 'vdml:MessageFlow') {
       descriptor.parent = rootElement;
     }
 
-    if (is(parent, 'bpmn:Lane')) {
+    if (is(parent, 'vdml:Lane')) {
       descriptor.parent = parent.parent;
     }
 
@@ -3488,17 +3488,17 @@ function BpmnCopyPaste(bpmnFactory, eventBus, copyPaste, clipboard, moddle, canv
         target = target.element;
       }
 
-      canConnect = bpmnRules.canConnect(source, target);
+      canConnect = vdmlRules.canConnect(source, target);
 
       if (canConnect) {
         descriptor.type = canConnect.type;
       }
     }
 
-    descriptor.businessObject = businessObject = bpmnFactory.create(descriptor.type);
+    descriptor.businessObject = businessObject = vdmlFactory.create(descriptor.type);
 
-    if (descriptor.type === 'bpmn:Participant' && descriptor.processRef) {
-      descriptor.processRef = businessObject.processRef = bpmnFactory.create('bpmn:Process');
+    if (descriptor.type === 'vdml:Participant' && descriptor.processRef) {
+      descriptor.processRef = businessObject.processRef = vdmlFactory.create('vdml:Process');
     }
 
     setProperties(businessObject, descriptor, [
@@ -3554,25 +3554,25 @@ function BpmnCopyPaste(bpmnFactory, eventBus, copyPaste, clipboard, moddle, canv
 }
 
 
-BpmnCopyPaste.$inject = [
-  'bpmnFactory',
+VdmlCopyPaste.$inject = [
+  'vdmlFactory',
   'eventBus',
   'copyPaste',
   'clipboard',
   'moddle',
   'canvas',
-  'bpmnRules'
+  'vdmlRules'
 ];
 
-module.exports = BpmnCopyPaste;
+module.exports = VdmlCopyPaste;
 
 },{"283":283,"286":286,"93":93}],14:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
     _dereq_(136)
   ],
-  __init__: [ 'bpmnCopyPaste' ],
-  bpmnCopyPaste: [ 'type', _dereq_(13) ]
+  __init__: [ 'vdmlCopyPaste' ],
+  vdmlCopyPaste: [ 'type', _dereq_(13) ]
 };
 
 },{"13":13,"136":136}],15:[function(_dereq_,module,exports){
@@ -3586,20 +3586,20 @@ var isAny = _dereq_(66).isAny;
  * Registers element exclude filters for elements that currently do 
  * not support distribution.
  */
-function BpmnDistributeElements(distributeElements) {
+function VdmlDistributeElements(distributeElements) {
 
   distributeElements.registerFilter(function(elements) {
     return filter(elements, function(element) {
       var cannotDistribute = isAny(element, [
-        'bpmn:Association',
-        'bpmn:BoundaryEvent',
-        'bpmn:DataInputAssociation',
-        'bpmn:DataOutputAssociation',
-        'bpmn:Lane',
-        'bpmn:MessageFlow',
-        'bpmn:Participant',
-        'bpmn:SequenceFlow',
-        'bpmn:TextAnnotation'
+        'vdml:Association',
+        'vdml:BoundaryEvent',
+        'vdml:DataInputAssociation',
+        'vdml:DataOutputAssociation',
+        'vdml:Lane',
+        'vdml:MessageFlow',
+        'vdml:Participant',
+        'vdml:SequenceFlow',
+        'vdml:TextAnnotation'
       ]);
 
       return !(element.labelTarget || cannotDistribute);
@@ -3607,17 +3607,17 @@ function BpmnDistributeElements(distributeElements) {
   });
 }
 
-BpmnDistributeElements.$inject = [ 'distributeElements' ];
+VdmlDistributeElements.$inject = [ 'distributeElements' ];
 
-module.exports = BpmnDistributeElements;
+module.exports = VdmlDistributeElements;
 
 },{"281":281,"66":66}],16:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
     _dereq_(140)
   ],
-  __init__: [ 'bpmnDistributeElements' ],
-  bpmnDistributeElements: [ 'type', _dereq_(15) ]
+  __init__: [ 'vdmlDistributeElements' ],
+  vdmlDistributeElements: [ 'type', _dereq_(15) ]
 };
 
 },{"140":140,"15":15}],17:[function(_dereq_,module,exports){
@@ -3633,7 +3633,7 @@ var is = _dereq_(93).is;
 
 var getBBox = _dereq_(247).getBBox;
 
-function BpmnEditorActions(
+function VdmlEditorActions(
     injector,
     canvas, elementRegistry, selection,
     spaceTool,
@@ -3689,7 +3689,7 @@ function BpmnEditorActions(
 
       if (currentSelection.length) {
         aligneableElements = filter(currentSelection, function(element) {
-          return !is(element, 'bpmn:Lane');
+          return !is(element, 'vdml:Lane');
         });
 
         alignElements.trigger(aligneableElements, type);
@@ -3710,9 +3710,9 @@ function BpmnEditorActions(
           boundingBox,
           elements;
 
-      if (is(rootElement, 'bpmn:Collaboration')) {
+      if (is(rootElement, 'vdml:Collaboration')) {
         elements = elementRegistry.filter(function(element) {
-          return is(element.parent, 'bpmn:Collaboration');
+          return is(element.parent, 'vdml:Collaboration');
         });
       } else {
         elements = elementRegistry.filter(function(element) {
@@ -3727,9 +3727,9 @@ function BpmnEditorActions(
   });
 }
 
-inherits(BpmnEditorActions, EditorActions);
+inherits(VdmlEditorActions, EditorActions);
 
-BpmnEditorActions.$inject = [
+VdmlEditorActions.$inject = [
   'injector',
   'canvas', 'elementRegistry', 'selection',
   'spaceTool',
@@ -3743,7 +3743,7 @@ BpmnEditorActions.$inject = [
   'modeling'
 ];
 
-module.exports = BpmnEditorActions;
+module.exports = VdmlEditorActions;
 
 },{"144":144,"247":247,"270":270,"281":281,"93":93}],18:[function(_dereq_,module,exports){
 module.exports = {
@@ -3769,16 +3769,16 @@ module.exports = {
 var isAny = _dereq_(66).isAny;
 
 /**
- * Extention of GlobalConnect tool that implements BPMN specific rules about
+ * Extention of GlobalConnect tool that implements VDML specific rules about
  * connection start elements.
  */
-function BpmnGlobalConnect(globalConnect) {
+function VdmlGlobalConnect(globalConnect) {
   globalConnect.registerProvider(this);
 }
 
-BpmnGlobalConnect.$inject = [ 'globalConnect' ];
+VdmlGlobalConnect.$inject = [ 'globalConnect' ];
 
-module.exports = BpmnGlobalConnect;
+module.exports = VdmlGlobalConnect;
 
 
 /**
@@ -3787,7 +3787,7 @@ module.exports = BpmnGlobalConnect;
  * @param  {Element} source
  * @return {Boolean}
  */
-BpmnGlobalConnect.prototype.canStartConnect = function(source) {
+VdmlGlobalConnect.prototype.canStartConnect = function(source) {
 
   if (nonExistantOrLabel(source)) {
     return null;
@@ -3796,10 +3796,10 @@ BpmnGlobalConnect.prototype.canStartConnect = function(source) {
   var businessObject = source.businessObject;
 
   return isAny(businessObject, [
-    'bpmn:FlowNode',
-    'bpmn:InteractionNode',
-    'bpmn:DataObjectReference',
-    'bpmn:DataStoreReference'
+    'vdml:FlowNode',
+    'vdml:InteractionNode',
+    'vdml:DataObjectReference',
+    'vdml:DataStoreReference'
   ]);
 };
 
@@ -3819,20 +3819,20 @@ module.exports = {
   __depends__: [
     _dereq_(147)
   ],
-  __init__: [ 'bpmnGlobalConnect' ],
-  bpmnGlobalConnect: [ 'type', _dereq_(19) ]
+  __init__: [ 'vdmlGlobalConnect' ],
+  vdmlGlobalConnect: [ 'type', _dereq_(19) ]
 };
 
 },{"147":147,"19":19}],21:[function(_dereq_,module,exports){
 'use strict';
 
 /**
- * BPMN 2.0 specific key bindings.
+ * VDML 2.0 specific key bindings.
  *
  * @param {Keyboard} keyboard
  * @param {EditorActions} editorActions
  */
-function BpmnKeyBindings(keyboard, editorActions) {
+function VdmlKeyBindings(keyboard, editorActions) {
 
   keyboard.addListener(function(key, modifiers) {
 
@@ -3891,19 +3891,19 @@ function BpmnKeyBindings(keyboard, editorActions) {
   });
 }
 
-BpmnKeyBindings.$inject = [
+VdmlKeyBindings.$inject = [
   'keyboard',
   'editorActions'
 ];
 
-module.exports = BpmnKeyBindings;
+module.exports = VdmlKeyBindings;
 },{}],22:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
     _dereq_(153)
   ],
-  __init__: [ 'bpmnKeyBindings' ],
-  bpmnKeyBindings: [ 'type', _dereq_(21) ]
+  __init__: [ 'vdmlKeyBindings' ],
+  vdmlKeyBindings: [ 'type', _dereq_(21) ]
 };
 
 },{"153":153,"21":21}],23:[function(_dereq_,module,exports){
@@ -3960,8 +3960,8 @@ function LabelEditingProvider(eventBus, canvas, directEditing, commandStack) {
         return;
       }
 
-      if (is(element, 'bpmn:Task') || is(element, 'bpmn:TextAnnotation') ||
-          (is(element, 'bpmn:SubProcess') && !isExpanded(element))) {
+      if (is(element, 'vdml:Task') || is(element, 'vdml:TextAnnotation') ||
+          (is(element, 'vdml:SubProcess') && !isExpanded(element))) {
 
         directEditing.activate(element);
       }
@@ -4023,7 +4023,7 @@ LabelEditingProvider.prototype.getEditingBBox = function(element) {
       zoom;
 
   // adjust for expanded pools AND lanes
-  if ((is(element, 'bpmn:Participant') && isExpanded(element)) || is(element, 'bpmn:Lane')) {
+  if ((is(element, 'vdml:Participant') && isExpanded(element)) || is(element, 'vdml:Lane')) {
 
     bounds.width = 150;
     bounds.minHeight = LINE_HEIGHT + PADDING;
@@ -4035,10 +4035,10 @@ LabelEditingProvider.prototype.getEditingBBox = function(element) {
 
   // internal labels for tasks and collapsed call activities, sub processes and participants
   if (
-    is(element, 'bpmn:Task') ||
-    (is(element, 'bpmn:CallActivity') && !isExpanded(element)) ||
-    (is(element, 'bpmn:SubProcess') && !isExpanded(element)) ||
-    (is(element, 'bpmn:Participant') && !isExpanded(element))
+    is(element, 'vdml:Task') ||
+    (is(element, 'vdml:CallActivity') && !isExpanded(element)) ||
+    (is(element, 'vdml:SubProcess') && !isExpanded(element)) ||
+    (is(element, 'vdml:Participant') && !isExpanded(element))
   ) {
 
     zoom = canvas.zoom();
@@ -4065,7 +4065,7 @@ LabelEditingProvider.prototype.getEditingBBox = function(element) {
 
 
   // internal labels for expanded sub processes
-  if (is(element, 'bpmn:SubProcess') && isExpanded(element)) {
+  if (is(element, 'vdml:SubProcess') && isExpanded(element)) {
 
     bounds.width = element.width;
     bounds.maxHeight = 3 * LINE_HEIGHT + PADDING; // maximum 3 lines
@@ -4083,7 +4083,7 @@ LabelEditingProvider.prototype.getEditingBBox = function(element) {
 
 
   // text annotations
-  if (is(element, 'bpmn:TextAnnotation')) {
+  if (is(element, 'vdml:TextAnnotation')) {
     bounds.minWidth = 100;
     bounds.height = element.height;
 
@@ -4107,16 +4107,16 @@ LabelEditingProvider.prototype.update = function(element, newLabel) {
 var is = _dereq_(93).is;
 
 function getLabelAttr(semantic) {
-  if (is(semantic, 'bpmn:FlowElement') ||
-      is(semantic, 'bpmn:Participant') ||
-      is(semantic, 'bpmn:Lane') ||
-      is(semantic, 'bpmn:SequenceFlow') ||
-      is(semantic, 'bpmn:MessageFlow')) {
+  if (is(semantic, 'vdml:FlowElement') ||
+      is(semantic, 'vdml:Participant') ||
+      is(semantic, 'vdml:Lane') ||
+      is(semantic, 'vdml:SequenceFlow') ||
+      is(semantic, 'vdml:MessageFlow')) {
 
     return 'name';
   }
 
-  if (is(semantic, 'bpmn:TextAnnotation')) {
+  if (is(semantic, 'vdml:TextAnnotation')) {
     return 'text';
   }
 }
@@ -4153,7 +4153,7 @@ var LabelUtil = _dereq_(24);
 
 
 /**
- * A handler that updates the text of a BPMN element.
+ * A handler that updates the text of a VDML element.
  */
 function UpdateLabelHandler() {
 
@@ -4206,39 +4206,393 @@ module.exports = {
 },{"102":102,"128":128,"23":23,"95":95}],27:[function(_dereq_,module,exports){
 'use strict';
 
+var assign = _dereq_(410),
+    inherits = _dereq_(270);
+
+var is = _dereq_(93).is;
+
+var isExpanded = _dereq_(91).isExpanded;
+
+var BaseElementFactory = _dereq_(104),
+    LabelUtil = _dereq_(92);
+
+/**
+ * A vdml-aware factory for diagram-js shapes
+ */
+function ElementFactory(vdmlFactory, moddle, translate) {
+  BaseElementFactory.call(this);
+
+  this._vdmlFactory = vdmlFactory;
+  this._moddle = moddle;
+  this._translate = translate;
+}
+
+inherits(ElementFactory, BaseElementFactory);
+
+
+ElementFactory.$inject = [ 'vdmlFactory', 'moddle', 'translate' ];
+
+module.exports = ElementFactory;
+
+ElementFactory.prototype.baseCreate = BaseElementFactory.prototype.create;
+
+ElementFactory.prototype.create = function(elementType, attrs) {
+  // no special magic for labels,
+  // we assume their businessObjects have already been created
+  // and wired via attrs
+  if (elementType === 'label') {
+    return this.baseCreate(elementType, assign({ type: 'label' }, LabelUtil.DEFAULT_LABEL_SIZE, attrs));
+  }
+
+  return this.createVdmlElement(elementType, attrs);
+};
+
+ElementFactory.prototype.createVdmlElement = function(elementType, attrs) {
+  var size,
+      translate = this._translate;
+
+  attrs = attrs || {};
+
+  var businessObject = attrs.businessObject;
+
+  if (!businessObject) {
+    if (!attrs.type) {
+      throw new Error(translate('no shape type specified'));
+    }
+
+    businessObject = this._vdmlFactory.create(attrs.type);
+  }
+
+  if (!businessObject.di) {
+    if (elementType === 'root') {
+      businessObject.di = this._vdmlFactory.createDiPlane(businessObject, [], {
+        id: businessObject.id + '_di'
+      });
+    } else
+    if (elementType === 'connection') {
+      businessObject.di = this._vdmlFactory.createDiEdge(businessObject, [], {
+        id: businessObject.id + '_di'
+      });
+    } else {
+      businessObject.di = this._vdmlFactory.createDiShape(businessObject, {}, {
+        id: businessObject.id + '_di'
+      });
+    }
+  }
+
+  if (attrs.processRef) {
+    businessObject.processRef = attrs.processRef;
+  }
+
+  if (attrs.isExpanded) {
+    businessObject.di.isExpanded = attrs.isExpanded;
+  }
+
+  if (is(businessObject, 'vdml:ExclusiveGateway')) {
+    businessObject.di.isMarkerVisible = true;
+  }
+
+  if (attrs.isInterrupting === false) {
+    businessObject.isInterrupting = false;
+  }
+
+  if (attrs.associationDirection) {
+    businessObject.associationDirection = attrs.associationDirection;
+  }
+
+  var eventDefinitions,
+      newEventDefinition;
+
+  if (attrs.eventDefinitionType) {
+    eventDefinitions = businessObject.get('eventDefinitions') || [];
+    newEventDefinition = this._moddle.create(attrs.eventDefinitionType);
+
+    eventDefinitions.push(newEventDefinition);
+
+    newEventDefinition.$parent = businessObject;
+    businessObject.eventDefinitions = eventDefinitions;
+  }
+
+  if (attrs.isForCompensation) {
+    businessObject.isForCompensation = true;
+  }
+
+  size = this._getDefaultSize(businessObject);
+
+  attrs = assign({
+    businessObject: businessObject,
+    id: businessObject.id
+  }, size, attrs);
+
+  return this.baseCreate(elementType, attrs);
+};
+
+
+ElementFactory.prototype._getDefaultSize = function(semantic) {
+
+  if (is(semantic, 'vdml:SubProcess')) {
+
+    if (isExpanded(semantic)) {
+      return { width: 350, height: 200 };
+    } else {
+      return { width: 100, height: 80 };
+    }
+  }
+
+  if (is(semantic, 'vdml:Collaboration')) {
+    return { width: 100, height: 80 };
+  }
+
+  if (is(semantic, 'vdml:Gateway')) {
+    return { width: 50, height: 50 };
+  }
+
+  if (is(semantic, 'vdml:Event')) {
+    return { width: 36, height: 36 };
+  }
+
+  if (is(semantic, 'vdml:Participant')) {
+    if (!isExpanded(semantic)) {
+      return { width: 400, height: 100 };
+    } else {
+      return { width: 600, height: 250 };
+    }
+  }
+
+  if (is(semantic, 'vdml:Lane')) {
+    return { width: 400, height: 100 };
+  }
+
+  if (is(semantic, 'vdml:DataObjectReference')) {
+    return { width: 36, height: 50 };
+  }
+
+  if (is(semantic, 'vdml:DataStoreReference')) {
+    return { width: 50, height: 50 };
+  }
+
+  if (is(semantic, 'vdml:TextAnnotation')) {
+    return { width: 100, height: 30 };
+  }
+
+  return { width: 100, height: 80 };
+};
+
+
+ElementFactory.prototype.createParticipantShape = function(collapsed) {
+
+  var attrs = { type: 'vdml:Participant' };
+
+  if (!collapsed) {
+    attrs.processRef = this._vdmlFactory.create('vdml:Process');
+  }
+
+  return this.createShape(attrs);
+};
+
+},{"104":104,"270":270,"410":410,"91":91,"92":92,"93":93}],28:[function(_dereq_,module,exports){
+'use strict';
+var inherits = _dereq_(270);
+
+var BaseModeling = _dereq_(158);
+
+var UpdatePropertiesHandler = _dereq_(63),
+    UpdateCanvasRootHandler = _dereq_(61),
+    AddLaneHandler = _dereq_(57),
+    SplitLaneHandler = _dereq_(60),
+    ResizeLaneHandler = _dereq_(59),
+    UpdateFlowNodeRefsHandler = _dereq_(62),
+    IdClaimHandler = _dereq_(58);
+
+
+/**
+ * VDML 2.0 modeling features activator
+ *
+ * @param {EventBus} eventBus
+ * @param {ElementFactory} elementFactory
+ * @param {CommandStack} commandStack
+ * @param {VdmlRules} vdmlRules
+ */
+function Modeling(eventBus, elementFactory, commandStack, vdmlRules) {
+  BaseModeling.call(this, eventBus, elementFactory, commandStack);
+
+  this._vdmlRules = vdmlRules;
+}
+
+inherits(Modeling, BaseModeling);
+
+Modeling.$inject = [ 'eventBus', 'elementFactory', 'commandStack', 'vdmlRules' ];
+
+module.exports = Modeling;
+
+
+Modeling.prototype.getHandlers = function() {
+  var handlers = BaseModeling.prototype.getHandlers.call(this);
+
+  handlers['element.updateProperties'] = UpdatePropertiesHandler;
+  handlers['canvas.updateRoot'] = UpdateCanvasRootHandler;
+  handlers['lane.add'] = AddLaneHandler;
+  handlers['lane.resize'] = ResizeLaneHandler;
+  handlers['lane.split'] = SplitLaneHandler;
+  handlers['lane.updateRefs'] = UpdateFlowNodeRefsHandler;
+  handlers['id.updateClaim'] = IdClaimHandler;
+
+  return handlers;
+};
+
+
+Modeling.prototype.updateLabel = function(element, newLabel) {
+  this._commandStack.execute('element.updateLabel', {
+    element: element,
+    newLabel: newLabel
+  });
+};
+
+
+Modeling.prototype.connect = function(source, target, attrs, hints) {
+
+  var vdmlRules = this._vdmlRules;
+
+  if (!attrs) {
+    attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
+  }
+
+  return this.createConnection(source, target, attrs, source.parent, hints);
+};
+
+
+Modeling.prototype.updateProperties = function(element, properties) {
+  this._commandStack.execute('element.updateProperties', {
+    element: element,
+    properties: properties
+  });
+};
+
+Modeling.prototype.resizeLane = function(laneShape, newBounds, balanced) {
+  this._commandStack.execute('lane.resize', {
+    shape: laneShape,
+    newBounds: newBounds,
+    balanced: balanced
+  });
+};
+
+Modeling.prototype.addLane = function(targetLaneShape, location) {
+  var context = {
+    shape: targetLaneShape,
+    location: location
+  };
+
+  this._commandStack.execute('lane.add', context);
+
+  return context.newLane;
+};
+
+Modeling.prototype.splitLane = function(targetLane, count) {
+  this._commandStack.execute('lane.split', {
+    shape: targetLane,
+    count: count
+  });
+};
+
+/**
+ * Transform the current diagram into a collaboration.
+ *
+ * @return {djs.model.Root} the new root element
+ */
+Modeling.prototype.makeCollaboration = function() {
+
+  var collaborationElement = this._create('root', {
+    type: 'vdml:Collaboration'
+  });
+
+  var context = {
+    newRoot: collaborationElement
+  };
+
+  this._commandStack.execute('canvas.updateRoot', context);
+
+  return collaborationElement;
+};
+
+Modeling.prototype.updateLaneRefs = function(flowNodeShapes, laneShapes) {
+
+  this._commandStack.execute('lane.updateRefs', {
+    flowNodeShapes: flowNodeShapes,
+    laneShapes: laneShapes
+  });
+};
+
+/**
+ * Transform the current diagram into a process.
+ *
+ * @return {djs.model.Root} the new root element
+ */
+Modeling.prototype.makeProcess = function() {
+
+  var processElement = this._create('root', {
+    type: 'vdml:Process'
+  });
+
+  var context = {
+    newRoot: processElement
+  };
+
+  this._commandStack.execute('canvas.updateRoot', context);
+};
+
+
+Modeling.prototype.claimId = function(id, moddleElement) {
+  this._commandStack.execute('id.updateClaim', {
+    id: id,
+    element: moddleElement,
+    claiming: true
+  });
+};
+
+
+Modeling.prototype.unclaimId = function(id, moddleElement) {
+  this._commandStack.execute('id.updateClaim', {
+    id: id,
+    element: moddleElement
+  });
+};
+
+},{"158":158,"270":270,"57":57,"58":58,"59":59,"60":60,"61":61,"62":62,"63":63}],29:[function(_dereq_,module,exports){
+'use strict';
+
 var map = _dereq_(286),
     assign = _dereq_(410),
     pick = _dereq_(417);
 
 
-function BpmnFactory(moddle) {
+function VdmlFactory(moddle) {
   this._model = moddle;
 }
 
-BpmnFactory.$inject = [ 'moddle' ];
+VdmlFactory.$inject = [ 'moddle' ];
 
 
-BpmnFactory.prototype._needsId = function(element) {
-  return element.$instanceOf('bpmn:RootElement') ||
-         element.$instanceOf('bpmn:FlowElement') ||
-         element.$instanceOf('bpmn:MessageFlow') ||
-         element.$instanceOf('bpmn:DataAssociation') ||
-         element.$instanceOf('bpmn:Artifact') ||
-         element.$instanceOf('bpmn:Participant') ||
-         element.$instanceOf('bpmn:Lane') ||
-         element.$instanceOf('bpmn:Process') ||
-         element.$instanceOf('bpmn:Collaboration') ||
-         element.$instanceOf('bpmndi:BPMNShape') ||
-         element.$instanceOf('bpmndi:BPMNEdge') ||
-         element.$instanceOf('bpmndi:BPMNDiagram') ||
-         element.$instanceOf('bpmndi:BPMNPlane') ||
-         element.$instanceOf('bpmn:Property');
+VdmlFactory.prototype._needsId = function(element) {
+  return element.$instanceOf('vdml:RootElement') ||
+         element.$instanceOf('vdml:FlowElement') ||
+         element.$instanceOf('vdml:MessageFlow') ||
+         element.$instanceOf('vdml:DataAssociation') ||
+         element.$instanceOf('vdml:Artifact') ||
+         element.$instanceOf('vdml:Participant') ||
+         element.$instanceOf('vdml:Lane') ||
+         element.$instanceOf('vdml:Process') ||
+         element.$instanceOf('vdml:Collaboration') ||
+         element.$instanceOf('vdmldi:VDMLShape') ||
+         element.$instanceOf('vdmldi:VDMLEdge') ||
+         element.$instanceOf('vdmldi:VDMLDiagram') ||
+         element.$instanceOf('vdmldi:VDMLPlane') ||
+         element.$instanceOf('vdml:Property');
 };
 
-BpmnFactory.prototype._ensureId = function(element) {
+VdmlFactory.prototype._ensureId = function(element) {
 
   // generate semantic ids for elements
-  // bpmn:SequenceFlow -> SequenceFlow_ID
+  // vdml:SequenceFlow -> SequenceFlow_ID
   var prefix = (element.$type || '').replace(/^[^:]*:/g, '') + '_';
 
   if (!element.id && this._needsId(element)) {
@@ -4247,7 +4601,7 @@ BpmnFactory.prototype._ensureId = function(element) {
 };
 
 
-BpmnFactory.prototype.create = function(type, attrs) {
+VdmlFactory.prototype.create = function(type, attrs) {
   var element = this._model.create(type, attrs || {});
 
   this._ensureId(element);
@@ -4256,53 +4610,53 @@ BpmnFactory.prototype.create = function(type, attrs) {
 };
 
 
-BpmnFactory.prototype.createDiLabel = function() {
-  return this.create('bpmndi:BPMNLabel', {
+VdmlFactory.prototype.createDiLabel = function() {
+  return this.create('vdmldi:VDMLLabel', {
     bounds: this.createDiBounds()
   });
 };
 
 
-BpmnFactory.prototype.createDiShape = function(semantic, bounds, attrs) {
+VdmlFactory.prototype.createDiShape = function(semantic, bounds, attrs) {
 
-  return this.create('bpmndi:BPMNShape', assign({
-    bpmnElement: semantic,
+  return this.create('vdmldi:VDMLShape', assign({
+    vdmlElement: semantic,
     bounds: this.createDiBounds(bounds)
   }, attrs));
 };
 
 
-BpmnFactory.prototype.createDiBounds = function(bounds) {
+VdmlFactory.prototype.createDiBounds = function(bounds) {
   return this.create('dc:Bounds', bounds);
 };
 
 
-BpmnFactory.prototype.createDiWaypoints = function(waypoints) {
+VdmlFactory.prototype.createDiWaypoints = function(waypoints) {
   return map(waypoints, function(pos) {
     return this.createDiWaypoint(pos);
   }, this);
 };
 
-BpmnFactory.prototype.createDiWaypoint = function(point) {
+VdmlFactory.prototype.createDiWaypoint = function(point) {
   return this.create('dc:Point', pick(point, [ 'x', 'y' ]));
 };
 
 
-BpmnFactory.prototype.createDiEdge = function(semantic, waypoints, attrs) {
-  return this.create('bpmndi:BPMNEdge', assign({
-    bpmnElement: semantic
+VdmlFactory.prototype.createDiEdge = function(semantic, waypoints, attrs) {
+  return this.create('vdmldi:VDMLEdge', assign({
+    vdmlElement: semantic
   }, attrs));
 };
 
-BpmnFactory.prototype.createDiPlane = function(semantic) {
-  return this.create('bpmndi:BPMNPlane', {
-    bpmnElement: semantic
+VdmlFactory.prototype.createDiPlane = function(semantic) {
+  return this.create('vdmldi:VDMLPlane', {
+    vdmlElement: semantic
   });
 };
 
-module.exports = BpmnFactory;
+module.exports = VdmlFactory;
 
-},{"286":286,"410":410,"417":417}],28:[function(_dereq_,module,exports){
+},{"286":286,"410":410,"417":417}],30:[function(_dereq_,module,exports){
 'use strict';
 
 var inherits = _dereq_(270);
@@ -4322,14 +4676,14 @@ var getMid = LayoutUtil.getMid,
 var is = _dereq_(93).is;
 
 
-function BpmnLayouter() {}
+function VdmlLayouter() {}
 
-inherits(BpmnLayouter, BaseLayouter);
+inherits(VdmlLayouter, BaseLayouter);
 
-module.exports = BpmnLayouter;
+module.exports = VdmlLayouter;
 
 
-BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
+VdmlLayouter.prototype.layoutConnection = function(connection, hints) {
 
   hints = hints || {};
 
@@ -4353,8 +4707,8 @@ BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
   // TODO(nikku): support vertical modeling
   // and invert preferredLayouts accordingly
 
-  if (is(connection, 'bpmn:Association') ||
-      is(connection, 'bpmn:DataAssociation')) {
+  if (is(connection, 'vdml:Association') ||
+      is(connection, 'vdml:DataAssociation')) {
 
     if (waypoints && !isCompensationAssociation(connection)) {
       return [].concat([ start ], waypoints.slice(1, -1), [ end ]);
@@ -4362,12 +4716,12 @@ BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
   }
 
   // manhattan layout sequence / message flows
-  if (is(connection, 'bpmn:MessageFlow')) {
+  if (is(connection, 'vdml:MessageFlow')) {
     manhattanOptions = {
       preferredLayouts: [ 'v:v' ]
     };
 
-    if (is(target, 'bpmn:Participant')) {
+    if (is(target, 'vdml:Participant')) {
       manhattanOptions = {
         preferredLayouts: [ 'straight', 'v:v' ]
       };
@@ -4379,21 +4733,21 @@ BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
       };
     }
 
-    if (isExpandedSubProcess(source) && is(target, 'bpmn:FlowNode')) {
+    if (isExpandedSubProcess(source) && is(target, 'vdml:FlowNode')) {
       manhattanOptions = {
         preferredLayouts: [ 'straight', 'v:v' ],
         preserveDocking: isExpandedSubProcess(target) ? 'source' : 'target'
       };
     }
 
-    if (is(source, 'bpmn:Participant') && is(target, 'bpmn:FlowNode')) {
+    if (is(source, 'vdml:Participant') && is(target, 'vdml:FlowNode')) {
       manhattanOptions = {
         preferredLayouts: [ 'straight', 'v:v' ],
         preserveDocking: 'target'
       };
     }
 
-    if (is(target, 'bpmn:Event')) {
+    if (is(target, 'vdml:Event')) {
       manhattanOptions = {
         preferredLayouts: [ 'v:v' ]
       };
@@ -4408,12 +4762,12 @@ BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
   // (1) outgoing of BoundaryEvents -> layout h:v or v:h based on attach orientation
   // (2) incoming / outgoing of Gateway -> v:h (outgoing), h:v (incoming)
   //
-  if (is(connection, 'bpmn:SequenceFlow') ||
+  if (is(connection, 'vdml:SequenceFlow') ||
       isCompensationAssociation(connection)) {
 
     // make sure boundary event connections do
     // not look ugly =:>
-    if (is(source, 'bpmn:BoundaryEvent')) {
+    if (is(source, 'vdml:BoundaryEvent')) {
 
       var orientation = getAttachOrientation(source);
 
@@ -4430,14 +4784,14 @@ BpmnLayouter.prototype.layoutConnection = function(connection, hints) {
       }
     } else
 
-    if (is(source, 'bpmn:Gateway')) {
+    if (is(source, 'vdml:Gateway')) {
 
       manhattanOptions = {
         preferredLayouts: [ 'v:h' ]
       };
     } else
 
-    if (is(target, 'bpmn:Gateway')) {
+    if (is(target, 'vdml:Gateway')) {
 
       manhattanOptions = {
         preferredLayouts: [ 'h:v' ]
@@ -4486,16 +4840,16 @@ function isCompensationAssociation(connection) {
   var source = connection.source,
       target = connection.target;
 
-  return is(target, 'bpmn:Activity') &&
-         is(source, 'bpmn:BoundaryEvent') &&
+  return is(target, 'vdml:Activity') &&
+         is(source, 'vdml:BoundaryEvent') &&
          target.businessObject.isForCompensation;
 }
 
 
 function isExpandedSubProcess(element) {
-  return is(element, 'bpmn:SubProcess') && isExpanded(element);
+  return is(element, 'vdml:SubProcess') && isExpanded(element);
 }
-},{"231":231,"233":233,"234":234,"270":270,"410":410,"91":91,"93":93}],29:[function(_dereq_,module,exports){
+},{"231":231,"233":233,"234":234,"270":270,"410":410,"91":91,"93":93}],31:[function(_dereq_,module,exports){
 'use strict';
 
 var assign = _dereq_(410),
@@ -4511,14 +4865,14 @@ var getBusinessObject = _dereq_(93).getBusinessObject,
 var CommandInterceptor = _dereq_(100);
 
 /**
- * A handler responsible for updating the underlying BPMN 2.0 XML + DI
+ * A handler responsible for updating the underlying VDML 2.0 XML + DI
  * once changes on the diagram happen
  */
-function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
+function VdmlUpdater(eventBus, vdmlFactory, connectionDocking, translate) {
 
   CommandInterceptor.call(this, eventBus);
 
-  this._bpmnFactory = bpmnFactory;
+  this._vdmlFactory = vdmlFactory;
   this._translate = translate;
 
   var self = this;
@@ -4552,7 +4906,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
 
 
 
-  ////// BPMN + DI update /////////////////////////
+  ////// VDML + DI update /////////////////////////
 
 
   // update parent
@@ -4577,14 +4931,14 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
                   'shape.delete',
                   'connection.create',
                   'connection.move',
-                  'connection.delete' ], ifBpmn(updateParent));
+                  'connection.delete' ], ifVdml(updateParent));
 
   this.reverted([ 'shape.move',
                   'shape.create',
                   'shape.delete',
                   'connection.create',
                   'connection.move',
-                  'connection.delete' ], ifBpmn(reverseUpdateParent));
+                  'connection.delete' ], ifVdml(reverseUpdateParent));
 
   /*
    * ## Updating Parent
@@ -4600,7 +4954,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
         children = oldRoot.children;
 
     forEach(children, function(child) {
-      if (is(child, 'bpmn:BaseElement')) {
+      if (is(child, 'vdml:BaseElement')) {
         self.updateParent(child);
       }
     });
@@ -4614,14 +4968,14 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
   function updateBounds(e) {
     var shape = e.context.shape;
 
-    if (!is(shape, 'bpmn:BaseElement')) {
+    if (!is(shape, 'vdml:BaseElement')) {
       return;
     }
 
     self.updateBounds(shape);
   }
 
-  this.executed([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(function(event) {
+  this.executed([ 'shape.move', 'shape.create', 'shape.resize' ], ifVdml(function(event) {
 
     // exclude labels because they're handled separately during shape.changed
     if (event.context.shape.type === 'label') {
@@ -4631,7 +4985,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     updateBounds(event);
   }));
 
-  this.reverted([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(function(event) {
+  this.reverted([ 'shape.move', 'shape.create', 'shape.resize' ], ifVdml(function(event) {
 
     // exclude labels because they're handled separately during shape.changed
     if (event.context.shape.type === 'label') {
@@ -4660,7 +5014,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     'connection.delete',
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(updateConnection));
+  ], ifVdml(updateConnection));
 
   this.reverted([
     'connection.create',
@@ -4668,7 +5022,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     'connection.delete',
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(updateConnection));
+  ], ifVdml(updateConnection));
 
 
   // update waypoints
@@ -4682,7 +5036,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     'connection.updateWaypoints',
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(updateConnectionWaypoints));
+  ], ifVdml(updateConnectionWaypoints));
 
   this.reverted([
     'connection.layout',
@@ -4690,14 +5044,14 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     'connection.updateWaypoints',
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(updateConnectionWaypoints));
+  ], ifVdml(updateConnectionWaypoints));
 
 
   // update Default & Conditional flows
   this.executed([
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(function(e) {
+  ], ifVdml(function(e) {
     var context = e.context,
         connection = context.connection,
         businessObject = getBusinessObject(connection),
@@ -4718,28 +5072,28 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
 
     // on reconnectEnd -> default flow
     if ((businessObject.sourceRef && businessObject.sourceRef.default) &&
-        !(is(newTarget, 'bpmn:Activity') ||
-          is(newTarget, 'bpmn:EndEvent') ||
-          is(newTarget, 'bpmn:Gateway') ||
-          is(newTarget, 'bpmn:IntermediateThrowEvent')) ) {
+        !(is(newTarget, 'vdml:Activity') ||
+          is(newTarget, 'vdml:EndEvent') ||
+          is(newTarget, 'vdml:Gateway') ||
+          is(newTarget, 'vdml:IntermediateThrowEvent')) ) {
       context.default = businessObject.sourceRef.default;
       businessObject.sourceRef.default = undefined;
     }
 
     // on reconnectStart -> conditional flow
     if (oldSource && (businessObject.conditionExpression) &&
-      !(is(newSource, 'bpmn:Activity') ||
-        is(newSource, 'bpmn:Gateway')) ) {
+      !(is(newSource, 'vdml:Activity') ||
+        is(newSource, 'vdml:Gateway')) ) {
       context.conditionExpression = businessObject.conditionExpression;
       businessObject.conditionExpression = undefined;
     }
 
     // on reconnectEnd -> conditional flow
     if (oldTarget && (businessObject.conditionExpression) &&
-        !(is(newTarget, 'bpmn:Activity') ||
-          is(newTarget, 'bpmn:EndEvent') ||
-          is(newTarget, 'bpmn:Gateway') ||
-          is(newTarget, 'bpmn:IntermediateThrowEvent')) ) {
+        !(is(newTarget, 'vdml:Activity') ||
+          is(newTarget, 'vdml:EndEvent') ||
+          is(newTarget, 'vdml:Gateway') ||
+          is(newTarget, 'vdml:IntermediateThrowEvent')) ) {
       context.conditionExpression = businessObject.conditionExpression;
       businessObject.conditionExpression = undefined;
     }
@@ -4748,7 +5102,7 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
   this.reverted([
     'connection.reconnectEnd',
     'connection.reconnectStart'
-  ], ifBpmn(function(e) {
+  ], ifVdml(function(e) {
     var context = e.context,
         connection = context.connection,
         businessObject = getBusinessObject(connection),
@@ -4756,14 +5110,14 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
 
     // default flow
     if (context.default) {
-      if (is(newSource, 'bpmn:ExclusiveGateway') || is(newSource, 'bpmn:InclusiveGateway') ||
-          is(newSource, 'bpmn:Activity')) {
+      if (is(newSource, 'vdml:ExclusiveGateway') || is(newSource, 'vdml:InclusiveGateway') ||
+          is(newSource, 'vdml:Activity')) {
         newSource.default = context.default;
       }
     }
 
     // conditional flow
-    if (context.conditionExpression && is(newSource, 'bpmn:Activity')) {
+    if (context.conditionExpression && is(newSource, 'vdml:Activity')) {
       businessObject.conditionExpression = context.conditionExpression;
     }
   }));
@@ -4773,20 +5127,20 @@ function BpmnUpdater(eventBus, bpmnFactory, connectionDocking, translate) {
     self.updateAttachment(e.context);
   }
 
-  this.executed([ 'element.updateAttachment' ], ifBpmn(updateAttachment));
-  this.reverted([ 'element.updateAttachment' ], ifBpmn(updateAttachment));
+  this.executed([ 'element.updateAttachment' ], ifVdml(updateAttachment));
+  this.reverted([ 'element.updateAttachment' ], ifVdml(updateAttachment));
 }
 
-inherits(BpmnUpdater, CommandInterceptor);
+inherits(VdmlUpdater, CommandInterceptor);
 
-module.exports = BpmnUpdater;
+module.exports = VdmlUpdater;
 
-BpmnUpdater.$inject = [ 'eventBus', 'bpmnFactory', 'connectionDocking', 'translate' ];
+VdmlUpdater.$inject = [ 'eventBus', 'vdmlFactory', 'connectionDocking', 'translate' ];
 
 
 /////// implementation //////////////////////////////////
 
-BpmnUpdater.prototype.updateAttachment = function(context) {
+VdmlUpdater.prototype.updateAttachment = function(context) {
 
   var shape = context.shape,
       businessObject = shape.businessObject,
@@ -4795,8 +5149,8 @@ BpmnUpdater.prototype.updateAttachment = function(context) {
   businessObject.attachedToRef = host && host.businessObject;
 };
 
-BpmnUpdater.prototype.updateParent = function(element, oldParent) {
-  // do not update BPMN 2.0 label parent
+VdmlUpdater.prototype.updateParent = function(element, oldParent) {
+  // do not update VDML 2.0 label parent
   if (element instanceof Model.Label) {
     return;
   }
@@ -4807,11 +5161,11 @@ BpmnUpdater.prototype.updateParent = function(element, oldParent) {
       parentBusinessObject = parentShape && parentShape.businessObject,
       parentDi = parentBusinessObject && parentBusinessObject.di;
 
-  if (is(element, 'bpmn:FlowNode')) {
+  if (is(element, 'vdml:FlowNode')) {
     this.updateFlowNodeRefs(businessObject, parentBusinessObject, oldParent && oldParent.businessObject);
   }
 
-  if (is(element, 'bpmn:DataOutputAssociation')) {
+  if (is(element, 'vdml:DataOutputAssociation')) {
     if (element.source) {
       parentBusinessObject = element.source.businessObject;
     } else {
@@ -4819,7 +5173,7 @@ BpmnUpdater.prototype.updateParent = function(element, oldParent) {
     }
   }
 
-  if (is(element, 'bpmn:DataInputAssociation')) {
+  if (is(element, 'vdml:DataInputAssociation')) {
     if (element.target) {
       parentBusinessObject = element.target.businessObject;
     } else {
@@ -4829,7 +5183,7 @@ BpmnUpdater.prototype.updateParent = function(element, oldParent) {
 
   this.updateSemanticParent(businessObject, parentBusinessObject);
 
-  if (is(element, 'bpmn:DataObjectReference') && businessObject.dataObjectRef) {
+  if (is(element, 'vdml:DataObjectReference') && businessObject.dataObjectRef) {
     this.updateSemanticParent(businessObject.dataObjectRef, parentBusinessObject);
   }
 
@@ -4837,7 +5191,7 @@ BpmnUpdater.prototype.updateParent = function(element, oldParent) {
 };
 
 
-BpmnUpdater.prototype.updateBounds = function(shape) {
+VdmlUpdater.prototype.updateBounds = function(shape) {
 
   var di = shape.businessObject.di;
 
@@ -4851,7 +5205,7 @@ BpmnUpdater.prototype.updateBounds = function(shape) {
   });
 };
 
-BpmnUpdater.prototype.updateFlowNodeRefs = function(businessObject, newContainment, oldContainment) {
+VdmlUpdater.prototype.updateFlowNodeRefs = function(businessObject, newContainment, oldContainment) {
 
   if (oldContainment === newContainment) {
     return;
@@ -4859,20 +5213,20 @@ BpmnUpdater.prototype.updateFlowNodeRefs = function(businessObject, newContainme
 
   var oldRefs, newRefs;
 
-  if (is (oldContainment, 'bpmn:Lane')) {
+  if (is (oldContainment, 'vdml:Lane')) {
     oldRefs = oldContainment.get('flowNodeRef');
     Collections.remove(oldRefs, businessObject);
   }
 
-  if (is(newContainment, 'bpmn:Lane')) {
+  if (is(newContainment, 'vdml:Lane')) {
     newRefs = newContainment.get('flowNodeRef');
     Collections.add(newRefs, businessObject);
   }
 };
 
-BpmnUpdater.prototype.updateDiParent = function(di, parentDi) {
+VdmlUpdater.prototype.updateDiParent = function(di, parentDi) {
 
-  if (parentDi && !is(parentDi, 'bpmndi:BPMNPlane')) {
+  if (parentDi && !is(parentDi, 'vdmldi:VDMLPlane')) {
     parentDi = parentDi.$parent;
   }
 
@@ -4892,23 +5246,23 @@ BpmnUpdater.prototype.updateDiParent = function(di, parentDi) {
 };
 
 function getDefinitions(element) {
-  while (element && !is(element, 'bpmn:Definitions')) {
+  while (element && !is(element, 'vdml:Definitions')) {
     element = element.$parent;
   }
 
   return element;
 }
 
-BpmnUpdater.prototype.getLaneSet = function(container) {
+VdmlUpdater.prototype.getLaneSet = function(container) {
 
   var laneSet, laneSets;
 
-  // bpmn:Lane
-  if (is(container, 'bpmn:Lane')) {
+  // vdml:Lane
+  if (is(container, 'vdml:Lane')) {
     laneSet = container.childLaneSet;
 
     if (!laneSet) {
-      laneSet = this._bpmnFactory.create('bpmn:LaneSet');
+      laneSet = this._vdmlFactory.create('vdml:LaneSet');
       container.childLaneSet = laneSet;
       laneSet.$parent = container;
     }
@@ -4916,17 +5270,17 @@ BpmnUpdater.prototype.getLaneSet = function(container) {
     return laneSet;
   }
 
-  // bpmn:Participant
-  if (is(container, 'bpmn:Participant')) {
+  // vdml:Participant
+  if (is(container, 'vdml:Participant')) {
     container = container.processRef;
   }
 
-  // bpmn:FlowElementsContainer
+  // vdml:FlowElementsContainer
   laneSets = container.get('laneSets');
   laneSet = laneSets[0];
 
   if (!laneSet) {
-    laneSet = this._bpmnFactory.create('bpmn:LaneSet');
+    laneSet = this._vdmlFactory.create('vdml:LaneSet');
     laneSet.$parent = container;
     laneSets.push(laneSet);
   }
@@ -4934,7 +5288,7 @@ BpmnUpdater.prototype.getLaneSet = function(container) {
   return laneSet;
 };
 
-BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent, visualParent) {
+VdmlUpdater.prototype.updateSemanticParent = function(businessObject, newParent, visualParent) {
 
   var containment,
       translate = this._translate;
@@ -4943,7 +5297,7 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
     return;
   }
 
-  if (is(businessObject, 'bpmn:Lane')) {
+  if (is(businessObject, 'vdml:Lane')) {
 
     if (newParent) {
       newParent = this.getLaneSet(newParent);
@@ -4952,19 +5306,19 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
     containment = 'lanes';
   } else
 
-  if (is(businessObject, 'bpmn:FlowElement')) {
+  if (is(businessObject, 'vdml:FlowElement')) {
 
     if (newParent) {
 
-      if (is(newParent, 'bpmn:Participant')) {
+      if (is(newParent, 'vdml:Participant')) {
         newParent = newParent.processRef;
       } else
 
-      if (is(newParent, 'bpmn:Lane')) {
+      if (is(newParent, 'vdml:Lane')) {
         do {
           // unwrap Lane -> LaneSet -> (Lane | FlowElementsContainer)
           newParent = newParent.$parent.$parent;
-        } while (is(newParent, 'bpmn:Lane'));
+        } while (is(newParent, 'vdml:Lane'));
 
       }
     }
@@ -4973,14 +5327,14 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
 
   } else
 
-  if (is(businessObject, 'bpmn:Artifact')) {
+  if (is(businessObject, 'vdml:Artifact')) {
 
     while (newParent &&
-           !is(newParent, 'bpmn:Process') &&
-           !is(newParent, 'bpmn:SubProcess') &&
-           !is(newParent, 'bpmn:Collaboration')) {
+           !is(newParent, 'vdml:Process') &&
+           !is(newParent, 'vdml:SubProcess') &&
+           !is(newParent, 'vdml:Collaboration')) {
 
-      if (is(newParent, 'bpmn:Participant')) {
+      if (is(newParent, 'vdml:Participant')) {
         newParent = newParent.processRef;
         break;
       } else {
@@ -4991,12 +5345,12 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
     containment = 'artifacts';
   } else
 
-  if (is(businessObject, 'bpmn:MessageFlow')) {
+  if (is(businessObject, 'vdml:MessageFlow')) {
     containment = 'messageFlows';
 
   } else
 
-  if (is(businessObject, 'bpmn:Participant')) {
+  if (is(businessObject, 'vdml:Participant')) {
     containment = 'participants';
 
     // make sure the participants process is properly attached / detached
@@ -5020,11 +5374,11 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
     }
   } else
 
-  if (is(businessObject, 'bpmn:DataOutputAssociation')) {
+  if (is(businessObject, 'vdml:DataOutputAssociation')) {
     containment = 'dataOutputAssociations';
   } else
 
-  if (is(businessObject, 'bpmn:DataInputAssociation')) {
+  if (is(businessObject, 'vdml:DataInputAssociation')) {
     containment = 'dataInputAssociations';
   }
 
@@ -5073,12 +5427,12 @@ BpmnUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
 };
 
 
-BpmnUpdater.prototype.updateConnectionWaypoints = function(connection) {
-  connection.businessObject.di.set('waypoint', this._bpmnFactory.createDiWaypoints(connection.waypoints));
+VdmlUpdater.prototype.updateConnectionWaypoints = function(connection) {
+  connection.businessObject.di.set('waypoint', this._vdmlFactory.createDiWaypoints(connection.waypoints));
 };
 
 
-BpmnUpdater.prototype.updateConnection = function(context) {
+VdmlUpdater.prototype.updateConnection = function(context) {
 
   var connection = context.connection,
       businessObject = getBusinessObject(connection),
@@ -5086,9 +5440,9 @@ BpmnUpdater.prototype.updateConnection = function(context) {
       newTarget = getBusinessObject(connection.target),
       visualParent;
 
-  if (!is(businessObject, 'bpmn:DataAssociation')) {
+  if (!is(businessObject, 'vdml:DataAssociation')) {
 
-    var inverseSet = is(businessObject, 'bpmn:SequenceFlow');
+    var inverseSet = is(businessObject, 'vdml:SequenceFlow');
 
     if (businessObject.sourceRef !== newSource) {
       if (inverseSet) {
@@ -5115,7 +5469,7 @@ BpmnUpdater.prototype.updateConnection = function(context) {
     }
   } else
 
-  if (is(businessObject, 'bpmn:DataInputAssociation')) {
+  if (is(businessObject, 'vdml:DataInputAssociation')) {
     // handle obnoxious isMany sourceRef
     businessObject.get('sourceRef')[0] = newSource;
 
@@ -5124,7 +5478,7 @@ BpmnUpdater.prototype.updateConnection = function(context) {
     this.updateSemanticParent(businessObject, newTarget, parent.businessObject);
   } else
 
-  if (is(businessObject, 'bpmn:DataOutputAssociation')) {
+  if (is(businessObject, 'vdml:DataOutputAssociation')) {
     visualParent = context.parent || context.newParent || newSource;
 
     this.updateSemanticParent(businessObject, newSource, visualParent);
@@ -5139,9 +5493,9 @@ BpmnUpdater.prototype.updateConnection = function(context) {
 
 /////// helpers /////////////////////////////////////////
 
-BpmnUpdater.prototype._getLabel = function(di) {
+VdmlUpdater.prototype._getLabel = function(di) {
   if (!di.label) {
-    di.label = this._bpmnFactory.createDiLabel();
+    di.label = this._vdmlFactory.createDiLabel();
   }
 
   return di.label;
@@ -5150,380 +5504,25 @@ BpmnUpdater.prototype._getLabel = function(di) {
 
 /**
  * Make sure the event listener is only called
- * if the touched element is a BPMN element.
+ * if the touched element is a VDML element.
  *
  * @param  {Function} fn
  * @return {Function} guarded function
  */
-function ifBpmn(fn) {
+function ifVdml(fn) {
 
   return function(event) {
 
     var context = event.context,
         element = context.shape || context.connection;
 
-    if (is(element, 'bpmn:BaseElement')) {
+    if (is(element, 'vdml:BaseElement')) {
       fn(event);
     }
   };
 }
 
-},{"100":100,"235":235,"244":244,"270":270,"283":283,"410":410,"93":93}],30:[function(_dereq_,module,exports){
-'use strict';
-
-var assign = _dereq_(410),
-    inherits = _dereq_(270);
-
-var is = _dereq_(93).is;
-
-var isExpanded = _dereq_(91).isExpanded;
-
-var BaseElementFactory = _dereq_(104),
-    LabelUtil = _dereq_(92);
-
-/**
- * A bpmn-aware factory for diagram-js shapes
- */
-function ElementFactory(bpmnFactory, moddle, translate) {
-  BaseElementFactory.call(this);
-
-  this._bpmnFactory = bpmnFactory;
-  this._moddle = moddle;
-  this._translate = translate;
-}
-
-inherits(ElementFactory, BaseElementFactory);
-
-
-ElementFactory.$inject = [ 'bpmnFactory', 'moddle', 'translate' ];
-
-module.exports = ElementFactory;
-
-ElementFactory.prototype.baseCreate = BaseElementFactory.prototype.create;
-
-ElementFactory.prototype.create = function(elementType, attrs) {
-  // no special magic for labels,
-  // we assume their businessObjects have already been created
-  // and wired via attrs
-  if (elementType === 'label') {
-    return this.baseCreate(elementType, assign({ type: 'label' }, LabelUtil.DEFAULT_LABEL_SIZE, attrs));
-  }
-
-  return this.createBpmnElement(elementType, attrs);
-};
-
-ElementFactory.prototype.createBpmnElement = function(elementType, attrs) {
-  var size,
-      translate = this._translate;
-
-  attrs = attrs || {};
-
-  var businessObject = attrs.businessObject;
-
-  if (!businessObject) {
-    if (!attrs.type) {
-      throw new Error(translate('no shape type specified'));
-    }
-
-    businessObject = this._bpmnFactory.create(attrs.type);
-  }
-
-  if (!businessObject.di) {
-    if (elementType === 'root') {
-      businessObject.di = this._bpmnFactory.createDiPlane(businessObject, [], {
-        id: businessObject.id + '_di'
-      });
-    } else
-    if (elementType === 'connection') {
-      businessObject.di = this._bpmnFactory.createDiEdge(businessObject, [], {
-        id: businessObject.id + '_di'
-      });
-    } else {
-      businessObject.di = this._bpmnFactory.createDiShape(businessObject, {}, {
-        id: businessObject.id + '_di'
-      });
-    }
-  }
-
-  if (attrs.processRef) {
-    businessObject.processRef = attrs.processRef;
-  }
-
-  if (attrs.isExpanded) {
-    businessObject.di.isExpanded = attrs.isExpanded;
-  }
-
-  if (is(businessObject, 'bpmn:ExclusiveGateway')) {
-    businessObject.di.isMarkerVisible = true;
-  }
-
-  if (attrs.isInterrupting === false) {
-    businessObject.isInterrupting = false;
-  }
-
-  if (attrs.associationDirection) {
-    businessObject.associationDirection = attrs.associationDirection;
-  }
-
-  var eventDefinitions,
-      newEventDefinition;
-
-  if (attrs.eventDefinitionType) {
-    eventDefinitions = businessObject.get('eventDefinitions') || [];
-    newEventDefinition = this._moddle.create(attrs.eventDefinitionType);
-
-    eventDefinitions.push(newEventDefinition);
-
-    newEventDefinition.$parent = businessObject;
-    businessObject.eventDefinitions = eventDefinitions;
-  }
-
-  if (attrs.isForCompensation) {
-    businessObject.isForCompensation = true;
-  }
-
-  size = this._getDefaultSize(businessObject);
-
-  attrs = assign({
-    businessObject: businessObject,
-    id: businessObject.id
-  }, size, attrs);
-
-  return this.baseCreate(elementType, attrs);
-};
-
-
-ElementFactory.prototype._getDefaultSize = function(semantic) {
-
-  if (is(semantic, 'bpmn:SubProcess')) {
-
-    if (isExpanded(semantic)) {
-      return { width: 350, height: 200 };
-    } else {
-      return { width: 100, height: 80 };
-    }
-  }
-
-  if (is(semantic, 'bpmn:Task')) {
-    return { width: 100, height: 80 };
-  }
-
-  if (is(semantic, 'bpmn:Gateway')) {
-    return { width: 50, height: 50 };
-  }
-
-  if (is(semantic, 'bpmn:Event')) {
-    return { width: 36, height: 36 };
-  }
-
-  if (is(semantic, 'bpmn:Participant')) {
-    if (!isExpanded(semantic)) {
-      return { width: 400, height: 100 };
-    } else {
-      return { width: 600, height: 250 };
-    }
-  }
-
-  if (is(semantic, 'bpmn:Lane')) {
-    return { width: 400, height: 100 };
-  }
-
-  if (is(semantic, 'bpmn:DataObjectReference')) {
-    return { width: 36, height: 50 };
-  }
-
-  if (is(semantic, 'bpmn:DataStoreReference')) {
-    return { width: 50, height: 50 };
-  }
-
-  if (is(semantic, 'bpmn:TextAnnotation')) {
-    return { width: 100, height: 30 };
-  }
-
-  return { width: 100, height: 80 };
-};
-
-
-ElementFactory.prototype.createParticipantShape = function(collapsed) {
-
-  var attrs = { type: 'bpmn:Participant' };
-
-  if (!collapsed) {
-    attrs.processRef = this._bpmnFactory.create('bpmn:Process');
-  }
-
-  return this.createShape(attrs);
-};
-
-},{"104":104,"270":270,"410":410,"91":91,"92":92,"93":93}],31:[function(_dereq_,module,exports){
-'use strict';
-
-var inherits = _dereq_(270);
-
-var BaseModeling = _dereq_(158);
-
-var UpdatePropertiesHandler = _dereq_(63),
-    UpdateCanvasRootHandler = _dereq_(61),
-    AddLaneHandler = _dereq_(57),
-    SplitLaneHandler = _dereq_(60),
-    ResizeLaneHandler = _dereq_(59),
-    UpdateFlowNodeRefsHandler = _dereq_(62),
-    IdClaimHandler = _dereq_(58);
-
-
-/**
- * BPMN 2.0 modeling features activator
- *
- * @param {EventBus} eventBus
- * @param {ElementFactory} elementFactory
- * @param {CommandStack} commandStack
- * @param {BpmnRules} bpmnRules
- */
-function Modeling(eventBus, elementFactory, commandStack, bpmnRules) {
-  BaseModeling.call(this, eventBus, elementFactory, commandStack);
-
-  this._bpmnRules = bpmnRules;
-}
-
-inherits(Modeling, BaseModeling);
-
-Modeling.$inject = [ 'eventBus', 'elementFactory', 'commandStack', 'bpmnRules' ];
-
-module.exports = Modeling;
-
-
-Modeling.prototype.getHandlers = function() {
-  var handlers = BaseModeling.prototype.getHandlers.call(this);
-
-  handlers['element.updateProperties'] = UpdatePropertiesHandler;
-  handlers['canvas.updateRoot'] = UpdateCanvasRootHandler;
-  handlers['lane.add'] = AddLaneHandler;
-  handlers['lane.resize'] = ResizeLaneHandler;
-  handlers['lane.split'] = SplitLaneHandler;
-  handlers['lane.updateRefs'] = UpdateFlowNodeRefsHandler;
-  handlers['id.updateClaim'] = IdClaimHandler;
-
-  return handlers;
-};
-
-
-Modeling.prototype.updateLabel = function(element, newLabel) {
-  this._commandStack.execute('element.updateLabel', {
-    element: element,
-    newLabel: newLabel
-  });
-};
-
-
-Modeling.prototype.connect = function(source, target, attrs, hints) {
-
-  var bpmnRules = this._bpmnRules;
-
-  if (!attrs) {
-    attrs = bpmnRules.canConnect(source, target) || { type: 'bpmn:Association' };
-  }
-
-  return this.createConnection(source, target, attrs, source.parent, hints);
-};
-
-
-Modeling.prototype.updateProperties = function(element, properties) {
-  this._commandStack.execute('element.updateProperties', {
-    element: element,
-    properties: properties
-  });
-};
-
-Modeling.prototype.resizeLane = function(laneShape, newBounds, balanced) {
-  this._commandStack.execute('lane.resize', {
-    shape: laneShape,
-    newBounds: newBounds,
-    balanced: balanced
-  });
-};
-
-Modeling.prototype.addLane = function(targetLaneShape, location) {
-  var context = {
-    shape: targetLaneShape,
-    location: location
-  };
-
-  this._commandStack.execute('lane.add', context);
-
-  return context.newLane;
-};
-
-Modeling.prototype.splitLane = function(targetLane, count) {
-  this._commandStack.execute('lane.split', {
-    shape: targetLane,
-    count: count
-  });
-};
-
-/**
- * Transform the current diagram into a collaboration.
- *
- * @return {djs.model.Root} the new root element
- */
-Modeling.prototype.makeCollaboration = function() {
-
-  var collaborationElement = this._create('root', {
-    type: 'bpmn:Collaboration'
-  });
-
-  var context = {
-    newRoot: collaborationElement
-  };
-
-  this._commandStack.execute('canvas.updateRoot', context);
-
-  return collaborationElement;
-};
-
-Modeling.prototype.updateLaneRefs = function(flowNodeShapes, laneShapes) {
-
-  this._commandStack.execute('lane.updateRefs', {
-    flowNodeShapes: flowNodeShapes,
-    laneShapes: laneShapes
-  });
-};
-
-/**
- * Transform the current diagram into a process.
- *
- * @return {djs.model.Root} the new root element
- */
-Modeling.prototype.makeProcess = function() {
-
-  var processElement = this._create('root', {
-    type: 'bpmn:Process'
-  });
-
-  var context = {
-    newRoot: processElement
-  };
-
-  this._commandStack.execute('canvas.updateRoot', context);
-};
-
-
-Modeling.prototype.claimId = function(id, moddleElement) {
-  this._commandStack.execute('id.updateClaim', {
-    id: id,
-    element: moddleElement,
-    claiming: true
-  });
-};
-
-
-Modeling.prototype.unclaimId = function(id, moddleElement) {
-  this._commandStack.execute('id.updateClaim', {
-    id: id,
-    element: moddleElement
-  });
-};
-
-},{"158":158,"270":270,"57":57,"58":58,"59":59,"60":60,"61":61,"62":62,"63":63}],32:[function(_dereq_,module,exports){
+},{"100":100,"235":235,"244":244,"270":270,"283":283,"410":410,"93":93}],32:[function(_dereq_,module,exports){
 'use strict';
 
 var inherits = _dereq_(270);
@@ -5533,7 +5532,7 @@ var is = _dereq_(93).is;
 var CommandInterceptor = _dereq_(100);
 
 
-function AppendBehavior(eventBus, elementFactory, bpmnRules) {
+function AppendBehavior(eventBus, elementFactory, vdmlRules) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -5546,7 +5545,7 @@ function AppendBehavior(eventBus, elementFactory, bpmnRules) {
 
     if (!context.position) {
 
-      if (is(shape, 'bpmn:TextAnnotation')) {
+      if (is(shape, 'vdml:TextAnnotation')) {
         context.position = {
           x: source.x + source.width / 2 + 75,
           y: source.y - (50) - shape.height / 2
@@ -5562,7 +5561,7 @@ function AppendBehavior(eventBus, elementFactory, bpmnRules) {
 }
 
 
-AppendBehavior.$inject = [ 'eventBus', 'elementFactory', 'bpmnRules' ];
+AppendBehavior.$inject = [ 'eventBus', 'elementFactory', 'vdmlRules' ];
 
 inherits(AppendBehavior, CommandInterceptor);
 
@@ -5591,12 +5590,12 @@ function CopyPasteBehavior(eventBus, modeling, canvas) {
       context.topParent = canvas.getRootElement();
     }
 
-    if (is(topParent, 'bpmn:Lane')) {
+    if (is(topParent, 'vdml:Lane')) {
       do {
         // unwrap Lane -> LaneSet -> (Lane | FlowElementsContainer)
         topParent = context.topParent = topParent.parent;
 
-      } while (is(topParent, 'bpmn:Lane') || !is(topParent, 'bpmn:Participant'));
+      } while (is(topParent, 'vdml:Lane') || !is(topParent, 'vdml:Participant'));
     }
   }, true);
 
@@ -5611,8 +5610,8 @@ function CopyPasteBehavior(eventBus, modeling, canvas) {
           descriptor = data.descriptor,
           defaultFlow;
 
-      if ((is(businessObject, 'bpmn:ExclusiveGateway') || is(businessObject, 'bpmn:InclusiveGateway') ||
-           is(businessObject, 'bpmn:Activity')) && descriptor.default) {
+      if ((is(businessObject, 'vdml:ExclusiveGateway') || is(businessObject, 'vdml:InclusiveGateway') ||
+           is(businessObject, 'vdml:Activity')) && descriptor.default) {
 
         defaultFlow = createdElements[descriptor.default];
 
@@ -5649,9 +5648,9 @@ var is = _dereq_(93).is;
 
 
 /**
- * BPMN specific create boundary event behavior
+ * VDML specific create boundary event behavior
  */
-function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, bpmnFactory) {
+function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, vdmlFactory) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -5670,13 +5669,13 @@ function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, bpmnFac
       cancelActivity: true
     };
 
-    if (host && is(shape, 'bpmn:IntermediateThrowEvent')) {
+    if (host && is(shape, 'vdml:IntermediateThrowEvent')) {
       attrs.attachedToRef = host.businessObject;
 
-      businessObject = bpmnFactory.create('bpmn:BoundaryEvent', attrs);
+      businessObject = vdmlFactory.create('vdml:BoundaryEvent', attrs);
 
       boundaryEvent = {
-        type: 'bpmn:BoundaryEvent',
+        type: 'vdml:BoundaryEvent',
         businessObject: businessObject
       };
 
@@ -5685,7 +5684,7 @@ function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, bpmnFac
   }, true);
 }
 
-CreateBoundaryEventBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory' ];
+CreateBoundaryEventBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'vdmlFactory' ];
 
 inherits(CreateBoundaryEventBehavior, CommandInterceptor);
 
@@ -5701,9 +5700,9 @@ var CommandInterceptor = _dereq_(100);
 var is = _dereq_(93).is;
 
 /**
- * BPMN specific create data object behavior
+ * VDML specific create data object behavior
  */
-function CreateDataObjectBehavior(eventBus, bpmnFactory, moddle) {
+function CreateDataObjectBehavior(eventBus, vdmlFactory, moddle) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -5712,10 +5711,10 @@ function CreateDataObjectBehavior(eventBus, bpmnFactory, moddle) {
     var context = event.context,
         shape = context.shape;
 
-    if (is(shape, 'bpmn:DataObjectReference') && shape.type !== 'label') {
+    if (is(shape, 'vdml:DataObjectReference') && shape.type !== 'label') {
 
       // create a DataObject every time a DataObjectReference is created
-      var dataObject = bpmnFactory.create('bpmn:DataObject');
+      var dataObject = vdmlFactory.create('vdml:DataObject');
 
       // set the reference to the DataObject
       shape.businessObject.dataObjectRef = dataObject;
@@ -5724,7 +5723,7 @@ function CreateDataObjectBehavior(eventBus, bpmnFactory, moddle) {
 
 }
 
-CreateDataObjectBehavior.$inject = [ 'eventBus', 'bpmnFactory', 'moddle' ];
+CreateDataObjectBehavior.$inject = [ 'eventBus', 'vdmlFactory', 'moddle' ];
 
 inherits(CreateDataObjectBehavior, CommandInterceptor);
 
@@ -5746,7 +5745,7 @@ function copy(obj) {
   return assign({}, obj);
 }
 
-function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
+function CreateOnFlowBehavior(eventBus, vdmlRules, modeling) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -5760,7 +5759,7 @@ function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
     var parent = context.parent,
         shape = context.shape;
 
-    if (bpmnRules.canInsert(shape, parent)) {
+    if (vdmlRules.canInsert(shape, parent)) {
       context.targetFlow = parent;
       context.parent = parent.parent;
     }
@@ -5801,14 +5800,14 @@ function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
       source = targetFlow.source;
       target = targetFlow.target;
 
-      if (bpmnRules.canConnect(source, shape, targetFlow)) {
+      if (vdmlRules.canConnect(source, shape, targetFlow)) {
         // reconnect source -> inserted shape
         modeling.reconnectEnd(targetFlow, shape, waypointsBefore || copy(position));
 
         reconnected = true;
       }
 
-      if (bpmnRules.canConnect(shape, target, targetFlow)) {
+      if (vdmlRules.canConnect(shape, target, targetFlow)) {
 
         if (!reconnected) {
           // reconnect inserted shape -> end
@@ -5823,7 +5822,7 @@ function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
 
 inherits(CreateOnFlowBehavior, CommandInterceptor);
 
-CreateOnFlowBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
+CreateOnFlowBehavior.$inject = [ 'eventBus', 'vdmlRules', 'modeling' ];
 
 module.exports = CreateOnFlowBehavior;
 
@@ -5837,9 +5836,9 @@ var CommandInterceptor = _dereq_(100);
 var is = _dereq_(93).is;
 
 /**
- * BPMN specific create participant behavior
+ * VDML specific create participant behavior
  */
-function CreateParticipantBehavior(eventBus, modeling, elementFactory, bpmnFactory, canvas) {
+function CreateParticipantBehavior(eventBus, modeling, elementFactory, vdmlFactory, canvas) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -5856,7 +5855,7 @@ function CreateParticipantBehavior(eventBus, modeling, elementFactory, bpmnFacto
 
     var rootElement = canvas.getRootElement();
 
-    if (is(parent, 'bpmn:Process') && is(shape, 'bpmn:Participant') && !is(rootElement, 'bpmn:Collaboration')) {
+    if (is(parent, 'vdml:Process') && is(shape, 'vdml:Participant') && !is(rootElement, 'vdml:Collaboration')) {
 
       // this is going to detach the process root
       // and set the returned collaboration element
@@ -5914,7 +5913,7 @@ function CreateParticipantBehavior(eventBus, modeling, elementFactory, bpmnFacto
 
 }
 
-CreateParticipantBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory', 'canvas' ];
+CreateParticipantBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'vdmlFactory', 'canvas' ];
 
 inherits(CreateParticipantBehavior, CommandInterceptor);
 
@@ -5938,17 +5937,17 @@ var TARGET_REF_PLACEHOLDER_NAME = '__targetRef_placeholder';
 
 /**
  * This behavior makes sure we always set a fake
- * DataInputAssociation#targetRef as demanded by the BPMN 2.0
+ * DataInputAssociation#targetRef as demanded by the VDML 2.0
  * XSD schema.
  *
- * The reference is set to a bpmn:Property{ name: '__targetRef_placeholder' }
+ * The reference is set to a vdml:Property{ name: '__targetRef_placeholder' }
  * which is created on the fly and cleaned up afterwards if not needed
  * anymore.
  *
  * @param {EventBus} eventBus
- * @param {BpmnFactory} bpmnFactory
+ * @param {VdmlFactory} vdmlFactory
  */
-function DataInputAssociationBehavior(eventBus, bpmnFactory) {
+function DataInputAssociationBehavior(eventBus, vdmlFactory) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -5987,7 +5986,7 @@ function DataInputAssociationBehavior(eventBus, bpmnFactory) {
     });
 
     if (!targetRefProp && create) {
-      targetRefProp = bpmnFactory.create('bpmn:Property', {
+      targetRefProp = vdmlFactory.create('vdml:Property', {
         name: TARGET_REF_PLACEHOLDER_NAME
       });
 
@@ -6048,7 +6047,7 @@ function DataInputAssociationBehavior(eventBus, bpmnFactory) {
   }
 }
 
-DataInputAssociationBehavior.$inject = [ 'eventBus', 'bpmnFactory' ];
+DataInputAssociationBehavior.$inject = [ 'eventBus', 'vdmlFactory' ];
 
 inherits(DataInputAssociationBehavior, CommandInterceptor);
 
@@ -6057,7 +6056,7 @@ module.exports = DataInputAssociationBehavior;
 
 /**
  * Only call the given function when the event
- * touches a bpmn:DataInputAssociation.
+ * touches a vdml:DataInputAssociation.
  *
  * @param {Function} fn
  * @return {Function}
@@ -6068,7 +6067,7 @@ function ifDataInputAssociation(fn) {
     var context = event.context,
         connection = context.connection;
 
-    if (is(connection, 'bpmn:DataInputAssociation')) {
+    if (is(connection, 'vdml:DataInputAssociation')) {
       return fn(event);
     }
   };
@@ -6091,7 +6090,7 @@ var LOW_PRIORITY = 500;
 
 
 /**
- * BPMN specific delete lane behavior
+ * VDML specific delete lane behavior
  */
 function DeleteLaneBehavior(eventBus, modeling, spaceTool) {
 
@@ -6164,7 +6163,7 @@ function DeleteLaneBehavior(eventBus, modeling, spaceTool) {
         oldParent = context.oldParent;
 
     // only compensate lane deletes
-    if (!is(shape, 'bpmn:Lane')) {
+    if (!is(shape, 'vdml:Lane')) {
       return;
     }
 
@@ -6244,7 +6243,7 @@ function ImportDockingFix(eventBus) {
     );
   }
 
-  eventBus.on('bpmnElement.added', function(e) {
+  eventBus.on('vdmlElement.added', function(e) {
 
     var element = e.element;
 
@@ -6290,9 +6289,9 @@ var CommandInterceptor = _dereq_(100);
  *
  * @param {EventBus} eventBus
  * @param {Modeling} modeling
- * @param {BpmnFactory} bpmnFactory
+ * @param {VdmlFactory} vdmlFactory
  */
-function LabelSupport(eventBus, modeling, bpmnFactory) {
+function LabelSupport(eventBus, modeling, vdmlFactory) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -6332,8 +6331,8 @@ function LabelSupport(eventBus, modeling, bpmnFactory) {
       return;
     }
 
-    // we want to trigger on BPMN elements only
-    if (!is(element.labelTarget || element, 'bpmn:BaseElement')) {
+    // we want to trigger on VDML elements only
+    if (!is(element.labelTarget || element, 'vdml:BaseElement')) {
       return;
     }
 
@@ -6342,8 +6341,8 @@ function LabelSupport(eventBus, modeling, bpmnFactory) {
 
 
     if (!di.label) {
-      di.label = bpmnFactory.create('bpmndi:BPMNLabel', {
-        bounds: bpmnFactory.create('dc:Bounds')
+      di.label = vdmlFactory.create('vdmldi:VDMLLabel', {
+        bounds: vdmlFactory.create('dc:Bounds')
       });
     }
 
@@ -6437,7 +6436,7 @@ function LabelSupport(eventBus, modeling, bpmnFactory) {
 
 inherits(LabelSupport, CommandInterceptor);
 
-LabelSupport.$inject = [ 'eventBus', 'modeling', 'bpmnFactory' ];
+LabelSupport.$inject = [ 'eventBus', 'modeling', 'vdmlFactory' ];
 
 module.exports = LabelSupport;
 
@@ -6468,7 +6467,7 @@ function ModelingFeedback(eventBus, tooltips, translate) {
         shape = context.shape,
         target = context.target;
 
-    if (is(target, 'bpmn:Collaboration') && is(shape, 'bpmn:FlowNode')) {
+    if (is(target, 'vdml:Collaboration') && is(shape, 'vdml:FlowNode')) {
       showError(event, translate(COLLAB_ERR_MSG));
     }
   });
@@ -6478,11 +6477,11 @@ function ModelingFeedback(eventBus, tooltips, translate) {
         position = context.position,
         target = context.target;
 
-    if (is(target, 'bpmn:Collaboration')) {
+    if (is(target, 'vdml:Collaboration')) {
       showError(position, translate(COLLAB_ERR_MSG));
     }
 
-    if (is(target, 'bpmn:Process')) {
+    if (is(target, 'vdml:Process')) {
       showError(position, translate(PROCESS_ERR_MSG), 3000);
     }
   });
@@ -6503,7 +6502,7 @@ var CommandInterceptor = _dereq_(100);
 var lineIntersect = _dereq_(56);
 
 
-function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
+function RemoveElementBehavior(eventBus, vdmlRules, modeling) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -6522,7 +6521,7 @@ function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
           outConnection = shape.outgoing[0];
 
 
-      if (bpmnRules.canConnect(inConnection.source, outConnection.target, inConnection)) {
+      if (vdmlRules.canConnect(inConnection.source, outConnection.target, inConnection)) {
 
         // compute new, combined waypoints
         var newWaypoints = getNewWaypoints(inConnection.waypoints, outConnection.waypoints);
@@ -6536,7 +6535,7 @@ function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
 
 inherits(RemoveElementBehavior, CommandInterceptor);
 
-RemoveElementBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
+RemoveElementBehavior.$inject = [ 'eventBus', 'vdmlRules', 'modeling' ];
 
 module.exports = RemoveElementBehavior;
 
@@ -6579,7 +6578,7 @@ var is = _dereq_(93).is;
 
 
 /**
- * BPMN specific remove behavior
+ * VDML specific remove behavior
  */
 function RemoveParticipantBehavior(eventBus, modeling) {
 
@@ -6598,7 +6597,7 @@ function RemoveParticipantBehavior(eventBus, modeling) {
 
     // activate the behavior if the shape to be removed
     // is a participant
-    if (is(shape, 'bpmn:Participant')) {
+    if (is(shape, 'vdml:Participant')) {
       context.collaborationRoot = parent;
     }
   }, true);
@@ -6631,7 +6630,7 @@ var CommandInterceptor = _dereq_(100);
 
 var is = _dereq_(93).is;
 
-function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
+function ReplaceConnectionBehavior(eventBus, modeling, vdmlRules) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -6659,30 +6658,30 @@ function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
      * This holds true for SequenceFlow <> MessageFlow.
      */
 
-    if (is(connection, 'bpmn:SequenceFlow')) {
-      if (!bpmnRules.canConnectSequenceFlow(source, target)) {
+    if (is(connection, 'vdml:SequenceFlow')) {
+      if (!vdmlRules.canConnectSequenceFlow(source, target)) {
         remove = true;
       }
 
-      if (bpmnRules.canConnectMessageFlow(source, target)) {
-        replacementType = 'bpmn:MessageFlow';
+      if (vdmlRules.canConnectMessageFlow(source, target)) {
+        replacementType = 'vdml:MessageFlow';
       }
     }
 
     // transform message flows into sequence flows, if possible
 
-    if (is(connection, 'bpmn:MessageFlow')) {
+    if (is(connection, 'vdml:MessageFlow')) {
 
-      if (!bpmnRules.canConnectMessageFlow(source, target)) {
+      if (!vdmlRules.canConnectMessageFlow(source, target)) {
         remove = true;
       }
 
-      if (bpmnRules.canConnectSequenceFlow(source, target)) {
-        replacementType = 'bpmn:SequenceFlow';
+      if (vdmlRules.canConnectSequenceFlow(source, target)) {
+        replacementType = 'vdml:SequenceFlow';
       }
     }
 
-    if (is(connection, 'bpmn:Association') && !bpmnRules.canConnectAssociation(source, target)) {
+    if (is(connection, 'vdml:Association') && !vdmlRules.canConnectAssociation(source, target)) {
       remove = true;
     }
 
@@ -6746,7 +6745,7 @@ function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
 
 inherits(ReplaceConnectionBehavior, CommandInterceptor);
 
-ReplaceConnectionBehavior.$inject = [ 'eventBus', 'modeling', 'bpmnRules' ];
+ReplaceConnectionBehavior.$inject = [ 'eventBus', 'modeling', 'vdmlRules' ];
 
 module.exports = ReplaceConnectionBehavior;
 
@@ -6764,12 +6763,12 @@ var is = _dereq_(93).is;
 
 /**
  * Defines the behaviour of what happens to the elements inside a container
- * that morphs into another BPMN element
+ * that morphs into another VDML element
  */
-function ReplaceElementBehaviour(eventBus, bpmnReplace, bpmnRules, elementRegistry, selection, modeling) {
+function ReplaceElementBehaviour(eventBus, vdmlReplace, vdmlRules, elementRegistry, selection, modeling) {
   CommandInterceptor.call(this, eventBus);
 
-  this._bpmnReplace = bpmnReplace;
+  this._vdmlReplace = vdmlReplace;
   this._elementRegistry = elementRegistry;
   this._selection = selection;
   this._modeling = modeling;
@@ -6789,12 +6788,12 @@ function ReplaceElementBehaviour(eventBus, bpmnReplace, bpmnRules, elementRegist
       }
     });
 
-    // Change target to host when the moving element is a `bpmn:BoundaryEvent`
+    // Change target to host when the moving element is a `vdml:BoundaryEvent`
     if (elements.length === 1 && newHost) {
       target = newHost;
     }
 
-    var canReplace = bpmnRules.canReplace(elements, target);
+    var canReplace = vdmlRules.canReplace(elements, target);
 
     if (canReplace) {
       this.replaceElements(elements, canReplace.replacements, newHost);
@@ -6811,7 +6810,7 @@ function ReplaceElementBehaviour(eventBus, bpmnReplace, bpmnRules, elementRegist
         canReplace;
 
     if (attachers && attachers.length) {
-      canReplace = bpmnRules.canReplace(attachers, newShape);
+      canReplace = vdmlRules.canReplace(attachers, newShape);
 
       this.replaceElements(attachers, canReplace.replacements);
     }
@@ -6833,7 +6832,7 @@ inherits(ReplaceElementBehaviour, CommandInterceptor);
 
 ReplaceElementBehaviour.prototype.replaceElements = function(elements, newElements, newHost) {
   var elementRegistry = this._elementRegistry,
-      bpmnReplace = this._bpmnReplace,
+      vdmlReplace = this._vdmlReplace,
       selection = this._selection,
       modeling = this._modeling;
 
@@ -6845,15 +6844,15 @@ ReplaceElementBehaviour.prototype.replaceElements = function(elements, newElemen
 
     var oldElement = elementRegistry.get(replacement.oldElementId);
 
-    if (newHost && is(oldElement, 'bpmn:BoundaryEvent')) {
+    if (newHost && is(oldElement, 'vdml:BoundaryEvent')) {
       modeling.updateAttachment(oldElement, null);
     }
 
     var idx = elements.indexOf(oldElement);
 
-    elements[idx] = bpmnReplace.replaceElement(oldElement, newElement, { select: false });
+    elements[idx] = vdmlReplace.replaceElement(oldElement, newElement, { select: false });
 
-    if (newHost && is(elements[idx], 'bpmn:BoundaryEvent')) {
+    if (newHost && is(elements[idx], 'vdml:BoundaryEvent')) {
       modeling.updateAttachment(elements[idx], newHost);
     }
   });
@@ -6863,7 +6862,7 @@ ReplaceElementBehaviour.prototype.replaceElements = function(elements, newElemen
   }
 };
 
-ReplaceElementBehaviour.$inject = [ 'eventBus', 'bpmnReplace', 'bpmnRules', 'elementRegistry',
+ReplaceElementBehaviour.$inject = [ 'eventBus', 'vdmlReplace', 'vdmlRules', 'elementRegistry',
  'selection', 'modeling' ];
 
 module.exports = ReplaceElementBehaviour;
@@ -6891,7 +6890,7 @@ function ResizeLaneBehavior(eventBus, modeling) {
     var context = event.context,
         shape = context.shape;
 
-    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
+    if (is(shape, 'vdml:Lane') || is(shape, 'vdml:Participant')) {
 
       // should we resize the opposite lane(s) in
       // order to compensate for the resize operation?
@@ -6908,7 +6907,7 @@ function ResizeLaneBehavior(eventBus, modeling) {
         canExecute = context.canExecute,
         newBounds = context.newBounds;
 
-    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
+    if (is(shape, 'vdml:Lane') || is(shape, 'vdml:Participant')) {
 
       if (canExecute) {
         // ensure we have actual pixel values for new bounds
@@ -6998,7 +6997,7 @@ function ToggleElementCollapseBehaviour(eventBus, elementFactory, modeling, resi
     var context = e.context,
         shape = context.shape;
 
-    if (!is(shape, 'bpmn:SubProcess')) {
+    if (!is(shape, 'vdml:SubProcess')) {
       return;
     }
 
@@ -7145,7 +7144,7 @@ module.exports = DeleteSequenceFlowBehavior;
 
 function isDefaultFlow(connection, source) {
 
-  if (!is(connection, 'bpmn:SequenceFlow')) {
+  if (!is(connection, 'vdml:SequenceFlow')) {
     return false;
   }
 
@@ -7169,7 +7168,7 @@ var LOW_PRIORITY = 500,
 
 
 /**
- * BPMN specific delete lane behavior
+ * VDML specific delete lane behavior
  */
 function UpdateFlowNodeRefsBehavior(eventBus, modeling, translate) {
 
@@ -7269,11 +7268,11 @@ function UpdateFlowNodeRefsBehavior(eventBus, modeling, translate) {
       return;
     }
 
-    if (is(shape, 'bpmn:Lane')) {
+    if (is(shape, 'vdml:Lane')) {
       updateContext.addLane(shape);
     }
 
-    if (is(shape, 'bpmn:FlowNode')) {
+    if (is(shape, 'vdml:FlowNode')) {
       updateContext.addFlowNode(shape);
     }
   });
@@ -8019,7 +8018,7 @@ AddLaneHandler.prototype.preExecute = function(context) {
 
   // (0) add a lane if we currently got none and are adding to root
   if (!existingChildLanes.length) {
-    modeling.createShape({ type: 'bpmn:Lane' }, {
+    modeling.createShape({ type: 'vdml:Lane' }, {
       x: shape.x + LANE_INDENTATION,
       y: shape.y,
       width: shape.width - LANE_INDENTATION,
@@ -8052,7 +8051,7 @@ AddLaneHandler.prototype.preExecute = function(context) {
   spaceTool.makeSpace(adjustments.movingShapes, adjustments.resizingShapes, { x: 0, y: offset }, direction);
 
   // (2) create new lane at open space
-  context.newLane = modeling.createShape({ type: 'bpmn:Lane' }, {
+  context.newLane = modeling.createShape({ type: 'vdml:Lane' }, {
     x: shape.x + (isRoot ? LANE_INDENTATION : 0),
     y: lanePosition - (location === 'top' ? 120 : 0),
     width: shape.width - (isRoot ? LANE_INDENTATION : 0),
@@ -8190,7 +8189,7 @@ ResizeLaneHandler.prototype.resizeSpace = function(shape, newBounds) {
   eachElement(lanesRoot, function(element) {
     allAffected.push(element);
 
-    if (is(element, 'bpmn:Lane') || is(element, 'bpmn:Participant')) {
+    if (is(element, 'vdml:Lane') || is(element, 'vdml:Participant')) {
       allLanes.push(element);
     }
 
@@ -8306,7 +8305,7 @@ SplitLaneHandler.prototype.preExecute = function(context) {
     } else {
       // create a new lane at position
       newLaneAttrs = {
-        type: 'bpmn:Lane'
+        type: 'vdml:Lane'
       };
 
       modeling.createShape(newLaneAttrs, laneBounds, shape);
@@ -8338,23 +8337,23 @@ UpdateCanvasRootHandler.prototype.execute = function(context) {
       newRootBusinessObject = newRoot.businessObject,
       oldRoot = canvas.getRootElement(),
       oldRootBusinessObject = oldRoot.businessObject,
-      bpmnDefinitions = oldRootBusinessObject.$parent,
+      vdmlDefinitions = oldRootBusinessObject.$parent,
       diPlane = oldRootBusinessObject.di;
 
   // (1) replace process old <> new root
   canvas.setRootElement(newRoot, true);
 
   // (2) update root elements
-  Collections.add(bpmnDefinitions.rootElements, newRootBusinessObject);
-  newRootBusinessObject.$parent = bpmnDefinitions;
+  Collections.add(vdmlDefinitions.rootElements, newRootBusinessObject);
+  newRootBusinessObject.$parent = vdmlDefinitions;
 
-  Collections.remove(bpmnDefinitions.rootElements, oldRootBusinessObject);
+  Collections.remove(vdmlDefinitions.rootElements, oldRootBusinessObject);
   oldRootBusinessObject.$parent = null;
 
   // (3) wire di
   oldRootBusinessObject.di = null;
 
-  diPlane.bpmnElement = newRootBusinessObject;
+  diPlane.vdmlElement = newRootBusinessObject;
   newRootBusinessObject.di = diPlane;
 
   context.oldRoot = oldRoot;
@@ -8372,23 +8371,23 @@ UpdateCanvasRootHandler.prototype.revert = function(context) {
       newRootBusinessObject = newRoot.businessObject,
       oldRoot = context.oldRoot,
       oldRootBusinessObject = oldRoot.businessObject,
-      bpmnDefinitions = newRootBusinessObject.$parent,
+      vdmlDefinitions = newRootBusinessObject.$parent,
       diPlane = newRootBusinessObject.di;
 
   // (1) replace process old <> new root
   canvas.setRootElement(oldRoot, true);
 
   // (2) update root elements
-  Collections.remove(bpmnDefinitions.rootElements, newRootBusinessObject);
+  Collections.remove(vdmlDefinitions.rootElements, newRootBusinessObject);
   newRootBusinessObject.$parent = null;
 
-  Collections.add(bpmnDefinitions.rootElements, oldRootBusinessObject);
-  oldRootBusinessObject.$parent = bpmnDefinitions;
+  Collections.add(vdmlDefinitions.rootElements, oldRootBusinessObject);
+  oldRootBusinessObject.$parent = vdmlDefinitions;
 
   // (3) wire di
   newRootBusinessObject.di = null;
 
-  diPlane.bpmnElement = oldRootBusinessObject;
+  diPlane.vdmlElement = oldRootBusinessObject;
   oldRootBusinessObject.di = diPlane;
 
   // TODO(nikku): return changed elements?
@@ -8487,7 +8486,7 @@ UpdateFlowNodeRefsHandler.prototype.computeUpdates = function(flowNodeShapes, la
     }
 
     var children = root.children.filter(function(c) {
-      return is(c, 'bpmn:FlowNode');
+      return is(c, 'vdml:FlowNode');
     });
 
     children.forEach(addFlowNodeShape);
@@ -8502,9 +8501,12 @@ UpdateFlowNodeRefsHandler.prototype.computeUpdates = function(flowNodeShapes, la
 
     var flowNode = flowNodeShape.businessObject;
 
-    var lanes = flowNode.get(LANES_ATTR),
-        remove = lanes.slice(),
-        add = getNewLanes(flowNodeShape);
+    var lanes = flowNode.get(LANES_ATTR);
+    if (!lanes) {
+        return;
+    }
+    var remove = lanes.slice();
+    var add = getNewLanes(flowNodeShape);
 
     updates.push({ flowNode: flowNode, remove: remove, add: add });
   });
@@ -8597,10 +8599,10 @@ var DEFAULT_FLOW = 'default',
 
 
 /**
- * A handler that implements a BPMN 2.0 property update.
+ * A handler that implements a VDML 2.0 property update.
  *
  * This should be used to set simple properties on elements with
- * an underlying BPMN business object.
+ * an underlying VDML business object.
  *
  * Use respective diagram-js provided handlers if you would
  * like to perform automated modeling.
@@ -8619,12 +8621,12 @@ module.exports = UpdatePropertiesHandler;
 ////// api /////////////////////////////////////////////
 
 /**
- * Updates a BPMN element with a list of new properties
+ * Updates a VDML element with a list of new properties
  *
  * @param {Object} context
  * @param {djs.model.Base} context.element the element to update
  * @param {Object} context.properties a list of properties to set on the element's
- *                                    businessObject (the BPMN model element)
+ *                                    businessObject (the VDML model element)
  *
  * @return {Array<djs.model.Base>} the updated element
  */
@@ -8684,7 +8686,7 @@ UpdatePropertiesHandler.prototype.execute = function(context) {
 };
 
 /**
- * Reverts the update on a BPMN elements properties.
+ * Reverts the update on a VDML elements properties.
  *
  * @param  {Object} context
  *
@@ -8759,7 +8761,7 @@ function unwrapBusinessObjects(properties) {
 }
 },{"283":283,"410":410,"412":412,"418":418,"93":93}],64:[function(_dereq_,module,exports){
 module.exports = {
-  __init__: [ 'modeling', 'bpmnUpdater' ],
+  __init__: [ 'modeling', 'vdmlUpdater' ],
   __depends__: [
     _dereq_(52),
     _dereq_(26),
@@ -8774,11 +8776,11 @@ module.exports = {
     _dereq_(128),
     _dereq_(221)
   ],
-  bpmnFactory: [ 'type', _dereq_(27) ],
-  bpmnUpdater: [ 'type', _dereq_(29) ],
-  elementFactory: [ 'type', _dereq_(30) ],
-  modeling: [ 'type', _dereq_(31) ],
-  layouter: [ 'type', _dereq_(28) ],
+  vdmlFactory: [ 'type', _dereq_(29) ],
+  vdmlUpdater: [ 'type', _dereq_(31) ],
+  elementFactory: [ 'type', _dereq_(27) ],
+  modeling: [ 'type', _dereq_(28) ],
+  layouter: [ 'type', _dereq_(30) ],
   connectionDocking: [ 'type', _dereq_(232) ]
 };
 
@@ -8802,9 +8804,9 @@ function getTRBLResize(oldBounds, newBounds) {
 
 
 var LANE_PARENTS = [
-  'bpmn:Participant',
-  'bpmn:Process',
-  'bpmn:SubProcess'
+  'vdml:Participant',
+  'vdml:Process',
+  'vdml:SubProcess'
 ];
 
 var LANE_INDENTATION = 30;
@@ -8825,7 +8827,7 @@ function collectLanes(shape, collectedShapes) {
   collectedShapes = collectedShapes || [];
 
   shape.children.filter(function(s) {
-    if (is(s, 'bpmn:Lane')) {
+    if (is(s, 'vdml:Lane')) {
       collectLanes(s, collectedShapes);
 
       collectedShapes.push(s);
@@ -8846,7 +8848,7 @@ module.exports.collectLanes = collectLanes;
  */
 function getChildLanes(shape) {
   return shape.children.filter(function(c) {
-    return is(c, 'bpmn:Lane');
+    return is(c, 'vdml:Lane');
   });
 }
 
@@ -8880,7 +8882,7 @@ function computeLanesResize(shape, newBounds) {
 
   var rootElement = getLanesRoot(shape);
 
-  var initialShapes = is(rootElement, 'bpmn:Process') ? [] : [ rootElement ];
+  var initialShapes = is(rootElement, 'vdml:Process') ? [] : [ rootElement ];
 
   var allLanes = collectLanes(rootElement, initialShapes),
       shapeTrbl = asTRBL(shape),
@@ -9029,39 +9031,39 @@ var find = _dereq_(282);
  * (1) elements are ordered by a {level} property
  * (2) elements with {alwaysOnTop} are always added to the root
  */
-function BpmnOrderingProvider(eventBus, translate) {
+function VdmlOrderingProvider(eventBus, translate) {
 
   OrderingProvider.call(this, eventBus);
 
   var orders = [
-    { type: 'bpmn:SubProcess', order: { level: 6 } },
+    { type: 'vdml:SubProcess', order: { level: 6 } },
     {
-      type: 'bpmn:SequenceFlow',
+      type: 'vdml:SequenceFlow',
       order: {
         level: 5,
         containers: [
-          'bpmn:Participant',
-          'bpmn:FlowElementsContainer'
+          'vdml:Participant',
+          'vdml:FlowElementsContainer'
         ]
       }
     },
-    { type: 'bpmn:DataInputAssociation', order: { level: 9, containers: [ 'bpmn:Collaboration', 'bpmn:Process' ] } },
-    { type: 'bpmn:DataOutputAssociation', order: { level: 9, containers: [ 'bpmn:Collaboration', 'bpmn:Process' ] } },
-    { type: 'bpmn:MessageFlow', order: { level: 9, containers: [ 'bpmn:Collaboration' ] } },
+    { type: 'vdml:DataInputAssociation', order: { level: 9, containers: [ 'vdml:Collaboration', 'vdml:Process' ] } },
+    { type: 'vdml:DataOutputAssociation', order: { level: 9, containers: [ 'vdml:Collaboration', 'vdml:Process' ] } },
+    { type: 'vdml:MessageFlow', order: { level: 9, containers: [ 'vdml:Collaboration' ] } },
     {
-      type: 'bpmn:Association',
+      type: 'vdml:Association',
       order: {
         level: 6,
         containers: [
-          'bpmn:Participant',
-          'bpmn:FlowElementsContainer',
-          'bpmn:Collaboration'
+          'vdml:Participant',
+          'vdml:FlowElementsContainer',
+          'vdml:Collaboration'
         ]
       }
     },
-    { type: 'bpmn:BoundaryEvent', order: { level: 8 } },
-    { type: 'bpmn:Participant', order: { level: -2 } },
-    { type: 'bpmn:Lane', order: { level: -1 } }
+    { type: 'vdml:BoundaryEvent', order: { level: 8 } },
+    { type: 'vdml:Participant', order: { level: -2 } },
+    { type: 'vdml:Lane', order: { level: -1 } }
   ];
 
   function computeOrder(element) {
@@ -9152,19 +9154,19 @@ function BpmnOrderingProvider(eventBus, translate) {
   };
 }
 
-BpmnOrderingProvider.$inject = [ 'eventBus', 'translate' ];
+VdmlOrderingProvider.$inject = [ 'eventBus', 'translate' ];
 
-inherits(BpmnOrderingProvider, OrderingProvider);
+inherits(VdmlOrderingProvider, OrderingProvider);
 
-module.exports = BpmnOrderingProvider;
+module.exports = VdmlOrderingProvider;
 
 },{"188":188,"270":270,"271":271,"282":282,"66":66}],68:[function(_dereq_,module,exports){
 module.exports = {
-  __init__: [ 'bpmnOrderingProvider' ],
+  __init__: [ 'vdmlOrderingProvider' ],
   __depends__: [
     _dereq_(229)
   ],
-  bpmnOrderingProvider: [ 'type', _dereq_(67) ]
+  vdmlOrderingProvider: [ 'type', _dereq_(67) ]
 };
 },{"229":229,"67":67}],69:[function(_dereq_,module,exports){
 'use strict';
@@ -9172,7 +9174,7 @@ module.exports = {
 var assign = _dereq_(410);
 
 /**
- * A palette provider for BPMN 2.0 elements.
+ * A palette provider for VDML 2.0 elements.
  */
 function PaletteProvider(palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate) {
 
@@ -9214,8 +9216,10 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       translate = this._translate;
 
   function createAction(type, group, className, title, options) {
+      debugger;
 
-    function createListener(event) {
+      function createListener(event) {
+          debugger;
       var shape = elementFactory.createShape(assign({ type: type }, options));
 
       if (options) {
@@ -9225,7 +9229,7 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       create.start(event, shape);
     }
 
-    var shortType = type.replace(/^bpmn\:/, '');
+    var shortType = type.replace(/^vdml\:/, '');
 
     return {
       group: group,
@@ -9288,28 +9292,28 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       separator: true
     },
     /*'create.start-event': createAction(
-      'bpmn:StartEvent', 'event', 'bpmn-icon-start-event-none'
+      'vdml:StartEvent', 'event', 'bpmn-icon-start-event-none'
     ),
-    'create.intermediate-event': createAction('bpmn:IntermediateThrowEvent', 'event',
+    'create.intermediate-event': createAction('vdml:IntermediateThrowEvent', 'event',
       'bpmn-icon-intermediate-event-none', translate('Create IntermediateThrowEvent/BoundaryEvent')
     ),
     'create.end-event': createAction(
-      'bpmn:EndEvent', 'event', 'bpmn-icon-end-event-none'
+      'vdml:EndEvent', 'event', 'bpmn-icon-end-event-none'
     ),
     'create.exclusive-gateway': createAction(
-      'bpmn:ExclusiveGateway', 'gateway', 'bpmn-icon-gateway-xor'
+      'vdml:ExclusiveGateway', 'gateway', 'bpmn-icon-gateway-xor'
     ),*/
     'create.task': createAction(
-      'bpmn:Task', 'activity', 'bpmn-icon-task'
+      'vdml:Collaboration', 'collaboration', 'bpmn-icon-task'
     ),
     /*'create.data-object': createAction(
-      'bpmn:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
+      'vdml:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
     ),
     'create.data-store': createAction(
-      'bpmn:DataStoreReference', 'data-store', 'bpmn-icon-data-store'
+      'vdml:DataStoreReference', 'data-store', 'bpmn-icon-data-store'
     ),
     'create.subprocess-expanded': createAction(
-      'bpmn:SubProcess', 'activity', 'bpmn-icon-subprocess-expanded', translate('Create expanded SubProcess'),
+      'vdml:SubProcess', 'activity', 'bpmn-icon-subprocess-expanded', translate('Create expanded SubProcess'),
       { isExpanded: true }
     ),
     'create.participant-expanded': {
@@ -9354,32 +9358,32 @@ var forEach = _dereq_(283),
     filter = _dereq_(281),
     reject = _dereq_(288);
 
-var replaceOptions = _dereq_(77);
+var replaceOptions = _dereq_(76);
 
 
 /**
  * This module is an element agnostic replace menu provider for the popup menu.
  */
-function ReplaceMenuProvider(popupMenu, modeling, moddle, bpmnReplace, rules, translate) {
+function ReplaceMenuProvider(popupMenu, modeling, moddle, vdmlReplace, rules, translate) {
 
   this._popupMenu = popupMenu;
   this._modeling = modeling;
   this._moddle = moddle;
-  this._bpmnReplace = bpmnReplace;
+  this._vdmlReplace = vdmlReplace;
   this._rules = rules;
   this._translate = translate;
 
   this.register();
 }
 
-ReplaceMenuProvider.$inject = [ 'popupMenu', 'modeling', 'moddle', 'bpmnReplace', 'rules', 'translate' ];
+ReplaceMenuProvider.$inject = [ 'popupMenu', 'modeling', 'moddle', 'vdmlReplace', 'rules', 'translate' ];
 
 
 /**
  * Register replace menu provider in the popup menu
  */
 ReplaceMenuProvider.prototype.register = function() {
-  this._popupMenu.registerProvider('bpmn-replace', this);
+  this._popupMenu.registerProvider('vdml-replace', this);
 };
 
 
@@ -9406,7 +9410,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   var differentType = isDifferentType(element);
 
   // start events outside event sub processes
-  if (is(businessObject, 'bpmn:StartEvent') && !isEventSubProcess(businessObject.$parent)) {
+  if (is(businessObject, 'vdml:StartEvent') && !isEventSubProcess(businessObject.$parent)) {
 
     entries = filter(replaceOptions.START_EVENT, differentType);
 
@@ -9414,7 +9418,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // expanded/collapsed pools
-  if (is(businessObject, 'bpmn:Participant')) {
+  if (is(businessObject, 'vdml:Participant')) {
 
     entries = filter(replaceOptions.PARTICIPANT, function(entry) {
       return isExpanded(businessObject) !== entry.target.isExpanded;
@@ -9424,7 +9428,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // start events inside event sub processes
-  if (is(businessObject, 'bpmn:StartEvent') && isEventSubProcess(businessObject.$parent)) {
+  if (is(businessObject, 'vdml:StartEvent') && isEventSubProcess(businessObject.$parent)) {
 
     entries = filter(replaceOptions.EVENT_SUB_PROCESS_START_EVENT, function(entry) {
 
@@ -9443,13 +9447,13 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // end events
-  if (is(businessObject, 'bpmn:EndEvent')) {
+  if (is(businessObject, 'vdml:EndEvent')) {
 
     entries = filter(replaceOptions.END_EVENT, function(entry) {
       var target = entry.target;
 
       // hide cancel end events outside transactions
-      if (target.eventDefinitionType == 'bpmn:CancelEventDefinition' && !is(businessObject.$parent, 'bpmn:Transaction')) {
+      if (target.eventDefinitionType == 'vdml:CancelEventDefinition' && !is(businessObject.$parent, 'vdml:Transaction')) {
         return false;
       }
 
@@ -9460,14 +9464,14 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // boundary events
-  if (is(businessObject, 'bpmn:BoundaryEvent')) {
+  if (is(businessObject, 'vdml:BoundaryEvent')) {
 
     entries = filter(replaceOptions.BOUNDARY_EVENT, function(entry) {
 
       var target = entry.target;
 
-      if (target.eventDefinition == 'bpmn:CancelEventDefinition' &&
-         !is(businessObject.attachedToRef, 'bpmn:Transaction')) {
+      if (target.eventDefinition == 'vdml:CancelEventDefinition' &&
+         !is(businessObject.attachedToRef, 'vdml:Transaction')) {
         return false;
       }
       var cancelActivity = target.cancelActivity !== false;
@@ -9481,8 +9485,8 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // intermediate events
-  if (is(businessObject, 'bpmn:IntermediateCatchEvent') ||
-      is(businessObject, 'bpmn:IntermediateThrowEvent')) {
+  if (is(businessObject, 'vdml:IntermediateCatchEvent') ||
+      is(businessObject, 'vdml:IntermediateThrowEvent')) {
 
     entries = filter(replaceOptions.INTERMEDIATE_EVENT, differentType);
 
@@ -9490,7 +9494,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // gateways
-  if (is(businessObject, 'bpmn:Gateway')) {
+  if (is(businessObject, 'vdml:Gateway')) {
 
     entries = filter(replaceOptions.GATEWAY, differentType);
 
@@ -9498,7 +9502,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // transactions
-  if (is(businessObject, 'bpmn:Transaction')) {
+  if (is(businessObject, 'vdml:Transaction')) {
 
     entries = filter(replaceOptions.TRANSACTION, differentType);
 
@@ -9514,7 +9518,7 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // expanded sub processes
-  if (is(businessObject, 'bpmn:SubProcess') && isExpanded(businessObject)) {
+  if (is(businessObject, 'vdml:SubProcess') && isExpanded(businessObject)) {
 
     entries = filter(replaceOptions.SUBPROCESS_EXPANDED, differentType);
 
@@ -9522,13 +9526,13 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // collapsed ad hoc sub processes
-  if (is(businessObject, 'bpmn:AdHocSubProcess') && !isExpanded(businessObject)) {
+  if (is(businessObject, 'vdml:AdHocSubProcess') && !isExpanded(businessObject)) {
 
     entries = filter(replaceOptions.TASK, function(entry) {
 
       var target = entry.target;
 
-      var isTargetSubProcess = target.type === 'bpmn:SubProcess';
+      var isTargetSubProcess = target.type === 'vdml:SubProcess';
 
       var isTargetExpanded = target.isExpanded === true;
 
@@ -9539,16 +9543,16 @@ ReplaceMenuProvider.prototype.getEntries = function(element) {
   }
 
   // sequence flows
-  if (is(businessObject, 'bpmn:SequenceFlow')) {
+  if (is(businessObject, 'vdml:SequenceFlow')) {
     return this._createSequenceFlowEntries(element, replaceOptions.SEQUENCE_FLOW);
   }
 
   // flow nodes
-  if (is(businessObject, 'bpmn:FlowNode')) {
+  if (is(businessObject, 'vdml:FlowNode')) {
     entries = filter(replaceOptions.TASK, differentType);
 
     // collapsed SubProcess can not be replaced with itself
-    if (is(businessObject, 'bpmn:SubProcess') && !isExpanded(businessObject)) {
+    if (is(businessObject, 'vdml:SubProcess') && !isExpanded(businessObject)) {
       entries = reject(entries, function(entry) {
         return entry.label === 'Sub Process (collapsed)';
       });
@@ -9573,12 +9577,12 @@ ReplaceMenuProvider.prototype.getHeaderEntries = function(element) {
 
   var headerEntries = [];
 
-  if (is(element, 'bpmn:Activity') && !isEventSubProcess(element)) {
+  if (is(element, 'vdml:Activity') && !isEventSubProcess(element)) {
     headerEntries = headerEntries.concat(this._getLoopEntries(element));
   }
 
-  if (is(element, 'bpmn:SubProcess') &&
-      !is(element, 'bpmn:Transaction') &&
+  if (is(element, 'vdml:SubProcess') &&
+      !is(element, 'vdml:Transaction') &&
       !isEventSubProcess(element)) {
     headerEntries.push(this._getAdHocEntry(element));
   }
@@ -9634,10 +9638,10 @@ ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, rep
     switch (entry.actionName) {
     case 'replace-with-default-flow':
       if (businessObject.sourceRef.default !== businessObject &&
-            (is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
-             is(businessObject.sourceRef, 'bpmn:InclusiveGateway') ||
-             is(businessObject.sourceRef, 'bpmn:ComplexGateway') ||
-             is(businessObject.sourceRef, 'bpmn:Activity'))) {
+            (is(businessObject.sourceRef, 'vdml:ExclusiveGateway') ||
+             is(businessObject.sourceRef, 'vdml:InclusiveGateway') ||
+             is(businessObject.sourceRef, 'vdml:ComplexGateway') ||
+             is(businessObject.sourceRef, 'vdml:Activity'))) {
 
         menuEntries.push(self._createMenuEntry(entry, element, function() {
           modeling.updateProperties(element.source, { default: businessObject });
@@ -9645,10 +9649,10 @@ ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, rep
       }
       break;
     case 'replace-with-conditional-flow':
-      if (!businessObject.conditionExpression && is(businessObject.sourceRef, 'bpmn:Activity')) {
+      if (!businessObject.conditionExpression && is(businessObject.sourceRef, 'vdml:Activity')) {
 
         menuEntries.push(self._createMenuEntry(entry, element, function() {
-          var conditionExpression = moddle.create('bpmn:FormalExpression', { body: '' });
+          var conditionExpression = moddle.create('vdml:FormalExpression', { body: '' });
 
           modeling.updateProperties(element, { conditionExpression: conditionExpression });
         }));
@@ -9656,16 +9660,16 @@ ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, rep
       break;
     default:
         // default flows
-      if (is(businessObject.sourceRef, 'bpmn:Activity') && businessObject.conditionExpression) {
+      if (is(businessObject.sourceRef, 'vdml:Activity') && businessObject.conditionExpression) {
         return menuEntries.push(self._createMenuEntry(entry, element, function() {
           modeling.updateProperties(element, { conditionExpression: undefined });
         }));
       }
         // conditional flows
-      if ((is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
-           is(businessObject.sourceRef, 'bpmn:InclusiveGateway') ||
-           is(businessObject.sourceRef, 'bpmn:ComplexGateway') ||
-           is(businessObject.sourceRef, 'bpmn:Activity')) &&
+      if ((is(businessObject.sourceRef, 'vdml:ExclusiveGateway') ||
+           is(businessObject.sourceRef, 'vdml:InclusiveGateway') ||
+           is(businessObject.sourceRef, 'vdml:ComplexGateway') ||
+           is(businessObject.sourceRef, 'vdml:Activity')) &&
            businessObject.sourceRef.default === businessObject) {
 
         return menuEntries.push(self._createMenuEntry(entry, element, function() {
@@ -9691,7 +9695,7 @@ ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, rep
  */
 ReplaceMenuProvider.prototype._createMenuEntry = function(definition, element, action) {
   var translate = this._translate;
-  var replaceElement = this._bpmnReplace.replaceElement;
+  var replaceElement = this._vdmlReplace.replaceElement;
 
   var replaceAction = function() {
     return replaceElement(element, definition.target);
@@ -9758,7 +9762,7 @@ ReplaceMenuProvider.prototype._getLoopEntries = function(element) {
       active: isParallel,
       action: toggleLoopEntry,
       options: {
-        loopCharacteristics: 'bpmn:MultiInstanceLoopCharacteristics',
+        loopCharacteristics: 'vdml:MultiInstanceLoopCharacteristics',
         isSequential: false
       }
     },
@@ -9769,7 +9773,7 @@ ReplaceMenuProvider.prototype._getLoopEntries = function(element) {
       active: isSequential,
       action: toggleLoopEntry,
       options: {
-        loopCharacteristics: 'bpmn:MultiInstanceLoopCharacteristics',
+        loopCharacteristics: 'vdml:MultiInstanceLoopCharacteristics',
         isSequential: true
       }
     },
@@ -9780,7 +9784,7 @@ ReplaceMenuProvider.prototype._getLoopEntries = function(element) {
       active: isLoop,
       action: toggleLoopEntry,
       options: {
-        loopCharacteristics: 'bpmn:StandardLoopCharacteristics'
+        loopCharacteristics: 'vdml:StandardLoopCharacteristics'
       }
     }
   ];
@@ -9799,9 +9803,9 @@ ReplaceMenuProvider.prototype._getAdHocEntry = function(element) {
   var translate = this._translate;
   var businessObject = getBusinessObject(element);
 
-  var isAdHoc = is(businessObject, 'bpmn:AdHocSubProcess');
+  var isAdHoc = is(businessObject, 'vdml:AdHocSubProcess');
 
-  var replaceElement = this._bpmnReplace.replaceElement;
+  var replaceElement = this._vdmlReplace.replaceElement;
 
   var adHocEntry = {
     id: 'toggle-adhoc',
@@ -9810,9 +9814,9 @@ ReplaceMenuProvider.prototype._getAdHocEntry = function(element) {
     active: isAdHoc,
     action: function(event, entry) {
       if (isAdHoc) {
-        return replaceElement(element, { type: 'bpmn:SubProcess' });
+        return replaceElement(element, { type: 'vdml:SubProcess' });
       } else {
-        return replaceElement(element, { type: 'bpmn:AdHocSubProcess' });
+        return replaceElement(element, { type: 'vdml:AdHocSubProcess' });
       }
     }
   };
@@ -9822,7 +9826,7 @@ ReplaceMenuProvider.prototype._getAdHocEntry = function(element) {
 
 module.exports = ReplaceMenuProvider;
 
-},{"281":281,"283":283,"288":288,"73":73,"77":77,"91":91,"93":93}],72:[function(_dereq_,module,exports){
+},{"281":281,"283":283,"288":288,"73":73,"76":76,"91":91,"93":93}],72:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
     _dereq_(196),
@@ -9886,7 +9890,7 @@ var assign = _dereq_(410),
 
 var LOW_PRIORITY = 250;
 
-function BpmnReplacePreview(eventBus, elementRegistry, elementFactory, canvas, previewSupport) {
+function VdmlReplacePreview(eventBus, elementRegistry, elementFactory, canvas, previewSupport) {
 
   CommandInterceptor.call(this, eventBus);
 
@@ -9979,20 +9983,809 @@ function BpmnReplacePreview(eventBus, elementRegistry, elementFactory, canvas, p
   });
 }
 
-BpmnReplacePreview.$inject = [ 'eventBus', 'elementRegistry', 'elementFactory', 'canvas', 'previewSupport' ];
+VdmlReplacePreview.$inject = [ 'eventBus', 'elementRegistry', 'elementFactory', 'canvas', 'previewSupport' ];
 
-inherits(BpmnReplacePreview, CommandInterceptor);
+inherits(VdmlReplacePreview, CommandInterceptor);
 
-module.exports = BpmnReplacePreview;
+module.exports = VdmlReplacePreview;
 
 },{"100":100,"270":270,"283":283,"410":410}],75:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [ _dereq_(198) ],
-  __init__: [ 'bpmnReplacePreview' ],
-  bpmnReplacePreview: [ 'type', _dereq_(74) ]
+  __init__: [ 'vdmlReplacePreview' ],
+  vdmlReplacePreview: [ 'type', _dereq_(74) ]
 };
 
 },{"198":198,"74":74}],76:[function(_dereq_,module,exports){
+'use strict';
+
+module.exports.START_EVENT = [
+  {
+    label: 'Start Event',
+    actionName: 'replace-with-none-start',
+    className: 'bpmn-icon-start-event-none',
+    target: {
+      type: 'vdml:StartEvent'
+    }
+  },
+  {
+    label: 'Intermediate Throw Event',
+    actionName: 'replace-with-none-intermediate-throwing',
+    className: 'bpmn-icon-intermediate-event-none',
+    target: {
+      type: 'vdml:IntermediateThrowEvent'
+    }
+  },
+  {
+    label: 'End Event',
+    actionName: 'replace-with-none-end',
+    className: 'bpmn-icon-end-event-none',
+    target: {
+      type: 'vdml:EndEvent'
+    }
+  },
+  {
+    label: 'Message Start Event',
+    actionName: 'replace-with-message-start',
+    className: 'bpmn-icon-start-event-message',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
+    }
+  },
+  {
+    label: 'Timer Start Event',
+    actionName: 'replace-with-timer-start',
+    className: 'bpmn-icon-start-event-timer',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition'
+    }
+  },
+  {
+    label: 'Conditional Start Event',
+    actionName: 'replace-with-conditional-start',
+    className: 'bpmn-icon-start-event-condition',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition'
+    }
+  },
+  {
+    label: 'Signal Start Event',
+    actionName: 'replace-with-signal-start',
+    className: 'bpmn-icon-start-event-signal',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
+    }
+  }
+];
+
+module.exports.INTERMEDIATE_EVENT = [
+  {
+    label: 'Start Event',
+    actionName: 'replace-with-none-start',
+    className: 'bpmn-icon-start-event-none',
+    target: {
+      type: 'vdml:StartEvent'
+    }
+  },
+  {
+    label: 'Intermediate Throw Event',
+    actionName: 'replace-with-none-intermediate-throw',
+    className: 'bpmn-icon-intermediate-event-none',
+    target: {
+      type: 'vdml:IntermediateThrowEvent'
+    }
+  },
+  {
+    label: 'End Event',
+    actionName: 'replace-with-none-end',
+    className: 'bpmn-icon-end-event-none',
+    target: {
+      type: 'vdml:EndEvent'
+    }
+  },
+  {
+    label: 'Message Intermediate Catch Event',
+    actionName: 'replace-with-message-intermediate-catch',
+    className: 'bpmn-icon-intermediate-event-catch-message',
+    target: {
+      type: 'vdml:IntermediateCatchEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
+    }
+  },
+  {
+    label: 'Message Intermediate Throw Event',
+    actionName: 'replace-with-message-intermediate-throw',
+    className: 'bpmn-icon-intermediate-event-throw-message',
+    target: {
+      type: 'vdml:IntermediateThrowEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
+    }
+  },
+  {
+    label: 'Timer Intermediate Catch Event',
+    actionName: 'replace-with-timer-intermediate-catch',
+    className: 'bpmn-icon-intermediate-event-catch-timer',
+    target: {
+      type: 'vdml:IntermediateCatchEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition'
+    }
+  },
+  {
+    label: 'Escalation Intermediate Throw Event',
+    actionName: 'replace-with-escalation-intermediate-throw',
+    className: 'bpmn-icon-intermediate-event-throw-escalation',
+    target: {
+      type: 'vdml:IntermediateThrowEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition'
+    }
+  },
+  {
+    label: 'Conditional Intermediate Catch Event',
+    actionName: 'replace-with-conditional-intermediate-catch',
+    className: 'bpmn-icon-intermediate-event-catch-condition',
+    target: {
+      type: 'vdml:IntermediateCatchEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition'
+    }
+  },
+  {
+    label: 'Link Intermediate Catch Event',
+    actionName: 'replace-with-link-intermediate-catch',
+    className: 'bpmn-icon-intermediate-event-catch-link',
+    target: {
+      type: 'vdml:IntermediateCatchEvent',
+      eventDefinitionType: 'vdml:LinkEventDefinition'
+    }
+  },
+  {
+    label: 'Link Intermediate Throw Event',
+    actionName: 'replace-with-link-intermediate-throw',
+    className: 'bpmn-icon-intermediate-event-throw-link',
+    target: {
+      type: 'vdml:IntermediateThrowEvent',
+      eventDefinitionType: 'vdml:LinkEventDefinition'
+    }
+  },
+  {
+    label: 'Compensation Intermediate Throw Event',
+    actionName: 'replace-with-compensation-intermediate-throw',
+    className: 'bpmn-icon-intermediate-event-throw-compensation',
+    target: {
+      type: 'vdml:IntermediateThrowEvent',
+      eventDefinitionType: 'vdml:CompensateEventDefinition'
+    }
+  },
+  {
+    label: 'Signal Intermediate Catch Event',
+    actionName: 'replace-with-signal-intermediate-catch',
+    className: 'bpmn-icon-intermediate-event-catch-signal',
+    target: {
+      type: 'vdml:IntermediateCatchEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
+    }
+  },
+  {
+    label: 'Signal Intermediate Throw Event',
+    actionName: 'replace-with-signal-intermediate-throw',
+    className: 'bpmn-icon-intermediate-event-throw-signal',
+    target: {
+      type: 'vdml:IntermediateThrowEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
+    }
+  }
+];
+
+module.exports.END_EVENT = [
+  {
+    label: 'Start Event',
+    actionName: 'replace-with-none-start',
+    className: 'bpmn-icon-start-event-none',
+    target: {
+      type: 'vdml:StartEvent'
+    }
+  },
+  {
+    label: 'Intermediate Throw Event',
+    actionName: 'replace-with-none-intermediate-throw',
+    className: 'bpmn-icon-intermediate-event-none',
+    target: {
+      type: 'vdml:IntermediateThrowEvent'
+    }
+  },
+  {
+    label: 'End Event',
+    actionName: 'replace-with-none-end',
+    className: 'bpmn-icon-end-event-none',
+    target: {
+      type: 'vdml:EndEvent'
+    }
+  },
+  {
+    label: 'Message End Event',
+    actionName: 'replace-with-message-end',
+    className: 'bpmn-icon-end-event-message',
+    target: {
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
+    }
+  },
+  {
+    label: 'Escalation End Event',
+    actionName: 'replace-with-escalation-end',
+    className: 'bpmn-icon-end-event-escalation',
+    target: {
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition'
+    }
+  },
+  {
+    label: 'Error End Event',
+    actionName: 'replace-with-error-end',
+    className: 'bpmn-icon-end-event-error',
+    target: {
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:ErrorEventDefinition'
+    }
+  },
+  {
+    label: 'Cancel End Event',
+    actionName: 'replace-with-cancel-end',
+    className: 'bpmn-icon-end-event-cancel',
+    target: {
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:CancelEventDefinition'
+    }
+  },
+  {
+    label: 'Compensation End Event',
+    actionName: 'replace-with-compensation-end',
+    className: 'bpmn-icon-end-event-compensation',
+    target: {
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:CompensateEventDefinition'
+    }
+  },
+  {
+    label: 'Signal End Event',
+    actionName: 'replace-with-signal-end',
+    className: 'bpmn-icon-end-event-signal',
+    target: {
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
+    }
+  },
+  {
+    label: 'Terminate End Event',
+    actionName: 'replace-with-terminate-end',
+    className: 'bpmn-icon-end-event-terminate',
+    target: {
+      type: 'vdml:EndEvent',
+      eventDefinitionType: 'vdml:TerminateEventDefinition'
+    }
+  }
+];
+
+module.exports.GATEWAY = [
+  {
+    label: 'Exclusive Gateway',
+    actionName: 'replace-with-exclusive-gateway',
+    className: 'bpmn-icon-gateway-xor',
+    target: {
+      type: 'vdml:ExclusiveGateway'
+    }
+  },
+  {
+    label: 'Parallel Gateway',
+    actionName: 'replace-with-parallel-gateway',
+    className: 'bpmn-icon-gateway-parallel',
+    target: {
+      type: 'vdml:ParallelGateway'
+    }
+  },
+  {
+    label: 'Inclusive Gateway',
+    actionName: 'replace-with-inclusive-gateway',
+    className: 'bpmn-icon-gateway-or',
+    target: {
+      type: 'vdml:InclusiveGateway'
+    }
+  },
+  {
+    label: 'Complex Gateway',
+    actionName: 'replace-with-complex-gateway',
+    className: 'bpmn-icon-gateway-complex',
+    target: {
+      type: 'vdml:ComplexGateway'
+    }
+  },
+  {
+    label: 'Event based Gateway',
+    actionName: 'replace-with-event-based-gateway',
+    className: 'bpmn-icon-gateway-eventbased',
+    target: {
+      type: 'vdml:EventBasedGateway',
+      instantiate: false,
+      eventGatewayType: 'Exclusive'
+    }
+  }
+  // Gateways deactivated until https://github.com/vdml-io/vdml-js/issues/194
+  // {
+  //   label: 'Event based instantiating Gateway',
+  //   actionName: 'replace-with-exclusive-event-based-gateway',
+  //   className: 'bpmn-icon-exclusive-event-based',
+  //   target: {
+  //     type: 'vdml:EventBasedGateway'
+  //   },
+  //   options: {
+  //     businessObject: { instantiate: true, eventGatewayType: 'Exclusive' }
+  //   }
+  // },
+  // {
+  //   label: 'Parallel Event based instantiating Gateway',
+  //   actionName: 'replace-with-parallel-event-based-instantiate-gateway',
+  //   className: 'bpmn-icon-parallel-event-based-instantiate-gateway',
+  //   target: {
+  //     type: 'vdml:EventBasedGateway'
+  //   },
+  //   options: {
+  //     businessObject: { instantiate: true, eventGatewayType: 'Parallel' }
+  //   }
+  // }
+];
+
+module.exports.SUBPROCESS_EXPANDED = [
+  {
+    label: 'Transaction',
+    actionName: 'replace-with-transaction',
+    className: 'bpmn-icon-transaction',
+    target: {
+      type: 'vdml:Transaction',
+      isExpanded: true
+    }
+  },
+  {
+    label: 'Event Sub Process',
+    actionName: 'replace-with-event-subprocess',
+    className: 'bpmn-icon-event-subprocess-expanded',
+    target: {
+      type: 'vdml:SubProcess',
+      triggeredByEvent: true,
+      isExpanded: true
+    }
+  },
+  {
+    label: 'Sub Process (collapsed)',
+    actionName: 'replace-with-collapsed-subprocess',
+    className: 'bpmn-icon-subprocess-collapsed',
+    target: {
+      type: 'vdml:SubProcess',
+      isExpanded: false
+    }
+  }
+];
+
+module.exports.TRANSACTION = [
+  {
+    label: 'Sub Process',
+    actionName: 'replace-with-subprocess',
+    className: 'bpmn-icon-subprocess-expanded',
+    target: {
+      type: 'vdml:SubProcess',
+      isExpanded: true
+    }
+  },
+  {
+    label: 'Event Sub Process',
+    actionName: 'replace-with-event-subprocess',
+    className: 'bpmn-icon-event-subprocess-expanded',
+    target: {
+      type: 'vdml:SubProcess',
+      triggeredByEvent: true,
+      isExpanded: true
+    }
+  }
+];
+
+module.exports.EVENT_SUB_PROCESS = [
+  {
+    label: 'Sub Process',
+    actionName: 'replace-with-subprocess',
+    className: 'bpmn-icon-subprocess-expanded',
+    target: {
+      type: 'vdml:SubProcess',
+      isExpanded: true
+    }
+  },
+  {
+    label: 'Transaction',
+    actionName: 'replace-with-transaction',
+    className: 'bpmn-icon-transaction',
+    target: {
+      type: 'vdml:Transaction',
+      isExpanded: true
+    }
+  }
+];
+
+module.exports.TASK = [
+  {
+    label: 'Task',
+    actionName: 'replace-with-task',
+    className: 'bpmn-icon-task',
+    target: {
+      type: 'vdml:Task'
+    }
+  },
+  {
+    label: 'Send Task',
+    actionName: 'replace-with-send-task',
+    className: 'bpmn-icon-send',
+    target: {
+      type: 'vdml:SendTask'
+    }
+  },
+  {
+    label: 'Receive Task',
+    actionName: 'replace-with-receive-task',
+    className: 'bpmn-icon-receive',
+    target: {
+      type: 'vdml:ReceiveTask'
+    }
+  },
+  {
+    label: 'User Task',
+    actionName: 'replace-with-user-task',
+    className: 'bpmn-icon-user',
+    target: {
+      type: 'vdml:UserTask'
+    }
+  },
+  {
+    label: 'Manual Task',
+    actionName: 'replace-with-manual-task',
+    className: 'bpmn-icon-manual',
+    target: {
+      type: 'vdml:ManualTask'
+    }
+  },
+  {
+    label: 'Business Rule Task',
+    actionName: 'replace-with-rule-task',
+    className: 'bpmn-icon-business-rule',
+    target: {
+      type: 'vdml:BusinessRuleTask'
+    }
+  },
+  {
+    label: 'Service Task',
+    actionName: 'replace-with-service-task',
+    className: 'bpmn-icon-service',
+    target: {
+      type: 'vdml:ServiceTask'
+    }
+  },
+  {
+    label: 'Script Task',
+    actionName: 'replace-with-script-task',
+    className: 'bpmn-icon-script',
+    target: {
+      type: 'vdml:ScriptTask'
+    }
+  },
+  {
+    label: 'Call Activity',
+    actionName: 'replace-with-call-activity',
+    className: 'bpmn-icon-call-activity',
+    target: {
+      type: 'vdml:CallActivity'
+    }
+  },
+  {
+    label: 'Sub Process (collapsed)',
+    actionName: 'replace-with-collapsed-subprocess',
+    className: 'bpmn-icon-subprocess-collapsed',
+    target: {
+      type: 'vdml:SubProcess',
+      isExpanded: false
+    }
+  },
+  {
+    label: 'Sub Process (expanded)',
+    actionName: 'replace-with-expanded-subprocess',
+    className: 'bpmn-icon-subprocess-expanded',
+    target: {
+      type: 'vdml:SubProcess',
+      isExpanded: true
+    }
+  }
+];
+
+module.exports.BOUNDARY_EVENT = [
+  {
+    label: 'Message Boundary Event',
+    actionName: 'replace-with-message-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-message',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
+    }
+  },
+  {
+    label: 'Timer Boundary Event',
+    actionName: 'replace-with-timer-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-timer',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition'
+    }
+  },
+  {
+    label: 'Escalation Boundary Event',
+    actionName: 'replace-with-escalation-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-escalation',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition'
+    }
+  },
+  {
+    label: 'Conditional Boundary Event',
+    actionName: 'replace-with-conditional-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-condition',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition'
+    }
+  },
+  {
+    label: 'Error Boundary Event',
+    actionName: 'replace-with-error-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-error',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:ErrorEventDefinition'
+    }
+  },
+  {
+    label: 'Cancel Boundary Event',
+    actionName: 'replace-with-cancel-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-cancel',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:CancelEventDefinition'
+    }
+  },
+  {
+    label: 'Signal Boundary Event',
+    actionName: 'replace-with-signal-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-signal',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
+    }
+  },
+  {
+    label: 'Compensation Boundary Event',
+    actionName: 'replace-with-compensation-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-compensation',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:CompensateEventDefinition'
+    }
+  },
+  {
+    label: 'Message Boundary Event (non-interrupting)',
+    actionName: 'replace-with-non-interrupting-message-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-message',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition',
+      cancelActivity: false
+    }
+  },
+  {
+    label: 'Timer Boundary Event (non-interrupting)',
+    actionName: 'replace-with-non-interrupting-timer-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-timer',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition',
+      cancelActivity: false
+    }
+  },
+  {
+    label: 'Escalation Boundary Event (non-interrupting)',
+    actionName: 'replace-with-non-interrupting-escalation-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-escalation',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition',
+      cancelActivity: false
+    }
+  },
+  {
+    label: 'Conditional Boundary Event (non-interrupting)',
+    actionName: 'replace-with-non-interrupting-conditional-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-condition',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition',
+      cancelActivity: false
+    }
+  },
+  {
+    label: 'Signal Boundary Event (non-interrupting)',
+    actionName: 'replace-with-non-interrupting-signal-boundary',
+    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-signal',
+    target: {
+      type: 'vdml:BoundaryEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition',
+      cancelActivity: false
+    }
+  }
+];
+
+module.exports.EVENT_SUB_PROCESS_START_EVENT = [
+  {
+    label: 'Message Start Event',
+    actionName: 'replace-with-message-start',
+    className: 'bpmn-icon-start-event-message',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition'
+    }
+  },
+  {
+    label: 'Timer Start Event',
+    actionName: 'replace-with-timer-start',
+    className: 'bpmn-icon-start-event-timer',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition'
+    }
+  },
+  {
+    label: 'Conditional Start Event',
+    actionName: 'replace-with-conditional-start',
+    className: 'bpmn-icon-start-event-condition',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition'
+    }
+  },
+  {
+    label: 'Signal Start Event',
+    actionName: 'replace-with-signal-start',
+    className: 'bpmn-icon-start-event-signal',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition'
+    }
+  },
+  {
+    label: 'Error Start Event',
+    actionName: 'replace-with-error-start',
+    className: 'bpmn-icon-start-event-error',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:ErrorEventDefinition'
+    }
+  },
+  {
+    label: 'Escalation Start Event',
+    actionName: 'replace-with-escalation-start',
+    className: 'bpmn-icon-start-event-escalation',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition'
+    }
+  },
+  {
+    label: 'Compensation Start Event',
+    actionName: 'replace-with-compensation-start',
+    className: 'bpmn-icon-start-event-compensation',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:CompensateEventDefinition'
+    }
+  },
+  {
+    label: 'Message Start Event (non-interrupting)',
+    actionName: 'replace-with-non-interrupting-message-start',
+    className: 'bpmn-icon-start-event-non-interrupting-message',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:MessageEventDefinition',
+      isInterrupting: false
+    }
+  },
+  {
+    label: 'Timer Start Event (non-interrupting)',
+    actionName: 'replace-with-non-interrupting-timer-start',
+    className: 'bpmn-icon-start-event-non-interrupting-timer',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:TimerEventDefinition',
+      isInterrupting: false
+    }
+  },
+  {
+    label: 'Conditional Start Event (non-interrupting)',
+    actionName: 'replace-with-non-interrupting-conditional-start',
+    className: 'bpmn-icon-start-event-non-interrupting-condition',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:ConditionalEventDefinition',
+      isInterrupting: false
+    }
+  },
+  {
+    label: 'Signal Start Event (non-interrupting)',
+    actionName: 'replace-with-non-interrupting-signal-start',
+    className: 'bpmn-icon-start-event-non-interrupting-signal',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:SignalEventDefinition',
+      isInterrupting: false
+    }
+  },
+  {
+    label: 'Escalation Start Event (non-interrupting)',
+    actionName: 'replace-with-non-interrupting-escalation-start',
+    className: 'bpmn-icon-start-event-non-interrupting-escalation',
+    target: {
+      type: 'vdml:StartEvent',
+      eventDefinitionType: 'vdml:EscalationEventDefinition',
+      isInterrupting: false
+    }
+  }
+];
+
+module.exports.SEQUENCE_FLOW = [
+  {
+    label: 'Sequence Flow',
+    actionName: 'replace-with-sequence-flow',
+    className: 'bpmn-icon-connection'
+  },
+  {
+    label: 'Default Flow',
+    actionName: 'replace-with-default-flow',
+    className: 'bpmn-icon-default-flow'
+  },
+  {
+    label: 'Conditional Flow',
+    actionName: 'replace-with-conditional-flow',
+    className: 'bpmn-icon-conditional-flow'
+  }
+];
+
+module.exports.PARTICIPANT = [
+  {
+    label: 'Expanded Pool',
+    actionName: 'replace-with-expanded-pool',
+    className: 'bpmn-icon-participant',
+    target: {
+      type: 'vdml:Participant',
+      isExpanded: true
+    }
+  },
+  {
+    label: 'Collapsed Pool',
+    actionName: 'replace-with-collapsed-pool',
+    // TODO(@janstuemmel): maybe design new icon
+    className: 'bpmn-icon-lane',
+    target: {
+      type: 'vdml:Participant',
+      isExpanded: false
+    }
+  }
+];
+
+},{}],77:[function(_dereq_,module,exports){
 'use strict';
 
 var pick = _dereq_(417),
@@ -10037,9 +10830,9 @@ function toggeling(element, target) {
 
 
 /**
- * This module takes care of replacing BPMN elements
+ * This module takes care of replacing VDML elements
  */
-function BpmnReplace(bpmnFactory, replace, selection, modeling) {
+function VdmlReplace(vdmlFactory, replace, selection, modeling) {
 
   /**
    * Prepares a new business object for the replacement element
@@ -10060,8 +10853,8 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
 
 
 
-    if (is(oldBusinessObject, 'bpmn:SubProcess')) {
-      if (type === 'bpmn:SubProcess') {
+    if (is(oldBusinessObject, 'vdml:SubProcess')) {
+      if (type === 'vdml:SubProcess') {
         if (toggeling(element, target)) {
           // expanding or collapsing process
           modeling.toggleCollapse(element);
@@ -10072,14 +10865,14 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
     }
 
 
-    var newBusinessObject = bpmnFactory.create(type);
+    var newBusinessObject = vdmlFactory.create(type);
 
     var newElement = {
       type: type,
       businessObject: newBusinessObject
     };
 
-    // initialize custom BPMN extensions
+    // initialize custom VDML extensions
     if (target.eventDefinitionType) {
       newElement.eventDefinitionType = target.eventDefinitionType;
     }
@@ -10088,9 +10881,9 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
     assign(newBusinessObject, pick(target, CUSTOM_PROPERTIES));
 
 
-    if (is(oldBusinessObject, 'bpmn:Activity')) {
+    if (is(oldBusinessObject, 'vdml:Activity')) {
 
-      if (is(oldBusinessObject, 'bpmn:SubProcess')) {
+      if (is(oldBusinessObject, 'vdml:SubProcess')) {
         // no toggeling, so keep old state
         newElement.isExpanded = isExpanded(oldBusinessObject);
       }
@@ -10101,8 +10894,8 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
 
       // TODO: need also to respect min/max Size
       // copy size, from an expanded subprocess to an expanded alternative subprocess
-      // except bpmn:Task, because Task is always expanded
-      if ((isExpanded(oldBusinessObject) && !is(oldBusinessObject, 'bpmn:Task')) && target.isExpanded) {
+      // except vdml:Task, because Task is always expanded
+      if ((isExpanded(oldBusinessObject) && !is(oldBusinessObject, 'vdml:Task')) && target.isExpanded) {
         newElement.width = element.width;
         newElement.height = element.height;
       }
@@ -10110,11 +10903,11 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
     }
 
     // transform collapsed/expanded pools
-    if (is(oldBusinessObject, 'bpmn:Participant')) {
+    if (is(oldBusinessObject, 'vdml:Participant')) {
 
         // create expanded pool
       if (target.isExpanded === true) {
-        newBusinessObject.processRef = bpmnFactory.create('bpmn:Process');
+        newBusinessObject.processRef = vdmlFactory.create('vdml:Process');
       } else {
           // remove children when transforming to collapsed pool
         hints.moveChildren = false;
@@ -10133,10 +10926,10 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
     }
 
     // retain default flow's reference between inclusive <-> exclusive gateways and activities
-    if ((is(oldBusinessObject, 'bpmn:ExclusiveGateway') || is(oldBusinessObject, 'bpmn:InclusiveGateway') ||
-         is(oldBusinessObject, 'bpmn:Activity')) &&
-        (is(newBusinessObject, 'bpmn:ExclusiveGateway') || is(newBusinessObject, 'bpmn:InclusiveGateway') ||
-         is(newBusinessObject, 'bpmn:Activity')))
+    if ((is(oldBusinessObject, 'vdml:ExclusiveGateway') || is(oldBusinessObject, 'vdml:InclusiveGateway') ||
+         is(oldBusinessObject, 'vdml:Activity')) &&
+        (is(newBusinessObject, 'vdml:ExclusiveGateway') || is(newBusinessObject, 'vdml:InclusiveGateway') ||
+         is(newBusinessObject, 'vdml:Activity')))
     {
       newBusinessObject.default = oldBusinessObject.default;
     }
@@ -10157,808 +10950,19 @@ function BpmnReplace(bpmnFactory, replace, selection, modeling) {
   this.replaceElement = replaceElement;
 }
 
-BpmnReplace.$inject = [ 'bpmnFactory', 'replace', 'selection', 'modeling' ];
+VdmlReplace.$inject = [ 'vdmlFactory', 'replace', 'selection', 'modeling' ];
 
-module.exports = BpmnReplace;
+module.exports = VdmlReplace;
 
-},{"410":410,"411":411,"417":417,"91":91,"93":93}],77:[function(_dereq_,module,exports){
-'use strict';
-
-module.exports.START_EVENT = [
-  {
-    label: 'Start Event',
-    actionName: 'replace-with-none-start',
-    className: 'bpmn-icon-start-event-none',
-    target: {
-      type: 'bpmn:StartEvent'
-    }
-  },
-  {
-    label: 'Intermediate Throw Event',
-    actionName: 'replace-with-none-intermediate-throwing',
-    className: 'bpmn-icon-intermediate-event-none',
-    target: {
-      type: 'bpmn:IntermediateThrowEvent'
-    }
-  },
-  {
-    label: 'End Event',
-    actionName: 'replace-with-none-end',
-    className: 'bpmn-icon-end-event-none',
-    target: {
-      type: 'bpmn:EndEvent'
-    }
-  },
-  {
-    label: 'Message Start Event',
-    actionName: 'replace-with-message-start',
-    className: 'bpmn-icon-start-event-message',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
-    }
-  },
-  {
-    label: 'Timer Start Event',
-    actionName: 'replace-with-timer-start',
-    className: 'bpmn-icon-start-event-timer',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition'
-    }
-  },
-  {
-    label: 'Conditional Start Event',
-    actionName: 'replace-with-conditional-start',
-    className: 'bpmn-icon-start-event-condition',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
-    }
-  },
-  {
-    label: 'Signal Start Event',
-    actionName: 'replace-with-signal-start',
-    className: 'bpmn-icon-start-event-signal',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
-    }
-  }
-];
-
-module.exports.INTERMEDIATE_EVENT = [
-  {
-    label: 'Start Event',
-    actionName: 'replace-with-none-start',
-    className: 'bpmn-icon-start-event-none',
-    target: {
-      type: 'bpmn:StartEvent'
-    }
-  },
-  {
-    label: 'Intermediate Throw Event',
-    actionName: 'replace-with-none-intermediate-throw',
-    className: 'bpmn-icon-intermediate-event-none',
-    target: {
-      type: 'bpmn:IntermediateThrowEvent'
-    }
-  },
-  {
-    label: 'End Event',
-    actionName: 'replace-with-none-end',
-    className: 'bpmn-icon-end-event-none',
-    target: {
-      type: 'bpmn:EndEvent'
-    }
-  },
-  {
-    label: 'Message Intermediate Catch Event',
-    actionName: 'replace-with-message-intermediate-catch',
-    className: 'bpmn-icon-intermediate-event-catch-message',
-    target: {
-      type: 'bpmn:IntermediateCatchEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
-    }
-  },
-  {
-    label: 'Message Intermediate Throw Event',
-    actionName: 'replace-with-message-intermediate-throw',
-    className: 'bpmn-icon-intermediate-event-throw-message',
-    target: {
-      type: 'bpmn:IntermediateThrowEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
-    }
-  },
-  {
-    label: 'Timer Intermediate Catch Event',
-    actionName: 'replace-with-timer-intermediate-catch',
-    className: 'bpmn-icon-intermediate-event-catch-timer',
-    target: {
-      type: 'bpmn:IntermediateCatchEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition'
-    }
-  },
-  {
-    label: 'Escalation Intermediate Throw Event',
-    actionName: 'replace-with-escalation-intermediate-throw',
-    className: 'bpmn-icon-intermediate-event-throw-escalation',
-    target: {
-      type: 'bpmn:IntermediateThrowEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition'
-    }
-  },
-  {
-    label: 'Conditional Intermediate Catch Event',
-    actionName: 'replace-with-conditional-intermediate-catch',
-    className: 'bpmn-icon-intermediate-event-catch-condition',
-    target: {
-      type: 'bpmn:IntermediateCatchEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
-    }
-  },
-  {
-    label: 'Link Intermediate Catch Event',
-    actionName: 'replace-with-link-intermediate-catch',
-    className: 'bpmn-icon-intermediate-event-catch-link',
-    target: {
-      type: 'bpmn:IntermediateCatchEvent',
-      eventDefinitionType: 'bpmn:LinkEventDefinition'
-    }
-  },
-  {
-    label: 'Link Intermediate Throw Event',
-    actionName: 'replace-with-link-intermediate-throw',
-    className: 'bpmn-icon-intermediate-event-throw-link',
-    target: {
-      type: 'bpmn:IntermediateThrowEvent',
-      eventDefinitionType: 'bpmn:LinkEventDefinition'
-    }
-  },
-  {
-    label: 'Compensation Intermediate Throw Event',
-    actionName: 'replace-with-compensation-intermediate-throw',
-    className: 'bpmn-icon-intermediate-event-throw-compensation',
-    target: {
-      type: 'bpmn:IntermediateThrowEvent',
-      eventDefinitionType: 'bpmn:CompensateEventDefinition'
-    }
-  },
-  {
-    label: 'Signal Intermediate Catch Event',
-    actionName: 'replace-with-signal-intermediate-catch',
-    className: 'bpmn-icon-intermediate-event-catch-signal',
-    target: {
-      type: 'bpmn:IntermediateCatchEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
-    }
-  },
-  {
-    label: 'Signal Intermediate Throw Event',
-    actionName: 'replace-with-signal-intermediate-throw',
-    className: 'bpmn-icon-intermediate-event-throw-signal',
-    target: {
-      type: 'bpmn:IntermediateThrowEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
-    }
-  }
-];
-
-module.exports.END_EVENT = [
-  {
-    label: 'Start Event',
-    actionName: 'replace-with-none-start',
-    className: 'bpmn-icon-start-event-none',
-    target: {
-      type: 'bpmn:StartEvent'
-    }
-  },
-  {
-    label: 'Intermediate Throw Event',
-    actionName: 'replace-with-none-intermediate-throw',
-    className: 'bpmn-icon-intermediate-event-none',
-    target: {
-      type: 'bpmn:IntermediateThrowEvent'
-    }
-  },
-  {
-    label: 'End Event',
-    actionName: 'replace-with-none-end',
-    className: 'bpmn-icon-end-event-none',
-    target: {
-      type: 'bpmn:EndEvent'
-    }
-  },
-  {
-    label: 'Message End Event',
-    actionName: 'replace-with-message-end',
-    className: 'bpmn-icon-end-event-message',
-    target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
-    }
-  },
-  {
-    label: 'Escalation End Event',
-    actionName: 'replace-with-escalation-end',
-    className: 'bpmn-icon-end-event-escalation',
-    target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition'
-    }
-  },
-  {
-    label: 'Error End Event',
-    actionName: 'replace-with-error-end',
-    className: 'bpmn-icon-end-event-error',
-    target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:ErrorEventDefinition'
-    }
-  },
-  {
-    label: 'Cancel End Event',
-    actionName: 'replace-with-cancel-end',
-    className: 'bpmn-icon-end-event-cancel',
-    target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:CancelEventDefinition'
-    }
-  },
-  {
-    label: 'Compensation End Event',
-    actionName: 'replace-with-compensation-end',
-    className: 'bpmn-icon-end-event-compensation',
-    target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:CompensateEventDefinition'
-    }
-  },
-  {
-    label: 'Signal End Event',
-    actionName: 'replace-with-signal-end',
-    className: 'bpmn-icon-end-event-signal',
-    target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
-    }
-  },
-  {
-    label: 'Terminate End Event',
-    actionName: 'replace-with-terminate-end',
-    className: 'bpmn-icon-end-event-terminate',
-    target: {
-      type: 'bpmn:EndEvent',
-      eventDefinitionType: 'bpmn:TerminateEventDefinition'
-    }
-  }
-];
-
-module.exports.GATEWAY = [
-  {
-    label: 'Exclusive Gateway',
-    actionName: 'replace-with-exclusive-gateway',
-    className: 'bpmn-icon-gateway-xor',
-    target: {
-      type: 'bpmn:ExclusiveGateway'
-    }
-  },
-  {
-    label: 'Parallel Gateway',
-    actionName: 'replace-with-parallel-gateway',
-    className: 'bpmn-icon-gateway-parallel',
-    target: {
-      type: 'bpmn:ParallelGateway'
-    }
-  },
-  {
-    label: 'Inclusive Gateway',
-    actionName: 'replace-with-inclusive-gateway',
-    className: 'bpmn-icon-gateway-or',
-    target: {
-      type: 'bpmn:InclusiveGateway'
-    }
-  },
-  {
-    label: 'Complex Gateway',
-    actionName: 'replace-with-complex-gateway',
-    className: 'bpmn-icon-gateway-complex',
-    target: {
-      type: 'bpmn:ComplexGateway'
-    }
-  },
-  {
-    label: 'Event based Gateway',
-    actionName: 'replace-with-event-based-gateway',
-    className: 'bpmn-icon-gateway-eventbased',
-    target: {
-      type: 'bpmn:EventBasedGateway',
-      instantiate: false,
-      eventGatewayType: 'Exclusive'
-    }
-  }
-  // Gateways deactivated until https://github.com/bpmn-io/bpmn-js/issues/194
-  // {
-  //   label: 'Event based instantiating Gateway',
-  //   actionName: 'replace-with-exclusive-event-based-gateway',
-  //   className: 'bpmn-icon-exclusive-event-based',
-  //   target: {
-  //     type: 'bpmn:EventBasedGateway'
-  //   },
-  //   options: {
-  //     businessObject: { instantiate: true, eventGatewayType: 'Exclusive' }
-  //   }
-  // },
-  // {
-  //   label: 'Parallel Event based instantiating Gateway',
-  //   actionName: 'replace-with-parallel-event-based-instantiate-gateway',
-  //   className: 'bpmn-icon-parallel-event-based-instantiate-gateway',
-  //   target: {
-  //     type: 'bpmn:EventBasedGateway'
-  //   },
-  //   options: {
-  //     businessObject: { instantiate: true, eventGatewayType: 'Parallel' }
-  //   }
-  // }
-];
-
-module.exports.SUBPROCESS_EXPANDED = [
-  {
-    label: 'Transaction',
-    actionName: 'replace-with-transaction',
-    className: 'bpmn-icon-transaction',
-    target: {
-      type: 'bpmn:Transaction',
-      isExpanded: true
-    }
-  },
-  {
-    label: 'Event Sub Process',
-    actionName: 'replace-with-event-subprocess',
-    className: 'bpmn-icon-event-subprocess-expanded',
-    target: {
-      type: 'bpmn:SubProcess',
-      triggeredByEvent: true,
-      isExpanded: true
-    }
-  },
-  {
-    label: 'Sub Process (collapsed)',
-    actionName: 'replace-with-collapsed-subprocess',
-    className: 'bpmn-icon-subprocess-collapsed',
-    target: {
-      type: 'bpmn:SubProcess',
-      isExpanded: false
-    }
-  }
-];
-
-module.exports.TRANSACTION = [
-  {
-    label: 'Sub Process',
-    actionName: 'replace-with-subprocess',
-    className: 'bpmn-icon-subprocess-expanded',
-    target: {
-      type: 'bpmn:SubProcess',
-      isExpanded: true
-    }
-  },
-  {
-    label: 'Event Sub Process',
-    actionName: 'replace-with-event-subprocess',
-    className: 'bpmn-icon-event-subprocess-expanded',
-    target: {
-      type: 'bpmn:SubProcess',
-      triggeredByEvent: true,
-      isExpanded: true
-    }
-  }
-];
-
-module.exports.EVENT_SUB_PROCESS = [
-  {
-    label: 'Sub Process',
-    actionName: 'replace-with-subprocess',
-    className: 'bpmn-icon-subprocess-expanded',
-    target: {
-      type: 'bpmn:SubProcess',
-      isExpanded: true
-    }
-  },
-  {
-    label: 'Transaction',
-    actionName: 'replace-with-transaction',
-    className: 'bpmn-icon-transaction',
-    target: {
-      type: 'bpmn:Transaction',
-      isExpanded: true
-    }
-  }
-];
-
-module.exports.TASK = [
-  {
-    label: 'Task',
-    actionName: 'replace-with-task',
-    className: 'bpmn-icon-task',
-    target: {
-      type: 'bpmn:Task'
-    }
-  },
-  {
-    label: 'Send Task',
-    actionName: 'replace-with-send-task',
-    className: 'bpmn-icon-send',
-    target: {
-      type: 'bpmn:SendTask'
-    }
-  },
-  {
-    label: 'Receive Task',
-    actionName: 'replace-with-receive-task',
-    className: 'bpmn-icon-receive',
-    target: {
-      type: 'bpmn:ReceiveTask'
-    }
-  },
-  {
-    label: 'User Task',
-    actionName: 'replace-with-user-task',
-    className: 'bpmn-icon-user',
-    target: {
-      type: 'bpmn:UserTask'
-    }
-  },
-  {
-    label: 'Manual Task',
-    actionName: 'replace-with-manual-task',
-    className: 'bpmn-icon-manual',
-    target: {
-      type: 'bpmn:ManualTask'
-    }
-  },
-  {
-    label: 'Business Rule Task',
-    actionName: 'replace-with-rule-task',
-    className: 'bpmn-icon-business-rule',
-    target: {
-      type: 'bpmn:BusinessRuleTask'
-    }
-  },
-  {
-    label: 'Service Task',
-    actionName: 'replace-with-service-task',
-    className: 'bpmn-icon-service',
-    target: {
-      type: 'bpmn:ServiceTask'
-    }
-  },
-  {
-    label: 'Script Task',
-    actionName: 'replace-with-script-task',
-    className: 'bpmn-icon-script',
-    target: {
-      type: 'bpmn:ScriptTask'
-    }
-  },
-  {
-    label: 'Call Activity',
-    actionName: 'replace-with-call-activity',
-    className: 'bpmn-icon-call-activity',
-    target: {
-      type: 'bpmn:CallActivity'
-    }
-  },
-  {
-    label: 'Sub Process (collapsed)',
-    actionName: 'replace-with-collapsed-subprocess',
-    className: 'bpmn-icon-subprocess-collapsed',
-    target: {
-      type: 'bpmn:SubProcess',
-      isExpanded: false
-    }
-  },
-  {
-    label: 'Sub Process (expanded)',
-    actionName: 'replace-with-expanded-subprocess',
-    className: 'bpmn-icon-subprocess-expanded',
-    target: {
-      type: 'bpmn:SubProcess',
-      isExpanded: true
-    }
-  }
-];
-
-module.exports.BOUNDARY_EVENT = [
-  {
-    label: 'Message Boundary Event',
-    actionName: 'replace-with-message-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-message',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
-    }
-  },
-  {
-    label: 'Timer Boundary Event',
-    actionName: 'replace-with-timer-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-timer',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition'
-    }
-  },
-  {
-    label: 'Escalation Boundary Event',
-    actionName: 'replace-with-escalation-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-escalation',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition'
-    }
-  },
-  {
-    label: 'Conditional Boundary Event',
-    actionName: 'replace-with-conditional-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-condition',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
-    }
-  },
-  {
-    label: 'Error Boundary Event',
-    actionName: 'replace-with-error-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-error',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:ErrorEventDefinition'
-    }
-  },
-  {
-    label: 'Cancel Boundary Event',
-    actionName: 'replace-with-cancel-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-cancel',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:CancelEventDefinition'
-    }
-  },
-  {
-    label: 'Signal Boundary Event',
-    actionName: 'replace-with-signal-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-signal',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
-    }
-  },
-  {
-    label: 'Compensation Boundary Event',
-    actionName: 'replace-with-compensation-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-compensation',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:CompensateEventDefinition'
-    }
-  },
-  {
-    label: 'Message Boundary Event (non-interrupting)',
-    actionName: 'replace-with-non-interrupting-message-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-message',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition',
-      cancelActivity: false
-    }
-  },
-  {
-    label: 'Timer Boundary Event (non-interrupting)',
-    actionName: 'replace-with-non-interrupting-timer-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-timer',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition',
-      cancelActivity: false
-    }
-  },
-  {
-    label: 'Escalation Boundary Event (non-interrupting)',
-    actionName: 'replace-with-non-interrupting-escalation-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-escalation',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition',
-      cancelActivity: false
-    }
-  },
-  {
-    label: 'Conditional Boundary Event (non-interrupting)',
-    actionName: 'replace-with-non-interrupting-conditional-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-condition',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition',
-      cancelActivity: false
-    }
-  },
-  {
-    label: 'Signal Boundary Event (non-interrupting)',
-    actionName: 'replace-with-non-interrupting-signal-boundary',
-    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-signal',
-    target: {
-      type: 'bpmn:BoundaryEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition',
-      cancelActivity: false
-    }
-  }
-];
-
-module.exports.EVENT_SUB_PROCESS_START_EVENT = [
-  {
-    label: 'Message Start Event',
-    actionName: 'replace-with-message-start',
-    className: 'bpmn-icon-start-event-message',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition'
-    }
-  },
-  {
-    label: 'Timer Start Event',
-    actionName: 'replace-with-timer-start',
-    className: 'bpmn-icon-start-event-timer',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition'
-    }
-  },
-  {
-    label: 'Conditional Start Event',
-    actionName: 'replace-with-conditional-start',
-    className: 'bpmn-icon-start-event-condition',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
-    }
-  },
-  {
-    label: 'Signal Start Event',
-    actionName: 'replace-with-signal-start',
-    className: 'bpmn-icon-start-event-signal',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition'
-    }
-  },
-  {
-    label: 'Error Start Event',
-    actionName: 'replace-with-error-start',
-    className: 'bpmn-icon-start-event-error',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:ErrorEventDefinition'
-    }
-  },
-  {
-    label: 'Escalation Start Event',
-    actionName: 'replace-with-escalation-start',
-    className: 'bpmn-icon-start-event-escalation',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition'
-    }
-  },
-  {
-    label: 'Compensation Start Event',
-    actionName: 'replace-with-compensation-start',
-    className: 'bpmn-icon-start-event-compensation',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:CompensateEventDefinition'
-    }
-  },
-  {
-    label: 'Message Start Event (non-interrupting)',
-    actionName: 'replace-with-non-interrupting-message-start',
-    className: 'bpmn-icon-start-event-non-interrupting-message',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:MessageEventDefinition',
-      isInterrupting: false
-    }
-  },
-  {
-    label: 'Timer Start Event (non-interrupting)',
-    actionName: 'replace-with-non-interrupting-timer-start',
-    className: 'bpmn-icon-start-event-non-interrupting-timer',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:TimerEventDefinition',
-      isInterrupting: false
-    }
-  },
-  {
-    label: 'Conditional Start Event (non-interrupting)',
-    actionName: 'replace-with-non-interrupting-conditional-start',
-    className: 'bpmn-icon-start-event-non-interrupting-condition',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:ConditionalEventDefinition',
-      isInterrupting: false
-    }
-  },
-  {
-    label: 'Signal Start Event (non-interrupting)',
-    actionName: 'replace-with-non-interrupting-signal-start',
-    className: 'bpmn-icon-start-event-non-interrupting-signal',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:SignalEventDefinition',
-      isInterrupting: false
-    }
-  },
-  {
-    label: 'Escalation Start Event (non-interrupting)',
-    actionName: 'replace-with-non-interrupting-escalation-start',
-    className: 'bpmn-icon-start-event-non-interrupting-escalation',
-    target: {
-      type: 'bpmn:StartEvent',
-      eventDefinitionType: 'bpmn:EscalationEventDefinition',
-      isInterrupting: false
-    }
-  }
-];
-
-module.exports.SEQUENCE_FLOW = [
-  {
-    label: 'Sequence Flow',
-    actionName: 'replace-with-sequence-flow',
-    className: 'bpmn-icon-connection'
-  },
-  {
-    label: 'Default Flow',
-    actionName: 'replace-with-default-flow',
-    className: 'bpmn-icon-default-flow'
-  },
-  {
-    label: 'Conditional Flow',
-    actionName: 'replace-with-conditional-flow',
-    className: 'bpmn-icon-conditional-flow'
-  }
-];
-
-module.exports.PARTICIPANT = [
-  {
-    label: 'Expanded Pool',
-    actionName: 'replace-with-expanded-pool',
-    className: 'bpmn-icon-participant',
-    target: {
-      type: 'bpmn:Participant',
-      isExpanded: true
-    }
-  },
-  {
-    label: 'Collapsed Pool',
-    actionName: 'replace-with-collapsed-pool',
-    // TODO(@janstuemmel): maybe design new icon
-    className: 'bpmn-icon-lane',
-    target: {
-      type: 'bpmn:Participant',
-      isExpanded: false
-    }
-  }
-];
-
-},{}],78:[function(_dereq_,module,exports){
+},{"410":410,"411":411,"417":417,"91":91,"93":93}],78:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
     _dereq_(200),
     _dereq_(214)
   ],
-  bpmnReplace: [ 'type', _dereq_(76) ]
+  vdmlReplace: [ 'type', _dereq_(77) ]
 };
-},{"200":200,"214":214,"76":76}],79:[function(_dereq_,module,exports){
+},{"200":200,"214":214,"77":77}],79:[function(_dereq_,module,exports){
 'use strict';
 
 var find = _dereq_(282),
@@ -10982,19 +10986,19 @@ var RuleProvider = _dereq_(206);
 var isBoundaryAttachment = _dereq_(84).getBoundaryAttachment;
 
 /**
- * BPMN specific modeling rule
+ * VDML specific modeling rule
  */
-function BpmnRules(eventBus) {
+function VdmlRules(eventBus) {
   RuleProvider.call(this, eventBus);
 }
 
-inherits(BpmnRules, RuleProvider);
+inherits(VdmlRules, RuleProvider);
 
-BpmnRules.$inject = [ 'eventBus' ];
+VdmlRules.$inject = [ 'eventBus' ];
 
-module.exports = BpmnRules;
+module.exports = VdmlRules;
 
-BpmnRules.prototype.init = function() {
+VdmlRules.prototype.init = function() {
 
   this.addRule('connection.create', function(context) {
     var source = context.source,
@@ -11091,31 +11095,31 @@ BpmnRules.prototype.init = function() {
   });
 };
 
-BpmnRules.prototype.canConnectMessageFlow = canConnectMessageFlow;
+VdmlRules.prototype.canConnectMessageFlow = canConnectMessageFlow;
 
-BpmnRules.prototype.canConnectSequenceFlow = canConnectSequenceFlow;
+VdmlRules.prototype.canConnectSequenceFlow = canConnectSequenceFlow;
 
-BpmnRules.prototype.canConnectDataAssociation = canConnectDataAssociation;
+VdmlRules.prototype.canConnectDataAssociation = canConnectDataAssociation;
 
-BpmnRules.prototype.canConnectAssociation = canConnectAssociation;
+VdmlRules.prototype.canConnectAssociation = canConnectAssociation;
 
-BpmnRules.prototype.canMove = canMove;
+VdmlRules.prototype.canMove = canMove;
 
-BpmnRules.prototype.canAttach = canAttach;
+VdmlRules.prototype.canAttach = canAttach;
 
-BpmnRules.prototype.canReplace = canReplace;
+VdmlRules.prototype.canReplace = canReplace;
 
-BpmnRules.prototype.canDrop = canDrop;
+VdmlRules.prototype.canDrop = canDrop;
 
-BpmnRules.prototype.canInsert = canInsert;
+VdmlRules.prototype.canInsert = canInsert;
 
-BpmnRules.prototype.canCreate = canCreate;
+VdmlRules.prototype.canCreate = canCreate;
 
-BpmnRules.prototype.canConnect = canConnect;
+VdmlRules.prototype.canConnect = canConnect;
 
-BpmnRules.prototype.canResize = canResize;
+VdmlRules.prototype.canResize = canResize;
 
-BpmnRules.prototype.canCopy = canCopy;
+VdmlRules.prototype.canCopy = canCopy;
 
 /**
  * Utility functions for rule checking
@@ -11133,8 +11137,8 @@ function getOrganizationalParent(element) {
 
   var bo = getBusinessObject(element);
 
-  while (bo && !is(bo, 'bpmn:Process')) {
-    if (is(bo, 'bpmn:Participant')) {
+  while (bo && !is(bo, 'vdml:Process')) {
+    if (is(bo, 'vdml:Participant')) {
       return bo.processRef || bo;
     }
 
@@ -11145,12 +11149,12 @@ function getOrganizationalParent(element) {
 }
 
 function isTextAnnotation(element) {
-  return is(element, 'bpmn:TextAnnotation');
+  return is(element, 'vdml:TextAnnotation');
 }
 
 function isCompensationBoundary(element) {
-  return is(element, 'bpmn:BoundaryEvent') &&
-         hasEventDefinition(element, 'bpmn:CompensateEventDefinition');
+  return is(element, 'vdml:BoundaryEvent') &&
+         hasEventDefinition(element, 'vdml:CompensateEventDefinition');
 }
 
 function isForCompensation(e) {
@@ -11165,21 +11169,21 @@ function isSameOrganization(a, b) {
 }
 
 function isMessageFlowSource(element) {
-  return is(element, 'bpmn:InteractionNode') &&
+  return is(element, 'vdml:InteractionNode') &&
         !isForCompensation(element) && (
-            !is(element, 'bpmn:Event') || (
-              is(element, 'bpmn:ThrowEvent') &&
-              hasEventDefinitionOrNone(element, 'bpmn:MessageEventDefinition')
+            !is(element, 'vdml:Event') || (
+              is(element, 'vdml:ThrowEvent') &&
+              hasEventDefinitionOrNone(element, 'vdml:MessageEventDefinition')
             )
   );
 }
 
 function isMessageFlowTarget(element) {
-  return is(element, 'bpmn:InteractionNode') &&
+  return is(element, 'vdml:InteractionNode') &&
         !isForCompensation(element) && (
-            !is(element, 'bpmn:Event') || (
-              is(element, 'bpmn:CatchEvent') &&
-              hasEventDefinitionOrNone(element, 'bpmn:MessageEventDefinition')
+            !is(element, 'vdml:Event') || (
+              is(element, 'vdml:CatchEvent') &&
+              hasEventDefinitionOrNone(element, 'vdml:MessageEventDefinition')
             )
   );
 }
@@ -11188,14 +11192,14 @@ function getScopeParent(element) {
 
   var bo = getBusinessObject(element);
 
-  if (is(bo, 'bpmn:Participant')) {
+  if (is(bo, 'vdml:Participant')) {
     return null;
   }
 
   while (bo) {
     bo = bo.$parent;
 
-    if (is(bo, 'bpmn:FlowElementsContainer')) {
+    if (is(bo, 'vdml:FlowElementsContainer')) {
       return bo;
     }
   }
@@ -11227,35 +11231,35 @@ function hasEventDefinitionOrNone(element, eventDefinition) {
 }
 
 function isSequenceFlowSource(element) {
-  return is(element, 'bpmn:FlowNode') &&
-        !is(element, 'bpmn:EndEvent') &&
+  return is(element, 'vdml:FlowNode') &&
+        !is(element, 'vdml:EndEvent') &&
         !isEventSubProcess(element) &&
-        !(is(element, 'bpmn:IntermediateThrowEvent') &&
-          hasEventDefinition(element, 'bpmn:LinkEventDefinition')
+        !(is(element, 'vdml:IntermediateThrowEvent') &&
+          hasEventDefinition(element, 'vdml:LinkEventDefinition')
         ) &&
         !isCompensationBoundary(element) &&
         !isForCompensation(element);
 }
 
 function isSequenceFlowTarget(element) {
-  return is(element, 'bpmn:FlowNode') &&
-        !is(element, 'bpmn:StartEvent') &&
-        !is(element, 'bpmn:BoundaryEvent') &&
+  return is(element, 'vdml:FlowNode') &&
+        !is(element, 'vdml:StartEvent') &&
+        !is(element, 'vdml:BoundaryEvent') &&
         !isEventSubProcess(element) &&
-        !(is(element, 'bpmn:IntermediateCatchEvent') &&
-          hasEventDefinition(element, 'bpmn:LinkEventDefinition')
+        !(is(element, 'vdml:IntermediateCatchEvent') &&
+          hasEventDefinition(element, 'vdml:LinkEventDefinition')
         ) &&
         !isForCompensation(element);
 
 }
 
 function isEventBasedTarget(element) {
-  return is(element, 'bpmn:ReceiveTask') || (
-         is(element, 'bpmn:IntermediateCatchEvent') && (
-           hasEventDefinition(element, 'bpmn:MessageEventDefinition') ||
-           hasEventDefinition(element, 'bpmn:TimerEventDefinition') ||
-           hasEventDefinition(element, 'bpmn:ConditionalEventDefinition') ||
-           hasEventDefinition(element, 'bpmn:SignalEventDefinition')
+  return is(element, 'vdml:ReceiveTask') || (
+         is(element, 'vdml:IntermediateCatchEvent') && (
+           hasEventDefinition(element, 'vdml:MessageEventDefinition') ||
+           hasEventDefinition(element, 'vdml:TimerEventDefinition') ||
+           hasEventDefinition(element, 'vdml:ConditionalEventDefinition') ||
+           hasEventDefinition(element, 'vdml:SignalEventDefinition')
          )
   );
 }
@@ -11279,7 +11283,7 @@ function canConnect(source, target, connection) {
     return null;
   }
 
-  // See https://github.com/bpmn-io/bpmn-js/issues/178
+  // See https://github.com/vdml-io/vdml-js/issues/178
   // as a workround we disallow connections with same
   // target and source element.
   // This rule must be removed if a auto layout for this
@@ -11288,14 +11292,14 @@ function canConnect(source, target, connection) {
     return false;
   }
 
-  if (!is(connection, 'bpmn:DataAssociation')) {
+  if (!is(connection, 'vdml:DataAssociation')) {
 
     if (canConnectMessageFlow(source, target)) {
-      return { type: 'bpmn:MessageFlow' };
+      return { type: 'vdml:MessageFlow' };
     }
 
     if (canConnectSequenceFlow(source, target)) {
-      return { type: 'bpmn:SequenceFlow' };
+      return { type: 'vdml:SequenceFlow' };
     }
   }
 
@@ -11307,22 +11311,22 @@ function canConnect(source, target, connection) {
 
   if (isCompensationBoundary(source) && isForCompensation(target)) {
     return {
-      type: 'bpmn:Association',
+      type: 'vdml:Association',
       associationDirection: 'One'
     };
   }
 
-  if (is(connection, 'bpmn:Association') && canConnectAssociation(source, target)) {
+  if (is(connection, 'vdml:Association') && canConnectAssociation(source, target)) {
 
     return {
-      type: 'bpmn:Association'
+      type: 'vdml:Association'
     };
   }
 
   if (isTextAnnotation(source) || isTextAnnotation(target)) {
 
     return {
-      type: 'bpmn:Association'
+      type: 'vdml:Association'
     };
   }
 
@@ -11342,46 +11346,46 @@ function canDrop(element, target, position) {
   }
 
   // disallow to create elements on collapsed pools
-  if (is(target, 'bpmn:Participant') && !isExpanded(target)) {
+  if (is(target, 'vdml:Participant') && !isExpanded(target)) {
     return false;
   }
 
   // allow to create new participants on
   // on existing collaboration and process diagrams
-  if (is(element, 'bpmn:Participant')) {
-    return is(target, 'bpmn:Process') || is(target, 'bpmn:Collaboration');
+  if (is(element, 'vdml:Participant')) {
+    return is(target, 'vdml:EcoMap');
   }
 
   // allow creating lanes on participants and other lanes only
-  if (is(element, 'bpmn:Lane')) {
-    return is(target, 'bpmn:Participant') || is(target, 'bpmn:Lane');
+  if (is(element, 'vdml:Lane')) {
+    return is(target, 'vdml:Participant') || is(target, 'vdml:Lane');
   }
 
-  if (is(element, 'bpmn:BoundaryEvent')) {
+  if (is(element, 'vdml:BoundaryEvent')) {
     return false;
   }
 
   // drop flow elements onto flow element containers
   // and participants
-  if (is(element, 'bpmn:FlowElement') || is(element, 'bpmn:DataAssociation')) {
-    if (is(target, 'bpmn:FlowElementsContainer')) {
+  if (is(element, 'vdml:FlowElement') || is(element, 'vdml:DataAssociation')) {
+    if (is(target, 'vdml:FlowElementsContainer')) {
       return isExpanded(target);
     }
 
-    return isAny(target, [ 'bpmn:Participant', 'bpmn:Lane' ]);
+    return isAny(target, [ 'vdml:Participant', 'vdml:Lane' ]);
   }
 
-  if (is(element, 'bpmn:Artifact')) {
+  if (is(element, 'vdml:Artifact')) {
     return isAny(target, [
-      'bpmn:Collaboration',
-      'bpmn:Lane',
-      'bpmn:Participant',
-      'bpmn:Process',
-      'bpmn:SubProcess' ]);
+      'vdml:Collaboration',
+      'vdml:Lane',
+      'vdml:Participant',
+      'vdml:Process',
+      'vdml:SubProcess' ]);
   }
 
-  if (is(element, 'bpmn:MessageFlow')) {
-    return is(target, 'bpmn:Collaboration')
+  if (is(element, 'vdml:MessageFlow')) {
+    return is(target, 'vdml:Collaboration')
       || element.source.parent == target
       || element.target.parent == target;
   }
@@ -11393,43 +11397,43 @@ function canPaste(tree, target) {
   var topLevel = tree[0],
       participants;
 
-  if (is(target, 'bpmn:Collaboration')) {
+  if (is(target, 'vdml:Collaboration')) {
     return every(topLevel, function(e) {
-      return e.type === 'bpmn:Participant';
+      return e.type === 'vdml:Participant';
     });
   }
 
-  if (is(target, 'bpmn:Process')) {
+  if (is(target, 'vdml:Process')) {
     participants = any(topLevel, function(e) {
-      return e.type === 'bpmn:Participant';
+      return e.type === 'vdml:Participant';
     });
 
     return !(participants && target.children.length > 0);
   }
 
   // disallow to create elements on collapsed pools
-  if (is(target, 'bpmn:Participant') && !isExpanded(target)) {
+  if (is(target, 'vdml:Participant') && !isExpanded(target)) {
     return false;
   }
 
-  if (is(target, 'bpmn:FlowElementsContainer')) {
+  if (is(target, 'vdml:FlowElementsContainer')) {
     return isExpanded(target);
   }
 
   return isAny(target, [
-    'bpmn:Collaboration',
-    'bpmn:Lane',
-    'bpmn:Participant',
-    'bpmn:Process',
-    'bpmn:SubProcess' ]);
+    'vdml:Collaboration',
+    'vdml:Lane',
+    'vdml:Participant',
+    'vdml:Process',
+    'vdml:SubProcess' ]);
 }
 
 function isBoundaryEvent(element) {
-  return !isLabel(element) && is(element, 'bpmn:BoundaryEvent');
+  return !isLabel(element) && is(element, 'vdml:BoundaryEvent');
 }
 
 function isLane(element) {
-  return is(element, 'bpmn:Lane');
+  return is(element, 'vdml:Lane');
 }
 
 /**
@@ -11438,7 +11442,7 @@ function isLane(element) {
  */
 function isBoundaryCandidate(element) {
   return isBoundaryEvent(element) ||
-        (is(element, 'bpmn:IntermediateThrowEvent') && !element.parent);
+        (is(element, 'vdml:IntermediateThrowEvent') && !element.parent);
 }
 
 
@@ -11481,7 +11485,7 @@ function canAttach(elements, target, source, position) {
   }
 
   // only allow drop on non compensation activities
-  if (!is(target, 'bpmn:Activity') || isForCompensation(target)) {
+  if (!is(target, 'vdml:Activity') || isForCompensation(target)) {
     return false;
   }
 
@@ -11502,10 +11506,10 @@ function canAttach(elements, target, source, position) {
  * @example
  *
  *  [{ id: 'IntermediateEvent_2',
- *     type: 'bpmn:StartEvent'
+ *     type: 'vdml:StartEvent'
  *   },
  *   { id: 'IntermediateEvent_5',
- *     type: 'bpmn:EndEvent'
+ *     type: 'vdml:EndEvent'
  *   }]
  *
  * @param  {Array} elements
@@ -11529,33 +11533,33 @@ function canReplace(elements, target, position) {
     // when the target is not an event sub process
     if (!isEventSubProcess(target)) {
 
-      if (is(element, 'bpmn:StartEvent') &&
+      if (is(element, 'vdml:StartEvent') &&
           !isInterrupting(element) &&
           element.type !== 'label' &&
           canDrop(element, target)) {
 
         canExecute.replacements.push({
           oldElementId: element.id,
-          newElementType: 'bpmn:StartEvent'
+          newElementType: 'vdml:StartEvent'
         });
       }
     }
 
-    if (!is(target, 'bpmn:Transaction')) {
-      if (hasEventDefinition(element, 'bpmn:CancelEventDefinition') &&
+    if (!is(target, 'vdml:Transaction')) {
+      if (hasEventDefinition(element, 'vdml:CancelEventDefinition') &&
           element.type !== 'label') {
 
-        if (is(element, 'bpmn:EndEvent') && canDrop(element, target)) {
+        if (is(element, 'vdml:EndEvent') && canDrop(element, target)) {
           canExecute.replacements.push({
             oldElementId: element.id,
-            newElementType: 'bpmn:EndEvent'
+            newElementType: 'vdml:EndEvent'
           });
         }
 
-        if (is(element, 'bpmn:BoundaryEvent') && canAttach(element, target, null, position)) {
+        if (is(element, 'vdml:BoundaryEvent') && canAttach(element, target, null, position)) {
           canExecute.replacements.push({
             oldElementId: element.id,
-            newElementType: 'bpmn:BoundaryEvent'
+            newElementType: 'vdml:BoundaryEvent'
           });
         }
       }
@@ -11611,17 +11615,17 @@ function canCreate(shape, target, source, position) {
 }
 
 function canResize(shape, newBounds) {
-  if (is(shape, 'bpmn:SubProcess')) {
+  if (is(shape, 'vdml:SubProcess')) {
     return (!!isExpanded(shape)) && (
           !newBounds || (newBounds.width >= 100 && newBounds.height >= 80)
     );
   }
 
-  if (is(shape, 'bpmn:Lane')) {
+  if (is(shape, 'vdml:Lane')) {
     return !newBounds || (newBounds.width >= 130 && newBounds.height >= 60);
   }
 
-  if (is(shape, 'bpmn:Participant')) {
+  if (is(shape, 'vdml:Participant')) {
     return !newBounds || (newBounds.width >= 250 && newBounds.height >= 50);
   }
 
@@ -11656,20 +11660,20 @@ function canConnectSequenceFlow(source, target) {
   return isSequenceFlowSource(source) &&
          isSequenceFlowTarget(target) &&
          isSameScope(source, target) &&
-         !(is(source, 'bpmn:EventBasedGateway') && !isEventBasedTarget(target));
+         !(is(source, 'vdml:EventBasedGateway') && !isEventBasedTarget(target));
 }
 
 
 function canConnectDataAssociation(source, target) {
 
-  if (isAny(source, [ 'bpmn:DataObjectReference', 'bpmn:DataStoreReference' ]) &&
-      isAny(target, [ 'bpmn:Activity', 'bpmn:ThrowEvent' ])) {
-    return { type: 'bpmn:DataInputAssociation' };
+  if (isAny(source, [ 'vdml:DataObjectReference', 'vdml:DataStoreReference' ]) &&
+      isAny(target, [ 'vdml:Activity', 'vdml:ThrowEvent' ])) {
+    return { type: 'vdml:DataInputAssociation' };
   }
 
-  if (isAny(target, [ 'bpmn:DataObjectReference', 'bpmn:DataStoreReference' ]) &&
-      isAny(source, [ 'bpmn:Activity', 'bpmn:CatchEvent' ])) {
-    return { type: 'bpmn:DataOutputAssociation' };
+  if (isAny(target, [ 'vdml:DataObjectReference', 'vdml:DataStoreReference' ]) &&
+      isAny(source, [ 'vdml:Activity', 'vdml:CatchEvent' ])) {
+    return { type: 'vdml:DataOutputAssociation' };
   }
 
   return false;
@@ -11683,9 +11687,9 @@ function canInsert(shape, flow, position) {
   // at this point we are not really able to talk
   // about connection rules (yet)
   return (
-    isAny(flow, [ 'bpmn:SequenceFlow', 'bpmn:MessageFlow' ]) &&
-    is(shape, 'bpmn:FlowNode') &&
-    !is(shape, 'bpmn:BoundaryEvent') &&
+    isAny(flow, [ 'vdml:SequenceFlow', 'vdml:MessageFlow' ]) &&
+    is(shape, 'vdml:FlowNode') &&
+    !is(shape, 'vdml:BoundaryEvent') &&
     canDrop(shape, flow.parent, position));
 }
 
@@ -11694,11 +11698,11 @@ function contains(collection, element) {
 }
 
 function canCopy(collection, element) {
-  if (is(element, 'bpmn:Lane') && !contains(collection, element.parent)) {
+  if (is(element, 'vdml:Lane') && !contains(collection, element.parent)) {
     return false;
   }
 
-  if (is(element, 'bpmn:BoundaryEvent') && !contains(collection, element.host)) {
+  if (is(element, 'vdml:BoundaryEvent') && !contains(collection, element.host)) {
     return false;
   }
 
@@ -11710,8 +11714,8 @@ module.exports = {
   __depends__: [
     _dereq_(208)
   ],
-  __init__: [ 'bpmnRules' ],
-  bpmnRules: [ 'type', _dereq_(79) ]
+  __init__: [ 'vdmlRules' ],
+  vdmlRules: [ 'type', _dereq_(79) ]
 };
 
 },{"208":208,"79":79}],81:[function(_dereq_,module,exports){
@@ -11725,9 +11729,9 @@ var labelUtil = _dereq_(24);
 
 
 /**
- * Provides ability to search through BPMN elements
+ * Provides ability to search through VDML elements
  */
-function BpmnSearchProvider(elementRegistry, searchPad, canvas) {
+function VdmlSearchProvider(elementRegistry, searchPad, canvas) {
 
   this._elementRegistry = elementRegistry;
   this._canvas = canvas;
@@ -11735,9 +11739,9 @@ function BpmnSearchProvider(elementRegistry, searchPad, canvas) {
   searchPad.registerProvider(this);
 }
 
-module.exports = BpmnSearchProvider;
+module.exports = VdmlSearchProvider;
 
-BpmnSearchProvider.$inject = [
+VdmlSearchProvider.$inject = [
   'elementRegistry',
   'searchPad',
   'canvas'
@@ -11762,7 +11766,7 @@ BpmnSearchProvider.$inject = [
  * @param  {String} pattern
  * @return {Array<Result>}
  */
-BpmnSearchProvider.prototype.find = function(pattern) {
+VdmlSearchProvider.prototype.find = function(pattern) {
   var rootElement = this._canvas.getRootElement();
 
   var elements = this._elementRegistry.filter(function(element) {
@@ -11849,8 +11853,8 @@ module.exports = {
   __depends__: [
     _dereq_(210)
   ],
-  __init__: [ 'bpmnSearch'],
-  bpmnSearch: [ 'type', _dereq_(81) ]
+  __init__: [ 'vdmlSearch'],
+  vdmlSearch: [ 'type', _dereq_(81) ]
 };
 
 },{"210":210,"81":81}],83:[function(_dereq_,module,exports){
@@ -11891,7 +11895,7 @@ var HIGH_PRIORITY = 1500;
 
 
 /**
- * BPMN specific snapping functionality
+ * VDML specific snapping functionality
  *
  *  * snap on process elements if a pool is created inside a
  *    process diagram
@@ -11899,7 +11903,7 @@ var HIGH_PRIORITY = 1500;
  * @param {EventBus} eventBus
  * @param {Canvas} canvas
  */
-function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
+function VdmlSnapping(eventBus, canvas, vdmlRules, elementRegistry) {
 
   // instantiate super
   Snapping.call(this, eventBus, canvas);
@@ -11915,7 +11919,7 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
         rootElement = canvas.getRootElement();
 
     // snap participant around existing elements (if any)
-    if (is(shape, 'bpmn:Participant') && is(rootElement, 'bpmn:Process')) {
+    if (is(shape, 'vdml:Participant') && is(rootElement, 'vdml:Process')) {
       initParticipantSnapping(context, shape, rootElement.children);
     }
   });
@@ -11938,18 +11942,18 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
         rootElement = canvas.getRootElement();
 
     // snap participant around existing elements (if any)
-    if (is(shape, 'bpmn:Participant') && is(rootElement, 'bpmn:Process')) {
+    if (is(shape, 'vdml:Participant') && is(rootElement, 'vdml:Process')) {
       initParticipantSnapping(context, shape, rootElement.children);
     }
   });
 
 
   function canAttach(shape, target, position) {
-    return bpmnRules.canAttach([ shape ], target, null, position) === 'attach';
+    return vdmlRules.canAttach([ shape ], target, null, position) === 'attach';
   }
 
   function canConnect(source, target) {
-    return bpmnRules.canConnect(source, target);
+    return vdmlRules.canConnect(source, target);
   }
 
   /**
@@ -11987,7 +11991,7 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
         shape = context.shape,
         hover = event.hover;
 
-    if (is(hover, 'bpmn:Lane') && !isAny(shape, [ 'bpmn:Lane', 'bpmn:Participant' ])) {
+    if (is(hover, 'vdml:Lane') && !isAny(shape, [ 'vdml:Lane', 'vdml:Participant' ])) {
       event.hover = getLanesRoot(hover);
       event.hoverGfx = elementRegistry.getGraphics(event.hover);
     }
@@ -12011,7 +12015,7 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
       context.initialSourcePosition = context.sourcePosition;
     }
 
-    if (target && connection.type === 'bpmn:SequenceFlow') {
+    if (target && connection.type === 'vdml:SequenceFlow') {
 
       // snap source
       context.sourcePosition = mid(source);
@@ -12038,11 +12042,11 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
 
     var threshold = 30;
 
-    if (is(shape, 'bpmn:Lane')) {
-      if (isAny(target, [ 'bpmn:Lane', 'bpmn:Participant' ])) {
+    if (is(shape, 'vdml:Lane')) {
+      if (isAny(target, [ 'vdml:Lane', 'vdml:Participant' ])) {
 
         var childLanes = filter(target.children, function(c) {
-          return is(c, 'bpmn:Lane');
+          return is(c, 'vdml:Lane');
         });
 
         var y = event.y,
@@ -12114,33 +12118,33 @@ function BpmnSnapping(eventBus, canvas, bpmnRules, elementRegistry) {
     var context = event.context,
         shape = context.shape;
 
-    if (is(shape, 'bpmn:SubProcess') && isExpanded(shape)) {
+    if (is(shape, 'vdml:SubProcess') && isExpanded(shape)) {
       context.minDimensions = { width: 140, height: 120 };
     }
 
-    if (is(shape, 'bpmn:Participant')) {
+    if (is(shape, 'vdml:Participant')) {
       context.minDimensions = { width: 300, height: 150 };
     }
 
-    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
+    if (is(shape, 'vdml:Lane') || is(shape, 'vdml:Participant')) {
       context.resizeConstraints = getParticipantSizeConstraints(shape, context.direction, context.balanced);
     }
 
-    if (is(shape, 'bpmn:TextAnnotation')) {
+    if (is(shape, 'vdml:TextAnnotation')) {
       context.minDimensions = { width: 50, height: 30 };
     }
   });
 
 }
 
-inherits(BpmnSnapping, Snapping);
+inherits(VdmlSnapping, Snapping);
 
-BpmnSnapping.$inject = [ 'eventBus', 'canvas', 'bpmnRules', 'elementRegistry' ];
+VdmlSnapping.$inject = [ 'eventBus', 'canvas', 'vdmlRules', 'elementRegistry' ];
 
-module.exports = BpmnSnapping;
+module.exports = VdmlSnapping;
 
 
-BpmnSnapping.prototype.initSnap = function(event) {
+VdmlSnapping.prototype.initSnap = function(event) {
 
   var context = event.context,
       shape = event.shape,
@@ -12153,7 +12157,7 @@ BpmnSnapping.prototype.initSnap = function(event) {
 
   snapContext = Snapping.prototype.initSnap.call(this, event);
 
-  if (is(shape, 'bpmn:Participant')) {
+  if (is(shape, 'vdml:Participant')) {
     // assign higher priority for outer snaps on participants
     snapContext.setSnapLocations([ 'top-left', 'bottom-right', 'mid' ]);
   }
@@ -12215,15 +12219,15 @@ BpmnSnapping.prototype.initSnap = function(event) {
 };
 
 
-BpmnSnapping.prototype.addTargetSnaps = function(snapPoints, shape, target) {
+VdmlSnapping.prototype.addTargetSnaps = function(snapPoints, shape, target) {
 
   // use target parent as snap target
-  if (is(shape, 'bpmn:BoundaryEvent') && shape.type !== 'label') {
+  if (is(shape, 'vdml:BoundaryEvent') && shape.type !== 'label') {
     target = target.parent;
   }
 
   // add sequence flow parents as snap targets
-  if (is(target, 'bpmn:SequenceFlow')) {
+  if (is(target, 'vdml:SequenceFlow')) {
     this.addTargetSnaps(snapPoints, shape, target.parent);
   }
 
@@ -12232,13 +12236,13 @@ BpmnSnapping.prototype.addTargetSnaps = function(snapPoints, shape, target) {
   forEach(siblings, function(s) {
 
     // do not snap to lanes
-    if (is(s, 'bpmn:Lane')) {
+    if (is(s, 'vdml:Lane')) {
       return;
     }
 
     snapPoints.add('mid', mid(s));
 
-    if (is(s, 'bpmn:Participant')) {
+    if (is(s, 'vdml:Participant')) {
       snapPoints.add('top-left', topLeft(s));
       snapPoints.add('bottom-right', bottomRight(s));
     }
@@ -12478,7 +12482,7 @@ function getParticipantSizeConstraints(laneShape, resizeDirection, balanced) {
   ///// max top/bottom/left/right size based on flow nodes
 
   var flowElements = lanesRoot.children.filter(function(s) {
-    return !s.hidden && !s.waypoints && (is(s, 'bpmn:FlowElement') || is(s, 'bpmn:Artifact'));
+    return !s.hidden && !s.waypoints && (is(s, 'vdml:FlowElement') || is(s, 'vdml:Artifact'));
   });
 
   flowElements.forEach(function(flowElement) {
@@ -12885,7 +12889,7 @@ function is(element, type) {
  */
 function findDisplayCandidate(definitions) {
   return find(definitions.rootElements, function(e) {
-    return is(e, 'vdml:Process') || is(e, 'vdml:Collaboration');
+    return is(e, 'vdml:EcoMap');
   });
 }
 
@@ -13064,7 +13068,7 @@ function VdmlTreeWalker(handler, translate) {
 
     var ctx = visitRoot(rootElement, plane);
 
-    if (is(rootElement, 'vdml:Process')) {
+    if (is(rootElement, 'vdml:EcoMap')) {
       handleProcess(rootElement, ctx);
     } else if (is(rootElement, 'vdml:Collaboration')) {
       handleCollaboration(rootElement, ctx);
@@ -13089,10 +13093,11 @@ function VdmlTreeWalker(handler, translate) {
   }
 
   function handleProcess(process, context) {
-    handleFlowElementsContainer(process, context);
+      //TODO
+    /*handleFlowElementsContainer(process, context);
     handleIoSpecification(process.ioSpecification, context);
 
-    handleArtifacts(process.artifacts, context);
+    handleArtifacts(process.artifacts, context);*/
 
     // log process handled
     handled(process);
@@ -13305,7 +13310,7 @@ module.exports = {
   __depends__: [
     _dereq_(229)
   ],
-  bpmnImporter: [ 'type', _dereq_(88) ]
+  vdmlImporter: [ 'type', _dereq_(88) ]
 };
 },{"229":229,"88":88}],91:[function(_dereq_,module,exports){
 'use strict';
@@ -13528,7 +13533,7 @@ var domDelegate = _dereq_(427);
 /* jshint -W101 */
 
 // inlined ../resources/bpmnjs.png
-var logoData = module.exports.BPMNIO_LOGO = 'iVBORw0KGgoAAAANSUhEUgAAADQAAAA0CAMAAADypuvZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADBQTFRFiMte9PrwldFwfcZPqtqN0+zEyOe1XLgjvuKncsJAZ70y6fXh3vDT////UrQV////G2zN+AAAABB0Uk5T////////////////////AOAjXRkAAAHDSURBVHjavJZJkoUgDEBJmAX8979tM8u3E6x20VlYJfFFMoL4vBDxATxZcakIOJTWSmxvKWVIkJ8jHvlRv1F2LFrVISCZI+tCtQx+XfewgVTfyY3plPiQEAzI3zWy+kR6NBhFBYeBuscJLOUuA2WVLpCjVIaFzrNQZArxAZKUQm6gsj37L9Cb7dnIBUKxENaaMJQqMpDXvSL+ktxdGRm2IsKgJGGPg7atwUG5CcFUEuSv+CwQqizTrvDTNXdMU2bMiDWZd8d7QIySWVRsb2vBBioxOFt4OinPBapL+neAb5KL5IJ8szOza2/DYoipUCx+CjO0Bpsv0V6mktNZ+k8rlABlWG0FrOpKYVo8DT3dBeLEjUBAj7moDogVii7nSS9QzZnFcOVBp1g2PyBQ3Vr5aIapN91VJy33HTJLC1iX2FY6F8gRdaAeIEfVONgtFCzZTmoLEdOjBDfsIOA6128gw3eu1shAajdZNAORxuQDJN5A5PbEG6gNIu24QJD5iNyRMZIr6bsHbCtCU/OaOaSvgkUyDMdDa1BXGf5HJ1To+/Ym6mCKT02Y+/Sa126ZKyd3jxhzpc1r8zVL6YM1Qy/kR4ABAFJ6iQUnivhAAAAAAElFTkSuQmCC';
+var logoData = module.exports.VDMLIO_LOGO = 'iVBORw0KGgoAAAANSUhEUgAAADQAAAA0CAMAAADypuvZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADBQTFRFiMte9PrwldFwfcZPqtqN0+zEyOe1XLgjvuKncsJAZ70y6fXh3vDT////UrQV////G2zN+AAAABB0Uk5T////////////////////AOAjXRkAAAHDSURBVHjavJZJkoUgDEBJmAX8979tM8u3E6x20VlYJfFFMoL4vBDxATxZcakIOJTWSmxvKWVIkJ8jHvlRv1F2LFrVISCZI+tCtQx+XfewgVTfyY3plPiQEAzI3zWy+kR6NBhFBYeBuscJLOUuA2WVLpCjVIaFzrNQZArxAZKUQm6gsj37L9Cb7dnIBUKxENaaMJQqMpDXvSL+ktxdGRm2IsKgJGGPg7atwUG5CcFUEuSv+CwQqizTrvDTNXdMU2bMiDWZd8d7QIySWVRsb2vBBioxOFt4OinPBapL+neAb5KL5IJ8szOza2/DYoipUCx+CjO0Bpsv0V6mktNZ+k8rlABlWG0FrOpKYVo8DT3dBeLEjUBAj7moDogVii7nSS9QzZnFcOVBp1g2PyBQ3Vr5aIapN91VJy33HTJLC1iX2FY6F8gRdaAeIEfVONgtFCzZTmoLEdOjBDfsIOA6128gw3eu1shAajdZNAORxuQDJN5A5PbEG6gNIu24QJD5iNyRMZIr6bsHbCtCU/OaOaSvgkUyDMdDa1BXGf5HJ1To+/Ym6mCKT02Y+/Sa126ZKyd3jxhzpc1r8zVL6YM1Qy/kR4ABAFJ6iQUnivhAAAAAAElFTkSuQmCC';
 
 /* jshint +W101 */
 
@@ -55388,7 +55393,8 @@ module.exports={
     {
       "name": "EcoMap",
       "superClass": [
-        "FlowElementsContainer"
+        "FlowElementsContainer",
+        "RootElement"
       ],
       "properties": [
         {
@@ -55412,6 +55418,13 @@ module.exports={
           "type": "Artifact",
           "isMany": true
         }
+      ]
+    },
+    {
+      "name": "RootElement",
+      "isAbstract": true,
+      "superClass": [
+        "BaseElement"
       ]
     },
     {
