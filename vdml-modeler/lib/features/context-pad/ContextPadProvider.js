@@ -263,7 +263,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
       assign(actions, {
         'append.end-event': appendAction('vdml:EndEvent', 'bpmn-icon-end-event-none'),
         'append.gateway': appendAction('vdml:ExclusiveGateway', 'bpmn-icon-gateway-xor'),
-        'append.append-task': appendAction('vdml:Task', 'bpmn-icon-task'),
+        'append.append-task': appendAction('vdml:Collaboration', 'bpmn-icon-task'),
         'append.intermediate-event': appendAction('vdml:IntermediateThrowEvent',
                                                   'bpmn-icon-intermediate-event-none')
       });

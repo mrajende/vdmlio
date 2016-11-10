@@ -3237,7 +3237,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
       assign(actions, {
         'append.end-event': appendAction('vdml:EndEvent', 'bpmn-icon-end-event-none'),
         'append.gateway': appendAction('vdml:ExclusiveGateway', 'bpmn-icon-gateway-xor'),
-        'append.append-task': appendAction('vdml:Task', 'bpmn-icon-task'),
+        'append.append-task': appendAction('vdml:Collaboration', 'bpmn-icon-task'),
         'append.intermediate-event': appendAction('vdml:IntermediateThrowEvent',
                                                   'bpmn-icon-intermediate-event-none')
       });
@@ -4457,7 +4457,8 @@ Modeling.prototype.connect = function(source, target, attrs, hints) {
     attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
   }
 
-  return this.createConnection(source, target, attrs, source.parent, hints);
+    //return this.createConnection(source, target, attrs, source.parent, hints);
+  return this.createConnection(source, target, attrs, source, hints);
 };
 
 
@@ -19249,7 +19250,7 @@ var isFunction = _dereq_(402),
 var entrySelector = '.entry';
 
 
-/**
+/*k
  * A context pad that displays element specific, contextual actions next
  * to a diagram element.
  *
@@ -55983,74 +55984,6 @@ module.exports={
       ]
     },
     {
-      "name": "Collaboration",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "isClosed",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "participants",
-          "type": "Participant",
-          "isMany": true
-        },
-        {
-          "name": "messageFlows",
-          "type": "MessageFlow",
-          "isMany": true
-        },
-        {
-          "name": "artifacts",
-          "type": "Artifact",
-          "isMany": true
-        },
-        {
-          "name": "conversations",
-          "type": "ConversationNode",
-          "isMany": true
-        },
-        {
-          "name": "conversationAssociations",
-          "type": "ConversationAssociation"
-        },
-        {
-          "name": "participantAssociations",
-          "type": "ParticipantAssociation",
-          "isMany": true
-        },
-        {
-          "name": "messageFlowAssociations",
-          "type": "MessageFlowAssociation",
-          "isMany": true
-        },
-        {
-          "name": "correlationKeys",
-          "type": "CorrelationKey",
-          "isMany": true
-        },
-        {
-          "name": "choreographyRef",
-          "type": "Choreography",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "conversationLinks",
-          "type": "ConversationLink",
-          "isMany": true
-        }
-      ]
-    },
-    {
       "name": "TextAnnotation",
       "superClass": [
         "Artifact"
@@ -56174,6 +56107,63 @@ module.exports={
       "superClass": [
         "Participant",
         "InteractionNode"
+      ],
+      "properties": [
+        {
+          "name": "isClosed",
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "participants",
+          "type": "Participant",
+          "isMany": true
+        },
+        {
+          "name": "messageFlows",
+          "type": "MessageFlow",
+          "isMany": true
+        },
+        {
+          "name": "artifacts",
+          "type": "Artifact",
+          "isMany": true
+        },
+        {
+          "name": "conversations",
+          "type": "ConversationNode",
+          "isMany": true
+        },
+        {
+          "name": "conversationAssociations",
+          "type": "ConversationAssociation"
+        },
+        {
+          "name": "participantAssociations",
+          "type": "ParticipantAssociation",
+          "isMany": true
+        },
+        {
+          "name": "messageFlowAssociations",
+          "type": "MessageFlowAssociation",
+          "isMany": true
+        },
+        {
+          "name": "correlationKeys",
+          "type": "CorrelationKey",
+          "isMany": true
+        },
+        {
+          "name": "choreographyRef",
+          "type": "Choreography",
+          "isMany": true,
+          "isReference": true
+        },
+        {
+          "name": "conversationLinks",
+          "type": "ConversationLink",
+          "isMany": true
+        }
       ]
     }, 
     {

@@ -27285,74 +27285,6 @@ module.exports={
       ]
     },
     {
-      "name": "Collaboration",
-      "superClass": [
-        "RootElement"
-      ],
-      "properties": [
-        {
-          "name": "name",
-          "isAttr": true,
-          "type": "String"
-        },
-        {
-          "name": "isClosed",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "participants",
-          "type": "Participant",
-          "isMany": true
-        },
-        {
-          "name": "messageFlows",
-          "type": "MessageFlow",
-          "isMany": true
-        },
-        {
-          "name": "artifacts",
-          "type": "Artifact",
-          "isMany": true
-        },
-        {
-          "name": "conversations",
-          "type": "ConversationNode",
-          "isMany": true
-        },
-        {
-          "name": "conversationAssociations",
-          "type": "ConversationAssociation"
-        },
-        {
-          "name": "participantAssociations",
-          "type": "ParticipantAssociation",
-          "isMany": true
-        },
-        {
-          "name": "messageFlowAssociations",
-          "type": "MessageFlowAssociation",
-          "isMany": true
-        },
-        {
-          "name": "correlationKeys",
-          "type": "CorrelationKey",
-          "isMany": true
-        },
-        {
-          "name": "choreographyRef",
-          "type": "Choreography",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "conversationLinks",
-          "type": "ConversationLink",
-          "isMany": true
-        }
-      ]
-    },
-    {
       "name": "TextAnnotation",
       "superClass": [
         "Artifact"
@@ -27476,6 +27408,63 @@ module.exports={
       "superClass": [
         "Participant",
         "InteractionNode"
+      ],
+      "properties": [
+        {
+          "name": "isClosed",
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "participants",
+          "type": "Participant",
+          "isMany": true
+        },
+        {
+          "name": "messageFlows",
+          "type": "MessageFlow",
+          "isMany": true
+        },
+        {
+          "name": "artifacts",
+          "type": "Artifact",
+          "isMany": true
+        },
+        {
+          "name": "conversations",
+          "type": "ConversationNode",
+          "isMany": true
+        },
+        {
+          "name": "conversationAssociations",
+          "type": "ConversationAssociation"
+        },
+        {
+          "name": "participantAssociations",
+          "type": "ParticipantAssociation",
+          "isMany": true
+        },
+        {
+          "name": "messageFlowAssociations",
+          "type": "MessageFlowAssociation",
+          "isMany": true
+        },
+        {
+          "name": "correlationKeys",
+          "type": "CorrelationKey",
+          "isMany": true
+        },
+        {
+          "name": "choreographyRef",
+          "type": "Choreography",
+          "isMany": true,
+          "isReference": true
+        },
+        {
+          "name": "conversationLinks",
+          "type": "ConversationLink",
+          "isMany": true
+        }
       ]
     }, 
     {

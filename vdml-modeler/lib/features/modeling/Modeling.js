@@ -64,7 +64,8 @@ Modeling.prototype.connect = function(source, target, attrs, hints) {
     attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
   }
 
-  return this.createConnection(source, target, attrs, source.parent, hints);
+    //return this.createConnection(source, target, attrs, source.parent, hints);
+  return this.createConnection(source, target, attrs, source, hints);
 };
 
 
