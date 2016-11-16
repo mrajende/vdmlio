@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-11-11
+ * Date: 2016-11-16
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -1206,8 +1206,10 @@ var is = _dereq_(93).is;
 var RenderUtil = _dereq_(258);
 
 var componentsToPath = RenderUtil.componentsToPath,
-    createLine = RenderUtil.createLine;
-
+    createLine = RenderUtil.createLine,
+    createCurve = RenderUtil.createCurve,
+    updateCurve = RenderUtil.updateCurve;
+    
 
 var TASK_BORDER_RADIUS = 10;
 var INNER_OUTER_DIST = 3;
@@ -1518,13 +1520,29 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       'translate(' + top + ',' + 0 + ')'
     );
   }
-
+  function isCurvedConnection(connection) {
+      if (connection.type === 'vdml:SequenceFlow') {
+          return true;
+      }
+      return false;
+  }
   function createPathFromConnection(connection) {
+    var isCurve = isCurvedConnection(connection);
     var waypoints = connection.waypoints;
-
+    
     var pathData = 'm  ' + waypoints[0].x + ',' + waypoints[0].y;
-    for (var i = 1; i < waypoints.length; i++) {
-      pathData += 'L' + waypoints[i].x + ',' + waypoints[i].y + ' ';
+    if (!isCurve) {
+        for (var i = 1; i < waypoints.length; i++) {
+            pathData += 'L' + waypoints[i].x + ',' + waypoints[i].y + ' ';
+        }
+    } else {
+        if (waypoints.length >= 3) {
+            pathData += ' Q' + waypoints[1].x + ',' + waypoints[1].y;
+            pathData += ' ' + waypoints[2].x + ',' + waypoints[2].y;
+        }
+        for (var i = 3, p; (p = waypoints[i]) ; i++) {
+            pathData += ' T' + waypoints[i].x + ',' + waypoints[i].y;
+        }
     }
     return pathData;
   }
@@ -4632,10 +4650,10 @@ VdmlFactory.prototype.createDiBounds = function(bounds) {
 };
 
 
-VdmlFactory.prototype.createDiWaypoints = function(waypoints) {
-  return map(waypoints, function(pos) {
-    return this.createDiWaypoint(pos);
-  }, this);
+VdmlFactory.prototype.createDiWaypoints = function (waypoints, isCurved) {
+    return map(waypoints, function (pos) {
+        return this.createDiWaypoint(pos);
+    }, this);
 };
 
 VdmlFactory.prototype.createDiWaypoint = function(point) {
@@ -4783,24 +4801,11 @@ VdmlLayouter.prototype.layoutConnection = function(connection, hints) {
           preferredLayouts: [ 'v:h' ]
         };
       }
-    } else
-
-    if (is(source, 'vdml:Gateway')) {
-
-      manhattanOptions = {
-        preferredLayouts: [ 'v:h' ]
-      };
-    } else
-
-    if (is(target, 'vdml:Gateway')) {
-
-      manhattanOptions = {
-        preferredLayouts: [ 'h:v' ]
-      };
+      hints.isCurved = true;  
     }
-
     // apply horizontal love <3
     else {
+      hints.isCurved = true;
       manhattanOptions = {
         preferredLayouts: [ 'h:h' ]
       };
@@ -5311,8 +5316,9 @@ VdmlUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
 
     if (newParent) {
 
-      if (is(newParent, 'vdml:Participant')) {
-        newParent = newParent.processRef;
+        if (is(newParent, 'vdml:Participant')) {
+          newParent.get('flows').push(businessObject);
+          newParent = newParent.processRef;
       } else
 
       if (is(newParent, 'vdml:Lane')) {
@@ -5427,9 +5433,14 @@ VdmlUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
   }
 };
 
-
+VdmlUpdater.prototype.isCurvedConnection = function (connection) {
+    if (connection.type === 'vdml:SequenceFlow') {
+        return true;
+    }
+    return false;
+}
 VdmlUpdater.prototype.updateConnectionWaypoints = function(connection) {
-  connection.businessObject.di.set('waypoint', this._vdmlFactory.createDiWaypoints(connection.waypoints));
+    connection.businessObject.di.set('waypoint', this._vdmlFactory.createDiWaypoints(connection.waypoints));
 };
 
 
@@ -6650,7 +6661,7 @@ function ReplaceConnectionBehavior(eventBus, modeling, vdmlRules) {
 
     var replacementType,
         remove;
-
+    //TODO when we want to change connection type.
     /**
      * Check if incoming or outgoing connections
      * can stay or could be substituted with an
@@ -6659,7 +6670,7 @@ function ReplaceConnectionBehavior(eventBus, modeling, vdmlRules) {
      * This holds true for SequenceFlow <> MessageFlow.
      */
 
-    if (is(connection, 'vdml:SequenceFlow')) {
+/*    if (is(connection, 'vdml:SequenceFlow')) {
       if (!vdmlRules.canConnectSequenceFlow(source, target)) {
         remove = true;
       }
@@ -6700,7 +6711,7 @@ function ReplaceConnectionBehavior(eventBus, modeling, vdmlRules) {
         type: replacementType,
         waypoints: connection.waypoints.slice()
       });
-    }
+    }*/
   }
 
   this.postExecuted('elements.move', function(context) {
@@ -9217,10 +9228,9 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       translate = this._translate;
 
   function createAction(type, group, className, title, options) {
-      debugger;
+      
 
       function createListener(event) {
-          debugger;
       var shape = elementFactory.createShape(assign({ type: type }, options));
 
       if (options) {
@@ -11279,6 +11289,7 @@ function isParent(possibleParent, element) {
 }
 
 function canConnect(source, target, connection) {
+  
 
   if (nonExistantOrLabel(source) || nonExistantOrLabel(target)) {
     return null;
@@ -11292,15 +11303,12 @@ function canConnect(source, target, connection) {
   if (isSame(source, target)) {
     return false;
   }
-
   if (!is(connection, 'vdml:DataAssociation')) {
-
+      if (canConnectSequenceFlow(source, target)) {
+          return { type: 'vdml:SequenceFlow' };
+      }
     if (canConnectMessageFlow(source, target)) {
       return { type: 'vdml:MessageFlow' };
-    }
-
-    if (canConnectSequenceFlow(source, target)) {
-      return { type: 'vdml:SequenceFlow' };
     }
   }
 
@@ -11652,16 +11660,13 @@ function canConnectAssociation(source, target) {
 function canConnectMessageFlow(source, target) {
 
   return isMessageFlowSource(source) &&
-         isMessageFlowTarget(target) &&
-        !isSameOrganization(source, target);
+         isMessageFlowTarget(target) ;
 }
 
 function canConnectSequenceFlow(source, target) {
 
   return isSequenceFlowSource(source) &&
-         isSequenceFlowTarget(target) &&
-         isSameScope(source, target) &&
-         !(is(source, 'vdml:EventBasedGateway') && !isEventBasedTarget(target));
+         isSequenceFlowTarget(target) ;
 }
 
 
@@ -13095,10 +13100,10 @@ function VdmlTreeWalker(handler, translate) {
 
   function handleProcess(process, context) {
       //TODO
-    /*handleFlowElementsContainer(process, context);
+    handleFlowElementsContainer(process, context);
     handleIoSpecification(process.ioSpecification, context);
 
-    handleArtifacts(process.artifacts, context);*/
+    handleArtifacts(process.artifacts, context);
 
     // log process handled
     handled(process);
@@ -13128,8 +13133,8 @@ function VdmlTreeWalker(handler, translate) {
     visitIfDi(association, context);
   }
 
-  function handleDataInput(dataInput, context) {
-    visitIfDi(dataInput, context);
+  function handleFlow(flow, context) {
+    visitIfDi(flow, context);
   }
 
   function handleDataOutput(dataOutput, context) {
@@ -13158,14 +13163,13 @@ function VdmlTreeWalker(handler, translate) {
     });
   }
 
-  function handleIoSpecification(ioSpecification, context) {
+  function handleIoSpecification(flowNode, context) {
 
-    if (!ioSpecification) {
+      if (!flowNode) {
       return;
     }
 
-    forEach(ioSpecification.dataInputs, contextual(handleDataInput, context));
-    forEach(ioSpecification.dataOutputs, contextual(handleDataOutput, context));
+      forEach(flowNode.flows, contextual(handleFlow, context));
   }
 
   function handleSubProcess(subProcess, context) {
@@ -13180,8 +13184,10 @@ function VdmlTreeWalker(handler, translate) {
       handleSubProcess(flowNode, childCtx || context);
     }
 
-    if (is(flowNode, 'vdml:Activity')) {
-      handleIoSpecification(flowNode.ioSpecification, context);
+    if (is(flowNode, 'vdml:Participant')) {
+        deferred.push(function () {
+            handleIoSpecification(flowNode, context);
+        });
     }
 
     // defer handling of associations
@@ -19250,7 +19256,7 @@ var isFunction = _dereq_(402),
 var entrySelector = '.entry';
 
 
-/*k
+/**
  * A context pad that displays element specific, contextual actions next
  * to a diagram element.
  *
@@ -31375,8 +31381,7 @@ module.exports.getBendpoints = function(a, b, directions) {
     xmid = Math.round((b.x - a.x) / 2 + a.x);
 
     return [
-      { x: xmid, y: a.y },
-      { x: xmid, y: b.y }
+      { x: xmid, y: a.y }
     ];
   } else
   // horizontal edge ymid
@@ -31384,16 +31389,54 @@ module.exports.getBendpoints = function(a, b, directions) {
     ymid = Math.round((b.y - a.y) / 2 + a.y);
 
     return [
-      { x: a.x, y: ymid },
-      { x: b.x, y: ymid }
+      { x: a.x, y: ymid }
     ];
   } else {
-    throw new Error(
-      'unknown directions: <' + directions + '>: ' +
-      'directions must be specified as {a direction}:{b direction} (direction in h|v)');
+      xmid = Math.round((b.x - a.x) / 2 + a.x);
+      ymid = Math.round((b.y - a.y) / 2 + a.y);
+      return [
+        { x: xmid, y: ymid }
+      ]
   }
 };
 
+module.exports.getControlpoints = function (a, b, directions) {
+
+    directions = directions || 'h:h';
+
+    var xmid, ymid;
+
+    // one point, next to a
+    if (directions === 'h:v') {
+        return [{ x: b.x, y: a.y }];
+    } else
+        // one point, above a
+        if (directions === 'v:h') {
+            return [{ x: a.x, y: b.y }];
+        } else
+            // vertical edge xmid
+            if (directions === 'h:h') {
+                xmid = Math.round((b.x - a.x) / 2 + a.x);
+
+                return [
+                  { x: xmid, y: a.y }
+                  //{ x: xmid, y: b.y }
+                ];
+            } else
+                // horizontal edge ymid
+                if (directions === 'v:v') {
+                    ymid = Math.round((b.y - a.y) / 2 + a.y);
+
+                    return [
+                      { x: a.x, y: ymid }
+                      //{ x: b.x, y: ymid }
+                    ];
+                } else {
+                    throw new Error(
+                      'unknown directions: <' + directions + '>: ' +
+                      'directions must be specified as {a direction}:{b direction} (direction in h|v)');
+                }
+};
 
 /**
  * Create a connection between the two points according
@@ -31407,12 +31450,15 @@ module.exports.getBendpoints = function(a, b, directions) {
  *
  * @return {Array<Point>}
  */
-module.exports.connectPoints = function(a, b, directions) {
+module.exports.connectPoints = function(a, b, directions,isCurved) {
 
   var points = [];
-
-  if (!pointsAligned(a, b)) {
-    points = this.getBendpoints(a, b, directions);
+  if (isCurved) {
+      points = this.getControlpoints(a, b, directions);
+  } else {
+      if (!pointsAligned(a, b)) {
+          points = this.getBendpoints(a, b, directions);
+      }
   }
 
   points.unshift(a);
@@ -31494,7 +31540,7 @@ module.exports.connectRectangles = function(source, target, start, end, hints) {
     }
   }
 
-  return this.connectPoints(start, end, directions);
+  return this.connectPoints(start, end, directions,hints.isCurved);
 };
 
 /**
@@ -33413,14 +33459,42 @@ function toSVGPoints(points) {
   return result;
 }
 
+function toSVGCurve(points) {
+    var result = '';
+    var result = 'm  ' + points[0].x + ',' + points[0].y;
+    if (!isCurve) {
+        for (var i = 1; i < points.length; i++) {
+            result += 'L' + points[i].x + ',' + points[i].y + ' ';
+        }
+    } else {
+        if (points.length >= 3) {
+            result += ' Q' + points[1].x + ',' + points[1].y;
+            result += ' ' + points[2].x + ',' + points[2].y;
+        }
+        for (var i = 3, p; (p = points[i]) ; i++) {
+            result += ' T' + points[i].x + ',' + points[i].y;
+        }
+    }
+
+    return result;
+}
+
 module.exports.toSVGPoints = toSVGPoints;
 
 module.exports.createLine = function(points, attrs) {
   return Snap.create('polyline', { points: toSVGPoints(points) }).attr(attrs || {});
 };
 
+module.exports.createCurve = function (points, attrs) {
+    return Snap.create('path', { d: toSVGCurve(points) }).attr(attrs || {});
+};
+
 module.exports.updateLine = function(gfx, points) {
   return gfx.attr({ points: toSVGPoints(points) });
+};
+
+module.exports.updateCurve = function (gfx, points) {
+    return gfx.attr({ d: toSVGCurve(points) });
 };
 
 },{"267":267}],259:[function(_dereq_,module,exports){
@@ -56093,60 +56167,10 @@ module.exports={
       ],
       "properties": [
         {
-          "name": "isClosed",
-          "isAttr": true,
-          "type": "Boolean"
-        },
-        {
-          "name": "participants",
-          "type": "Participant",
+          "name": "flows",
+          "type": "SequenceFlow",
           "isMany": true
-        },
-        {
-          "name": "messageFlows",
-          "type": "MessageFlow",
-          "isMany": true
-        },
-        {
-          "name": "artifacts",
-          "type": "Artifact",
-          "isMany": true
-        },
-        {
-          "name": "conversations",
-          "type": "ConversationNode",
-          "isMany": true
-        },
-        {
-          "name": "conversationAssociations",
-          "type": "ConversationAssociation"
-        },
-        {
-          "name": "participantAssociations",
-          "type": "ParticipantAssociation",
-          "isMany": true
-        },
-        {
-          "name": "messageFlowAssociations",
-          "type": "MessageFlowAssociation",
-          "isMany": true
-        },
-        {
-          "name": "correlationKeys",
-          "type": "CorrelationKey",
-          "isMany": true
-        },
-        {
-          "name": "choreographyRef",
-          "type": "Choreography",
-          "isMany": true,
-          "isReference": true
-        },
-        {
-          "name": "conversationLinks",
-          "type": "ConversationLink",
-          "isMany": true
-        }       
+        }
       ]
     },
     {

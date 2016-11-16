@@ -458,8 +458,9 @@ VdmlUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
 
     if (newParent) {
 
-      if (is(newParent, 'vdml:Participant')) {
-        newParent = newParent.processRef;
+        if (is(newParent, 'vdml:Participant')) {
+          newParent.get('flows').push(businessObject);
+          newParent = newParent.processRef;
       } else
 
       if (is(newParent, 'vdml:Lane')) {
@@ -574,9 +575,14 @@ VdmlUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
   }
 };
 
-
+VdmlUpdater.prototype.isCurvedConnection = function (connection) {
+    if (connection.type === 'vdml:SequenceFlow') {
+        return true;
+    }
+    return false;
+}
 VdmlUpdater.prototype.updateConnectionWaypoints = function(connection) {
-  connection.businessObject.di.set('waypoint', this._vdmlFactory.createDiWaypoints(connection.waypoints));
+    connection.businessObject.di.set('waypoint', this._vdmlFactory.createDiWaypoints(connection.waypoints));
 };
 
 

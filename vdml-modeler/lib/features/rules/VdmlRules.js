@@ -313,6 +313,7 @@ function isParent(possibleParent, element) {
 }
 
 function canConnect(source, target, connection) {
+  
 
   if (nonExistantOrLabel(source) || nonExistantOrLabel(target)) {
     return null;
@@ -326,15 +327,12 @@ function canConnect(source, target, connection) {
   if (isSame(source, target)) {
     return false;
   }
-
   if (!is(connection, 'vdml:DataAssociation')) {
-
+      if (canConnectSequenceFlow(source, target)) {
+          return { type: 'vdml:SequenceFlow' };
+      }
     if (canConnectMessageFlow(source, target)) {
       return { type: 'vdml:MessageFlow' };
-    }
-
-    if (canConnectSequenceFlow(source, target)) {
-      return { type: 'vdml:SequenceFlow' };
     }
   }
 
@@ -686,16 +684,13 @@ function canConnectAssociation(source, target) {
 function canConnectMessageFlow(source, target) {
 
   return isMessageFlowSource(source) &&
-         isMessageFlowTarget(target) &&
-        !isSameOrganization(source, target);
+         isMessageFlowTarget(target) ;
 }
 
 function canConnectSequenceFlow(source, target) {
 
   return isSequenceFlowSource(source) &&
-         isSequenceFlowTarget(target) &&
-         isSameScope(source, target) &&
-         !(is(source, 'vdml:EventBasedGateway') && !isEventBasedTarget(target));
+         isSequenceFlowTarget(target) ;
 }
 
 

@@ -123,24 +123,11 @@ VdmlLayouter.prototype.layoutConnection = function(connection, hints) {
           preferredLayouts: [ 'v:h' ]
         };
       }
-    } else
-
-    if (is(source, 'vdml:Gateway')) {
-
-      manhattanOptions = {
-        preferredLayouts: [ 'v:h' ]
-      };
-    } else
-
-    if (is(target, 'vdml:Gateway')) {
-
-      manhattanOptions = {
-        preferredLayouts: [ 'h:v' ]
-      };
+      hints.isCurved = true;  
     }
-
     // apply horizontal love <3
     else {
+      hints.isCurved = true;
       manhattanOptions = {
         preferredLayouts: [ 'h:h' ]
       };

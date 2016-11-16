@@ -45,10 +45,9 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       translate = this._translate;
 
   function createAction(type, group, className, title, options) {
-      debugger;
+      
 
       function createListener(event) {
-          debugger;
       var shape = elementFactory.createShape(assign({ type: type }, options));
 
       if (options) {

@@ -234,10 +234,10 @@ function VdmlTreeWalker(handler, translate) {
 
   function handleProcess(process, context) {
       //TODO
-    /*handleFlowElementsContainer(process, context);
+    handleFlowElementsContainer(process, context);
     handleIoSpecification(process.ioSpecification, context);
 
-    handleArtifacts(process.artifacts, context);*/
+    handleArtifacts(process.artifacts, context);
 
     // log process handled
     handled(process);
@@ -267,8 +267,8 @@ function VdmlTreeWalker(handler, translate) {
     visitIfDi(association, context);
   }
 
-  function handleDataInput(dataInput, context) {
-    visitIfDi(dataInput, context);
+  function handleFlow(flow, context) {
+    visitIfDi(flow, context);
   }
 
   function handleDataOutput(dataOutput, context) {
@@ -297,14 +297,13 @@ function VdmlTreeWalker(handler, translate) {
     });
   }
 
-  function handleIoSpecification(ioSpecification, context) {
+  function handleIoSpecification(flowNode, context) {
 
-    if (!ioSpecification) {
+      if (!flowNode) {
       return;
     }
 
-    forEach(ioSpecification.dataInputs, contextual(handleDataInput, context));
-    forEach(ioSpecification.dataOutputs, contextual(handleDataOutput, context));
+      forEach(flowNode.flows, contextual(handleFlow, context));
   }
 
   function handleSubProcess(subProcess, context) {
@@ -319,8 +318,10 @@ function VdmlTreeWalker(handler, translate) {
       handleSubProcess(flowNode, childCtx || context);
     }
 
-    if (is(flowNode, 'vdml:Activity')) {
-      handleIoSpecification(flowNode.ioSpecification, context);
+    if (is(flowNode, 'vdml:Participant')) {
+        deferred.push(function () {
+            handleIoSpecification(flowNode, context);
+        });
     }
 
     // defer handling of associations

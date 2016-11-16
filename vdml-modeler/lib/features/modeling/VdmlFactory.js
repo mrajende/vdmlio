@@ -71,10 +71,10 @@ VdmlFactory.prototype.createDiBounds = function(bounds) {
 };
 
 
-VdmlFactory.prototype.createDiWaypoints = function(waypoints) {
-  return map(waypoints, function(pos) {
-    return this.createDiWaypoint(pos);
-  }, this);
+VdmlFactory.prototype.createDiWaypoints = function (waypoints, isCurved) {
+    return map(waypoints, function (pos) {
+        return this.createDiWaypoint(pos);
+    }, this);
 };
 
 VdmlFactory.prototype.createDiWaypoint = function(point) {

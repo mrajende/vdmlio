@@ -27,7 +27,7 @@ function ReplaceConnectionBehavior(eventBus, modeling, vdmlRules) {
 
     var replacementType,
         remove;
-
+    //TODO when we want to change connection type.
     /**
      * Check if incoming or outgoing connections
      * can stay or could be substituted with an
@@ -36,7 +36,7 @@ function ReplaceConnectionBehavior(eventBus, modeling, vdmlRules) {
      * This holds true for SequenceFlow <> MessageFlow.
      */
 
-    if (is(connection, 'vdml:SequenceFlow')) {
+/*    if (is(connection, 'vdml:SequenceFlow')) {
       if (!vdmlRules.canConnectSequenceFlow(source, target)) {
         remove = true;
       }
@@ -77,7 +77,7 @@ function ReplaceConnectionBehavior(eventBus, modeling, vdmlRules) {
         type: replacementType,
         waypoints: connection.waypoints.slice()
       });
-    }
+    }*/
   }
 
   this.postExecuted('elements.move', function(context) {

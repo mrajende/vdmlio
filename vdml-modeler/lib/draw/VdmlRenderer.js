@@ -17,8 +17,10 @@ var is = require('../util/ModelUtil').is;
 var RenderUtil = require('diagram-js/lib/util/RenderUtil');
 
 var componentsToPath = RenderUtil.componentsToPath,
-    createLine = RenderUtil.createLine;
-
+    createLine = RenderUtil.createLine,
+    createCurve = RenderUtil.createCurve,
+    updateCurve = RenderUtil.updateCurve;
+    
 
 var TASK_BORDER_RADIUS = 10;
 var INNER_OUTER_DIST = 3;
@@ -329,13 +331,29 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       'translate(' + top + ',' + 0 + ')'
     );
   }
-
+  function isCurvedConnection(connection) {
+      if (connection.type === 'vdml:SequenceFlow') {
+          return true;
+      }
+      return false;
+  }
   function createPathFromConnection(connection) {
+    var isCurve = isCurvedConnection(connection);
     var waypoints = connection.waypoints;
-
+    
     var pathData = 'm  ' + waypoints[0].x + ',' + waypoints[0].y;
-    for (var i = 1; i < waypoints.length; i++) {
-      pathData += 'L' + waypoints[i].x + ',' + waypoints[i].y + ' ';
+    if (!isCurve) {
+        for (var i = 1; i < waypoints.length; i++) {
+            pathData += 'L' + waypoints[i].x + ',' + waypoints[i].y + ' ';
+        }
+    } else {
+        if (waypoints.length >= 3) {
+            pathData += ' Q' + waypoints[1].x + ',' + waypoints[1].y;
+            pathData += ' ' + waypoints[2].x + ',' + waypoints[2].y;
+        }
+        for (var i = 3, p; (p = waypoints[i]) ; i++) {
+            pathData += ' T' + waypoints[i].x + ',' + waypoints[i].y;
+        }
     }
     return pathData;
   }

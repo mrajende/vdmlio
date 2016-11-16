@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<vdml:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vdml="http://www.omg.org/spec/VDML/20100524/MODEL" xmlns:vdmldi="http://www.omg.org/spec/VDML/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://vdml.io/schema/vdml" xsi:schemaLocation="http://www.omg.org/spec/VDML/20100524/MODEL VDML.xsd">
+  <vdml:ecoMap id="Process_1">
+    <vdml:collaboration id="Collaboration_18g3eh9" name="a1">
+      <vdml:outgoing>SequenceFlow_1jzy45w</vdml:outgoing>
+      <vdml:sequenceFlow id="SequenceFlow_1jzy45w" name="f1" sourceRef="Collaboration_18g3eh9" targetRef="Collaboration_0saad82" />
+    </vdml:collaboration>
+    <vdml:collaboration id="Collaboration_0saad82" name="a2">
+      <vdml:incoming>SequenceFlow_1jzy45w</vdml:incoming>
+    </vdml:collaboration>
+  </vdml:ecoMap>
+  <vdmldi:VDMLDiagram id="VDMLDiagram_1">
+    <vdmldi:VDMLPlane id="VDMLPlane_1" vdmlElement="Process_1">
+      <vdmldi:VDMLShape id="Collaboration_18g3eh9_di" vdmlElement="Collaboration_18g3eh9">
+        <dc:Bounds x="117" y="171" width="100" height="80" />
+      </vdmldi:VDMLShape>
+      <vdmldi:VDMLShape id="Collaboration_0saad82_di" vdmlElement="Collaboration_0saad82">
+        <dc:Bounds x="326" y="171" width="100" height="80" />
+      </vdmldi:VDMLShape>
+      <vdmldi:VDMLEdge id="SequenceFlow_1jzy45w_di" vdmlElement="SequenceFlow_1jzy45w">
+        <di:waypoint xsi:type="dc:Point" x="217" y="211" />
+        <di:waypoint xsi:type="dc:Point" x="272" y="211" />
+        <di:waypoint xsi:type="dc:Point" x="326" y="211" />
+        <vdmldi:VDMLLabel>
+          <dc:Bounds x="240" y="186" width="10" height="12" />
+        </vdmldi:VDMLLabel>
+      </vdmldi:VDMLEdge>
+    </vdmldi:VDMLPlane>
+  </vdmldi:VDMLDiagram>
+</vdml:definitions>
