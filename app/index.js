@@ -126,4 +126,6 @@ function handleSaveSVG() {
     });
 }
 $('#js-download-svg').click(handleSaveSVG);
-
+$('#js-create-new-diagram').click(function () {
+    openDiagram(newDiagramXML);
+});

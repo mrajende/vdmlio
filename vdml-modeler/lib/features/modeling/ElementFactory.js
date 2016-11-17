@@ -124,52 +124,19 @@ ElementFactory.prototype.createVdmlElement = function(elementType, attrs) {
 
 ElementFactory.prototype._getDefaultSize = function(semantic) {
 
-  if (is(semantic, 'vdml:SubProcess')) {
-
-    if (isExpanded(semantic)) {
-      return { width: 350, height: 200 };
-    } else {
-      return { width: 100, height: 80 };
-    }
-  }
-
-  if (is(semantic, 'vdml:Collaboration')) {
-    return { width: 100, height: 80 };
-  }
-
-  if (is(semantic, 'vdml:Gateway')) {
-    return { width: 50, height: 50 };
-  }
-
-  if (is(semantic, 'vdml:Event')) {
-    return { width: 36, height: 36 };
-  }
-
   if (is(semantic, 'vdml:Participant')) {
-    if (!isExpanded(semantic)) {
-      return { width: 400, height: 100 };
-    } else {
-      return { width: 600, height: 250 };
-    }
+     return { width: 100, height: 36 };
   }
 
   if (is(semantic, 'vdml:Lane')) {
     return { width: 400, height: 100 };
   }
 
-  if (is(semantic, 'vdml:DataObjectReference')) {
-    return { width: 36, height: 50 };
-  }
-
-  if (is(semantic, 'vdml:DataStoreReference')) {
-    return { width: 50, height: 50 };
-  }
-
   if (is(semantic, 'vdml:TextAnnotation')) {
     return { width: 100, height: 30 };
   }
 
-  return { width: 100, height: 80 };
+  return { width: 100, height: 36 };
 };
 
 

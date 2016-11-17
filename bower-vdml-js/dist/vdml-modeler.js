@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-11-16
+ * Date: 2016-11-17
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -4348,52 +4348,19 @@ ElementFactory.prototype.createVdmlElement = function(elementType, attrs) {
 
 ElementFactory.prototype._getDefaultSize = function(semantic) {
 
-  if (is(semantic, 'vdml:SubProcess')) {
-
-    if (isExpanded(semantic)) {
-      return { width: 350, height: 200 };
-    } else {
-      return { width: 100, height: 80 };
-    }
-  }
-
-  if (is(semantic, 'vdml:Collaboration')) {
-    return { width: 100, height: 80 };
-  }
-
-  if (is(semantic, 'vdml:Gateway')) {
-    return { width: 50, height: 50 };
-  }
-
-  if (is(semantic, 'vdml:Event')) {
-    return { width: 36, height: 36 };
-  }
-
   if (is(semantic, 'vdml:Participant')) {
-    if (!isExpanded(semantic)) {
-      return { width: 400, height: 100 };
-    } else {
-      return { width: 600, height: 250 };
-    }
+     return { width: 100, height: 36 };
   }
 
   if (is(semantic, 'vdml:Lane')) {
     return { width: 400, height: 100 };
   }
 
-  if (is(semantic, 'vdml:DataObjectReference')) {
-    return { width: 36, height: 50 };
-  }
-
-  if (is(semantic, 'vdml:DataStoreReference')) {
-    return { width: 50, height: 50 };
-  }
-
   if (is(semantic, 'vdml:TextAnnotation')) {
     return { width: 100, height: 30 };
   }
 
-  return { width: 100, height: 80 };
+  return { width: 100, height: 36 };
 };
 
 
@@ -12123,16 +12090,11 @@ function VdmlSnapping(eventBus, canvas, vdmlRules, elementRegistry) {
   eventBus.on('resize.start', HIGH_PRIORITY, function(event) {
     var context = event.context,
         shape = context.shape;
-
-    if (is(shape, 'vdml:SubProcess') && isExpanded(shape)) {
-      context.minDimensions = { width: 140, height: 120 };
-    }
-
     if (is(shape, 'vdml:Participant')) {
-      context.minDimensions = { width: 300, height: 150 };
+      context.minDimensions = { width: 100, height: 36 };
     }
 
-    if (is(shape, 'vdml:Lane') || is(shape, 'vdml:Participant')) {
+    if (is(shape, 'vdml:Lane')) {
       context.resizeConstraints = getParticipantSizeConstraints(shape, context.direction, context.balanced);
     }
 
