@@ -261,11 +261,12 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
         !isEventSubProcess(businessObject)) {
 
       assign(actions, {
-        'append.end-event': appendAction('vdml:EndEvent', 'bpmn-icon-end-event-none'),
-        'append.gateway': appendAction('vdml:ExclusiveGateway', 'bpmn-icon-gateway-xor'),
-        'append.append-task': appendAction('vdml:Collaboration', 'bpmn-icon-task'),
-        'append.intermediate-event': appendAction('vdml:IntermediateThrowEvent',
-                                                  'bpmn-icon-intermediate-event-none')
+          //'append.append-collaboration': appendAction('vdml:Collaboration', 'bpmn-icon-task'),
+          'append.append-marketSegment': appendAction('vdml:MarketSegment', 'bpmn-icon-task'),
+          'append.append-enterprise': appendAction('vdml:Enterprise', 'bpmn-icon-task'),
+          'append.append-individual': appendAction('vdml:Individual', 'bpmn-icon-task'),
+          'append.append-role': appendAction('vdml:Role', 'bpmn-icon-task'),
+          'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task')
       });
     }
   }

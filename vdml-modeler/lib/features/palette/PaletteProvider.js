@@ -131,9 +131,21 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
     'create.exclusive-gateway': createAction(
       'vdml:ExclusiveGateway', 'gateway', 'bpmn-icon-gateway-xor'
     ),*/
-    'create.task': createAction(
-      'vdml:Collaboration', 'collaboration', 'bpmn-icon-task'
+    'create.marketSegment': createAction(
+      'vdml:MarketSegment', 'collaboration', 'bpmn-icon-task','Market Segment'
     ),
+    'create.enterprise': createAction(
+      'vdml:Enterprise', 'collaboration', 'bpmn-icon-task', 'Enterprise'
+    ),
+    'create.individual': createAction(
+      'vdml:Individual', 'collaboration', 'bpmn-icon-task', 'Individual'
+    ),
+    'create.role': createAction(
+          'vdml:Role', 'collaboration', 'bpmn-icon-task', 'Role'
+     ),
+    'create.businessModel': createAction(
+          'vdml:BusinessModel', 'collaboration', 'bpmn-icon-task', 'Business Model'
+     ),
     /*'create.data-object': createAction(
       'vdml:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
     ),

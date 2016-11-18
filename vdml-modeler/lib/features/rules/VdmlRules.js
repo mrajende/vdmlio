@@ -329,7 +329,7 @@ function canConnect(source, target, connection) {
   }
   if (!is(connection, 'vdml:DataAssociation')) {
       if (canConnectSequenceFlow(source, target)) {
-          return { type: 'vdml:SequenceFlow' };
+          return { type: 'vdml:ValueProposition' };
       }
     if (canConnectMessageFlow(source, target)) {
       return { type: 'vdml:MessageFlow' };

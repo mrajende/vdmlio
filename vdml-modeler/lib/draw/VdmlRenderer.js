@@ -332,7 +332,8 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     );
   }
   function isCurvedConnection(connection) {
-      if (connection.type === 'vdml:SequenceFlow') {
+      if(is(connection, 'vdml:SequenceFlow')){
+      //if (connection.type === 'vdml:SequenceFlow') {
           return true;
       }
       return false;
@@ -651,6 +652,26 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       renderEmbeddedLabel(p, element, 'center-middle');
       attachTaskMarkers(p, element);
       return rect;
+    },
+    'vdml:MarketSegment': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
+    },
+    'vdml:Enterprise': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
+    },
+    'vdml:Individual': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
+    },
+    'vdml:Role': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
+    },
+    'vdml:BusinessModel': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
     },
     'vdml:ServiceTask': function(p, element) {
       var task = renderer('vdml:Task')(p, element);
@@ -1092,7 +1113,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     'vdml:Gateway': function(p, element) {
       return drawDiamond(p, element.width, element.height);
     },
-    'vdml:SequenceFlow': function(p, element) {
+    'vdml:ValueProposition': function(p, element) {
       var pathData = createPathFromConnection(element);
       var path = drawPath(p, pathData, {
         strokeLinejoin: 'round',

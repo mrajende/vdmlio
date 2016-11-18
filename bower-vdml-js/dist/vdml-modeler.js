@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-11-17
+ * Date: 2016-11-18
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -1521,7 +1521,8 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     );
   }
   function isCurvedConnection(connection) {
-      if (connection.type === 'vdml:SequenceFlow') {
+      if(is(connection, 'vdml:SequenceFlow')){
+      //if (connection.type === 'vdml:SequenceFlow') {
           return true;
       }
       return false;
@@ -1840,6 +1841,26 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       renderEmbeddedLabel(p, element, 'center-middle');
       attachTaskMarkers(p, element);
       return rect;
+    },
+    'vdml:MarketSegment': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
+    },
+    'vdml:Enterprise': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
+    },
+    'vdml:Individual': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
+    },
+    'vdml:Role': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
+    },
+    'vdml:BusinessModel': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
     },
     'vdml:ServiceTask': function(p, element) {
       var task = renderer('vdml:Task')(p, element);
@@ -2281,7 +2302,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     'vdml:Gateway': function(p, element) {
       return drawDiamond(p, element.width, element.height);
     },
-    'vdml:SequenceFlow': function(p, element) {
+    'vdml:ValueProposition': function(p, element) {
       var pathData = createPathFromConnection(element);
       var path = drawPath(p, pathData, {
         strokeLinejoin: 'round',
@@ -3253,11 +3274,12 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
         !isEventSubProcess(businessObject)) {
 
       assign(actions, {
-        'append.end-event': appendAction('vdml:EndEvent', 'bpmn-icon-end-event-none'),
-        'append.gateway': appendAction('vdml:ExclusiveGateway', 'bpmn-icon-gateway-xor'),
-        'append.append-task': appendAction('vdml:Collaboration', 'bpmn-icon-task'),
-        'append.intermediate-event': appendAction('vdml:IntermediateThrowEvent',
-                                                  'bpmn-icon-intermediate-event-none')
+          'append.append-collaboration': appendAction('vdml:Collaboration', 'bpmn-icon-task'),
+          'append.append-marketSegment': appendAction('vdml:MarketSegment', 'bpmn-icon-task'),
+          'append.append-enterprise': appendAction('vdml:Enterprise', 'bpmn-icon-task'),
+          'append.append-individual': appendAction('vdml:Individual', 'bpmn-icon-task'),
+          'append.append-role': appendAction('vdml:Role', 'bpmn-icon-task'),
+          'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task')
       });
     }
   }
@@ -9281,9 +9303,21 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
     'create.exclusive-gateway': createAction(
       'vdml:ExclusiveGateway', 'gateway', 'bpmn-icon-gateway-xor'
     ),*/
-    'create.task': createAction(
-      'vdml:Collaboration', 'collaboration', 'bpmn-icon-task'
+    'create.marketSegment': createAction(
+      'vdml:MarketSegment', 'collaboration', 'bpmn-icon-task','Market Segment'
     ),
+    'create.enterprise': createAction(
+      'vdml:Enterprise', 'collaboration', 'bpmn-icon-task', 'Enterprise'
+    ),
+    'create.individual': createAction(
+      'vdml:Individual', 'collaboration', 'bpmn-icon-task', 'Individual'
+    ),
+    'create.role': createAction(
+          'vdml:Role', 'collaboration', 'bpmn-icon-task', 'Role'
+     ),
+    'create.businessModel': createAction(
+          'vdml:BusinessModel', 'collaboration', 'bpmn-icon-task', 'Business Model'
+     ),
     /*'create.data-object': createAction(
       'vdml:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
     ),
@@ -11272,7 +11306,7 @@ function canConnect(source, target, connection) {
   }
   if (!is(connection, 'vdml:DataAssociation')) {
       if (canConnectSequenceFlow(source, target)) {
-          return { type: 'vdml:SequenceFlow' };
+          return { type: 'vdml:ValueProposition' };
       }
     if (canConnectMessageFlow(source, target)) {
       return { type: 'vdml:MessageFlow' };
@@ -55792,6 +55826,12 @@ module.exports={
       ]
     },
     {
+      "name": "ValueProposition",
+      "superClass": [
+        "SequenceFlow"
+      ]
+    },
+    {
       "name": "FlowElementsContainer",
       "isAbstract": true,
       "superClass": [
@@ -56143,6 +56183,13 @@ module.exports={
       ]
     },
     {
+      "name": "BusinessModel",
+      "superClass": [
+        "Participant",
+        "InteractionNode"
+      ]
+    },
+    {
       "name": "Collaboration",
       "superClass": [
         "Participant",
@@ -56151,7 +56198,25 @@ module.exports={
       "properties": [
 
       ]
-    }, 
+    },
+    {
+      "name": "MarketSegment",
+      "superClass": [
+        "Collaboration"
+      ]
+    },
+    {
+      "name": "Enterprise",
+      "superClass": [
+        "Collaboration"
+      ]
+    },
+    {
+      "name": "Individual",
+      "superClass": [
+        "Collaboration"
+      ]
+    },         
     {
       "name": "Actor",
       "superClass": [
