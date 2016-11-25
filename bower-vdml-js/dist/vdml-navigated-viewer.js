@@ -1130,7 +1130,35 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       scale: 0.5
     });
   }
+  function drawPerson(p, width, height, offset, attrs) {
 
+      if (isObject(offset)) {
+          attrs = offset;
+          offset = 0;
+      }
+
+      offset = offset || 0;
+
+      attrs = computeStyle(attrs, {
+          stroke: 'black',
+          strokeWidth: 0,
+          fill: 'white'
+      });
+
+      var r = height > width ? height/8 : width/8;
+      var cx = width / 2,
+          cy = r;
+
+      var outer = drawRect(p, width, height, COLLABORATION_BORDER_RADIUS, attrs);
+      attrs.strokeWidth = 2;
+      p.circle(cx, cy, Math.round(r - offset)).attr(attrs);
+
+      var waypoints = [{ x: width / 3, y: (2 * r + height) / 2 }, { x: 2 * width / 3, y: (2 * r + height) / 2 }];
+      drawLine(p, waypoints, attrs);
+      waypoints = [{ x: width / 2, y: 2* r }, { x: width / 2, y: height}];;
+      drawLine(p, waypoints, attrs);
+      return outer;
+  }
   function drawCircle(p, width, height, offset, attrs) {
 
     if (isObject(offset)) {
@@ -1680,7 +1708,8 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
         return rect;
     },
     'vdml:Individual': function (p, element, attrs) {
-        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        var rect = drawPerson(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
+        renderEmbeddedLabel(p, element, 'center-bottom');
         return rect;
     },
     'vdml:Role': function (p, element, attrs) {
