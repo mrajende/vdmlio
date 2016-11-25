@@ -27,7 +27,7 @@ module.exports = VdmlAutoResize;
  */
 VdmlAutoResize.prototype.resize = function(target, newBounds) {
 
-  if (is(target, 'vdml:Participant')) {
+  if (is(target, 'vdml:Lane')) {
     this._modeling.resizeLane(target, newBounds);
   } else {
     this._modeling.resizeShape(target, newBounds);

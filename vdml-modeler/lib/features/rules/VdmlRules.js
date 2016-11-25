@@ -659,7 +659,7 @@ function canResize(shape, newBounds) {
   }
 
   if (is(shape, 'vdml:Participant')) {
-    return !newBounds || (newBounds.width >= 250 && newBounds.height >= 50);
+    return !newBounds || (newBounds.width >= 10 && newBounds.height >= 10);
   }
 
   if (isTextAnnotation(shape)) {

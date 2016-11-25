@@ -123,7 +123,9 @@ ElementFactory.prototype.createVdmlElement = function(elementType, attrs) {
 
 
 ElementFactory.prototype._getDefaultSize = function(semantic) {
-
+    if (is(semantic, 'vdml:BusinessModel') || is(semantic, 'vdml:Role')) {
+        return { width: 50, height: 50 };
+  }
   if (is(semantic, 'vdml:Participant')) {
      return { width: 100, height: 36 };
   }

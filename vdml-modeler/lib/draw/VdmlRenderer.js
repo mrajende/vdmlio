@@ -23,6 +23,7 @@ var componentsToPath = RenderUtil.componentsToPath,
     
 
 var TASK_BORDER_RADIUS = 10;
+var COLLABORATION_BORDER_RADIUS = 0;
 var INNER_OUTER_DIST = 3;
 
 var LABEL_STYLE = {
@@ -172,6 +173,26 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     return p.circle(cx, cy, Math.round((width + height) / 4 - offset)).attr(attrs);
   }
 
+  function drawOval(p, width, height, offset, attrs) {
+
+      if (isObject(offset)) {
+          attrs = offset;
+          offset = 0;
+      }
+
+      offset = offset || 0;
+
+      attrs = computeStyle(attrs, {
+          stroke: 'black',
+          strokeWidth: 2,
+          fill: 'white'
+      });
+
+      var cx = width / 2,
+          cy = height / 2;
+
+      return p.ellipse(cx, cy, Math.round((width) / 2 - offset), Math.round((height) / 2 - offset)).attr(attrs);
+  }
   function drawRect(p, width, height, r, offset, attrs) {
 
     if (isObject(offset)) {
@@ -204,6 +225,24 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     });
 
     return p.polygon(points).attr(attrs);
+  }
+
+  function drawHexagon(p, width, height, attrs) {
+
+      var r = Math.round(height/2);
+      var points = [];
+      for (var i = 0; i < 6; i++) {
+          points.push(width/2 + r * Math.cos(2 * Math.PI * i / 6));
+          points.push(height/2 + r * Math.sin(2 * Math.PI * i / 6));
+      }
+
+      attrs = computeStyle(attrs, {
+          stroke: 'black',
+          strokeWidth: 2,
+          fill: 'white'
+      });
+
+      return p.polygon(points).attr(attrs);
   }
 
   function drawLine(p, waypoints, attrs) {
@@ -648,9 +687,9 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     },
 
     'vdml:Collaboration': function(p, element, attrs) {
-      var rect = renderer('vdml:Activity')(p, element, attrs);
+      var rect = drawRect(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
       renderEmbeddedLabel(p, element, 'center-middle');
-      attachTaskMarkers(p, element);
+      
       return rect;
     },
     'vdml:MarketSegment': function (p, element, attrs) {
@@ -666,12 +705,16 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
         return rect;
     },
     'vdml:Role': function (p, element, attrs) {
-        var rect = renderer('vdml:Collaboration')(p, element, attrs);
-        return rect;
+        var oval = drawOval(p, element.width, element.height, attrs);
+        renderEmbeddedLabel(p, element, 'center-middle');
+        
+        //var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return oval;
     },
     'vdml:BusinessModel': function (p, element, attrs) {
-        var rect = renderer('vdml:Collaboration')(p, element, attrs);
-        return rect;
+        var hexagon = drawHexagon(p, element.width, element.height);
+        renderEmbeddedLabel(p, element, 'center-middle');
+        return hexagon;
     },
     'vdml:ServiceTask': function(p, element) {
       var task = renderer('vdml:Task')(p, element);

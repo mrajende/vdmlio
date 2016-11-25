@@ -257,8 +257,11 @@ function VdmlSnapping(eventBus, canvas, vdmlRules, elementRegistry) {
   eventBus.on('resize.start', HIGH_PRIORITY, function(event) {
     var context = event.context,
         shape = context.shape;
+    if (is(shape, 'vdml:BusinessModel') || is(shape, 'vdml:Role')) {
+        context.minDimensions = { width: 10, height: 10 };
+    }else
     if (is(shape, 'vdml:Participant')) {
-      context.minDimensions = { width: 100, height: 36 };
+      context.minDimensions = { width: 10, height: 10 };
     }
 
     if (is(shape, 'vdml:Lane')) {

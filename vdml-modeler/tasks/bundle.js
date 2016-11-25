@@ -90,7 +90,7 @@ module.exports = function(grunt) {
     var browserifyOptions = {
       standalone: 'VdmlJS',
       debug: true,
-      builtins: false,
+      //builtins: false,
       insertGlobalVars: {
         process: function () {
             return 'undefined';

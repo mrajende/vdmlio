@@ -6,9 +6,10 @@
 // require the viewer, make sure you added the vdml-js bower distribution
 // along with all its dependencies to the web site
 var VdmlModeler = window.VdmlJS;
-
+debugger;
 //var fs = require('fs');
 var container = $('#js-canvas')
+var properties = $('#js-properties');
 var modeler;
 
 
@@ -18,8 +19,9 @@ var newDiagramXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<vdml:definitio
 function createNewDiagram() {
     modeler = new VdmlModeler({
         container: container,
-        additionalModules: [
-        ]
+        propertiesPanel: {
+            parent: '#js-properties'
+        }
     });
     var xhr = new XMLHttpRequest();
 
