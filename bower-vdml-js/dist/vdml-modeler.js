@@ -44128,7 +44128,9 @@ Text.prototype.createText = function(parent, text, options) {
   case 'middle':
     y = (box.height - totalHeight) / 2 - layouted[0].height / 4;
     break;
-
+  case 'bottom':
+      y = (box.height - totalHeight) - layouted[0].height / 4;
+      break;
   default:
     y = padding.top;
   }

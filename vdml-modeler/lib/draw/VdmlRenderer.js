@@ -730,7 +730,8 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     },
     'vdml:Individual': function (p, element, attrs) {
         var rect = drawPerson(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
-        renderEmbeddedLabel(p, element, 'center-bottom');
+        renderEmbeddedLabel(p, element, 'center-bottom');//works with update to diagram.js text util
+        //renderEmbeddedLabel(p, element, 'center-middle');
         return rect;
     },
     'vdml:Role': function (p, element, attrs) {
