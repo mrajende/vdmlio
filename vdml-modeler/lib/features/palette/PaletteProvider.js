@@ -141,7 +141,7 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       'vdml:Individual', 'collaboration', 'bpmn-icon-task', 'Individual'
     ),
     'create.role': createAction(
-          'vdml:Role', 'collaboration', 'bpmn-icon-task', 'Role'
+          'vdml:Role', 'collaboration', 'bpmn-icon-start-event-none', 'Role'
      ),
     'create.businessModel': createAction(
           'vdml:BusinessModel', 'collaboration', 'bpmn-icon-task', 'Business Model'

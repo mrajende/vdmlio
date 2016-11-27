@@ -225,41 +225,6 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   }
 
   if (is(businessObject, 'vdml:FlowNode')) {
-
-    if (is(businessObject, 'vdml:EventBasedGateway')) {
-
-      assign(actions, {
-        'append.receive-task': appendAction('vdml:ReceiveTask', 'bpmn-icon-receive-task'),
-        'append.message-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
-                                                  'bpmn-icon-intermediate-event-catch-message',
-                                                  { eventDefinitionType: 'vdml:MessageEventDefinition' }),
-        'append.timer-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
-                                                  'bpmn-icon-intermediate-event-catch-timer',
-                                                  { eventDefinitionType: 'vdml:TimerEventDefinition' }),
-        'append.condtion-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
-                                                  'bpmn-icon-intermediate-event-catch-condition',
-                                                  { eventDefinitionType: 'vdml:ConditionalEventDefinition' }),
-        'append.signal-intermediate-event': appendAction('vdml:IntermediateCatchEvent',
-                                                  'bpmn-icon-intermediate-event-catch-signal',
-                                                  { eventDefinitionType: 'vdml:SignalEventDefinition' })
-      });
-    } else
-
-    if (isEventType(businessObject, 'vdml:BoundaryEvent', 'vdml:CompensateEventDefinition')) {
-
-      assign(actions, {
-        'append.compensation-activity':
-            appendAction('vdml:Task', 'bpmn-icon-task', translate('Append compensation activity'), {
-              isForCompensation: true
-            })
-      });
-    } else
-
-    if (!is(businessObject, 'vdml:EndEvent') &&
-        !businessObject.isForCompensation &&
-        !isEventType(businessObject, 'vdml:IntermediateThrowEvent', 'vdml:LinkEventDefinition') &&
-        !isEventSubProcess(businessObject)) {
-
       assign(actions, {
           //'append.append-collaboration': appendAction('vdml:Collaboration', 'bpmn-icon-task'),
           'append.append-marketSegment': appendAction('vdml:MarketSegment', 'bpmn-icon-task'),
@@ -268,13 +233,12 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
           'append.append-role': appendAction('vdml:Role', 'bpmn-icon-task'),
           'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task')
       });
-    }
   }
 
   var replaceMenu;
 
   if (popupMenu._providers['vdml-replace']) {
-    replaceMenu = popupMenu.create('vdml-replace', element);
+    //replaceMenu = popupMenu.create('vdml-replace', element);
   }
 
   if (replaceMenu && !replaceMenu.isEmpty()) {
@@ -312,20 +276,6 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
         title: translate('Connect using ' +
                   (businessObject.isForCompensation ? '' : 'Sequence/MessageFlow or ') +
                   'Association'),
-        action: {
-          click: startConnect,
-          dragstart: startConnect
-        }
-      }
-    });
-  }
-
-  if (isAny(businessObject, [ 'vdml:DataObjectReference', 'vdml:DataStoreReference' ])) {
-    assign(actions, {
-      'connect': {
-        group: 'connect',
-        className: 'bpmn-icon-connection-multi',
-        title: translate('Connect using DataInputAssociation'),
         action: {
           click: startConnect,
           dragstart: startConnect

@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-11-25
+ * Date: 2016-11-27
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /**
@@ -1377,289 +1377,6 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
   }
 
   var handlers = this.handlers = {
-    'vdml:Event': function(p, element, attrs) {
-      return drawCircle(p, element.width, element.height,  attrs);
-    },
-    'vdml:StartEvent': function(p, element) {
-      var attrs = {};
-      var semantic = getSemantic(element);
-
-      if (!semantic.isInterrupting) {
-        attrs = {
-          strokeDasharray: '6',
-          strokeLinecap: 'round'
-        };
-      }
-
-      var circle = renderer('vdml:Event')(p, element, attrs);
-
-      renderEventContent(element, p);
-
-      return circle;
-    },
-    'vdml:MessageEventDefinition': function(p, element, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_MESSAGE', {
-        xScaleFactor: 0.9,
-        yScaleFactor: 0.9,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.235,
-          my: 0.315
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'white';
-      var stroke = isThrowing ? 'white' : 'black';
-
-      var messagePath = drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill,
-        stroke: stroke
-      });
-
-      return messagePath;
-    },
-    'vdml:TimerEventDefinition': function(p, element) {
-
-      var circle = drawCircle(p, element.width, element.height, 0.2 * element.height, {
-        strokeWidth: 2
-      });
-
-      var pathData = pathMap.getScaledPath('EVENT_TIMER_WH', {
-        xScaleFactor: 0.75,
-        yScaleFactor: 0.75,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.5,
-          my: 0.5
-        }
-      });
-
-      drawPath(p, pathData, {
-        strokeWidth: 2,
-        strokeLinecap: 'square'
-      });
-
-      for (var i = 0;i < 12;i++) {
-
-        var linePathData = pathMap.getScaledPath('EVENT_TIMER_LINE', {
-          xScaleFactor: 0.75,
-          yScaleFactor: 0.75,
-          containerWidth: element.width,
-          containerHeight: element.height,
-          position: {
-            mx: 0.5,
-            my: 0.5
-          }
-        });
-
-        var width = element.width / 2;
-        var height = element.height / 2;
-
-        drawPath(p, linePathData, {
-          strokeWidth: 1,
-          strokeLinecap: 'square',
-          transform: 'rotate(' + (i * 30) + ',' + height + ',' + width + ')'
-        });
-      }
-
-      return circle;
-    },
-    'vdml:EscalationEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_ESCALATION', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.5,
-          my: 0.2
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'vdml:ConditionalEventDefinition': function(p, event) {
-      var pathData = pathMap.getScaledPath('EVENT_CONDITIONAL', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.5,
-          my: 0.222
-        }
-      });
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1
-      });
-    },
-    'vdml:LinkEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_LINK', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.57,
-          my: 0.263
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'vdml:ErrorEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_ERROR', {
-        xScaleFactor: 1.1,
-        yScaleFactor: 1.1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.2,
-          my: 0.722
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'vdml:CancelEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_CANCEL_45', {
-        xScaleFactor: 1.0,
-        yScaleFactor: 1.0,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.638,
-          my: -0.055
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      }).transform('rotate(45)');
-    },
-    'vdml:CompensateEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_COMPENSATION', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.22,
-          my: 0.5
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'vdml:SignalEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_SIGNAL', {
-        xScaleFactor: 0.9,
-        yScaleFactor: 0.9,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.5,
-          my: 0.2
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'vdml:MultipleEventDefinition': function(p, event, isThrowing) {
-      var pathData = pathMap.getScaledPath('EVENT_MULTIPLE', {
-        xScaleFactor: 1.1,
-        yScaleFactor: 1.1,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.222,
-          my: 0.36
-        }
-      });
-
-      var fill = isThrowing ? 'black' : 'none';
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: fill
-      });
-    },
-    'vdml:ParallelMultipleEventDefinition': function(p, event) {
-      var pathData = pathMap.getScaledPath('EVENT_PARALLEL_MULTIPLE', {
-        xScaleFactor: 1.2,
-        yScaleFactor: 1.2,
-        containerWidth: event.width,
-        containerHeight: event.height,
-        position: {
-          mx: 0.458,
-          my: 0.194
-        }
-      });
-
-      return drawPath(p, pathData, {
-        strokeWidth: 1
-      });
-    },
-    'vdml:EndEvent': function(p, element) {
-      var circle = renderer('vdml:Event')(p, element, {
-        strokeWidth: 4
-      });
-
-      renderEventContent(element, p, true);
-
-      return circle;
-    },
-    'vdml:TerminateEventDefinition': function(p, element) {
-      var circle = drawCircle(p, element.width, element.height, 8, {
-        strokeWidth: 4,
-        fill: 'black'
-      });
-
-      return circle;
-    },
-    'vdml:IntermediateEvent': function(p, element) {
-      var outer = renderer('vdml:Event')(p, element, { strokeWidth: 1 });
-      /* inner */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, { strokeWidth: 1, fill: 'none' });
-
-      renderEventContent(element, p);
-
-      return outer;
-    },
-    'vdml:IntermediateCatchEvent': as('vdml:IntermediateEvent'),
-    'vdml:IntermediateThrowEvent': as('vdml:IntermediateEvent'),
-
     'vdml:Activity': function(p, element, attrs) {
       return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, attrs);
     },
@@ -1680,7 +1397,8 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     },
     'vdml:Individual': function (p, element, attrs) {
         var rect = drawPerson(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
-        renderEmbeddedLabel(p, element, 'center-bottom');
+        renderEmbeddedLabel(p, element, 'center-bottom');//works with update to diagram.js text util
+        //renderEmbeddedLabel(p, element, 'center-middle');
         return rect;
     },
     'vdml:Role': function (p, element, attrs) {
@@ -1694,256 +1412,6 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
         var hexagon = drawHexagon(p, element.width, element.height);
         renderEmbeddedLabel(p, element, 'center-middle');
         return hexagon;
-    },
-    'vdml:ServiceTask': function(p, element) {
-      var task = renderer('vdml:Task')(p, element);
-
-      var pathDataBG = pathMap.getScaledPath('TASK_TYPE_SERVICE', {
-        abspos: {
-          x: 12,
-          y: 18
-        }
-      });
-
-      /* service bg */ drawPath(p, pathDataBG, {
-        strokeWidth: 1,
-        fill: 'none'
-      });
-
-      var fillPathData = pathMap.getScaledPath('TASK_TYPE_SERVICE_FILL', {
-        abspos: {
-          x: 17.2,
-          y: 18
-        }
-      });
-
-      /* service fill */ drawPath(p, fillPathData, {
-        strokeWidth: 0,
-        stroke: 'none',
-        fill: 'white'
-      });
-
-      var pathData = pathMap.getScaledPath('TASK_TYPE_SERVICE', {
-        abspos: {
-          x: 17,
-          y: 22
-        }
-      });
-
-      /* service */ drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: 'white'
-      });
-
-      return task;
-    },
-    'vdml:UserTask': function(p, element) {
-      var task = renderer('vdml:Task')(p, element);
-
-      var x = 15;
-      var y = 12;
-
-      var pathData = pathMap.getScaledPath('TASK_TYPE_USER_1', {
-        abspos: {
-          x: x,
-          y: y
-        }
-      });
-
-      /* user path */ drawPath(p, pathData, {
-        strokeWidth: 0.5,
-        fill: 'none'
-      });
-
-      var pathData2 = pathMap.getScaledPath('TASK_TYPE_USER_2', {
-        abspos: {
-          x: x,
-          y: y
-        }
-      });
-
-      /* user2 path */ drawPath(p, pathData2, {
-        strokeWidth: 0.5,
-        fill: 'none'
-      });
-
-      var pathData3 = pathMap.getScaledPath('TASK_TYPE_USER_3', {
-        abspos: {
-          x: x,
-          y: y
-        }
-      });
-
-      /* user3 path */ drawPath(p, pathData3, {
-        strokeWidth: 0.5,
-        fill: 'black'
-      });
-
-      return task;
-    },
-    'vdml:ManualTask': function(p, element) {
-      var task = renderer('vdml:Task')(p, element);
-
-      var pathData = pathMap.getScaledPath('TASK_TYPE_MANUAL', {
-        abspos: {
-          x: 17,
-          y: 15
-        }
-      });
-
-      /* manual path */ drawPath(p, pathData, {
-        strokeWidth: 0.25,
-        fill: 'white',
-        stroke: 'black'
-      });
-
-      return task;
-    },
-    'vdml:SendTask': function(p, element) {
-      var task = renderer('vdml:Task')(p, element);
-
-      var pathData = pathMap.getScaledPath('TASK_TYPE_SEND', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: 21,
-        containerHeight: 14,
-        position: {
-          mx: 0.285,
-          my: 0.357
-        }
-      });
-
-      /* send path */ drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: 'black',
-        stroke: 'white'
-      });
-
-      return task;
-    },
-    'vdml:ReceiveTask' : function(p, element) {
-      var semantic = getSemantic(element);
-
-      var task = renderer('vdml:Task')(p, element);
-      var pathData;
-
-      if (semantic.instantiate) {
-        drawCircle(p, 28, 28, 20 * 0.22, { strokeWidth: 1 });
-
-        pathData = pathMap.getScaledPath('TASK_TYPE_INSTANTIATING_SEND', {
-          abspos: {
-            x: 7.77,
-            y: 9.52
-          }
-        });
-      } else {
-
-        pathData = pathMap.getScaledPath('TASK_TYPE_SEND', {
-          xScaleFactor: 0.9,
-          yScaleFactor: 0.9,
-          containerWidth: 21,
-          containerHeight: 14,
-          position: {
-            mx: 0.3,
-            my: 0.4
-          }
-        });
-      }
-
-      /* receive path */ drawPath(p, pathData, {
-        strokeWidth: 1
-      });
-
-      return task;
-    },
-    'vdml:ScriptTask': function(p, element) {
-      var task = renderer('vdml:Task')(p, element);
-
-      var pathData = pathMap.getScaledPath('TASK_TYPE_SCRIPT', {
-        abspos: {
-          x: 15,
-          y: 20
-        }
-      });
-
-      /* script path */ drawPath(p, pathData, {
-        strokeWidth: 1
-      });
-
-      return task;
-    },
-    'vdml:BusinessRuleTask': function(p, element) {
-      var task = renderer('vdml:Task')(p, element);
-
-      var headerPathData = pathMap.getScaledPath('TASK_TYPE_BUSINESS_RULE_HEADER', {
-        abspos: {
-          x: 8,
-          y: 8
-        }
-      });
-
-      var businessHeaderPath = drawPath(p, headerPathData);
-      businessHeaderPath.attr({
-        strokeWidth: 1,
-        fill: 'AAA'
-      });
-
-      var headerData = pathMap.getScaledPath('TASK_TYPE_BUSINESS_RULE_MAIN', {
-        abspos: {
-          x: 8,
-          y: 8
-        }
-      });
-
-      var businessPath = drawPath(p, headerData);
-      businessPath.attr({
-        strokeWidth: 1
-      });
-
-      return task;
-    },
-    'vdml:SubProcess': function(p, element, attrs) {
-
-      attrs = assign({ fillOpacity: 0.95 }, attrs);
-
-      var rect = renderer('vdml:Activity')(p, element, attrs);
-
-      var expanded = DiUtil.isExpanded(element);
-
-      var isEventSubProcess = DiUtil.isEventSubProcess(element);
-
-      if (isEventSubProcess) {
-        rect.attr({
-          strokeDasharray: '1,2'
-        });
-      }
-
-      renderEmbeddedLabel(p, element, expanded ? 'center-top' : 'center-middle');
-
-      if (expanded) {
-        attachTaskMarkers(p, element);
-      } else {
-        attachTaskMarkers(p, element, ['SubProcessMarker']);
-      }
-
-      return rect;
-    },
-    'vdml:AdHocSubProcess': function(p, element) {
-      return renderer('vdml:SubProcess')(p, element);
-    },
-    'vdml:Transaction': function(p, element) {
-      var outer = renderer('vdml:SubProcess')(p, element);
-
-      var innerAttrs = styles.style([ 'no-fill', 'no-events' ]);
-
-      /* inner path */ drawRect(p, element.width, element.height, TASK_BORDER_RADIUS - 2, INNER_OUTER_DIST, innerAttrs);
-
-      return outer;
-    },
-    'vdml:CallActivity': function(p, element) {
-      return renderer('vdml:SubProcess')(p, element, {
-        strokeWidth: 5
-      });
     },
     'vdml:Participant': function(p, element) {
 
@@ -1989,152 +1457,6 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
       return rect;
     },
-    'vdml:InclusiveGateway': function(p, element) {
-      var diamond = drawDiamond(p, element.width, element.height);
-
-      /* circle path */
-      drawCircle(p, element.width, element.height, element.height * 0.24, {
-        strokeWidth: 2.5,
-        fill: 'none'
-      });
-
-      return diamond;
-    },
-    'vdml:ExclusiveGateway': function(p, element) {
-      var diamond = drawDiamond(p, element.width, element.height);
-
-      var pathData = pathMap.getScaledPath('GATEWAY_EXCLUSIVE', {
-        xScaleFactor: 0.4,
-        yScaleFactor: 0.4,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.32,
-          my: 0.3
-        }
-      });
-
-      if ((getDi(element).isMarkerVisible)) {
-        drawPath(p, pathData, {
-          strokeWidth: 1,
-          fill: 'black'
-        });
-      }
-
-      return diamond;
-    },
-    'vdml:ComplexGateway': function(p, element) {
-      var diamond = drawDiamond(p, element.width, element.height);
-
-      var pathData = pathMap.getScaledPath('GATEWAY_COMPLEX', {
-        xScaleFactor: 0.5,
-        yScaleFactor:0.5,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.46,
-          my: 0.26
-        }
-      });
-
-      /* complex path */ drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: 'black'
-      });
-
-      return diamond;
-    },
-    'vdml:ParallelGateway': function(p, element) {
-      var diamond = drawDiamond(p, element.width, element.height);
-
-      var pathData = pathMap.getScaledPath('GATEWAY_PARALLEL', {
-        xScaleFactor: 0.6,
-        yScaleFactor:0.6,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.46,
-          my: 0.2
-        }
-      });
-
-      /* parallel path */ drawPath(p, pathData, {
-        strokeWidth: 1,
-        fill: 'black'
-      });
-
-      return diamond;
-    },
-    'vdml:EventBasedGateway': function(p, element) {
-
-      var semantic = getSemantic(element);
-
-      var diamond = drawDiamond(p, element.width, element.height);
-
-      /* outer circle path */ drawCircle(p, element.width, element.height, element.height * 0.20, {
-        strokeWidth: 1,
-        fill: 'none'
-      });
-
-      var type = semantic.eventGatewayType;
-      var instantiate = !!semantic.instantiate;
-
-      function drawEvent() {
-
-        var pathData = pathMap.getScaledPath('GATEWAY_EVENT_BASED', {
-          xScaleFactor: 0.18,
-          yScaleFactor: 0.18,
-          containerWidth: element.width,
-          containerHeight: element.height,
-          position: {
-            mx: 0.36,
-            my: 0.44
-          }
-        });
-
-        /* event path */ drawPath(p, pathData, {
-          strokeWidth: 2,
-          fill: 'none'
-        });
-      }
-
-      if (type === 'Parallel') {
-
-        var pathData = pathMap.getScaledPath('GATEWAY_PARALLEL', {
-          xScaleFactor: 0.4,
-          yScaleFactor:0.4,
-          containerWidth: element.width,
-          containerHeight: element.height,
-          position: {
-            mx: 0.474,
-            my: 0.296
-          }
-        });
-
-        var parallelPath = drawPath(p, pathData);
-        parallelPath.attr({
-          strokeWidth: 1,
-          fill: 'none'
-        });
-      } else if (type === 'Exclusive') {
-
-        if (!instantiate) {
-          var innerCircle = drawCircle(p, element.width, element.height, element.height * 0.26);
-          innerCircle.attr({
-            strokeWidth: 1,
-            fill: 'none'
-          });
-        }
-
-        drawEvent();
-      }
-
-
-      return diamond;
-    },
-    'vdml:Gateway': function(p, element) {
-      return drawDiamond(p, element.width, element.height);
-    },
     'vdml:ValueProposition': function(p, element) {
       var pathData = createPathFromConnection(element);
       var path = drawPath(p, pathData, {
@@ -2161,164 +1483,6 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       }
 
       return path;
-    },
-    'vdml:Association': function(p, element, attrs) {
-
-      var semantic = getSemantic(element);
-
-      attrs = assign({
-        strokeDasharray: '0.5, 5',
-        strokeLinecap: 'round',
-        strokeLinejoin: 'round'
-      }, attrs || {});
-
-      if (semantic.associationDirection === 'One' ||
-          semantic.associationDirection === 'Both') {
-        attrs.markerEnd = marker('association-end');
-      }
-
-      if (semantic.associationDirection === 'Both') {
-        attrs.markerStart = marker('association-start');
-      }
-
-      return drawLine(p, element.waypoints, attrs);
-    },
-    'vdml:DataInputAssociation': function(p, element) {
-      return renderer('vdml:Association')(p, element, {
-        markerEnd: marker('association-end')
-      });
-    },
-    'vdml:DataOutputAssociation': function(p, element) {
-      return renderer('vdml:Association')(p, element, {
-        markerEnd: marker('association-end')
-      });
-    },
-    'vdml:MessageFlow': function(p, element) {
-
-      var semantic = getSemantic(element),
-          di = getDi(element);
-
-      var pathData = createPathFromConnection(element);
-      var path = drawPath(p, pathData, {
-        markerEnd: marker('messageflow-end'),
-        markerStart: marker('messageflow-start'),
-        strokeDasharray: '10, 12',
-        strokeLinecap: 'round',
-        strokeLinejoin: 'round',
-        strokeWidth: '1.5px'
-      });
-
-      if (semantic.messageRef) {
-        var midPoint = path.getPointAtLength(path.getTotalLength() / 2);
-
-        var markerPathData = pathMap.getScaledPath('MESSAGE_FLOW_MARKER', {
-          abspos: {
-            x: midPoint.x,
-            y: midPoint.y
-          }
-        });
-
-        var messageAttrs = { strokeWidth: 1 };
-
-        if (di.messageVisibleKind === 'initiating') {
-          messageAttrs.fill = 'white';
-          messageAttrs.stroke = 'black';
-        } else {
-          messageAttrs.fill = '#888';
-          messageAttrs.stroke = 'white';
-        }
-
-        drawPath(p, markerPathData, messageAttrs);
-      }
-
-      return path;
-    },
-    'vdml:DataObject': function(p, element) {
-      var pathData = pathMap.getScaledPath('DATA_OBJECT_PATH', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0.474,
-          my: 0.296
-        }
-      });
-
-      var elementObject = drawPath(p, pathData, { fill: 'white' });
-
-      var semantic = getSemantic(element);
-
-      if (isCollection(semantic)) {
-        renderDataItemCollection(p, element);
-      }
-
-      return elementObject;
-    },
-    'vdml:DataObjectReference': as('vdml:DataObject'),
-    'vdml:DataInput': function(p, element) {
-
-      var arrowPathData = pathMap.getRawPath('DATA_ARROW');
-
-      // page
-      var elementObject = renderer('vdml:DataObject')(p, element);
-
-      /* input arrow path */ drawPath(p, arrowPathData, { strokeWidth: 1 });
-
-      return elementObject;
-    },
-    'vdml:DataOutput': function(p, element) {
-      var arrowPathData = pathMap.getRawPath('DATA_ARROW');
-
-      // page
-      var elementObject = renderer('vdml:DataObject')(p, element);
-
-      /* output arrow path */ drawPath(p, arrowPathData, {
-        strokeWidth: 1,
-        fill: 'black'
-      });
-
-      return elementObject;
-    },
-    'vdml:DataStoreReference': function(p, element) {
-      var DATA_STORE_PATH = pathMap.getScaledPath('DATA_STORE', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: 0,
-          my: 0.133
-        }
-      });
-
-      var elementStore = drawPath(p, DATA_STORE_PATH, {
-        strokeWidth: 2,
-        fill: 'white'
-      });
-
-      return elementStore;
-    },
-    'vdml:BoundaryEvent': function(p, element) {
-
-      var semantic = getSemantic(element),
-          cancel = semantic.cancelActivity;
-
-      var attrs = {
-        strokeWidth: 1
-      };
-
-      if (!cancel) {
-        attrs.strokeDasharray = '6';
-        attrs.strokeLinecap = 'round';
-      }
-
-      var outer = renderer('vdml:Event')(p, element, attrs);
-      /* inner path */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, assign(attrs, { fill: 'none' }));
-
-      renderEventContent(element, p);
-
-      return outer;
     },
     'vdml:Group': function(p, element) {
       return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, {
@@ -2373,121 +1537,8 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       renderLabel(p, text, { box: element, align: 'left-middle', padding: 5 });
 
       return textElement;
-    },
-    'ParticipantMultiplicityMarker': function(p, element) {
-      var markerPath = pathMap.getScaledPath('MARKER_PARALLEL', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2) / element.width),
-          my: (element.height - 15) / element.height
-        }
-      });
-
-      drawMarker('participant-multiplicity', p, markerPath);
-    },
-    'SubProcessMarker': function(p, element) {
-      var markerRect = drawRect(p, 14, 14, 0, {
-        strokeWidth: 1
-      });
-
-      // Process marker is placed in the middle of the box
-      // therefore fixed values can be used here
-      markerRect.transform('translate(' + (element.width / 2 - 7.5) + ',' + (element.height - 20) + ')');
-
-      var markerPath = pathMap.getScaledPath('MARKER_SUB_PROCESS', {
-        xScaleFactor: 1.5,
-        yScaleFactor: 1.5,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: (element.width / 2 - 7.5) / element.width,
-          my: (element.height - 20) / element.height
-        }
-      });
-
-      drawMarker('sub-process', p, markerPath);
-    },
-    'ParallelMarker': function(p, element, position) {
-      var markerPath = pathMap.getScaledPath('MARKER_PARALLEL', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2 + position.parallel) / element.width),
-          my: (element.height - 20) / element.height
-        }
-      });
-
-      drawMarker('parallel', p, markerPath);
-    },
-    'SequentialMarker': function(p, element, position) {
-      var markerPath = pathMap.getScaledPath('MARKER_SEQUENTIAL', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2 + position.seq) / element.width),
-          my: (element.height - 19) / element.height
-        }
-      });
-
-      drawMarker('sequential', p, markerPath);
-    },
-    'CompensationMarker': function(p, element, position) {
-      var markerMath = pathMap.getScaledPath('MARKER_COMPENSATION', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2 + position.compensation) / element.width),
-          my: (element.height - 13) / element.height
-        }
-      });
-
-      drawMarker('compensation', p, markerMath, { strokeWidth: 1 });
-    },
-    'LoopMarker': function(p, element, position) {
-      var markerPath = pathMap.getScaledPath('MARKER_LOOP', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2 + position.loop) / element.width),
-          my: (element.height - 7) / element.height
-        }
-      });
-
-      drawMarker('loop', p, markerPath, {
-        strokeWidth: 1,
-        fill: 'none',
-        strokeLinecap: 'round',
-        strokeMiterlimit: 0.5
-      });
-    },
-    'AdhocMarker': function(p, element, position) {
-      var markerPath = pathMap.getScaledPath('MARKER_ADHOC', {
-        xScaleFactor: 1,
-        yScaleFactor: 1,
-        containerWidth: element.width,
-        containerHeight: element.height,
-        position: {
-          mx: ((element.width / 2 + position.adhoc) / element.width),
-          my: (element.height - 15) / element.height
-        }
-      });
-
-      drawMarker('adhoc', p, markerPath, {
-        strokeWidth: 1,
-        fill: 'black'
-      });
     }
+
   };
 
   function attachTaskMarkers(p, element, taskMarkers) {
@@ -2602,20 +1653,22 @@ VdmlRenderer.prototype.drawConnection = function(visuals, element) {
 
 VdmlRenderer.prototype.getShapePath = function(element) {
 
-  if (is(element, 'vdml:Event')) {
-    return getCirclePath(element);
+  if (is(element, 'vdml:Role')) {
+    return getOvalPath(element);
   }
-
-  if (is(element, 'vdml:Activity')) {
+/*  if (is(element, 'vdml:BusinessModel')) {
+      return getHexagonePath(element);
+  }
+  if (is(element, 'vdml:Individual')) {
+      return getPersonPath(element);
+  }*/
+  if (is(element, 'vdml:MarketSegment') || is(element, 'vdml:Enterprise')) {
     return getRoundRectPath(element, TASK_BORDER_RADIUS);
-  }
-
-  if (is(element, 'vdml:Gateway')) {
-    return getDiamondPath(element);
   }
 
   return getRectPath(element);
 };
+
 
 
 ///////// helper functions /////////////////////////////
@@ -2680,6 +1733,21 @@ function getCirclePath(shape) {
   return componentsToPath(circlePath);
 }
 
+
+function getOvalPath(shape) {
+    var cx = shape.x + shape.width / 2,
+        cy = shape.y + shape.height / 2,
+        rx = shape.width / 2,
+        ry = shape.height / 2;
+    var circlePath = [
+        ['M', cx - rx, cy],
+        ['a', rx, ry, 0, 1, 0, 2 * rx, 0],
+        ['a', rx, ry, 0, 1, 0, -2 * rx, 0]
+    ];
+    return componentsToPath(circlePath);
+}
+// done hiding from old browsers -->
+
 function getRoundRectPath(shape, borderRadius) {
 
   var x = shape.x,
@@ -2738,6 +1806,23 @@ function getRectPath(shape) {
   ];
 
   return componentsToPath(rectPath);
+}
+function getHexagonePath(shape) {
+    var r = Math.round(shape.width / 2);
+    var points = [];
+    for (var i = 0; i < 6; i++) {
+        points.push(shape.width / 2 + r * Math.cos(2 * Math.PI * i / 6));
+        points.push(shape.height / 2 + r * Math.sin(2 * Math.PI * i / 6));
+    }
+    var hexPath = [
+      
+    ];
+    hexPath.push(['M', points[0], points[1]]);
+    for (var i = 1; i < 6; i++) {
+        hexPath.push(['l', points[i * 2], points[i * 2 + 1]]);
+    }
+    hexPath.push(['z']);
+    return componentsToPath(hexPath);;
 }
 
 },{"11":11,"13":13,"194":194,"199":199,"48":48,"72":72,"73":73,"81":81,"84":84,"87":87,"89":89,"92":92}],5:[function(_dereq_,module,exports){
@@ -31378,6 +30463,12 @@ module.exports={
           "isAttr": true,
           "type": "String",
           "isId": true
+        },
+        {
+          "name": "mappingId",
+          "isAttr": true,
+          "type": "String",
+          "isId": false
         },
         {
           "name": "documentation",
