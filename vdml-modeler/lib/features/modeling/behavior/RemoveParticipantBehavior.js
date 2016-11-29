@@ -34,12 +34,12 @@ function RemoveParticipantBehavior(eventBus, modeling) {
 
   this.postExecute('shape.delete', function(context) {
 
-    var collaborationRoot = context.collaborationRoot;
+ /*   var collaborationRoot = context.collaborationRoot;
 
     if (collaborationRoot && !collaborationRoot.businessObject.participants.length) {
       // replace empty collaboration with process diagram
       modeling.makeProcess();
-    }
+    }*/
   }, true);
 
 }

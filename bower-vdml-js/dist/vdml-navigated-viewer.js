@@ -1130,6 +1130,51 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       scale: 0.5
     });
   }
+  function drawMargetSegment(p, element, attrs) {
+      var rect = renderer('vdml:Collaboration')(p, element, attrs);
+      attrs = computeStyle(attrs, {
+          stroke: 'black',
+          strokeWidth: 2,
+          fill: 'white'
+      });
+      var r = element.height > element.width ? element.width / 20 : element.height / 20;
+      var cx = element.width / 4,
+          cy = element.height / 4;
+      p.circle(cx, cy, Math.round(r)).attr(attrs);
+      cx = cx -2*r;
+      cy = cy + 2 * r;
+      p.circle(cx, cy, Math.round(r)).attr(attrs);
+      cx = cx + 4 * r;
+      p.circle(cx, cy, Math.round(r)).attr(attrs);
+      return rect;
+  }
+  function drawEnterprise(p, element, attrs) {
+      var rect = renderer('vdml:Collaboration')(p, element, attrs);
+      attrs = computeStyle(attrs, {
+          stroke: 'black',
+          strokeWidth: 2,
+          fill: 'white'
+      });
+      var ouwidth = element.height > element.width ? element.width / 10 : element.height / 10;
+      var startx = element.width / 4;
+      var starty = element.height / 4;
+
+      var waypoints = [{ x: startx, y: starty}, { x: startx, y: starty + element.height/10 }];
+      drawLine(p, waypoints, attrs);
+      startx = startx - ouwidth;
+      starty = starty + element.height / 10;
+
+      var waypoints = [{ x: startx , y: starty }, { x: startx + 2* ouwidth, y: starty }];
+      drawLine(p, waypoints, attrs);
+
+      var waypoints = [{ x: startx, y: starty }, { x: startx, y: starty + ouwidth}];
+      drawLine(p, waypoints, attrs);
+      startx = startx + 2 * ouwidth;
+      var waypoints = [{ x: startx, y: starty }, { x: startx, y: starty + ouwidth }];
+      drawLine(p, waypoints, attrs);
+
+      return rect;
+  }
   function drawPerson(p, width, height, offset, attrs) {
 
       if (isObject(offset)) {
@@ -1417,11 +1462,13 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       return rect;
     },
     'vdml:MarketSegment': function (p, element, attrs) {
-        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        //var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        var rect = drawMargetSegment(p, element, attrs);
         return rect;
     },
     'vdml:Enterprise': function (p, element, attrs) {
-        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        //var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        var rect = drawEnterprise(p, element, attrs);
         return rect;
     },
     'vdml:Individual': function (p, element, attrs) {
@@ -30831,6 +30878,11 @@ module.exports={
         "RootElement"
       ],
       "properties": [
+      {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
         {
           "name": "ecoType",
           "type": "EcoType",
