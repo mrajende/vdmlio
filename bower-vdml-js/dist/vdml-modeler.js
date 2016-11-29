@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-11-27
+ * Date: 2016-11-29
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -1725,6 +1725,27 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
       return path;
     },
+    'vdml:Association': function (p, element, attrs) {
+
+        var semantic = getSemantic(element);
+
+        attrs = assign({
+            strokeDasharray: '0.5, 5',
+            strokeLinecap: 'round',
+            strokeLinejoin: 'round'
+        }, attrs || {});
+
+        if (semantic.associationDirection === 'One' ||
+            semantic.associationDirection === 'Both') {
+            attrs.markerEnd = marker('association-end');
+        }
+
+        if (semantic.associationDirection === 'Both') {
+            attrs.markerStart = marker('association-start');
+        }
+
+        return drawLine(p, element.waypoints, attrs);
+    },
     'vdml:Group': function(p, element) {
       return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, {
         strokeWidth: 1,
@@ -2445,9 +2466,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
       'connect': {
         group: 'connect',
         className: 'bpmn-icon-connection-multi',
-        title: translate('Connect using ' +
-                  (businessObject.isForCompensation ? '' : 'Sequence/MessageFlow or ') +
-                  'Association'),
+        title: translate('Connect using Sequence'),
         action: {
           click: startConnect,
           dragstart: startConnect
@@ -4422,7 +4441,7 @@ VdmlUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
 
     if (newParent) {
 
-        if (is(newParent, 'vdml:Participant')) {
+      if (is(newParent, 'vdml:Participant')) {
           newParent.get('flows').push(businessObject);
           newParent = newParent.processRef;
       } else
@@ -4442,19 +4461,9 @@ VdmlUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
 
   if (is(businessObject, 'vdml:Artifact')) {
 
-    while (newParent &&
-           !is(newParent, 'vdml:Process') &&
-           !is(newParent, 'vdml:SubProcess') &&
-           !is(newParent, 'vdml:Collaboration')) {
-
-      if (is(newParent, 'vdml:Participant')) {
-        newParent = newParent.processRef;
-        break;
-      } else {
-        newParent = newParent.$parent;
-      }
+    while (newParent && !is(newParent, 'vdml:EcoMap')) {
+       newParent = newParent.$parent;
     }
-
     containment = 'artifacts';
   } else
 
@@ -4879,7 +4888,7 @@ function CreateOnFlowBehavior(eventBus, vdmlRules, modeling) {
 
     if (vdmlRules.canInsert(shape, parent)) {
       context.targetFlow = parent;
-      context.parent = parent.parent;
+      context.parent = parent.parent ? parent.parent : parent;
     }
   }, true);
 
@@ -4900,8 +4909,8 @@ function CreateOnFlowBehavior(eventBus, vdmlRules, modeling) {
 
     if (targetFlow) {
 
-      waypoints = targetFlow.waypoints;
-
+        waypoints = targetFlow.waypoints ? targetFlow.waypoints : [];
+        
 
       intersection = getApproxIntersection(waypoints, position);
 
@@ -10506,11 +10515,8 @@ function canDrop(element, target, position) {
 
   if (is(element, 'vdml:Artifact')) {
     return isAny(target, [
-      'vdml:Collaboration',
-      'vdml:Lane',
-      'vdml:Participant',
-      'vdml:Process',
-      'vdml:SubProcess' ]);
+      'vdml:EcoMap',
+      'vdml:Lane']);
   }
 
   if (is(element, 'vdml:MessageFlow')) {
@@ -10811,7 +10817,10 @@ function canInsert(shape, flow, position) {
   // underlying flow parent
   //
   // at this point we are not really able to talk
-  // about connection rules (yet)
+    // about connection rules (yet)
+  if (is(shape, 'vdml:TextAnnotation') && is(flow, 'vdml:EcoMap')) {
+        return true;
+  }
   return (
     isAny(flow, [ 'vdml:SequenceFlow', 'vdml:MessageFlow' ]) &&
     is(shape, 'vdml:FlowNode') &&
@@ -16120,7 +16129,7 @@ var processProps = _dereq_(129),
     nameProps = _dereq_(128),
     executableProps = _dereq_(125);
 
-function createGeneralTabGroups(element, bpmnFactory, elementRegistry) {
+function createGeneralTabGroups(element, vdmlFactory, elementRegistry) {
 
   var generalGroup = {
     id: 'general',
@@ -16138,7 +16147,7 @@ function createGeneralTabGroups(element, bpmnFactory, elementRegistry) {
     entries: []
   };
   linkProps(detailsGroup, element);
-  eventProps(detailsGroup, element, bpmnFactory, elementRegistry);
+  eventProps(detailsGroup, element, vdmlFactory, elementRegistry);
 
   var documentationGroup = {
     id: 'documentation',
@@ -16146,7 +16155,7 @@ function createGeneralTabGroups(element, bpmnFactory, elementRegistry) {
     entries: []
   };
 
-  documentationProps(documentationGroup, element, bpmnFactory);
+  documentationProps(documentationGroup, element, vdmlFactory);
 
   return [
     generalGroup,
@@ -16156,7 +16165,7 @@ function createGeneralTabGroups(element, bpmnFactory, elementRegistry) {
 
 }
 
-function BpmnPropertiesProvider(eventBus, bpmnFactory, elementRegistry) {
+function VdmlPropertiesProvider(eventBus, vdmlFactory, elementRegistry) {
 
   PropertiesActivator.call(this, eventBus);
 
@@ -16165,7 +16174,7 @@ function BpmnPropertiesProvider(eventBus, bpmnFactory, elementRegistry) {
     var generalTab = {
       id: 'general',
       label: 'General',
-      groups: createGeneralTabGroups(element, bpmnFactory, elementRegistry)
+      groups: createGeneralTabGroups(element, vdmlFactory, elementRegistry)
     };
 
     return [
@@ -16174,11 +16183,11 @@ function BpmnPropertiesProvider(eventBus, bpmnFactory, elementRegistry) {
   };
 }
 
-BpmnPropertiesProvider.$inject = [ 'eventBus', 'vdmlFactory', 'elementRegistry' ];
+VdmlPropertiesProvider.$inject = [ 'eventBus', 'vdmlFactory', 'elementRegistry' ];
 
-inherits(BpmnPropertiesProvider, PropertiesActivator);
+inherits(VdmlPropertiesProvider, PropertiesActivator);
 
-module.exports = BpmnPropertiesProvider;
+module.exports = VdmlPropertiesProvider;
 
 },{"123":123,"124":124,"125":125,"126":126,"127":127,"128":128,"129":129,"345":345,"96":96}],122:[function(_dereq_,module,exports){
 module.exports = {
@@ -16196,7 +16205,7 @@ var ModelUtil = _dereq_(144),
     getBusinessObject = ModelUtil.getBusinessObject;
 
 
-module.exports = function(group, element, bpmnFactory) {
+module.exports = function(group, element, vdmlFactory) {
 
   var getValue = function(businessObject) {
     return function(element) {
@@ -16212,7 +16221,7 @@ module.exports = function(group, element, bpmnFactory) {
       var newObjectList = [];
 
       if (typeof values.documentation !== 'undefined' && values.documentation !== '') {
-        newObjectList.push(bpmnFactory.create('bpmn:Documentation', {
+        newObjectList.push(vdmlFactory.create('vdml:Documentation', {
           text: values.documentation
         }));
       }
@@ -16238,7 +16247,7 @@ module.exports = function(group, element, bpmnFactory) {
   var processRef;
 
   // Process Documentation when having a Collaboration Diagram
-  if (is(element, 'bpmn:Participant')) {
+  if (is(element, 'vdml:Participant')) {
 
     processRef = getBusinessObject(element).processRef;
 
@@ -16280,13 +16289,13 @@ var message = _dereq_(136),
     condition = _dereq_(131);
 
 
-module.exports = function(group, element, bpmnFactory, elementRegistry) {
+module.exports = function(group, element, vdmlFactory, elementRegistry) {
   var events = [
-    'bpmn:StartEvent',
-    'bpmn:EndEvent',
-    'bpmn:IntermediateThrowEvent',
-    'bpmn:BoundaryEvent',
-    'bpmn:IntermediateCatchEvent'
+    'vdml:StartEvent',
+    'vdml:EndEvent',
+    'vdml:IntermediateThrowEvent',
+    'vdml:BoundaryEvent',
+    'vdml:IntermediateCatchEvent'
   ];
 
   // Message and Signal Event Definition
@@ -16297,26 +16306,26 @@ module.exports = function(group, element, bpmnFactory, elementRegistry) {
           signalEventDefinition = eventDefinitionHelper.getSignalEventDefinition(element);
 
       if (messageEventDefinition) {
-        message(group, element, bpmnFactory, messageEventDefinition);
+        message(group, element, vdmlFactory, messageEventDefinition);
       }
 
       if (signalEventDefinition) {
-        signal(group, element, bpmnFactory, signalEventDefinition);
+        signal(group, element, vdmlFactory, signalEventDefinition);
       }
 
     }
   });
 
   // Special Case: Receive Task
-  if (is(element, 'bpmn:ReceiveTask')) {
-    message(group, element, bpmnFactory, getBusinessObject(element));
+  if (is(element, 'vdml:ReceiveTask')) {
+    message(group, element, vdmlFactory, getBusinessObject(element));
   }
 
   // Error Event Definition
   var errorEvents = [
-    'bpmn:StartEvent',
-    'bpmn:BoundaryEvent',
-    'bpmn:EndEvent'
+    'vdml:StartEvent',
+    'vdml:BoundaryEvent',
+    'vdml:EndEvent'
   ];
 
   forEach(errorEvents, function(event) {
@@ -16325,34 +16334,34 @@ module.exports = function(group, element, bpmnFactory, elementRegistry) {
       var errorEventDefinition = eventDefinitionHelper.getErrorEventDefinition(element);
 
       if (errorEventDefinition) {
-        var isCatchingErrorEvent = is(element, 'bpmn:StartEvent') || is (element, 'bpmn:BoundaryEvent');
+        var isCatchingErrorEvent = is(element, 'vdml:StartEvent') || is (element, 'vdml:BoundaryEvent');
 
         var showErrorCodeVariable = isCatchingErrorEvent,
             showErrorMessageVariable = isCatchingErrorEvent;
 
-        error(group, element, bpmnFactory, errorEventDefinition, showErrorCodeVariable, showErrorMessageVariable);
+        error(group, element, vdmlFactory, errorEventDefinition, showErrorCodeVariable, showErrorMessageVariable);
       }
     }
   });
 
   // Escalation Event Definition
   var escalationEvents = [
-    'bpmn:StartEvent',
-    'bpmn:BoundaryEvent',
-    'bpmn:IntermediateThrowEvent',
-    'bpmn:EndEvent'
+    'vdml:StartEvent',
+    'vdml:BoundaryEvent',
+    'vdml:IntermediateThrowEvent',
+    'vdml:EndEvent'
   ];
 
   forEach(escalationEvents, function(event) {
     if (is(element, event)) {
 
-      var showEscalationCodeVariable = is(element, 'bpmn:StartEvent') || is(element, 'bpmn:BoundaryEvent');
+      var showEscalationCodeVariable = is(element, 'vdml:StartEvent') || is(element, 'vdml:BoundaryEvent');
 
       // get business object
       var escalationEventDefinition = eventDefinitionHelper.getEscalationEventDefinition(element);
 
       if (escalationEventDefinition) {
-        escalation(group, element, bpmnFactory, escalationEventDefinition, showEscalationCodeVariable);
+        escalation(group, element, vdmlFactory, escalationEventDefinition, showEscalationCodeVariable);
       }
     }
 
@@ -16360,9 +16369,9 @@ module.exports = function(group, element, bpmnFactory, elementRegistry) {
 
   // Timer Event Definition
   var timerEvents = [
-    'bpmn:StartEvent',
-    'bpmn:BoundaryEvent',
-    'bpmn:IntermediateCatchEvent'
+    'vdml:StartEvent',
+    'vdml:BoundaryEvent',
+    'vdml:IntermediateCatchEvent'
   ];
 
   forEach(timerEvents, function(event) {
@@ -16372,15 +16381,15 @@ module.exports = function(group, element, bpmnFactory, elementRegistry) {
       var timerEventDefinition = eventDefinitionHelper.getTimerEventDefinition(element);
 
       if (timerEventDefinition) {
-        timer(group, element, bpmnFactory, timerEventDefinition);
+        timer(group, element, vdmlFactory, timerEventDefinition);
       }
     }
   });
 
   // Compensate Event Definition
   var compensationEvents = [
-    'bpmn:EndEvent',
-    'bpmn:IntermediateThrowEvent'
+    'vdml:EndEvent',
+    'vdml:IntermediateThrowEvent'
   ];
 
   forEach(compensationEvents, function(event) {
@@ -16390,7 +16399,7 @@ module.exports = function(group, element, bpmnFactory, elementRegistry) {
       var compensateEventDefinition = eventDefinitionHelper.getCompensateEventDefinition(element);
 
       if (compensateEventDefinition) {
-        compensation(group, element, bpmnFactory, compensateEventDefinition, elementRegistry);
+        compensation(group, element, vdmlFactory, compensateEventDefinition, elementRegistry);
       }
     }
   });
@@ -16398,19 +16407,19 @@ module.exports = function(group, element, bpmnFactory, elementRegistry) {
 
   // Conditional Event Defintion
   var conditionalEvents = [
-    'bpmn:BoundaryEvent',
-    'bpmn:IntermediateThrowEvent',
-    'bpmn:IntermediateCatchEvent'
+    'vdml:BoundaryEvent',
+    'vdml:IntermediateThrowEvent',
+    'vdml:IntermediateCatchEvent'
   ];
 
   if (isAny(element, conditionalEvents) ||
-      (is(element, 'bpmn:StartEvent') && isEventSubProcess(element.parent))) {
+      (is(element, 'vdml:StartEvent') && isEventSubProcess(element.parent))) {
 
     // get business object
     var conditionalEventDefinition = eventDefinitionHelper.getConditionalEventDefinition(element);
 
     if (conditionalEventDefinition) {
-      condition(group, element, bpmnFactory, conditionalEventDefinition, elementRegistry);
+      condition(group, element, vdmlFactory, conditionalEventDefinition, elementRegistry);
     }
   }
 
@@ -16434,7 +16443,7 @@ module.exports = function(group, element) {
     return;
   }
 
-  if (is(element, 'bpmn:Process') || (is(element, 'bpmn:Participant') && bo.get('processRef'))) {
+  if (is(element, 'vdml:Process') || (is(element, 'vdml:Participant') && bo.get('processRef'))) {
 
     var executableEntry = entryFactory.checkbox({
       id: 'process-is-executable',
@@ -16443,7 +16452,7 @@ module.exports = function(group, element) {
     });
 
     // in participants we have to change the default behavior of set and get
-    if (is(element, 'bpmn:Participant')) {
+    if (is(element, 'vdml:Participant')) {
       executableEntry.get = function(element) {
         return participantHelper.getProcessBusinessObject(element, 'isExecutable');
       };
@@ -16512,7 +16521,7 @@ function getLinkEventDefinition(element) {
   var linkEventDefinition = null;
   if (bo.eventDefinitions) {
     forEach(bo.eventDefinitions, function(eventDefinition) {
-      if (is(eventDefinition, 'bpmn:LinkEventDefinition')) {
+      if (is(eventDefinition, 'vdml:LinkEventDefinition')) {
         linkEventDefinition = eventDefinition;
       }
     });
@@ -16522,7 +16531,7 @@ function getLinkEventDefinition(element) {
 }
 
 module.exports = function(group, element) {
-  var linkEvents = [ 'bpmn:IntermediateThrowEvent', 'bpmn:IntermediateCatchEvent' ];
+  var linkEvents = [ 'vdml:IntermediateThrowEvent', 'vdml:IntermediateCatchEvent' ];
 
   forEach(linkEvents, function(event) {
     if (is(element, event)) {
@@ -16562,17 +16571,17 @@ var nameEntryFactory = _dereq_(137),
 
 module.exports = function(group, element) {
 
-  if (!is(element, 'bpmn:Collaboration')) {
+  //if (!is(element, 'vdml:Collaboration')) {
 
     var options;
-    if (is(element, 'bpmn:TextAnnotation')) {
+    if (is(element, 'vdml:TextAnnotation')) {
       options = { modelProperty: 'text' };
     }
 
     // name
     group.entries = group.entries.concat(nameEntryFactory(element, options));
 
-  }
+  //}
 
 };
 
@@ -16589,12 +16598,12 @@ var is = _dereq_(144).is,
 module.exports = function(group, element) {
   var businessObject = getBusinessObject(element);
 
-  if (is(element, 'bpmn:Process') || (is(element, 'bpmn:Participant') && businessObject.get('processRef'))) {
+  if (is(element, 'vdml:Process') || (is(element, 'vdml:Participant') && businessObject.get('processRef'))) {
 
     /**
      * processId
      */
-    if (is(element, 'bpmn:Participant')) {
+    if (is(element, 'vdml:Participant')) {
       var idEntry = entryFactory.validationAwareTextField({
         id: 'process-id',
         label: 'Process Id',
@@ -16664,11 +16673,11 @@ var forEach = _dereq_(360),
 
 
 function getContainedActivities(element) {
-  return getFlowElements(element, 'bpmn:Activity');
+  return getFlowElements(element, 'vdml:Activity');
 }
 
 function getContainedBoundaryEvents(element) {
-  return getFlowElements(element, 'bpmn:BoundaryEvent');
+  return getFlowElements(element, 'vdml:BoundaryEvent');
 }
 
 function getFlowElements(element, type) {
@@ -16689,8 +16698,8 @@ function isCompensationEventAttachedToActivity(activity, boundaryEvents) {
 // activity: only when it attach a compensation boundary event
 // callActivity: no limitation
 function canActivityBeCompensated(activity, boundaryEvents) {
-  return (is(activity, 'bpmn:SubProcess') && !activity.triggeredByEvent) ||
-          is(activity, 'bpmn:CallActivity') ||
+  return (is(activity, 'vdml:SubProcess') && !activity.triggeredByEvent) ||
+          is(activity, 'vdml:CallActivity') ||
           isCompensationEventAttachedToActivity(activity, boundaryEvents);
 }
 
@@ -16709,7 +16718,7 @@ function getActivitiesForActivityRef(element) {
 
   // if throwing compensation event is in an event sub process:
   // get also all activities outside of the event sub process
-  if (is(parent, 'bpmn:SubProcess') && parent.triggeredByEvent) {
+  if (is(parent, 'vdml:SubProcess') && parent.triggeredByEvent) {
     parent = parent.$parent;
     if (parent) {
       activitiesForActivityRef = activitiesForActivityRef.concat(getActivitiesForCompensation(parent));
@@ -16734,7 +16743,7 @@ function createActivityRefOptions(element) {
 }
 
 
-module.exports = function(group, element, bpmnFactory, compensateEventDefinition, elementRegistry) {
+module.exports = function(group, element, vdmlFactory, compensateEventDefinition, elementRegistry) {
 
   group.entries.push(entryFactory.checkbox({
     id: 'wait-for-completion',
@@ -16785,12 +16794,12 @@ var entryFactory = _dereq_(107),
     elementHelper = _dereq_(117),
     cmdHelper = _dereq_(116);
 
-function createFormalExpression(parent, body, bpmnFactory) {
+function createFormalExpression(parent, body, vdmlFactory) {
   body = body || undefined;
-  return elementHelper.createElement('bpmn:FormalExpression', { body: body }, parent, bpmnFactory);
+  return elementHelper.createElement('vdml:FormalExpression', { body: body }, parent, vdmlFactory);
 }
 
-module.exports = function(group, element, bpmnFactory, conditionalEventDefinition) {
+module.exports = function(group, element, vdmlFactory, conditionalEventDefinition) {
 
   var getValue = function(modelProperty) {
     return function(element) {
@@ -16832,7 +16841,7 @@ module.exports = function(group, element, bpmnFactory, conditionalEventDefinitio
 
       // if no condition expression is set yet, create one
       if (!condition) {
-        condition = createFormalExpression(conditionalEventDefinition, values.condition, bpmnFactory);
+        condition = createFormalExpression(conditionalEventDefinition, values.condition, vdmlFactory);
 
         return cmdHelper.updateBusinessObject(element, conditionalEventDefinition, { condition: condition });
 
@@ -16884,7 +16893,7 @@ var cmdHelper = _dereq_(116);
  *
  * @param  {djs.model.Base} element
  * @param  {ModdleElement} definition
- * @param  {BpmnFactory} bpmnFactory
+ * @param  {VdmlFactory} vdmlFactory
  * @param  {Object} options
  * @param  {string} options.id the id of the entry
  * @param  {string} options.label the label of the entry
@@ -16894,7 +16903,7 @@ var cmdHelper = _dereq_(116);
  *
  * @return {Array<Object>} return an array containing the entries
  */
-module.exports = function(element, definition, bpmnFactory, options) {
+module.exports = function(element, definition, vdmlFactory, options) {
 
   var id = options.id || 'element-property';
   var label = options.label;
@@ -16950,7 +16959,7 @@ var eventDefinitionReference = _dereq_(135),
     elementReferenceProperty = _dereq_(132);
 
 
-module.exports = function(group, element, bpmnFactory, errorEventDefinition, showErrorCodeVariable,
+module.exports = function(group, element, vdmlFactory, errorEventDefinition, showErrorCodeVariable,
   showErrorMessageVariable) {
 
 
@@ -16975,16 +16984,16 @@ module.exports = function(group, element, bpmnFactory, errorEventDefinition, sho
   };
 
 
-  group.entries = group.entries.concat(eventDefinitionReference(element, errorEventDefinition, bpmnFactory, {
+  group.entries = group.entries.concat(eventDefinitionReference(element, errorEventDefinition, vdmlFactory, {
     label: 'Error',
     elementName: 'error',
-    elementType: 'bpmn:Error',
+    elementType: 'vdml:Error',
     referenceProperty: 'errorRef',
     newElementIdPrefix: 'Error_'
   }));
 
 
-  group.entries = group.entries.concat(elementReferenceProperty(element, errorEventDefinition, bpmnFactory, {
+  group.entries = group.entries.concat(elementReferenceProperty(element, errorEventDefinition, vdmlFactory, {
     id: 'error-element-name',
     label: 'Error Name',
     referenceProperty: 'errorRef',
@@ -16993,7 +17002,7 @@ module.exports = function(group, element, bpmnFactory, errorEventDefinition, sho
   }));
 
 
-  group.entries = group.entries.concat(elementReferenceProperty(element, errorEventDefinition, bpmnFactory, {
+  group.entries = group.entries.concat(elementReferenceProperty(element, errorEventDefinition, vdmlFactory, {
     id: 'error-element-code',
     label: 'Error Code',
     referenceProperty: 'errorRef',
@@ -17035,18 +17044,18 @@ var eventDefinitionReference = _dereq_(135),
     elementReferenceProperty = _dereq_(132);
 
 
-module.exports = function(group, element, bpmnFactory, escalationEventDefinition, showEscalationCodeVariable) {
+module.exports = function(group, element, vdmlFactory, escalationEventDefinition, showEscalationCodeVariable) {
 
-  group.entries = group.entries.concat(eventDefinitionReference(element, escalationEventDefinition, bpmnFactory, {
+  group.entries = group.entries.concat(eventDefinitionReference(element, escalationEventDefinition, vdmlFactory, {
     label: 'Escalation',
     elementName: 'escalation',
-    elementType: 'bpmn:Escalation',
+    elementType: 'vdml:Escalation',
     referenceProperty: 'escalationRef',
     newElementIdPrefix: 'Escalation_'
   }));
 
 
-  group.entries = group.entries.concat(elementReferenceProperty(element, escalationEventDefinition, bpmnFactory, {
+  group.entries = group.entries.concat(elementReferenceProperty(element, escalationEventDefinition, vdmlFactory, {
     id: 'escalation-element-name',
     label: 'Escalation Name',
     referenceProperty: 'escalationRef',
@@ -17055,7 +17064,7 @@ module.exports = function(group, element, bpmnFactory, escalationEventDefinition
   }));
 
 
-  group.entries = group.entries.concat(elementReferenceProperty(element, escalationEventDefinition, bpmnFactory, {
+  group.entries = group.entries.concat(elementReferenceProperty(element, escalationEventDefinition, vdmlFactory, {
     id: 'escalation-element-code',
     label: 'Escalation Code',
     referenceProperty: 'escalationRef',
@@ -17133,7 +17142,7 @@ function findElementById(eventDefinition, type, id) {
  *
  * @param  {djs.model.Base} element
  * @param  {ModdleElement} definition
- * @param  {BpmnFactory} bpmnFactory
+ * @param  {VdmlFactory} vdmlFactory
  * @param  {Object} options
  * @param  {string} options.label the label of the entry
  * @param  {string} options.description the description of the entry
@@ -17144,7 +17153,7 @@ function findElementById(eventDefinition, type, id) {
  *
  * @return {Array<Object>} return an array containing the entries
  */
-module.exports = function(element, definition, bpmnFactory, options) {
+module.exports = function(element, definition, vdmlFactory, options) {
 
   var elementName       = options.elementName || '',
       elementType       = options.elementType,
@@ -17196,7 +17205,7 @@ module.exports = function(element, definition, bpmnFactory, options) {
         var root = utils.getRoot(definition);
 
         // create a new element
-        selectedElement = elementHelper.createElement(elementType, { name: selection }, root, bpmnFactory);
+        selectedElement = elementHelper.createElement(elementType, { name: selection }, root, vdmlFactory);
         commands.push(cmdHelper.addAndRemoveElementsFromList(element, root, 'rootElements', null, [ selectedElement ]));
       }
 
@@ -17243,18 +17252,18 @@ var eventDefinitionReference = _dereq_(135),
     elementReferenceProperty = _dereq_(132);
 
 
-module.exports = function(group, element, bpmnFactory, messageEventDefinition) {
+module.exports = function(group, element, vdmlFactory, messageEventDefinition) {
 
-  group.entries = group.entries.concat(eventDefinitionReference(element, messageEventDefinition, bpmnFactory, {
+  group.entries = group.entries.concat(eventDefinitionReference(element, messageEventDefinition, vdmlFactory, {
     label: 'Message',
     elementName: 'message',
-    elementType: 'bpmn:Message',
+    elementType: 'vdml:Message',
     referenceProperty: 'messageRef',
     newElementIdPrefix: 'Message_'
   }));
 
 
-  group.entries = group.entries.concat(elementReferenceProperty(element, messageEventDefinition, bpmnFactory, {
+  group.entries = group.entries.concat(elementReferenceProperty(element, messageEventDefinition, vdmlFactory, {
     id: 'message-element-name',
     label: 'Message Name',
     referenceProperty: 'messageRef',
@@ -17304,18 +17313,18 @@ var eventDefinitionReference = _dereq_(135),
     elementReferenceProperty = _dereq_(132);
 
 
-module.exports = function(group, element, bpmnFactory, signalEventDefinition) {
+module.exports = function(group, element, vdmlFactory, signalEventDefinition) {
 
-  group.entries = group.entries.concat(eventDefinitionReference(element, signalEventDefinition, bpmnFactory, {
+  group.entries = group.entries.concat(eventDefinitionReference(element, signalEventDefinition, vdmlFactory, {
     label: 'Signal',
     elementName: 'signal',
-    elementType: 'bpmn:Signal',
+    elementType: 'vdml:Signal',
     referenceProperty: 'signalRef',
     newElementIdPrefix: 'Signal_'
   }));
 
 
-  group.entries = group.entries.concat(elementReferenceProperty(element, signalEventDefinition, bpmnFactory, {
+  group.entries = group.entries.concat(elementReferenceProperty(element, signalEventDefinition, vdmlFactory, {
     id: 'signal-element-name',
     label: 'Signal Name',
     referenceProperty: 'signalRef',
@@ -17336,7 +17345,7 @@ var entryFactory = _dereq_(107);
 /**
  * Get the timer definition type for a given timer event definition.
  *
- * @param {ModdleElement<bpmn:TimerEventDefinition>} timer
+ * @param {ModdleElement<vdml:TimerEventDefinition>} timer
  *
  * @return {string|undefined} the timer definition type
  */
@@ -17358,20 +17367,20 @@ function getTimerDefinitionType(timer) {
 }
 
 /**
- * Creates 'bpmn:FormalExpression' element.
+ * Creates 'vdml:FormalExpression' element.
  *
  * @param {ModdleElement} parent
  * @param {string} body
- * @param {BpmnFactory} bpmnFactory
+ * @param {VdmlFactory} vdmlFactory
  *
- * @return {ModdleElement<bpmn:FormalExpression>} a formal expression
+ * @return {ModdleElement<vdml:FormalExpression>} a formal expression
  */
-function createFormalExpression(parent, body, bpmnFactory) {
+function createFormalExpression(parent, body, vdmlFactory) {
   body = body || undefined;
-  return elementHelper.createElement('bpmn:FormalExpression', { body: body }, parent, bpmnFactory);
+  return elementHelper.createElement('vdml:FormalExpression', { body: body }, parent, vdmlFactory);
 }
 
-function TimerEventDefinition(group, element, bpmnFactory, timerEventDefinition) {
+function TimerEventDefinition(group, element, vdmlFactory, timerEventDefinition) {
 
   var selectOptions = [
     { value: 'timeDate', name: 'Date' },
@@ -17409,7 +17418,7 @@ function TimerEventDefinition(group, element, bpmnFactory, timerEventDefinition)
           value = definition.get('body');
         }
 
-        props[newType] = createFormalExpression(timerEventDefinition, value, bpmnFactory);
+        props[newType] = createFormalExpression(timerEventDefinition, value, vdmlFactory);
       }
 
       return cmdHelper.updateBusinessObject(element, timerEventDefinition, props);
@@ -17485,8 +17494,8 @@ var inherits = _dereq_(345);
 var EventEmitter = _dereq_(150);
 
 var DEFAULT_OPTIONS = {
-  scrollSymbolLeft: '‹',
-  scrollSymbolRight: '›'
+  scrollSymbolLeft: "<",
+  scrollSymbolRight: ">"
 };
 
 

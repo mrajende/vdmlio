@@ -410,11 +410,8 @@ function canDrop(element, target, position) {
 
   if (is(element, 'vdml:Artifact')) {
     return isAny(target, [
-      'vdml:Collaboration',
-      'vdml:Lane',
-      'vdml:Participant',
-      'vdml:Process',
-      'vdml:SubProcess' ]);
+      'vdml:EcoMap',
+      'vdml:Lane']);
   }
 
   if (is(element, 'vdml:MessageFlow')) {
@@ -715,7 +712,10 @@ function canInsert(shape, flow, position) {
   // underlying flow parent
   //
   // at this point we are not really able to talk
-  // about connection rules (yet)
+    // about connection rules (yet)
+  if (is(shape, 'vdml:TextAnnotation') && is(flow, 'vdml:EcoMap')) {
+        return true;
+  }
   return (
     isAny(flow, [ 'vdml:SequenceFlow', 'vdml:MessageFlow' ]) &&
     is(shape, 'vdml:FlowNode') &&

@@ -8,6 +8,9 @@
     <vdml:collaboration id="Collaboration_1f6qlce" name="bm2">
       <vdml:incoming>ValueProposition_0tkgry3</vdml:incoming>
     </vdml:collaboration>
+    <vdml:textAnnotation id="TextAnnotation_1m0vc8m">    <vdml:text>fvdsfs</vdml:text>
+</vdml:textAnnotation>
+    <vdml:association id="Association_1d11jfu" sourceRef="Collaboration_1f6qlce" targetRef="TextAnnotation_1m0vc8m" />
   </vdml:ecoMap>
   <vdmldi:VDMLDiagram id="VDMLDiagram_1">
     <vdmldi:VDMLPlane id="VDMLPlane_1" vdmlElement="Process_1">
@@ -24,6 +27,13 @@
         <vdmldi:VDMLLabel>
           <dc:Bounds x="253" y="237.22736514067108" width="19" height="12" />
         </vdmldi:VDMLLabel>
+      </vdmldi:VDMLEdge>
+      <vdmldi:VDMLShape id="TextAnnotation_1m0vc8m_di" vdmlElement="TextAnnotation_1m0vc8m">
+        <dc:Bounds x="548" y="109" width="100" height="30" />
+      </vdmldi:VDMLShape>
+      <vdmldi:VDMLEdge id="Association_1d11jfu_di" vdmlElement="Association_1d11jfu">
+        <di:waypoint xsi:type="dc:Point" x="494" y="124" />
+        <di:waypoint xsi:type="dc:Point" x="548" y="124" />
       </vdmldi:VDMLEdge>
     </vdmldi:VDMLPlane>
   </vdmldi:VDMLDiagram>

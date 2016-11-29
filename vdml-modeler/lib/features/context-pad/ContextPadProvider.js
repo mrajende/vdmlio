@@ -273,9 +273,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
       'connect': {
         group: 'connect',
         className: 'bpmn-icon-connection-multi',
-        title: translate('Connect using ' +
-                  (businessObject.isForCompensation ? '' : 'Sequence/MessageFlow or ') +
-                  'Association'),
+        title: translate('Connect using Sequence'),
         action: {
           click: startConnect,
           dragstart: startConnect

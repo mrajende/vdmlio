@@ -29,7 +29,7 @@ function CreateOnFlowBehavior(eventBus, vdmlRules, modeling) {
 
     if (vdmlRules.canInsert(shape, parent)) {
       context.targetFlow = parent;
-      context.parent = parent.parent;
+      context.parent = parent.parent ? parent.parent : parent;
     }
   }, true);
 
@@ -50,8 +50,8 @@ function CreateOnFlowBehavior(eventBus, vdmlRules, modeling) {
 
     if (targetFlow) {
 
-      waypoints = targetFlow.waypoints;
-
+        waypoints = targetFlow.waypoints ? targetFlow.waypoints : [];
+        
 
       intersection = getApproxIntersection(waypoints, position);
 

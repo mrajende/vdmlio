@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-11-27
+ * Date: 2016-11-29
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -1512,6 +1512,27 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       }
 
       return path;
+    },
+    'vdml:Association': function (p, element, attrs) {
+
+        var semantic = getSemantic(element);
+
+        attrs = assign({
+            strokeDasharray: '0.5, 5',
+            strokeLinecap: 'round',
+            strokeLinejoin: 'round'
+        }, attrs || {});
+
+        if (semantic.associationDirection === 'One' ||
+            semantic.associationDirection === 'Both') {
+            attrs.markerEnd = marker('association-end');
+        }
+
+        if (semantic.associationDirection === 'Both') {
+            attrs.markerStart = marker('association-start');
+        }
+
+        return drawLine(p, element.waypoints, attrs);
     },
     'vdml:Group': function(p, element) {
       return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, {

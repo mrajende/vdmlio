@@ -458,7 +458,7 @@ VdmlUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
 
     if (newParent) {
 
-        if (is(newParent, 'vdml:Participant')) {
+      if (is(newParent, 'vdml:Participant')) {
           newParent.get('flows').push(businessObject);
           newParent = newParent.processRef;
       } else
@@ -478,19 +478,9 @@ VdmlUpdater.prototype.updateSemanticParent = function(businessObject, newParent,
 
   if (is(businessObject, 'vdml:Artifact')) {
 
-    while (newParent &&
-           !is(newParent, 'vdml:Process') &&
-           !is(newParent, 'vdml:SubProcess') &&
-           !is(newParent, 'vdml:Collaboration')) {
-
-      if (is(newParent, 'vdml:Participant')) {
-        newParent = newParent.processRef;
-        break;
-      } else {
-        newParent = newParent.$parent;
-      }
+    while (newParent && !is(newParent, 'vdml:EcoMap')) {
+       newParent = newParent.$parent;
     }
-
     containment = 'artifacts';
   } else
 

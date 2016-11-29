@@ -534,6 +534,27 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
       return path;
     },
+    'vdml:Association': function (p, element, attrs) {
+
+        var semantic = getSemantic(element);
+
+        attrs = assign({
+            strokeDasharray: '0.5, 5',
+            strokeLinecap: 'round',
+            strokeLinejoin: 'round'
+        }, attrs || {});
+
+        if (semantic.associationDirection === 'One' ||
+            semantic.associationDirection === 'Both') {
+            attrs.markerEnd = marker('association-end');
+        }
+
+        if (semantic.associationDirection === 'Both') {
+            attrs.markerStart = marker('association-start');
+        }
+
+        return drawLine(p, element.waypoints, attrs);
+    },
     'vdml:Group': function(p, element) {
       return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, {
         strokeWidth: 1,

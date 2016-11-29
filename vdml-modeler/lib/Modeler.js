@@ -194,7 +194,7 @@ Modeler.prototype._modelingModules = [
   require('./features/replace-preview'),
   require('./features/snapping'),
   require('bpmn-js-properties-panel'),
-  require('bpmn-js-properties-panel/lib/provider/bpmn')
+  require('bpmn-js-properties-panel/lib/provider/vdml')
 ];
 
 
