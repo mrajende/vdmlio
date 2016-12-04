@@ -93,7 +93,18 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   function removeElement(e) {
     modeling.removeElements([ element ]);
   }
+  function mapElement(e) {
+      debugger;
+      if (window.chrome && window.chrome.app && window.chrome.app.runtime) {
+          window.require1(['appcommon/com/vbee/data/DataManager', "appviews/ecomap/views/designer/MappingWizardViewModel"], function (DataManager, MappingWizardViewModel) {
+              var dataManager = DataManager.getDataManager();
+              var wizard = self.wizard = MappingWizardViewModel.getInstance(window.vdmModelView.model, {}, {}, businessObject, function () {
 
+              });
+              wizard.startWizard();
+          });
+      }
+  }
   function getReplaceMenuPosition(element) {
 
     var Y_OFFSET = 5;
@@ -229,7 +240,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
           //'append.append-collaboration': appendAction('vdml:Collaboration', 'bpmn-icon-task'),
           'append.append-marketSegment': appendAction('vdml:MarketSegment', 'bpmn-icon-task'),
           'append.append-enterprise': appendAction('vdml:Enterprise', 'bpmn-icon-task'),
-          'append.append-individual': appendAction('vdml:Individual', 'bpmn-icon-task'),
+          'append.append-individual': appendAction('vdml:Individual', 'bpmn-icon-user'),
           'append.append-role': appendAction('vdml:Role', 'bpmn-icon-task'),
           'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task')
       });
@@ -261,10 +272,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   }
 
   if (isAny(businessObject, [
-    'vdml:FlowNode',
-    'vdml:InteractionNode',
-    'vdml:DataObjectReference',
-    'vdml:DataStoreReference'
+    'vdml:FlowNode'
   ]) ) {
 
     assign(actions, {
@@ -280,6 +288,20 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
         }
       }
     });
+    if (!businessObject.mid) {
+        assign(actions, {
+            'map': {
+                group: 'edit',
+                className: 'bpmn-icon-data-store',
+                title: translate('Map'),
+                action: {
+                    click: mapElement,
+                    dragstart: mapElement
+                }
+            }
+        });
+    }
+   
   }
 
   // delete element entry, only show if allowed by rules
