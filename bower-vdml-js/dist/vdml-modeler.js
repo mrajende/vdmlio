@@ -2515,19 +2515,23 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
     'vdml:FlowNode'
   ]) ) {
 
-    assign(actions, {
-      'append.text-annotation': appendAction('vdml:TextAnnotation', 'bpmn-icon-text-annotation'),
+      assign(actions, {
+          'append.text-annotation': appendAction('vdml:TextAnnotation', 'bpmn-icon-text-annotation'),
 
-      'connect': {
-        group: 'connect',
-        className: 'bpmn-icon-connection-multi',
-        title: translate('Connect using Sequence'),
-        action: {
-          click: startConnect,
-          dragstart: startConnect
-        }
-      }
-    });
+          'connect': {
+              group: 'connect',
+              className: 'bpmn-icon-connection-multi',
+              title: translate('Connect using Sequence'),
+              action: {
+                  click: startConnect,
+                  dragstart: startConnect
+              }
+          }
+      });
+  }
+  if (isAny(businessObject, [
+ 'vdml:FlowNode','vdml:ValueProposition'
+  ])) {
     if (!businessObject.get('vdml:mid')) {
         assign(actions, {
             'map': {
@@ -16644,10 +16648,11 @@ var nameEntryFactory = _dereq_(137),
 //window.require1(["appbo/vdml/Community", "appbo/vdml/Enterprise", "appbo/vdml/Actor", "appbo/vdml/Role", "appbo/vdml/ValueProposition", "appbo/vdml/BusinessModel"], function (Community, Enterprise, Actor, Role, ValueProposition, BusinessModel) {
 if (window.require && window.require.s) {
     var Community = window.require.s.contexts._.defined["appbo/vdml/Community"];
-    var Enterprise = window.require.s.contexts._.defined["appbo/vdml/Enterprise"];
+    var Enterprise = window.require.s.contexts._.defined["appbo/vdml/OrgUnit"];
     var Role = window.require.s.contexts._.defined["appbo/vdml/Role"];
     var ValueProposition = window.require.s.contexts._.defined["appbo/vdml/ValueProposition"];
     var BusinessModel = window.require.s.contexts._.defined["appbo/vdml/BusinessModel"];
+    var Actor = window.require.s.contexts._.defined["appbo/vdml/Actor"];
     module.exports = function (group, element) {
         var bo = getBusinessObject(element);
         var mappingBoType;

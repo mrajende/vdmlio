@@ -275,19 +275,23 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
     'vdml:FlowNode'
   ]) ) {
 
-    assign(actions, {
-      'append.text-annotation': appendAction('vdml:TextAnnotation', 'bpmn-icon-text-annotation'),
+      assign(actions, {
+          'append.text-annotation': appendAction('vdml:TextAnnotation', 'bpmn-icon-text-annotation'),
 
-      'connect': {
-        group: 'connect',
-        className: 'bpmn-icon-connection-multi',
-        title: translate('Connect using Sequence'),
-        action: {
-          click: startConnect,
-          dragstart: startConnect
-        }
-      }
-    });
+          'connect': {
+              group: 'connect',
+              className: 'bpmn-icon-connection-multi',
+              title: translate('Connect using Sequence'),
+              action: {
+                  click: startConnect,
+                  dragstart: startConnect
+              }
+          }
+      });
+  }
+  if (isAny(businessObject, [
+ 'vdml:FlowNode','vdml:ValueProposition'
+  ])) {
     if (!businessObject.get('vdml:mid')) {
         assign(actions, {
             'map': {
