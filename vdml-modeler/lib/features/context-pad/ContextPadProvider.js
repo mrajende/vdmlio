@@ -288,7 +288,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
         }
       }
     });
-    if (!businessObject.mid) {
+    if (!businessObject.get('vdml:mid')) {
         assign(actions, {
             'map': {
                 group: 'edit',

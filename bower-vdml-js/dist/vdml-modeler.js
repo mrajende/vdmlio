@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-12-04
+ * Date: 2016-12-06
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -2528,7 +2528,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
         }
       }
     });
-    if (!businessObject.mid) {
+    if (!businessObject.get('vdml:mid')) {
         assign(actions, {
             'map': {
                 group: 'edit',
@@ -16206,11 +16206,11 @@ function createGeneralTabGroups(element, vdmlFactory, elementRegistry) {
     label: 'General',
     entries: []
   };
-  idProps(generalGroup, element, elementRegistry);
+  //idProps(generalGroup, element, elementRegistry);
   nameProps(generalGroup, element);
   mappingNameProps(generalGroup, element);
-  processProps(generalGroup, element);
-  executableProps(generalGroup, element);
+  //processProps(generalGroup, element);
+  //executableProps(generalGroup, element);
 
   var detailsGroup = {
     id: 'details',
@@ -16639,56 +16639,72 @@ module.exports = function(group, element) {
 var getBusinessObject = _dereq_(146).getBusinessObject;
 
 var nameEntryFactory = _dereq_(137),
+    cmdHelper = _dereq_(116),
     is = _dereq_(146).is;
-
-module.exports = function (group, element) {
-    var bo = getBusinessObject(element);
-    var mappingBoType;
-    var mappingType;
-    if (is(bo, "vdml:MarketSegment")) {
-        mappingBoType = "appbo/vdml/Community";
-    }
-    if (is(bo, "vdml:Enterprise")) {
-        mappingBoType = "appbo/vdml/Enterprise";
-    }
-    if (is(bo, "vdml:Individual")) {
-        mappingBoType = "appbo/vdml/Actor";
-    }
-    if (is(bo, "vdml:Role")) {
-        mappingBoType = "appbo/vdml/Role";
-    }
-    if (is(bo, "vdml:ValueProposition")) {
-        mappingBoType = "appbo/vdml/ValueProposition";
-    }
-    if (is(bo, "vdml:BusinessModel")) {
-        mappingBoType = "appbo/vdml/BusinessModel";
-    }
-    if (window.require1) {
-        window.require1([mappingBoType], function (type) {
-            mappingType = type;
-        });
-    }
-    group.entries = group.entries.concat(nameEntryFactory(element, {
-        get: function () {
-            debugger;
-            if (bo.mid && mappingType) {
-                var mappingBo = mappingType.fetch({ id: bo.mid });
-                return mappingBo.get('name');
-            } else {
-                return "";
-            }
-        },
-        set: function (val) {
-            debugger;
-            if (bo.mid && mappingType) {
-                var mappingBo = mappingType.fetch({ id: bo.mid });
-                mappingBo.set('name', val);
-            }
+//window.require1(["appbo/vdml/Community", "appbo/vdml/Enterprise", "appbo/vdml/Actor", "appbo/vdml/Role", "appbo/vdml/ValueProposition", "appbo/vdml/BusinessModel"], function (Community, Enterprise, Actor, Role, ValueProposition, BusinessModel) {
+if (window.require && window.require.s) {
+    var Community = window.require.s.contexts._.defined["appbo/vdml/Community"];
+    var Enterprise = window.require.s.contexts._.defined["appbo/vdml/Enterprise"];
+    var Role = window.require.s.contexts._.defined["appbo/vdml/Role"];
+    var ValueProposition = window.require.s.contexts._.defined["appbo/vdml/ValueProposition"];
+    var BusinessModel = window.require.s.contexts._.defined["appbo/vdml/BusinessModel"];
+    module.exports = function (group, element) {
+        var bo = getBusinessObject(element);
+        var mappingBoType;
+        var mappingType;
+        if (is(bo, "vdml:MarketSegment")) {
+            mappingBoType = Community;
         }
-    }));
-};
+        if (is(bo, "vdml:Enterprise")) {
+            mappingBoType = Enterprise;
+        }
+        if (is(bo, "vdml:Individual")) {
+            mappingBoType = Actor;
+        }
+        if (is(bo, "vdml:Role")) {
+            mappingBoType = Role;
+        }
+        if (is(bo, "vdml:ValueProposition")) {
+            mappingBoType = ValueProposition;
+        }
+        if (is(bo, "vdml:BusinessModel")) {
+            mappingBoType = BusinessModel;
+        }
+        group.entries = group.entries.concat(nameEntryFactory(element, {
+            get: function () {
+                debugger;
+                if ((bo.get('vdml:mid') || bo.get('mid')) && mappingBoType) {
+                    var id = bo.get('vdml:mid') ? bo.get('vdml:mid') : bo.get('mid');
+                    var mappingBo = mappingBoType.find(id, { silent: true });
+                    return { 'mappingName': mappingBo ? mappingBo.get('name') : "" };
+                } else {
+                    return { 'mappingName': "" };
+                }
+            },
+            set: function (val) {
+                debugger;
+                var value = { 'vdml:mappingName': undefined};
+                if (bo.mid && mappingBoType) {
+                    var mappingBo = mappingBoType.find(bo.mid, { silent: true });
+                    if (mappingBo) {
+                        //mappingBo.set('name', val);
+                        value = { 'vdml:mappingName': val };
+                    }
+                }
+                return cmdHelper.updateBusinessObject(element, bo, value);
+            }
+        }));
+    };
+} else {
+    module.exports = function (group, element) {
 
-},{"137":137,"146":146}],129:[function(_dereq_,module,exports){
+    }
+}
+
+//    });
+
+
+},{"116":116,"137":137,"146":146}],129:[function(_dereq_,module,exports){
 'use strict';
 
 var nameEntryFactory = _dereq_(139),
@@ -17389,15 +17405,12 @@ var entryFactory = _dereq_(107);
 module.exports = function(element, options) {
 
   options = options || {};
-  var id = options.id || 'name',
-      label = options.label || 'Mapping Name',
-      modelProperty = options.modelProperty || 'name';
+  options.id = options.id || 'mappingName';
+  options.label = options.label || 'Mapping Name';
+  options.modelProperty = options.modelProperty || 'mappingName';
 
-  var nameEntry = entryFactory.textBox({
-    id: id,
-    label: label,
-    modelProperty: modelProperty
-  });
+
+  var nameEntry = entryFactory.textBox(options);
 
   return [ nameEntry ];
 
@@ -65393,13 +65406,13 @@ module.exports={
           "isId": true
         },
         {
-          "name": "mpId",
+          "name": "mpid",
           "isAttr": true,
           "type": "String",
           "isId": false
         },
         {
-          "name": "mId",
+          "name": "mid",
           "isAttr": true,
           "type": "String",
           "isId": false
