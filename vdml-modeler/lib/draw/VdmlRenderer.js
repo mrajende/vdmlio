@@ -490,7 +490,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
     'vdml:Collaboration': function(p, element, attrs) {
       var rect = drawRect(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
-      renderEmbeddedLabel(p, element, 'center-middle');
+      renderEmbeddedLabel(p, element, 'center-bottom');
       
       return rect;
     },
@@ -512,14 +512,14 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     },
     'vdml:Role': function (p, element, attrs) {
         var oval = drawOval(p,element, element.width, element.height, attrs);
-        renderEmbeddedLabel(p, element, 'center-middle');
+        renderEmbeddedLabel(p, element, 'center-bottom');
         
         //var rect = renderer('vdml:Collaboration')(p, element, attrs);
         return oval;
     },
     'vdml:BusinessModel': function (p, element, attrs) {
         var hexagon = drawHexagon(p,element, element.width, element.height);
-        renderEmbeddedLabel(p, element, 'center-middle');
+        renderEmbeddedLabel(p, element, 'center-bottom');
         return hexagon;
     },
     'vdml:Participant': function(p, element) {
