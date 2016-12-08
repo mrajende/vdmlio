@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-12-06
+ * Date: 2016-12-08
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -1146,6 +1146,9 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       p.circle(cx, cy, Math.round(r)).attr(attrs);
       cx = cx + 4 * r;
       p.circle(cx, cy, Math.round(r)).attr(attrs);
+      if (element.businessObject.get('vdml:backgroundUrl')) {
+          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
+      }
       return rect;
   }
   function drawEnterprise(p, element, attrs) {
@@ -1172,6 +1175,9 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       startx = startx + 2 * ouwidth;
       var waypoints = [{ x: startx, y: starty }, { x: startx, y: starty + ouwidth }];
       drawLine(p, waypoints, attrs);
+      if (element.businessObject.get('vdml:backgroundUrl')) {
+          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
+      }
 
       return rect;
   }
@@ -30981,6 +30987,11 @@ module.exports={
           "isAttr": true,
           "type": "String",
           "isId": false
+        },
+        {
+          "name": "backgroundUrl",
+          "isAttr": true,
+          "type": "String"
         },
         {
           "name": "documentation",

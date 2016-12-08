@@ -167,6 +167,9 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       p.circle(cx, cy, Math.round(r)).attr(attrs);
       cx = cx + 4 * r;
       p.circle(cx, cy, Math.round(r)).attr(attrs);
+      if (element.businessObject.get('vdml:backgroundUrl')) {
+          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
+      }
       return rect;
   }
   function drawEnterprise(p, element, attrs) {
@@ -193,6 +196,9 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       startx = startx + 2 * ouwidth;
       var waypoints = [{ x: startx, y: starty }, { x: startx, y: starty + ouwidth }];
       drawLine(p, waypoints, attrs);
+      if (element.businessObject.get('vdml:backgroundUrl')) {
+          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
+      }
 
       return rect;
   }

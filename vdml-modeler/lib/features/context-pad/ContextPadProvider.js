@@ -95,13 +95,38 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   }
   function mapElement(e) {
       debugger;
-      if (window.chrome && window.chrome.app && window.chrome.app.runtime) {
+      if (window.require1) {
           window.require1(['appcommon/com/vbee/data/DataManager', "appviews/ecomap/views/designer/MappingWizardViewModel"], function (DataManager, MappingWizardViewModel) {
               var dataManager = DataManager.getDataManager();
               var wizard = self.wizard = MappingWizardViewModel.getInstance(window.vdmModelView.model, {}, {}, businessObject, function () {
 
               });
               wizard.startWizard();
+          });
+      }
+  }
+  function setBackgroundImage(e) {
+      if (window.require1) {
+          window.require1(['domtoimage'], function () {
+              chrome.fileSystem.chooseEntry({
+                  type: 'openFile', accepts: [
+                      { description: "Image", extensions: ['jpg','png'] }
+                  ], acceptsAllTypes: true
+              }, function (f) {
+                  if (chrome.runtime.lastError) {
+                      console.log(chrome.runtime.lastError);
+                      fileHandled('Error opening Image');
+                  }
+                  else {
+                      f.file(function (fileObject) {
+                          var reader = new FileReader();
+                          reader.onload = function (ev) {
+                              businessObject.set('vdml:backgroundUrl', reader.result);
+                          };
+                          reader.readAsDataURL(fileObject);
+                      });
+                  }
+              });
           });
       }
   }
@@ -305,6 +330,17 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
             }
         });
     }
+    assign(actions, {
+        'background': {
+            group: 'edit',
+            className: 'bpmn-icon-data-store',
+            title: translate('Logo'),
+            action: {
+                click: setBackgroundImage,
+                dragstart: setBackgroundImage
+            }
+        }
+    });
    
   }
 
