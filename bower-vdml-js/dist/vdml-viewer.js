@@ -1202,7 +1202,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     return p.circle(cx, cy, Math.round((width + height) / 4 - offset)).attr(attrs);
   }
 
-  function drawOval(p, width, height, offset, attrs) {
+  function drawOval(p,element, width, height, offset, attrs) {
 
       if (isObject(offset)) {
           attrs = offset;
@@ -1219,7 +1219,9 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
       var cx = width / 2,
           cy = height / 2;
-
+      if (element.businessObject.get('vdml:backgroundUrl')) {
+          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
+      }
       return p.ellipse(cx, cy, Math.round((width) / 2 - offset), Math.round((height) / 2 - offset)).attr(attrs);
   }
   function drawRect(p, width, height, r, offset, attrs) {
@@ -1256,7 +1258,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     return p.polygon(points).attr(attrs);
   }
 
-  function drawHexagon(p, width, height, attrs) {
+  function drawHexagon(p,element, width, height, attrs) {
 
       var r = Math.round(height/2);
       var points = [];
@@ -1271,7 +1273,11 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
           fill: 'white'
       });
 
-      return p.polygon(points).attr(attrs);
+      var hexa = p.polygon(points).attr(attrs);
+      if (element.businessObject.get('vdml:backgroundUrl')) {
+          p.image(element.businessObject.get('vdml:backgroundUrl'), r/2 , r/2, r, r);
+      }
+      return hexa;
   }
 
   function drawLine(p, waypoints, attrs) {
@@ -1455,14 +1461,14 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
         return rect;
     },
     'vdml:Role': function (p, element, attrs) {
-        var oval = drawOval(p, element.width, element.height, attrs);
+        var oval = drawOval(p,element, element.width, element.height, attrs);
         renderEmbeddedLabel(p, element, 'center-middle');
         
         //var rect = renderer('vdml:Collaboration')(p, element, attrs);
         return oval;
     },
     'vdml:BusinessModel': function (p, element, attrs) {
-        var hexagon = drawHexagon(p, element.width, element.height);
+        var hexagon = drawHexagon(p,element, element.width, element.height);
         renderEmbeddedLabel(p, element, 'center-middle');
         return hexagon;
     },
