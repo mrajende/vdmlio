@@ -269,10 +269,11 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
       var cx = width / 2,
           cy = height / 2;
+      var ecllipse =  p.ellipse(cx, cy, Math.round((width) / 2 - offset), Math.round((height) / 2 - offset)).attr(attrs);
       if (element.businessObject.get('vdml:backgroundUrl')) {
-          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
+          p.image(element.businessObject.get('vdml:backgroundUrl'), element.width / 4, element.height / 4, element.width / 2, element.height / 2);
       }
-      return p.ellipse(cx, cy, Math.round((width) / 2 - offset), Math.round((height) / 2 - offset)).attr(attrs);
+      return ecllipse;
   }
   function drawRect(p, width, height, r, offset, attrs) {
 
@@ -504,6 +505,10 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
         var rect = drawEnterprise(p, element, attrs);
         return rect;
     },
+    'vdml:ValueProposition': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
+    },
     'vdml:Individual': function (p, element, attrs) {
         var rect = drawPerson(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
         renderEmbeddedLabel(p, element, 'center-bottom');//works with update to diagram.js text util
@@ -566,7 +571,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
       return rect;
     },
-    'vdml:ValueProposition': function(p, element) {
+    'vdml:BusinessItem': function(p, element) {
       var pathData = createPathFromConnection(element);
       var path = drawPath(p, pathData, {
         strokeLinejoin: 'round',

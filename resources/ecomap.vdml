@@ -2,31 +2,31 @@
 <vdml:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vdml="http://www.omg.org/spec/VDML/20100524/MODEL" xmlns:vdmldi="http://www.omg.org/spec/VDML/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://vdml.io/schema/vdml" xsi:schemaLocation="http://www.omg.org/spec/VDML/20100524/MODEL VDML.xsd">
   <vdml:ecoMap id="Process_1">
     <vdml:marketSegment id="MarketSegment_1li1mfq" name="ms1">
-      <vdml:incoming>ValueProposition_0zr9sy0</vdml:incoming>
-      <vdml:outgoing>ValueProposition_15tyia8</vdml:outgoing>
-      <vdml:valueProposition id="ValueProposition_0l17lcw" />
-      <vdml:valueProposition id="ValueProposition_15tyia8" name="raw material" sourceRef="MarketSegment_1li1mfq" targetRef="Enterprise_1v5n1ei" />
+      <vdml:incoming>BusinessItem_0zr9sy0</vdml:incoming>
+      <vdml:outgoing>BusinessItem_15tyia8</vdml:outgoing>
+      <vdml:businessItem id="BusinessItem_0l17lcw" />
+      <vdml:businessItem id="BusinessItem_15tyia8" name="raw material" sourceRef="MarketSegment_1li1mfq" targetRef="Enterprise_1v5n1ei" />
     </vdml:marketSegment>
     <vdml:enterprise id="Enterprise_1v5n1ei" name="ou1">
-      <vdml:incoming>ValueProposition_15tyia8</vdml:incoming>
-      <vdml:outgoing>ValueProposition_1075san</vdml:outgoing>
-      <vdml:outgoing>ValueProposition_1m0zkta</vdml:outgoing>
-      <vdml:outgoing>ValueProposition_18rfstu</vdml:outgoing>
-      <vdml:valueProposition id="ValueProposition_1075san" name="good prod" sourceRef="Enterprise_1v5n1ei" targetRef="Individual_16zuo8n" />
-      <vdml:valueProposition id="ValueProposition_1m0zkta" name="profit" sourceRef="Enterprise_1v5n1ei" targetRef="Role_1vnyc0q" />
-      <vdml:valueProposition id="ValueProposition_0gnae96" />
-      <vdml:valueProposition id="ValueProposition_18rfstu" name="vp2" sourceRef="Enterprise_1v5n1ei" targetRef="BusinessModel_04b5pne" />
+      <vdml:incoming>BusinessItem_15tyia8</vdml:incoming>
+      <vdml:outgoing>BusinessItem_1075san</vdml:outgoing>
+      <vdml:outgoing>BusinessItem_1m0zkta</vdml:outgoing>
+      <vdml:outgoing>BusinessItem_18rfstu</vdml:outgoing>
+      <vdml:businessItem id="BusinessItem_1075san" name="good prod" sourceRef="Enterprise_1v5n1ei" targetRef="Individual_16zuo8n" />
+      <vdml:businessItem id="BusinessItem_1m0zkta" name="profit" sourceRef="Enterprise_1v5n1ei" targetRef="Role_1vnyc0q" />
+      <vdml:businessItem id="BusinessItem_0gnae96" />
+      <vdml:businessItem id="BusinessItem_18rfstu" name="vp2" sourceRef="Enterprise_1v5n1ei" targetRef="BusinessModel_04b5pne" />
     </vdml:enterprise>
     <vdml:individual id="Individual_16zuo8n" name="rajender">
-      <vdml:incoming>ValueProposition_1075san</vdml:incoming>
+      <vdml:incoming>BusinessItem_1075san</vdml:incoming>
     </vdml:individual>
     <vdml:role id="Role_1vnyc0q" name="ceo">
-      <vdml:incoming>ValueProposition_1m0zkta</vdml:incoming>
+      <vdml:incoming>BusinessItem_1m0zkta</vdml:incoming>
     </vdml:role>
     <vdml:businessModel id="BusinessModel_04b5pne" name="bm1">
-      <vdml:incoming>ValueProposition_18rfstu</vdml:incoming>
-      <vdml:outgoing>ValueProposition_0zr9sy0</vdml:outgoing>
-      <vdml:valueProposition id="ValueProposition_0zr9sy0" name="dfgdf" sourceRef="BusinessModel_04b5pne" targetRef="MarketSegment_1li1mfq" />
+      <vdml:incoming>BusinessItem_18rfstu</vdml:incoming>
+      <vdml:outgoing>BusinessItem_0zr9sy0</vdml:outgoing>
+      <vdml:businessItem id="BusinessItem_0zr9sy0" name="dfgdf" sourceRef="BusinessModel_04b5pne" targetRef="MarketSegment_1li1mfq" />
     </vdml:businessModel>
   </vdml:ecoMap>
   <vdmldi:VDMLDiagram id="VDMLDiagram_1">
@@ -37,7 +37,7 @@
       <vdmldi:VDMLShape id="Enterprise_1v5n1ei_di" vdmlElement="Enterprise_1v5n1ei">
         <dc:Bounds x="525" y="149" width="100" height="36" />
       </vdmldi:VDMLShape>
-      <vdmldi:VDMLEdge id="ValueProposition_15tyia8_di" vdmlElement="ValueProposition_15tyia8">
+      <vdmldi:VDMLEdge id="BusinessItem_15tyia8_di" vdmlElement="BusinessItem_15tyia8">
         <di:waypoint xsi:type="dc:Point" x="362" y="236" />
         <di:waypoint xsi:type="dc:Point" x="444" y="236" />
         <di:waypoint xsi:type="dc:Point" x="541" y="185" />
@@ -48,7 +48,7 @@
       <vdmldi:VDMLShape id="Individual_16zuo8n_di" vdmlElement="Individual_16zuo8n">
         <dc:Bounds x="726" y="126" width="107" height="59" />
       </vdmldi:VDMLShape>
-      <vdmldi:VDMLEdge id="ValueProposition_1075san_di" vdmlElement="ValueProposition_1075san">
+      <vdmldi:VDMLEdge id="BusinessItem_1075san_di" vdmlElement="BusinessItem_1075san">
         <di:waypoint xsi:type="dc:Point" x="625" y="167" />
         <di:waypoint xsi:type="dc:Point" x="676" y="167" />
         <di:waypoint xsi:type="dc:Point" x="726" y="162" />
@@ -59,7 +59,7 @@
       <vdmldi:VDMLShape id="Role_1vnyc0q_di" vdmlElement="Role_1vnyc0q">
         <dc:Bounds x="540" y="342" width="70" height="50" />
       </vdmldi:VDMLShape>
-      <vdmldi:VDMLEdge id="ValueProposition_1m0zkta_di" vdmlElement="ValueProposition_1m0zkta">
+      <vdmldi:VDMLEdge id="BusinessItem_1m0zkta_di" vdmlElement="BusinessItem_1m0zkta">
         <di:waypoint xsi:type="dc:Point" x="575" y="185" />
         <di:waypoint xsi:type="dc:Point" x="575" y="264" />
         <di:waypoint xsi:type="dc:Point" x="575" y="342" />
@@ -70,7 +70,7 @@
       <vdmldi:VDMLShape id="BusinessModel_04b5pne_di" vdmlElement="BusinessModel_04b5pne">
         <dc:Bounds x="212" y="46" width="50" height="50" />
       </vdmldi:VDMLShape>
-      <vdmldi:VDMLEdge id="ValueProposition_18rfstu_di" vdmlElement="ValueProposition_18rfstu">
+      <vdmldi:VDMLEdge id="BusinessItem_18rfstu_di" vdmlElement="BusinessItem_18rfstu">
         <di:waypoint xsi:type="dc:Point" x="525" y="167" />
         <di:waypoint xsi:type="dc:Point" x="394" y="167" />
         <di:waypoint xsi:type="dc:Point" x="262" y="86" />
@@ -78,7 +78,7 @@
           <dc:Bounds x="450" y="142" width="19" height="12" />
         </vdmldi:VDMLLabel>
       </vdmldi:VDMLEdge>
-      <vdmldi:VDMLEdge id="ValueProposition_0zr9sy0_di" vdmlElement="ValueProposition_0zr9sy0">
+      <vdmldi:VDMLEdge id="BusinessItem_0zr9sy0_di" vdmlElement="BusinessItem_0zr9sy0">
         <di:waypoint xsi:type="dc:Point" x="237" y="96" />
         <di:waypoint xsi:type="dc:Point" x="237" y="157" />
         <di:waypoint xsi:type="dc:Point" x="280" y="218" />

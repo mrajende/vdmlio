@@ -61,7 +61,10 @@ Modeling.prototype.connect = function(source, target, attrs, hints) {
   var vdmlRules = this._vdmlRules;
 
   if (!attrs) {
-    attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
+      attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
+      if (!attrs) {
+          return false;
+      }
   }
 
     //return this.createConnection(source, target, attrs, source.parent, hints);

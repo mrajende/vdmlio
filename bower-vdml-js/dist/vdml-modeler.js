@@ -1460,10 +1460,11 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
       var cx = width / 2,
           cy = height / 2;
+      var ecllipse =  p.ellipse(cx, cy, Math.round((width) / 2 - offset), Math.round((height) / 2 - offset)).attr(attrs);
       if (element.businessObject.get('vdml:backgroundUrl')) {
-          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
+          p.image(element.businessObject.get('vdml:backgroundUrl'), element.width / 4, element.height / 4, element.width / 2, element.height / 2);
       }
-      return p.ellipse(cx, cy, Math.round((width) / 2 - offset), Math.round((height) / 2 - offset)).attr(attrs);
+      return ecllipse;
   }
   function drawRect(p, width, height, r, offset, attrs) {
 
@@ -1695,6 +1696,10 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
         var rect = drawEnterprise(p, element, attrs);
         return rect;
     },
+    'vdml:ValueProposition': function (p, element, attrs) {
+        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        return rect;
+    },
     'vdml:Individual': function (p, element, attrs) {
         var rect = drawPerson(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
         renderEmbeddedLabel(p, element, 'center-bottom');//works with update to diagram.js text util
@@ -1757,7 +1762,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
       return rect;
     },
-    'vdml:ValueProposition': function(p, element) {
+    'vdml:BusinessItem': function(p, element) {
       var pathData = createPathFromConnection(element);
       var path = drawPath(p, pathData, {
         strokeLinejoin: 'round',
@@ -2521,7 +2526,8 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
           'append.append-enterprise': appendAction('vdml:Enterprise', 'bpmn-icon-task'),
           'append.append-individual': appendAction('vdml:Individual', 'bpmn-icon-user'),
           'append.append-role': appendAction('vdml:Role', 'bpmn-icon-task'),
-          'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task')
+          'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task'),
+          'append.append-valueProposition': appendAction('vdml:ValueProposition', 'bpmn-icon-task')
       });
   }
 
@@ -2569,7 +2575,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
       });
   }
   if (isAny(businessObject, [
- 'vdml:FlowNode','vdml:ValueProposition'
+ 'vdml:FlowNode','vdml:BusinessItem'
   ])) {
     if (!businessObject.get('vdml:mid')) {
         assign(actions, {
@@ -3623,6 +3629,9 @@ ElementFactory.prototype._getDefaultSize = function(semantic) {
   if (is(semantic, 'vdml:BusinessModel')) {
         return { width: 50, height: 50 };
   }
+  if (is(semantic, 'vdml:ValueProposition')) {
+      return { width: 25, height: 25 };
+  }
   if (is(semantic, 'vdml:Role')) {
       return { width: 70, height: 50 };
   }
@@ -3720,7 +3729,10 @@ Modeling.prototype.connect = function(source, target, attrs, hints) {
   var vdmlRules = this._vdmlRules;
 
   if (!attrs) {
-    attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
+      attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
+      if (!attrs) {
+          return false;
+      }
   }
 
     //return this.createConnection(source, target, attrs, source.parent, hints);
@@ -8569,6 +8581,9 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
     'create.businessModel': createAction(
           'vdml:BusinessModel', 'collaboration', 'bpmn-icon-task', 'Business Model'
      ),
+    'create.valueProposition': createAction(
+        'vdml:ValueProposition', 'collaboration', 'bpmn-icon-task', 'Value Proposition'
+    ),
     /*'create.data-object': createAction(
       'vdml:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
     ),
@@ -10552,12 +10567,13 @@ function canConnect(source, target, connection) {
   // target and source element.
   // This rule must be removed if a auto layout for this
   // connections is implemented.
-  if (isSame(source, target)) {
+  if (isSame(source, target) || (is(source, "vdml:ValueProposition") && is(target, "vdml:ValueProposition"))
+      || (!is(source, "vdml:ValueProposition") && !is(target, "vdml:ValueProposition"))) {
     return false;
   }
   if (!is(connection, 'vdml:DataAssociation')) {
       if (canConnectSequenceFlow(source, target)) {
-          return { type: 'vdml:ValueProposition' };
+          return { type: 'vdml:BusinessItem' };
       }
     if (canConnectMessageFlow(source, target)) {
       return { type: 'vdml:MessageFlow' };
@@ -16685,12 +16701,12 @@ var getBusinessObject = _dereq_(147).getBusinessObject;
 var nameEntryFactory = _dereq_(138),
     cmdHelper = _dereq_(116),
     is = _dereq_(147).is;
-//window.require1(["appbo/vdml/Community", "appbo/vdml/Enterprise", "appbo/vdml/Actor", "appbo/vdml/Role", "appbo/vdml/ValueProposition", "appbo/vdml/BusinessModel"], function (Community, Enterprise, Actor, Role, ValueProposition, BusinessModel) {
+//window.require1(["appbo/vdml/Community", "appbo/vdml/Enterprise", "appbo/vdml/Actor", "appbo/vdml/Role", "appbo/vdml/BusinessItem", "appbo/vdml/BusinessModel"], function (Community, Enterprise, Actor, Role, BusinessItem, BusinessModel) {
 if (window.require && window.require.s) {
     var Community = window.require.s.contexts._.defined["appbo/vdml/Community"];
     var Enterprise = window.require.s.contexts._.defined["appbo/vdml/OrgUnit"];
     var Role = window.require.s.contexts._.defined["appbo/vdml/Role"];
-    var ValueProposition = window.require.s.contexts._.defined["appbo/vdml/ValueProposition"];
+    var BusinessItem = window.require.s.contexts._.defined["appbo/vdml/BusinessItem"];
     var BusinessModel = window.require.s.contexts._.defined["appbo/vdml/BusinessModel"];
     var Actor = window.require.s.contexts._.defined["appbo/vdml/Actor"];
     module.exports = function (group, element) {
@@ -16709,8 +16725,8 @@ if (window.require && window.require.s) {
         if (is(bo, "vdml:Role")) {
             mappingBoType = Role;
         }
-        if (is(bo, "vdml:ValueProposition")) {
-            mappingBoType = ValueProposition;
+        if (is(bo, "vdml:BusinessItem")) {
+            mappingBoType = BusinessItem;
         }
         if (is(bo, "vdml:BusinessModel")) {
             mappingBoType = BusinessModel;
@@ -65769,7 +65785,7 @@ module.exports={
       ]
     },
     {
-      "name": "ValueProposition",
+      "name": "BusinessItem",
       "superClass": [
         "SequenceFlow"
       ]
@@ -66127,6 +66143,13 @@ module.exports={
     },
     {
       "name": "BusinessModel",
+      "superClass": [
+        "Participant",
+        "InteractionNode"
+      ]
+    },
+    {
+      "name": "ValueProposition",
       "superClass": [
         "Participant",
         "InteractionNode"

@@ -324,12 +324,13 @@ function canConnect(source, target, connection) {
   // target and source element.
   // This rule must be removed if a auto layout for this
   // connections is implemented.
-  if (isSame(source, target)) {
+  if (isSame(source, target) || (is(source, "vdml:ValueProposition") && is(target, "vdml:ValueProposition"))
+      || (!is(source, "vdml:ValueProposition") && !is(target, "vdml:ValueProposition"))) {
     return false;
   }
   if (!is(connection, 'vdml:DataAssociation')) {
       if (canConnectSequenceFlow(source, target)) {
-          return { type: 'vdml:ValueProposition' };
+          return { type: 'vdml:BusinessItem' };
       }
     if (canConnectMessageFlow(source, target)) {
       return { type: 'vdml:MessageFlow' };

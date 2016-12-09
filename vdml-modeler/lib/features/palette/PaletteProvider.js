@@ -146,6 +146,9 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
     'create.businessModel': createAction(
           'vdml:BusinessModel', 'collaboration', 'bpmn-icon-task', 'Business Model'
      ),
+    'create.valueProposition': createAction(
+        'vdml:ValueProposition', 'collaboration', 'bpmn-icon-task', 'Value Proposition'
+    ),
     /*'create.data-object': createAction(
       'vdml:DataObjectReference', 'data-object', 'bpmn-icon-data-object'
     ),

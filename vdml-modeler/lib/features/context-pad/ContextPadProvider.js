@@ -269,7 +269,8 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
           'append.append-enterprise': appendAction('vdml:Enterprise', 'bpmn-icon-task'),
           'append.append-individual': appendAction('vdml:Individual', 'bpmn-icon-user'),
           'append.append-role': appendAction('vdml:Role', 'bpmn-icon-task'),
-          'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task')
+          'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task'),
+          'append.append-valueProposition': appendAction('vdml:ValueProposition', 'bpmn-icon-task')
       });
   }
 
@@ -317,7 +318,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
       });
   }
   if (isAny(businessObject, [
- 'vdml:FlowNode','vdml:ValueProposition'
+ 'vdml:FlowNode','vdml:BusinessItem'
   ])) {
     if (!businessObject.get('vdml:mid')) {
         assign(actions, {
