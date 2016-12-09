@@ -18,6 +18,7 @@ var newDiagramXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<vdml:definitio
 
 function createNewDiagram() {
     modeler = new VdmlModeler({
+        keyboard: { bindTo: document },
         container: container,
         propertiesPanel: {
             parent: '#js-properties'

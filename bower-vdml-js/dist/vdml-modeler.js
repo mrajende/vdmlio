@@ -13964,7 +13964,7 @@ PropertiesPanel.prototype._updateActivation = function(current) {
   });
 
   // inject elements id into header
-  updateLabel(panelNode, '[data-label-id]', getBusinessObject(element).id || '');
+  //updateLabel(panelNode, '[data-label-id]', getBusinessObject(element).id || '');
 };
 
 PropertiesPanel.prototype._createPanel = function(element, tabs) {
