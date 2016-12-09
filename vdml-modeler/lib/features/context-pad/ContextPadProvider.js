@@ -122,6 +122,8 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
                           var reader = new FileReader();
                           reader.onload = function (ev) {
                               businessObject.set('vdml:backgroundUrl', reader.result);
+                              //cmdHelper.updateProperties(e, {});
+                              modeling.updateProperties(element, {});
                           };
                           reader.readAsDataURL(fileObject);
                       });
