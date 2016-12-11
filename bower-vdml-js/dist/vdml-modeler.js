@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-12-09
+ * Date: 2016-12-11
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -3677,7 +3677,9 @@ var UpdatePropertiesHandler = _dereq_(63),
     SplitLaneHandler = _dereq_(60),
     ResizeLaneHandler = _dereq_(59),
     UpdateFlowNodeRefsHandler = _dereq_(62),
+    is = _dereq_(93).is,
     IdClaimHandler = _dereq_(58);
+
 
 
 /**
@@ -3729,7 +3731,11 @@ Modeling.prototype.connect = function(source, target, attrs, hints) {
   var vdmlRules = this._vdmlRules;
 
   if (!attrs) {
-      attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
+      //attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
+      attrs = vdmlRules.canConnect(source, target);
+      if (!attrs && is(target, 'vdml:TextAnnotation')) {
+          attrs = { type: 'vdml:Association' };
+      }
       if (!attrs) {
           return false;
       }
@@ -3836,7 +3842,7 @@ Modeling.prototype.unclaimId = function(id, moddleElement) {
   });
 };
 
-},{"236":236,"348":348,"57":57,"58":58,"59":59,"60":60,"61":61,"62":62,"63":63}],29:[function(_dereq_,module,exports){
+},{"236":236,"348":348,"57":57,"58":58,"59":59,"60":60,"61":61,"62":62,"63":63,"93":93}],29:[function(_dereq_,module,exports){
 'use strict';
 
 var map = _dereq_(367),
@@ -10509,6 +10515,9 @@ function hasEventDefinitionOrNone(element, eventDefinition) {
 }
 
 function isSequenceFlowSource(element) {
+    if (is(element, 'vdml:ValueProposition') && element.businessObject.flows && element.businessObject.flows.length > 0) {
+        return false;
+    }
   return is(element, 'vdml:FlowNode') &&
         !is(element, 'vdml:EndEvent') &&
         !isEventSubProcess(element) &&
@@ -10520,15 +10529,7 @@ function isSequenceFlowSource(element) {
 }
 
 function isSequenceFlowTarget(element) {
-  return is(element, 'vdml:FlowNode') &&
-        !is(element, 'vdml:StartEvent') &&
-        !is(element, 'vdml:BoundaryEvent') &&
-        !isEventSubProcess(element) &&
-        !(is(element, 'vdml:IntermediateCatchEvent') &&
-          hasEventDefinition(element, 'vdml:LinkEventDefinition')
-        ) &&
-        !isForCompensation(element);
-
+      return is(element, 'vdml:FlowNode');
 }
 
 function isEventBasedTarget(element) {
@@ -10575,26 +10576,9 @@ function canConnect(source, target, connection) {
       if (canConnectSequenceFlow(source, target)) {
           return { type: 'vdml:BusinessItem' };
       }
-    if (canConnectMessageFlow(source, target)) {
-      return { type: 'vdml:MessageFlow' };
-    }
-  }
-
-  var connectDataAssociation = canConnectDataAssociation(source, target);
-
-  if (connectDataAssociation) {
-    return connectDataAssociation;
-  }
-
-  if (isCompensationBoundary(source) && isForCompensation(target)) {
-    return {
-      type: 'vdml:Association',
-      associationDirection: 'One'
-    };
   }
 
   if (is(connection, 'vdml:Association') && canConnectAssociation(source, target)) {
-
     return {
       type: 'vdml:Association'
     };
@@ -10916,7 +10900,10 @@ function canConnectAssociation(source, target) {
   if (isConnection(source) || isConnection(target)) {
     return false;
   }
-
+  if ((is(source, "vdml:ValueProposition") && is(target, "vdml:ValueProposition"))
+      || (!is(source, "vdml:ValueProposition") && !is(target, "vdml:ValueProposition"))) {
+      return false;
+  }
   // connect if different parent
   return !isParent(target, source) &&
          !isParent(source, target);

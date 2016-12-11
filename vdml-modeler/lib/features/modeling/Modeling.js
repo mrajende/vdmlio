@@ -9,7 +9,9 @@ var UpdatePropertiesHandler = require('./cmd/UpdatePropertiesHandler'),
     SplitLaneHandler = require('./cmd/SplitLaneHandler'),
     ResizeLaneHandler = require('./cmd/ResizeLaneHandler'),
     UpdateFlowNodeRefsHandler = require('./cmd/UpdateFlowNodeRefsHandler'),
+    is = require('../../util/ModelUtil').is,
     IdClaimHandler = require('./cmd/IdClaimHandler');
+
 
 
 /**
@@ -61,7 +63,11 @@ Modeling.prototype.connect = function(source, target, attrs, hints) {
   var vdmlRules = this._vdmlRules;
 
   if (!attrs) {
-      attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
+      //attrs = vdmlRules.canConnect(source, target) || { type: 'vdml:Association' };
+      attrs = vdmlRules.canConnect(source, target);
+      if (!attrs && is(target, 'vdml:TextAnnotation')) {
+          attrs = { type: 'vdml:Association' };
+      }
       if (!attrs) {
           return false;
       }

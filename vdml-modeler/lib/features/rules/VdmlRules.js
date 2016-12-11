@@ -266,6 +266,9 @@ function hasEventDefinitionOrNone(element, eventDefinition) {
 }
 
 function isSequenceFlowSource(element) {
+    if (is(element, 'vdml:ValueProposition') && element.businessObject.flows && element.businessObject.flows.length > 0) {
+        return false;
+    }
   return is(element, 'vdml:FlowNode') &&
         !is(element, 'vdml:EndEvent') &&
         !isEventSubProcess(element) &&
@@ -277,15 +280,7 @@ function isSequenceFlowSource(element) {
 }
 
 function isSequenceFlowTarget(element) {
-  return is(element, 'vdml:FlowNode') &&
-        !is(element, 'vdml:StartEvent') &&
-        !is(element, 'vdml:BoundaryEvent') &&
-        !isEventSubProcess(element) &&
-        !(is(element, 'vdml:IntermediateCatchEvent') &&
-          hasEventDefinition(element, 'vdml:LinkEventDefinition')
-        ) &&
-        !isForCompensation(element);
-
+      return is(element, 'vdml:FlowNode');
 }
 
 function isEventBasedTarget(element) {
@@ -332,26 +327,9 @@ function canConnect(source, target, connection) {
       if (canConnectSequenceFlow(source, target)) {
           return { type: 'vdml:BusinessItem' };
       }
-    if (canConnectMessageFlow(source, target)) {
-      return { type: 'vdml:MessageFlow' };
-    }
-  }
-
-  var connectDataAssociation = canConnectDataAssociation(source, target);
-
-  if (connectDataAssociation) {
-    return connectDataAssociation;
-  }
-
-  if (isCompensationBoundary(source) && isForCompensation(target)) {
-    return {
-      type: 'vdml:Association',
-      associationDirection: 'One'
-    };
   }
 
   if (is(connection, 'vdml:Association') && canConnectAssociation(source, target)) {
-
     return {
       type: 'vdml:Association'
     };
@@ -673,7 +651,10 @@ function canConnectAssociation(source, target) {
   if (isConnection(source) || isConnection(target)) {
     return false;
   }
-
+  if ((is(source, "vdml:ValueProposition") && is(target, "vdml:ValueProposition"))
+      || (!is(source, "vdml:ValueProposition") && !is(target, "vdml:ValueProposition"))) {
+      return false;
+  }
   // connect if different parent
   return !isParent(target, source) &&
          !isParent(source, target);
