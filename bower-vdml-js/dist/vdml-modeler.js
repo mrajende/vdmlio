@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-12-11
+ * Date: 2016-12-13
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -4436,7 +4436,15 @@ VdmlUpdater.prototype.updateParent = function(element, oldParent) {
   if (is(element, 'vdml:FlowNode')) {
     this.updateFlowNodeRefs(businessObject, parentBusinessObject, oldParent && oldParent.businessObject);
   }
-
+  if (is(element, 'vdml:SequenceFlow') && is(oldParent, 'vdml:ValueProposition')) {
+      var flows = oldParent.businessObject.get('flows');
+      for (var i = 0; i < flows.length; i++) {
+          if (flows[i] === element.businessObject) {
+              flows.splice(i, 1);
+              break;
+          }
+      }
+  }
   if (is(element, 'vdml:DataOutputAssociation')) {
     if (element.source) {
       parentBusinessObject = element.source.businessObject;
@@ -10515,7 +10523,7 @@ function hasEventDefinitionOrNone(element, eventDefinition) {
 }
 
 function isSequenceFlowSource(element) {
-    if (is(element, 'vdml:ValueProposition') && element.businessObject.flows && element.businessObject.flows.length > 0) {
+    if (is(element, 'vdml:ValueProposition') && element.businessObject.flows && element.businessObject.flows.length > 0 && element.businessObject.flows[0].targetRef) {
         return false;
     }
   return is(element, 'vdml:FlowNode') &&
@@ -23478,7 +23486,7 @@ DirectEditing.prototype.activate = function(element) {
 
   // check if activation took place
   if (context) {
-    this._textbox.create(context.bounds, context.style, context.text);
+      this._textbox.create(context.bounds, context.style, context.text, (element.labelTarget && element.labelTarget.waypoints ? true : false));
 
     this._active = {
       element: element,
@@ -23544,7 +23552,7 @@ module.exports = TextBox;
  *
  * @return {DOMElement} The created content DOM element
  */
-TextBox.prototype.create = function(bounds, style, value) {
+TextBox.prototype.create = function(bounds, style, value,connector) {
 
   var content = this.content,
       container = this.container;
@@ -23557,7 +23565,7 @@ TextBox.prototype.create = function(bounds, style, value) {
     minWidth: bounds.minWidth + 'px',
     minHeight: bounds.minHeight + 'px',
     left: bounds.x + 'px',
-    top: bounds.y + 'px',
+    top: (connector ? 0 : bounds.height) + bounds.y + 'px',
     backgroundColor: '#ffffff',
     position: 'absolute',
     overflowY: 'auto',

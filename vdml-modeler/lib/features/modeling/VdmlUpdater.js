@@ -312,7 +312,15 @@ VdmlUpdater.prototype.updateParent = function(element, oldParent) {
   if (is(element, 'vdml:FlowNode')) {
     this.updateFlowNodeRefs(businessObject, parentBusinessObject, oldParent && oldParent.businessObject);
   }
-
+  if (is(element, 'vdml:SequenceFlow') && is(oldParent, 'vdml:ValueProposition')) {
+      var flows = oldParent.businessObject.get('flows');
+      for (var i = 0; i < flows.length; i++) {
+          if (flows[i] === element.businessObject) {
+              flows.splice(i, 1);
+              break;
+          }
+      }
+  }
   if (is(element, 'vdml:DataOutputAssociation')) {
     if (element.source) {
       parentBusinessObject = element.source.businessObject;

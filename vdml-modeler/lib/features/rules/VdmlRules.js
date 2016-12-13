@@ -266,7 +266,7 @@ function hasEventDefinitionOrNone(element, eventDefinition) {
 }
 
 function isSequenceFlowSource(element) {
-    if (is(element, 'vdml:ValueProposition') && element.businessObject.flows && element.businessObject.flows.length > 0) {
+    if (is(element, 'vdml:ValueProposition') && element.businessObject.flows && element.businessObject.flows.length > 0 && element.businessObject.flows[0].targetRef) {
         return false;
     }
   return is(element, 'vdml:FlowNode') &&
