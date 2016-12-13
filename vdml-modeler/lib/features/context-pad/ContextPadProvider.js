@@ -105,6 +105,18 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
           });
       }
   }
+  function showProperties(e) {
+      debugger;
+      if (window.require1) {
+          window.require1(['appcommon/com/vbee/data/DataManager', "appviews/ecomap/views/designer/ShapePropertiesViewModel"], function (DataManager, ShapePropertiesViewModel) {
+              var dataManager = DataManager.getDataManager();
+              var wizard = self.wizard = ShapePropertiesViewModel.getInstance(window.vdmModelView.model, businessObject, function () {
+
+              });
+              wizard.startWizard();
+          });
+      }
+  }
   function setBackgroundImage(e) {
       if (window.require1) {
           window.require1(['domtoimage'], function () {
@@ -333,6 +345,17 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
             }
         });
     }
+    assign(actions, {
+        'map': {
+            group: 'edit',
+            className: 'bpmn-icon-script-task',
+            title: translate('Properties'),
+            action: {
+                click: showProperties,
+                dragstart: showProperties
+            }
+        }
+    });
     assign(actions, {
         'background': {
             group: 'edit',
