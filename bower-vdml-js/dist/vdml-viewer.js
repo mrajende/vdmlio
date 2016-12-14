@@ -1101,6 +1101,19 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       scale: 0.5
     });
   }
+  function drawValueProposition(p, element, attrs) {
+      attrs = computeStyle(attrs, {
+          stroke: 'black',
+          strokeWidth: 2,
+          fill: 'white'
+      });
+      var rect = renderer('vdml:Collaboration')(p, element, attrs);
+      if (element.businessObject.get('vdml:backgroundUrl')) {
+          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
+      }
+      return rect;
+  }
+
   function drawMargetSegment(p, element, attrs) {
       var rect = renderer('vdml:Collaboration')(p, element, attrs);
       attrs = computeStyle(attrs, {
@@ -1456,7 +1469,8 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
         return rect;
     },
     'vdml:ValueProposition': function (p, element, attrs) {
-        var rect = renderer('vdml:Collaboration')(p, element, attrs);
+        var rect = drawValueProposition(p, element, element.width, element.height, attrs);
+        renderEmbeddedLabel(p, element, 'center-bottom');
         return rect;
     },
     'vdml:Individual': function (p, element, attrs) {
