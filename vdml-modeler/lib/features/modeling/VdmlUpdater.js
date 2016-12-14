@@ -61,7 +61,7 @@ function VdmlUpdater(eventBus, vdmlFactory, connectionDocking, translate) {
   function updateParent(e) {
     var context = e.context;
 
-    self.updateParent(context.shape || context.connection, context.oldParent);
+    self.updateParent(context.shape || context.connection, context.oldParent,e);
   }
 
   function reverseUpdateParent(e) {
@@ -71,7 +71,7 @@ function VdmlUpdater(eventBus, vdmlFactory, connectionDocking, translate) {
         // oldParent is the (old) new parent, because we are undoing
         oldParent = context.parent || context.newParent;
 
-    self.updateParent(element, oldParent);
+    self.updateParent(element, oldParent,e);
   }
 
   this.executed([ 'shape.move',
@@ -103,7 +103,7 @@ function VdmlUpdater(eventBus, vdmlFactory, connectionDocking, translate) {
 
     forEach(children, function(child) {
       if (is(child, 'vdml:BaseElement')) {
-        self.updateParent(child);
+        self.updateParent(child,null,event);
       }
     });
   }
@@ -297,11 +297,11 @@ VdmlUpdater.prototype.updateAttachment = function(context) {
   businessObject.attachedToRef = host && host.businessObject;
 };
 
-VdmlUpdater.prototype.updateParent = function(element, oldParent) {
+VdmlUpdater.prototype.updateParent = function(element, oldParent,event) {
   // do not update VDML 2.0 label parent
- /* if (element instanceof Model.Label) {
+  if (element instanceof Model.Label && event.command !== 'shape.delete') {
     return;
-  }*/
+  }
 
   var parentShape = element.parent;
 
@@ -312,15 +312,18 @@ VdmlUpdater.prototype.updateParent = function(element, oldParent) {
   if (is(element, 'vdml:FlowNode')) {
     this.updateFlowNodeRefs(businessObject, parentBusinessObject, oldParent && oldParent.businessObject);
   }
-  if (is(element, 'vdml:SequenceFlow') && oldParent) {
-      var flows = oldParent.businessObject.get('flows');
-      for (var i = 0; i < flows.length; i++) {
-          if (flows[i] === element.businessObject) {
-              flows.splice(i, 1);
-              break;
+  if (event.command === 'shape.delete') {
+      if (is(element, 'vdml:SequenceFlow') && oldParent) {
+          var flows = oldParent.businessObject.get('flows');
+          for (var i = 0; i < flows.length; i++) {
+              if (flows[i] === element.businessObject) {
+                  flows.splice(i, 1);
+                  break;
+              }
           }
       }
   }
+  
   if (is(element, 'vdml:DataOutputAssociation')) {
     if (element.source) {
       parentBusinessObject = element.source.businessObject;
