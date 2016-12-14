@@ -2532,14 +2532,18 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
 
   }
 
-  if (is(businessObject, 'vdml:FlowNode')) {
+  if (is(businessObject, 'vdml:ValueProposition')) {
       assign(actions, {
           //'append.append-collaboration': appendAction('vdml:Collaboration', 'bpmn-icon-task'),
           'append.append-marketSegment': appendAction('vdml:MarketSegment', 'bpmn-icon-task'),
           'append.append-enterprise': appendAction('vdml:Enterprise', 'bpmn-icon-task'),
           'append.append-individual': appendAction('vdml:Individual', 'bpmn-icon-user'),
           'append.append-role': appendAction('vdml:Role', 'bpmn-icon-task'),
-          'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task'),
+          'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task')
+      });
+  }else
+      if (is(businessObject, 'vdml:FlowNode') && !is(businessObject, 'vdml:ValueProposition')) {
+      assign(actions, {
           'append.append-valueProposition': appendAction('vdml:ValueProposition', 'bpmn-icon-task')
       });
   }
@@ -3654,7 +3658,7 @@ ElementFactory.prototype._getDefaultSize = function(semantic) {
         return { width: 50, height: 50 };
   }
   if (is(semantic, 'vdml:ValueProposition')) {
-      return { width: 25, height: 25 };
+      return { width: 35, height: 35 };
   }
   if (is(semantic, 'vdml:Role')) {
       return { width: 70, height: 50 };

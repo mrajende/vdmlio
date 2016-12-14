@@ -127,7 +127,7 @@ ElementFactory.prototype._getDefaultSize = function(semantic) {
         return { width: 50, height: 50 };
   }
   if (is(semantic, 'vdml:ValueProposition')) {
-      return { width: 25, height: 25 };
+      return { width: 35, height: 35 };
   }
   if (is(semantic, 'vdml:Role')) {
       return { width: 70, height: 50 };

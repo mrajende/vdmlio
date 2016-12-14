@@ -275,14 +275,18 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
 
   }
 
-  if (is(businessObject, 'vdml:FlowNode')) {
+  if (is(businessObject, 'vdml:ValueProposition')) {
       assign(actions, {
           //'append.append-collaboration': appendAction('vdml:Collaboration', 'bpmn-icon-task'),
           'append.append-marketSegment': appendAction('vdml:MarketSegment', 'bpmn-icon-task'),
           'append.append-enterprise': appendAction('vdml:Enterprise', 'bpmn-icon-task'),
           'append.append-individual': appendAction('vdml:Individual', 'bpmn-icon-user'),
           'append.append-role': appendAction('vdml:Role', 'bpmn-icon-task'),
-          'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task'),
+          'append.append-businessModel': appendAction('vdml:BusinessModel', 'bpmn-icon-task')
+      });
+  }else
+      if (is(businessObject, 'vdml:FlowNode') && !is(businessObject, 'vdml:ValueProposition')) {
+      assign(actions, {
           'append.append-valueProposition': appendAction('vdml:ValueProposition', 'bpmn-icon-task')
       });
   }
