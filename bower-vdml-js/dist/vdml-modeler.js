@@ -2622,7 +2622,7 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
         });
     }
     assign(actions, {
-        'map': {
+        'properties': {
             group: 'edit',
             className: 'bpmn-icon-script-task',
             title: translate('Properties'),
