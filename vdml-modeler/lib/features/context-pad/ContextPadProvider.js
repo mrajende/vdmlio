@@ -108,12 +108,13 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   function showProperties(e) {
       debugger;
       if (window.require1) {
-          window.require1(['appcommon/com/vbee/data/DataManager', "appviews/ecomap/views/designer/ShapePropertiesViewModel"], function (DataManager, ShapePropertiesViewModel) {
+          window.require1(['appcommon/com/vbee/data/DataManager', "appbo/vdml/EcoMapDiagramMixin"], function (DataManager, EcoMapDiagramMixin) {
               var dataManager = DataManager.getDataManager();
-              var wizard = self.wizard = ShapePropertiesViewModel.getInstance(window.vdmModelView.model, businessObject, function () {
-
-              });
-              wizard.startWizard();
+              var id = window.utils.htmlEscape(window.guidGenerator());
+              var user;
+              var options = { viewId: id };
+              options.businessObject = businessObject;
+              window.getAndCreateModalDialog(window.vdmModelView, id,EcoMapDiagramMixin, window.vdmModelView.model, "ShapeProperties", null, options);
           });
       }
   }

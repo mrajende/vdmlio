@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-12-13
+ * Date: 2016-12-14
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
@@ -2365,12 +2365,13 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
   function showProperties(e) {
       debugger;
       if (window.require1) {
-          window.require1(['appcommon/com/vbee/data/DataManager', "appviews/ecomap/views/designer/ShapePropertiesViewModel"], function (DataManager, ShapePropertiesViewModel) {
+          window.require1(['appcommon/com/vbee/data/DataManager', "appbo/vdml/EcoMapDiagramMixin"], function (DataManager, EcoMapDiagramMixin) {
               var dataManager = DataManager.getDataManager();
-              var wizard = self.wizard = ShapePropertiesViewModel.getInstance(window.vdmModelView.model, businessObject, function () {
-
-              });
-              wizard.startWizard();
+              var id = window.utils.htmlEscape(window.guidGenerator());
+              var user;
+              var options = { viewId: id };
+              options.businessObject = businessObject;
+              window.getAndCreateModalDialog(window.vdmModelView, id,EcoMapDiagramMixin, window.vdmModelView.model, "ShapeProperties", null, options);
           });
       }
   }
