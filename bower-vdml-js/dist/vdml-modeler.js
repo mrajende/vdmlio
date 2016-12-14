@@ -4451,9 +4451,9 @@ VdmlUpdater.prototype.updateAttachment = function(context) {
 
 VdmlUpdater.prototype.updateParent = function(element, oldParent) {
   // do not update VDML 2.0 label parent
-  if (element instanceof Model.Label) {
+ /* if (element instanceof Model.Label) {
     return;
-  }
+  }*/
 
   var parentShape = element.parent;
 
@@ -4464,7 +4464,7 @@ VdmlUpdater.prototype.updateParent = function(element, oldParent) {
   if (is(element, 'vdml:FlowNode')) {
     this.updateFlowNodeRefs(businessObject, parentBusinessObject, oldParent && oldParent.businessObject);
   }
-  if (is(element, 'vdml:SequenceFlow') && is(oldParent, 'vdml:ValueProposition')) {
+  if (is(element, 'vdml:SequenceFlow') && oldParent) {
       var flows = oldParent.businessObject.get('flows');
       for (var i = 0; i < flows.length; i++) {
           if (flows[i] === element.businessObject) {
