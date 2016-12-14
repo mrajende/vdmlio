@@ -158,22 +158,25 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
           strokeWidth: 2,
           fill: 'white'
       });
+      if (element.businessObject.get('vdml:backgroundUrl')) {
+          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
+      }
       var r = element.height > element.width ? element.width / 20 : element.height / 20;
       var cx = element.width / 4,
           cy = element.height / 4;
       p.circle(cx, cy, Math.round(r)).attr(attrs);
-      cx = cx -2*r;
+      cx = cx - 2 * r;
       cy = cy + 2 * r;
       p.circle(cx, cy, Math.round(r)).attr(attrs);
       cx = cx + 4 * r;
       p.circle(cx, cy, Math.round(r)).attr(attrs);
-      if (element.businessObject.get('vdml:backgroundUrl')) {
-          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
-      }
       return rect;
   }
   function drawEnterprise(p, element, attrs) {
       var rect = renderer('vdml:Collaboration')(p, element, attrs);
+      if (element.businessObject.get('vdml:backgroundUrl')) {
+          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
+      }
       attrs = computeStyle(attrs, {
           stroke: 'black',
           strokeWidth: 2,
@@ -183,22 +186,19 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
       var startx = element.width / 4;
       var starty = element.height / 4;
 
-      var waypoints = [{ x: startx, y: starty}, { x: startx, y: starty + element.height/10 }];
+      var waypoints = [{ x: startx, y: starty }, { x: startx, y: starty + element.height / 10 }];
       drawLine(p, waypoints, attrs);
       startx = startx - ouwidth;
       starty = starty + element.height / 10;
 
-      var waypoints = [{ x: startx , y: starty }, { x: startx + 2* ouwidth, y: starty }];
+      var waypoints = [{ x: startx, y: starty }, { x: startx + 2 * ouwidth, y: starty }];
       drawLine(p, waypoints, attrs);
 
-      var waypoints = [{ x: startx, y: starty }, { x: startx, y: starty + ouwidth}];
+      var waypoints = [{ x: startx, y: starty }, { x: startx, y: starty + ouwidth }];
       drawLine(p, waypoints, attrs);
       startx = startx + 2 * ouwidth;
       var waypoints = [{ x: startx, y: starty }, { x: startx, y: starty + ouwidth }];
       drawLine(p, waypoints, attrs);
-      if (element.businessObject.get('vdml:backgroundUrl')) {
-          p.image(element.businessObject.get('vdml:backgroundUrl'), 0, 0, element.width, element.height);
-      }
 
       return rect;
   }
