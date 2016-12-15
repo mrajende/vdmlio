@@ -445,6 +445,17 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     return renderLabel(p, semantic.name, { box: element, align: align, padding: 5 });
   }
 
+  function renderBottomLabel(p, element) {
+      var semantic = getSemantic(element);
+      var box = {
+          width: element.width,
+          height: element.height,
+          x: element.width + element.x,
+          y: element.height + element.y 
+      };
+
+      return renderLabel(p, semantic.name, { box: box, style: { fontSize: '11px' }, align: 'center-bottom' });
+  }
   function renderExternalLabel(p, element) {
     var semantic = getSemantic(element);
     var box = {
@@ -504,7 +515,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
     'vdml:Collaboration': function(p, element, attrs) {
       var rect = drawRect(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
-      renderEmbeddedLabel(p, element, 'center-bottom');
+      renderBottomLabel(p, element, 'center-bottom');
       
       return rect;
     },
@@ -520,25 +531,25 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     },
     'vdml:ValueProposition': function (p, element, attrs) {
         var rect = drawValueProposition(p, element, element.width, element.height, attrs);
-        renderEmbeddedLabel(p, element, 'center-bottom');
+        renderBottomLabel(p, element, 'center-bottom');
         return rect;
     },
     'vdml:Individual': function (p, element, attrs) {
         var rect = drawPerson(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
-        renderEmbeddedLabel(p, element, 'center-bottom');//works with update to diagram.js text util
+        renderBottomLabel(p, element, 'center-bottom');//works with update to diagram.js text util
         //renderEmbeddedLabel(p, element, 'center-middle');
         return rect;
     },
     'vdml:Role': function (p, element, attrs) {
         var oval = drawOval(p,element, element.width, element.height, attrs);
-        renderEmbeddedLabel(p, element, 'center-bottom');
+        renderBottomLabel(p, element, 'center-bottom');
         
         //var rect = renderer('vdml:Collaboration')(p, element, attrs);
         return oval;
     },
     'vdml:BusinessModel': function (p, element, attrs) {
         var hexagon = drawHexagon(p,element, element.width, element.height);
-        renderEmbeddedLabel(p, element, 'center-bottom');
+        renderBottomLabel(p, element, 'center-bottom');
         return hexagon;
     },
     'vdml:Participant': function(p, element) {

@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2016-12-14
+ * Date: 2016-12-15
  */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.VdmlJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /**
@@ -1395,6 +1395,17 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     return renderLabel(p, semantic.name, { box: element, align: align, padding: 5 });
   }
 
+  function renderBottomLabel(p, element) {
+      var semantic = getSemantic(element);
+      var box = {
+          width: element.width,
+          height: element.height,
+          x: element.width + element.x,
+          y: element.height + element.y 
+      };
+
+      return renderLabel(p, semantic.name, { box: box, style: { fontSize: '11px' }, align: 'center-bottom' });
+  }
   function renderExternalLabel(p, element) {
     var semantic = getSemantic(element);
     var box = {
@@ -1454,7 +1465,7 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
 
     'vdml:Collaboration': function(p, element, attrs) {
       var rect = drawRect(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
-      renderEmbeddedLabel(p, element, 'center-bottom');
+      renderBottomLabel(p, element, 'center-bottom');
       
       return rect;
     },
@@ -1470,25 +1481,25 @@ function VdmlRenderer(eventBus, styles, pathMap, priority) {
     },
     'vdml:ValueProposition': function (p, element, attrs) {
         var rect = drawValueProposition(p, element, element.width, element.height, attrs);
-        renderEmbeddedLabel(p, element, 'center-bottom');
+        renderBottomLabel(p, element, 'center-bottom');
         return rect;
     },
     'vdml:Individual': function (p, element, attrs) {
         var rect = drawPerson(p, element.width, element.height, COLLABORATION_BORDER_RADIUS, attrs);
-        renderEmbeddedLabel(p, element, 'center-bottom');//works with update to diagram.js text util
+        renderBottomLabel(p, element, 'center-bottom');//works with update to diagram.js text util
         //renderEmbeddedLabel(p, element, 'center-middle');
         return rect;
     },
     'vdml:Role': function (p, element, attrs) {
         var oval = drawOval(p,element, element.width, element.height, attrs);
-        renderEmbeddedLabel(p, element, 'center-bottom');
+        renderBottomLabel(p, element, 'center-bottom');
         
         //var rect = renderer('vdml:Collaboration')(p, element, attrs);
         return oval;
     },
     'vdml:BusinessModel': function (p, element, attrs) {
         var hexagon = drawHexagon(p,element, element.width, element.height);
-        renderEmbeddedLabel(p, element, 'center-bottom');
+        renderBottomLabel(p, element, 'center-bottom');
         return hexagon;
     },
     'vdml:Participant': function(p, element) {
